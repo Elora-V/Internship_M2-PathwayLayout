@@ -20,7 +20,7 @@ export function method_to_try(network: Network) {
         
     // } 
     // console.log(network);
-    console.log('test methodtotry');
+    
     //var dagre = require("dagre");
     // Create a new directed graph 
     var g = new dagre.graphlib.Graph();
