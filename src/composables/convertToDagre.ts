@@ -1,9 +1,8 @@
 import dagre from 'dagrejs';
 
 
-
 /**
- * Take an network object and return a dagre.graphlib.Graph object containing the same nodes and edge
+ * Take an network object and return a dagre.graphlib.Graph object containing the same nodes and edge 
  * @param {Network}  Network object 
  * @returns {dagre.graphlib.Graph} Return dagre.graphlib.Graph object 
  */
@@ -18,8 +17,22 @@ export function convertToDagre(network: Network): dagre.graphlib.Graph{
     for (const node in network["nodes"]){
         let keyNode=node;
         let labelNode=network["nodes"][node]["label"];
+
+        // get position (x,y) if one
+        let xNode:number;
+        if ( Object.keys(network["nodes"][node]).includes('x') ){
+            xNode= network["nodes"][node]["x"];
+        }else{
+            xNode= NaN;
+        }
+        let yNode:number;
+        if ( Object.keys(network["nodes"][node]).includes('y') ){
+            yNode= network["nodes"][node]["y"];
+        }else{
+            yNode= NaN;
+        }
         //let width= labelNode.length;
-        g.setNode(keyNode,    { label: labelNode,  width: 100, height: 100 });
+        g.setNode(keyNode,    { label: labelNode,  width: 100, height: 100, x: xNode, y:yNode });
     }
 
     // insert edges into graph
