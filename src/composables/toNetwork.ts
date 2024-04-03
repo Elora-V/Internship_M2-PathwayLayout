@@ -1,10 +1,10 @@
 import { Network } from '@metabohub/viz-core/src/types/Network';
 import type { Node } from "@metabohub/viz-core/src/types/Node";
-import dagre from 'dagrejs';
+import  dagre  from 'dagrejs';
 
 
 /**
- * Take an dagre.graphlib.Graph object and return a Network object containing the same nodes and edge
+ * Take a dagre.graphlib.Graph object and return a Network object containing the same nodes and edge
  * @param {dagre.graphlib.Graph}  dagre.graphlib.Graph object 
  * @returns {Network} Return Network object 
  */
@@ -17,12 +17,9 @@ export function convertToNetwork(graph: dagre.graphlib.Graph): Network{
 		links: []
 	};
 
-
-
     // insert nodes into network
     for (const node in graph["_nodes"]){
 
-        const keyNode=node;
         const labelNode=graph["_nodes"][node]["label"];
         // get position if one
         let xNode:number;
@@ -37,13 +34,12 @@ export function convertToNetwork(graph: dagre.graphlib.Graph): Network{
         }else{
             yNode= NaN;
         }
-        network.nodes[keyNode] = {
-			id: keyNode,
+        network.nodes[node] = {
+			id: node,
 			x: xNode,
 			y: yNode,
             label : labelNode
 		};
-
        
     }
 
@@ -63,6 +59,30 @@ export function convertToNetwork(graph: dagre.graphlib.Graph): Network{
     return network;
 
 }
+
+/**
+ * Take dagre.graphlib.Graph object and the network associated (with the graph) : change the position of network node by the one of the graph.
+ * The graph and network need to have the same nodes !
+ * @param {dagre.graphlib.Graph}  dagre.graphlib.Graph object 
+ * @param {Network} Network object (value of pointer)
+ */
+export function graphToNetwork(graph: dagre.graphlib.Graph,network: Network){
+
+    for (const node in graph["_nodes"]){
+
+        // get x (if one)
+        if (Object.keys(graph["_nodes"][node]).includes('x')){
+            network.nodes[node]["x"]= graph["_nodes"][node]["x"];
+        }
+        // get x (if one)
+        if (Object.keys(graph["_nodes"][node]).includes('y')){
+            network.nodes[node]["y"]= graph["_nodes"][node]["y"];
+        }
+    }
+}
+
+
+
 
 /**
  * Take an id string and return the corresponding node from the network

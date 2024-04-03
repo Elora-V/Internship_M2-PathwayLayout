@@ -27,7 +27,7 @@ import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStylePr
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
 import { method_to_try } from './composables/methode_to_try';
 import { convertToDagre } from './composables/convertToDagre';
-import { convertToNetwork } from './composables/convertToNetwork';
+import { graphToNetwork } from './composables/toNetwork';
 import { initZoom, rescale } from "@metabohub/viz-core";
 import { importNetworkFromFile, importNetworkFromURL } from "@metabohub/viz-core";
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
@@ -53,13 +53,11 @@ function loadFile(event: Event) {
 function callbackFunction() {
   rescale(svgProperties);
 
-  console.log(network.value);
   let graph = convertToDagre(network.value);
-  console.log(graph);
+  console.log(graph); 
   dagre.layout(graph);
-  let network2=convertToNetwork(graph);
-  console.log(network2);
-
+  graphToNetwork(graph, network.value);
+  console.log(network.value);
 }
 
 onMounted(() => {
@@ -69,4 +67,4 @@ onMounted(() => {
 
 </script><style>
 @import "@metabohub/viz-core/dist/style.css";
-</style>./composables/methode_to_try
+</style>./composables/methode_to_try./composables/toNetwork
