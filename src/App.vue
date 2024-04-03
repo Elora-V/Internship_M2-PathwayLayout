@@ -20,10 +20,13 @@
 import { ref, reactive, onMounted } from "vue";
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
-import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
+//import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
+
+
   // Composables ----------
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
 import { method_to_try } from './composables/methode_to_try';
+
 import { initZoom, rescale } from "@metabohub/viz-core";
 import { importNetworkFromFile, importNetworkFromURL } from "@metabohub/viz-core";
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
