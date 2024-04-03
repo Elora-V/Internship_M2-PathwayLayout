@@ -55,6 +55,7 @@ function callbackFunction() {
 
   let graph = convertToDagre(network.value);
   console.log(graph); 
+  graph.setGraph({})
   dagre.layout(graph);
   graphToNetwork(graph, network.value);
   console.log(network.value);
@@ -62,7 +63,7 @@ function callbackFunction() {
 
 onMounted(() => {
   svgProperties = initZoom();
-  importNetworkFromURL('/MetExploreViz_Trp_NEW.json', network, networkStyle, callbackFunction);
+  importNetworkFromURL('/MetExploreViz_04-03-2024.json', network, networkStyle, callbackFunction);
 });
 
 </script><style>

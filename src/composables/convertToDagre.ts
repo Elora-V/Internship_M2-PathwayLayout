@@ -1,5 +1,5 @@
 import { Network } from '@metabohub/viz-core/src/types/Network';
-import  dagre  from 'dagrejs';
+import  dagre  from 'dagrejs/dist/dagre.js';
 
 
 /**
@@ -11,7 +11,7 @@ export function convertToDagre(network: Network): dagre.graphlib.Graph{
 
     // initialisation dagre graph
     var g = new dagre.graphlib.Graph();
-    g.setGraph({});
+    //g.setGraph({});
     g.setDefaultEdgeLabel(function() { return {}; });
 
     // insert nodes into graph
@@ -31,7 +31,6 @@ export function convertToDagre(network: Network): dagre.graphlib.Graph{
         }else{
             yNode= NaN;
         }
-        //let width= labelNode.length;
         g.setNode(node,    { label: labelNode,  width: 100, height: 100, x: xNode, y:yNode });
     }
 

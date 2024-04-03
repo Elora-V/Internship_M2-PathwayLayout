@@ -1,6 +1,6 @@
 import { Network } from '@metabohub/viz-core/src/types/Network';
 import type { Node } from "@metabohub/viz-core/src/types/Node";
-import  dagre  from 'dagrejs';
+import  dagre  from 'dagrejs/dist/dagre.js';
 
 
 /**
