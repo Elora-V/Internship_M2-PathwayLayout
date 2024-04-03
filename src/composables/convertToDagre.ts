@@ -1,3 +1,4 @@
+import { Network } from '@metabohub/viz-core/src/types/Network';
 import dagre from 'dagrejs';
 
 
@@ -15,8 +16,8 @@ export function convertToDagre(network: Network): dagre.graphlib.Graph{
 
     // insert nodes into graph
     for (const node in network["nodes"]){
-        let keyNode=node;
-        let labelNode=network["nodes"][node]["label"];
+        const keyNode=node;
+        const labelNode=network["nodes"][node]["label"];
 
         // get position (x,y) if one
         let xNode:number;
@@ -37,8 +38,8 @@ export function convertToDagre(network: Network): dagre.graphlib.Graph{
 
     // insert edges into graph
     for (const link in network["links"]){
-        let fromNode=network["links"][link]["source"]["id"];
-        let toNode=network["links"][link]["target"]["id"];
+        const fromNode=network["links"][link]["source"]["id"];
+        const toNode=network["links"][link]["target"]["id"];
         g.setEdge(fromNode,   toNode);
     }
 
