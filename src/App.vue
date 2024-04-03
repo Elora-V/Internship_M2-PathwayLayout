@@ -21,7 +21,7 @@ import { ref, reactive, onMounted } from "vue";
 import dagre from 'dagrejs';
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
-import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
+//import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
   // Composables ----------
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
@@ -52,13 +52,8 @@ function loadFile(event: Event) {
 
 function callbackFunction() {
   rescale(svgProperties);
+  method_to_try(network.value)
 
-  let graph = convertToDagre(network.value);
-  console.log(graph); 
-  graph.setGraph({})
-  dagre.layout(graph);
-  graphToNetwork(graph, network.value);
-  console.log(network.value);
 }
 
 onMounted(() => {
