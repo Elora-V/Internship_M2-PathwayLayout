@@ -31,9 +31,9 @@
   },
   "types": "./dist/index.d.ts",
   "dependencies": {
-    "dagrejs":"^0.2.1",
     "@mdi/font": "^7.4.47",
-    "@metabohub/viz-core": "^0.0.27",
+    "@metabohub/viz-core": "file:metabohub-viz-core-0.0.2.tgz",
+    "dagrejs": "^0.2.1",
     "roboto-fontface": "*",
     "vue": "^3.4.15",
     "vuetify": "^3.5.2",
