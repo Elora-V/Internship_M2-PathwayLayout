@@ -38,7 +38,8 @@
     "roboto-fontface": "*",
     "vue": "^3.4.15",
     "vuetify": "^3.5.2",
-    "webfontloader": "^1.6.28"
+    "webfontloader": "^1.6.28",
+    "libsbmljs_stable": "^5.17.0-beta1"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.7.2",
