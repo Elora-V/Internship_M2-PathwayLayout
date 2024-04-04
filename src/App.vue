@@ -19,15 +19,17 @@
   // Utils ----------------
 import { ref, reactive, onMounted } from "vue";
 import dagre from 'dagrejs';
+import { instance } from "@viz-js/viz";
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
+import { GraphViz } from './types/graphLibType';
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
   // Composables ----------
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
 import { method_to_try } from './composables/methode_to_try';
-import { convertToDagre } from './composables/convertToDagre';
-import { graphToNetwork } from './composables/toNetwork';
+import { NetworkToDagre, NetworkToViz } from './composables/networkToGraph';
+import { changeNetworkFromDagre, changeNetworkFromViz } from './composables/graphToNetwork';
 import { initZoom, rescale } from "@metabohub/viz-core";
 import { importNetworkFromFile, importNetworkFromURL } from "@metabohub/viz-core";
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
@@ -52,7 +54,12 @@ function loadFile(event: Event) {
 
 function callbackFunction() {
   rescale(svgProperties);
-  method_to_try(network.value)
+
+  instance().then(viz => {
+  const graph=NetworkToViz(network.value);
+  const json=viz.renderJSON(graph);
+  changeNetworkFromViz(json,network.value)
+  })
 
 }
 
@@ -63,4 +70,4 @@ onMounted(() => {
 
 </script><style>
 @import "@metabohub/viz-core/dist/style.css";
-</style>./composables/methode_to_try./composables/toNetwork
+</style>./composables/methode_to_try./composables/toNetwork./composables/convertToGraph./composables/networkToGraph./composables/graphToNetwork
