@@ -27,6 +27,7 @@ import type { Network } from "@metabohub/viz-core/src/types/Network";
   // Composables ----------
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
 import { method_to_try } from './composables/methode_to_try';
+import { dagreLayout, vizLayout } from './composables/useLayout';
 import { NetworkToDagre, NetworkToViz } from './composables/networkToGraph';
 import { changeNetworkFromDagre, changeNetworkFromViz } from './composables/graphToNetwork';
 import { initZoom, rescale } from "@metabohub/viz-core";
@@ -55,11 +56,15 @@ function callbackFunction() {
   rescale(svgProperties);
 
 
-  instance().then(viz => {
-  const graphViz=NetworkToViz(network.value);
-  const json=viz.renderJSON(graphViz);
-  changeNetworkFromViz(json,network.value)
-  })
+  // dagre
+  setTimeout(() => {
+    dagreLayout(network.value);
+    }, 
+    4000);
+  // viz
+  setTimeout(() => {
+    vizLayout(network.value);}, 
+    10000);
 
 }
 
