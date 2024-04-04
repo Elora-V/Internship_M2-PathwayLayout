@@ -3,7 +3,7 @@ import  dagre  from 'dagrejs/dist/dagre.js';
 import { instance } from "@viz-js/viz";
 
 /** 
- * Take an network object and return a dagre.graphlib.Graph object containing the same nodes and edge 
+ * Take a network object and return a dagre.graphlib.Graph object containing the same nodes and edge 
  * @param {Network}  Network object 
  * @returns {dagre.graphlib.Graph} Return dagre.graphlib.Graph object 
  */
@@ -11,7 +11,7 @@ export function NetworkToDagre(network: Network): dagre.graphlib.Graph{
 
     // initialisation dagre graph
     var g = new dagre.graphlib.Graph();
-    //g.setGraph({});
+    g.setGraph({});
     g.setDefaultEdgeLabel(function() { return {}; });
 
     // insert nodes into graph
@@ -47,7 +47,7 @@ export function NetworkToDagre(network: Network): dagre.graphlib.Graph{
 
 
 /**
- * Take an network object and return a graph object for viz containing the same nodes and edge 
+ * Take a network object and return a graph object for viz containing the same nodes and edge 
  * @param {Network}  Network object 
  * @returns {object} Return graph object for viz
  */
