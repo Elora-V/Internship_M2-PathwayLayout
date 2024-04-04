@@ -3,7 +3,7 @@
     Rescale
   </button>
   <input type="file" accept=".json" label="File input" v-on:change="loadFile" />
-  <NetworkComponent
+  <NetworkComponent 
     v-on:contextmenu.prevent
     :network="network"
     :graphStyleProperties="networkStyle"
@@ -20,6 +20,7 @@
 import { ref, reactive, onMounted } from "vue";
 import dagre from 'dagrejs';
 import { instance } from "@viz-js/viz";
+
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
@@ -55,17 +56,13 @@ function loadFile(event: Event) {
 function callbackFunction() {
   rescale(svgProperties);
 
-
-  // dagre
-  setTimeout(() => {
-    dagreLayout(network.value);
-    }, 
-    4000);
-  // viz
-  setTimeout(() => {
-    vizLayout(network.value);}, 
-    10000);
-
+  window.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') {
+          dagreLayout(network.value);
+        } else if (event.key === 'ArrowRight') {
+          vizLayout(network.value);
+        }
+      });
 }
 
 onMounted(() => {
