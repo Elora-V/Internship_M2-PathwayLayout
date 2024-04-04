@@ -22,7 +22,6 @@ import dagre from 'dagrejs';
 import { instance } from "@viz-js/viz";
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
-import { GraphViz } from './types/graphLibType';
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
   // Composables ----------
@@ -55,9 +54,10 @@ function loadFile(event: Event) {
 function callbackFunction() {
   rescale(svgProperties);
 
+
   instance().then(viz => {
-  const graph=NetworkToViz(network.value);
-  const json=viz.renderJSON(graph);
+  const graphViz=NetworkToViz(network.value);
+  const json=viz.renderJSON(graphViz);
   changeNetworkFromViz(json,network.value)
   })
 

@@ -1,5 +1,4 @@
 import { Network } from '@metabohub/viz-core/src/types/Network';
-import { GraphViz } from '../types/graphLibType';
 import  dagre  from 'dagrejs/dist/dagre.js';
 import { instance } from "@viz-js/viz";
 
@@ -50,9 +49,9 @@ export function NetworkToDagre(network: Network): dagre.graphlib.Graph{
 /**
  * Take an network object and return a graph object for viz containing the same nodes and edge 
  * @param {Network}  Network object 
- * @returns {GraphViz} Return graph object for viz
+ * @returns {object} Return graph object for viz
  */
-export function NetworkToViz(network: Network): GraphViz{
+export function NetworkToViz(network: Network): object{
 
     // initialisation dagre graph
     const g ={
