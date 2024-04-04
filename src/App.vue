@@ -3,7 +3,7 @@
     Rescale
   </button>
   <input type="file" accept=".json" label="File input" v-on:change="loadFile" />
-  <NetworkComponent
+  <NetworkComponent 
     v-on:contextmenu.prevent
     :network="network"
     :graphStyleProperties="networkStyle"
@@ -19,15 +19,18 @@
   // Utils ----------------
 import { ref, reactive, onMounted } from "vue";
 import dagre from 'dagrejs';
+import { instance } from "@viz-js/viz";
+
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
-import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
+//import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
   // Composables ----------
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
 import { method_to_try } from './composables/methode_to_try';
-import { convertToDagre } from './composables/convertToDagre';
-import { graphToNetwork } from './composables/toNetwork';
+import { dagreLayout, vizLayout } from './composables/useLayout';
+import { NetworkToDagre, NetworkToViz } from './composables/networkToGraph';
+import { changeNetworkFromDagre, changeNetworkFromViz } from './composables/graphToNetwork';
 import { initZoom, rescale } from "@metabohub/viz-core";
 import { importNetworkFromFile, importNetworkFromURL } from "@metabohub/viz-core";
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
@@ -53,12 +56,13 @@ function loadFile(event: Event) {
 function callbackFunction() {
   rescale(svgProperties);
 
-  let graph = convertToDagre(network.value);
-  console.log(graph); 
-  graph.setGraph({})
-  dagre.layout(graph);
-  graphToNetwork(graph, network.value);
-  console.log(network.value);
+  window.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowLeft') {
+          dagreLayout(network.value);
+        } else if (event.key === 'ArrowRight') {
+          vizLayout(network.value);
+        }
+      });
 }
 
 onMounted(() => {
@@ -68,4 +72,4 @@ onMounted(() => {
 
 </script><style>
 @import "@metabohub/viz-core/dist/style.css";
-</style>./composables/methode_to_try./composables/toNetwork
+</style>./composables/methode_to_try./composables/toNetwork./composables/convertToGraph./composables/networkToGraph./composables/graphToNetwork
