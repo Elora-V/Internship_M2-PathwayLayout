@@ -42,6 +42,8 @@
     "libsbmljs_stable": "^5.17.0-beta1"
   },
   "devDependencies": {
+    "xml-js":"^1.6.11",
+    "require.js":"^1.0.0",
     "@rushstack/eslint-patch": "^1.7.2",
     "@storybook/addon-essentials": "^8.0.3",
     "@storybook/addon-interactions": "^8.0.3",
