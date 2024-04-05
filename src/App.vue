@@ -18,8 +18,6 @@
  */// Import -----------------
   // Utils ----------------
 import { ref, reactive, onMounted } from "vue";
-import dagre from 'dagrejs';
-import { instance } from "@viz-js/viz";
 
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
@@ -29,8 +27,7 @@ import type { Network } from "@metabohub/viz-core/src/types/Network";
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
 import { method_to_try } from './composables/methode_to_try';
 import { dagreLayout, vizLayout } from './composables/useLayout';
-import { NetworkToDagre, NetworkToViz } from './composables/networkToGraph';
-import { changeNetworkFromDagre, changeNetworkFromViz } from './composables/graphToNetwork';
+import { removeSideCompounds } from "@/composables/removeSideCompounds";
 import { initZoom, rescale } from "@metabohub/viz-core";
 import { importNetworkFromFile, importNetworkFromURL } from "@metabohub/viz-core";
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
@@ -53,8 +50,10 @@ function loadFile(event: Event) {
   importNetworkFromFile(file, network, networkStyle, callbackFunction);
 }
 
-function callbackFunction() {
+async function callbackFunction() {
   rescale(svgProperties);
+
+  removeSideCompounds(network.value);
 
   window.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowLeft') {
