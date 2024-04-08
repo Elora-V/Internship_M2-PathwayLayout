@@ -1,0 +1,283 @@
+{
+    "graph": {
+        "id": "_304c6dd3_22d0_47e4_bddf_1523ca53d90b",
+        "type": "metabolic",
+        "nodes": {
+            "Node1": {
+                "metadata": {
+                    "position": {
+                        "x": 100,
+                        "y": 100
+                    }
+                },
+                "label": "Node 1"
+            },
+            "Node2": {
+                "metadata": {
+                    "position": {
+                        "x": 200,
+                        "y": 100
+                    }
+                },
+                "label": "Node 2"
+            },
+            "Node3": {
+                "metadata": {
+                    "position": {
+                        "x": 200,
+                        "y": 200
+                    }
+                },
+                "label": "Node 3"
+            },
+            "Node4": {
+                "metadata": {
+                    "position": {
+                        "x": 300,
+                        "y": 100
+                    }
+                },
+                "label": "Node 4"
+            },
+            "Node5": {
+                "metadata": {
+                    "position": {
+                        "x": 400,
+                        "y": 100
+                    }
+                },
+                "label": "Node 5"
+            },
+            "Node6": {
+                "metadata": {
+                    "position": {
+                        "x": 500,
+                        "y": 100
+                    }
+                },
+                "label": "Node 6"
+            },
+            "Node7": {
+                "metadata": {
+                    "position": {
+                        "x": 600,
+                        "y": 100
+                    }
+                },
+                "label": "Node 7"
+            },
+            "Node8": {
+                "metadata": {
+                    "position": {
+                        "x": 700,
+                        "y": 100
+                    }
+                },
+                "label": "Node 8"
+            },
+            "Node9": {
+                "metadata": {
+                    "position": {
+                        "x": 800,
+                        "y": 100
+                    }
+                },
+                "label": "Node 9"
+            },
+            "Node10": {
+                "metadata": {
+                    "position": {
+                        "x": 800,
+                        "y": 100
+                    }
+                },
+                "label": "Node 10"
+            },
+            "Node11": {
+                "metadata": {
+                    "position": {
+                        "x": 800,
+                        "y": 100
+                    }
+                },
+                "label": "Node 11"
+            },
+            "Node12": {
+                "metadata": {
+                    "position": {
+                        "x": 800,
+                        "y": 100
+                    }
+                },
+                "label": "Node 12"
+            },
+            "Node13": {
+                "metadata": {
+                    "position": {
+                        "x": 800,
+                        "y": 100
+                    }
+                },
+                "label": "Node 13"
+            },
+            "Node14": {
+                "metadata": {
+                    "position": {
+                        "x": 800,
+                        "y": 100
+                    }
+                },
+                "label": "Node 14"
+            },
+            "Node15": {
+                "metadata": {
+                    "position": {
+                        "x": 800,
+                        "y": 100
+                    }
+                },
+                "label": "Node 15"
+            },
+            "Node16": {
+                "metadata": {
+                    "position": {
+                        "x": 800,
+                        "y": 100
+                    }
+                },
+                "label": "Node 16"
+            },
+            "Node17": {
+                "metadata": {
+                    "position": {
+                        "x": 800,
+                        "y": 100
+                    }
+                },
+                "label": "Node 17"
+            },
+            "Node18": {
+                "metadata": {
+                    "position": {
+                        "x": 800,
+                        "y": 100
+                    }
+                },
+                "label": "Node 18"
+            },
+            "Node19": {
+                "metadata": {
+                    "position": {
+                        "x": 800,
+                        "y": 100
+                    }
+                },
+                "label": "Node 19"
+            },
+            "Node20": {
+                "metadata": {
+                    "position": {
+                        "x": 800,
+                        "y": 100
+                    }
+                },
+                "label": "Node 20"
+            }
+        },
+        "edges": [
+            {
+                "source": "Node1",
+                "target": "Node2"
+            },
+            {
+                "source": "Node2",
+                "target": "Node3"
+            },
+            {
+                "source": "Node3",
+                "target": "Node1"
+            },
+            {
+                "source": "Node4",
+                "target": "Node5"
+            },
+            {
+                "source": "Node5",
+                "target": "Node6"
+            },
+            {
+                "source": "Node6",
+                "target": "Node7"
+            },
+            {
+                "source": "Node7",
+                "target": "Node4"
+            },
+            {
+                "source": "Node9",
+                "target": "Node8"
+            },
+            {
+                "source": "Node8",
+                "target": "Node10"
+            },
+            {
+                "source": "Node10",
+                "target": "Node11"
+            },
+            {
+                "source": "Node11",
+                "target": "Node12"
+            },
+            {
+                "source": "Node12",
+                "target": "Node9"
+            },
+            {
+                "source": "Node13",
+                "target": "Node14"
+            },
+            {
+                "source": "Node14",
+                "target": "Node15"
+            },
+            {
+                "source": "Node15",
+                "target": "Node16"
+            },
+            {
+                "source": "Node16",
+                "target": "Node17"
+            },
+            {
+                "source": "Node17",
+                "target": "Node18"
+            },
+            {
+                "source": "Node18",
+                "target": "Node19"
+            },
+            {
+                "source": "Node19",
+                "target": "Node20"
+            },
+            {
+                "source": "Node20",
+                "target": "Node13"
+            },
+            {
+                "source": "Node1",
+                "target": "Node4"
+            },
+            {
+                "source": "Node5",
+                "target": "Node15"
+            },
+            {
+                "source": "Node3",
+                "target": "Node10"
+            }
+
+        ]
+    }
+}
