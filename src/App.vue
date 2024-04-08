@@ -26,6 +26,7 @@ import type { Network } from "@metabohub/viz-core/src/types/Network";
   // Composables ----------
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
 import { method_to_try } from './composables/methode_to_try';
+import { removeSelectedNode } from "@metabohub/viz-core";
 import { dagreLayout, vizLayout } from './composables/useLayout';
 import { removeSideCompounds } from "@/composables/removeSideCompounds";
 import { initZoom, rescale } from "@metabohub/viz-core";
