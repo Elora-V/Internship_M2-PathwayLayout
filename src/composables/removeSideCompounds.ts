@@ -1,5 +1,4 @@
 import { Network } from "@metabohub/viz-core/src/types/Network";
-import { removeThisNode} from "@metabohub/viz-core";
 import { removeAllSelectedNode } from "@metabohub/viz-core";
 
 
@@ -37,5 +36,4 @@ export async function readFromFile(fileName: string): Promise<string> {
       throw error;
     }
   }
-
 

@@ -32,6 +32,7 @@
   "types": "./dist/index.d.ts",
   "dependencies": {
     "@mdi/font": "^7.4.47",
+    "@metabohub/viz-context-menu": "^0.0.2",
     "@metabohub/viz-core": "file:metabohub-viz-core-0.0.2.tgz",
     "roboto-fontface": "*",
     "vue": "^3.4.15",

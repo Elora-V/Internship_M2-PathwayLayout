@@ -7,7 +7,16 @@
     v-on:contextmenu.prevent
     :network="network"
     :graphStyleProperties="networkStyle"
+    @nodeRightClickEvent="openContextMenu"
   ></NetworkComponent>
+  <ContextMenu
+    v-if="menuProps.showMenu"
+      :actions="menuProps.contextMenuActions"
+      @action-clicked="UseContextMenu.handleActionClick"
+      @closeMenu="UseContextMenu.closeContextMenu"
+      :x="menuProps.menuX"
+      :y="menuProps.menuY"
+  ></ContextMenu>
 </template>
 
 <script setup lang="ts">
@@ -26,22 +35,26 @@ import type { Network } from "@metabohub/viz-core/src/types/Network";
   // Composables ----------
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
 import { method_to_try } from './composables/methode_to_try';
-import { removeSelectedNode } from "@metabohub/viz-core";
 import { dagreLayout, vizLayout } from './composables/useLayout';
 import { removeSideCompounds } from "@/composables/removeSideCompounds";
 import { initZoom, rescale } from "@metabohub/viz-core";
 import { importNetworkFromFile, importNetworkFromURL } from "@metabohub/viz-core";
+import { UseContextMenu } from "@metabohub/viz-context-menu";
+import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
 // import { createUndoFunction } from "./composables/UseUndo";
   // Components -----------
 import { NetworkComponent } from "@metabohub/viz-core";
+import { ContextMenu } from "@metabohub/viz-context-menu";
+
 
 // Variables --------------
 const network = ref<Network>({id: '', nodes: {}, links: []});
 const networkStyle = ref<GraphStyleProperties>({nodeStyles: {}, linkStyles: {}});
 let svgProperties = reactive({});
-
+const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNode},{label:'Duplicate', action:duplicateNode}])
 let undoFunction: any = reactive({});
+
 // Functions --------------
 
 function loadFile(event: Event) {
@@ -69,7 +82,16 @@ onMounted(() => {
   svgProperties = initZoom();
   importNetworkFromURL('/MetExploreViz_04-03-2024.json', network, networkStyle, callbackFunction);
 });
-
+function removeNode() {
+  removeThisNode(menuProps.targetElement, network.value);
+}
+function duplicateNode() {
+  duplicateThisNode(menuProps.targetElement, network.value, networkStyle.value);
+}
+function openContextMenu(Event: MouseEvent, nodeId: string) {
+  UseContextMenu.showContextMenu(Event, nodeId);
+}
 </script><style>
 @import "@metabohub/viz-core/dist/style.css";
+@import "@metabohub/viz-context-menu/dist/style.css"; 
 </style>./composables/methode_to_try./composables/toNetwork./composables/convertToGraph./composables/networkToGraph./composables/graphToNetwork
