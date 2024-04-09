@@ -70,7 +70,7 @@ async function callbackFunction() {
 
   removeSideCompounds(network.value);
   duplicateReversibleReactions(network.value);
-  
+  console.log(network.value);
 
   window.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowLeft') {

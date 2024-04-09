@@ -42,17 +42,27 @@ export function duplicateReversibleReactions(network: Network){
 
             if (reactionIsSource){
                 const target =network.links[link].target;
-                newLinks.push( {"id":target.id+"--"+newReactionNode.id ,"source":target, "target":newReactionNode,"classes":["reversible"],directed: true}  );
+                newLinks.push({
+                    "id":target.id+"--"+newReactionNode.id ,
+                    "source": network.nodes[target.id], 
+                    "target":newReactionNode,
+                    "classes":["reversible"]
+                });
             } else {
                 const source =network.links[link].source;
-                newLinks.push( {"id":newReactionNode.id+"--"+source.id ,"source":newReactionNode, "target":source,"classes":["reversible"],directed: true}  );
+                newLinks.push( {"id":newReactionNode.id+"--"+source.id ,"source":newReactionNode, "target":network.nodes[source.id],"classes":["reversible"],directed: true}  );
 
             }
 
         } 
         
     }
-    network.links.push(...newLinks);
+    console.log(newLinks);
+    // network.links.push(...newLinks);
+    newLinks.forEach((link) => {
+        network.links.push(link);
+        console.log(link);
+    });
 
 }
 
