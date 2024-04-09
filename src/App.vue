@@ -36,7 +36,8 @@ import type { Network } from "@metabohub/viz-core/src/types/Network";
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
 import { method_to_try } from './composables/methode_to_try';
 import { dagreLayout, vizLayout } from './composables/useLayout';
-import { removeSideCompounds } from "@/composables/removeSideCompounds";
+import { removeSideCompounds } from "./composables/removeSideCompounds";
+import {duplicateReversibleReactions} from "./composables/duplicateReversibleReactions"
 import { initZoom, rescale } from "@metabohub/viz-core";
 import { importNetworkFromFile, importNetworkFromURL } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
@@ -68,19 +69,23 @@ async function callbackFunction() {
   rescale(svgProperties);
 
   removeSideCompounds(network.value);
+  duplicateReversibleReactions(network.value);
+  
 
   window.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowLeft') {
           dagreLayout(network.value);
+          console.log(network.value);
         } else if (event.key === 'ArrowRight') {
           vizLayout(network.value);
+          console.log(network.value);
         }
       });
 }
 
 onMounted(() => {
   svgProperties = initZoom();
-  importNetworkFromURL('/MetExploreViz_04-03-2024.json', network, networkStyle, callbackFunction);
+  importNetworkFromURL('/Alanine_and_aspartate_metabolism.json', network, networkStyle, callbackFunction); 
 });
 function removeNode() {
   removeThisNode(menuProps.targetElement, network.value);
