@@ -80,7 +80,7 @@ async function callbackFunction() {
 
 onMounted(() => {
   svgProperties = initZoom();
-  importNetworkFromURL('/MetExploreViz_04-03-2024.json', network, networkStyle, callbackFunction);
+  importNetworkFromURL('/circuit.json', network, networkStyle, callbackFunction);
 });
 function removeNode() {
   removeThisNode(menuProps.targetElement, network.value);
