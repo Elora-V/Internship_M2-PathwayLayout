@@ -57,11 +57,9 @@ export function duplicateReversibleReactions(network: Network){
         } 
         
     }
-    console.log(newLinks);
-    // network.links.push(...newLinks);
+
     newLinks.forEach((link) => {
         network.links.push(link);
-        console.log(link);
     });
 
 }
