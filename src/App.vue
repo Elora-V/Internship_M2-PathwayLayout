@@ -67,6 +67,14 @@ function loadFile(event: Event) {
 async function callbackFunction() {
   rescale(svgProperties);
 
+  import('graph-data-structure').then(gds => {
+    const graph = gds.Graph();
+    graph.addNode("a");
+    graph.addNode("b");
+    graph.addEdge("a", "b");
+    console.log(graph.nodes());
+  })
+
   removeSideCompounds(network.value);
 
   window.addEventListener('keydown', (event) => {
