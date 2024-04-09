@@ -17,11 +17,11 @@ export function changeNetworkFromDagre(graph: dagre.graphlib.Graph,network: Netw
 
         // get x (if one)
         if (Object.keys(graph["_nodes"][node]).includes('x')){
-            network.nodes[node]["x"]= graph["_nodes"][node]["x"];
+            network.nodes[node].x= graph["_nodes"][node]["x"];
         }
         // get x (if one)
         if (Object.keys(graph["_nodes"][node]).includes('y')){
-            network.nodes[node]["y"]= graph["_nodes"][node]["y"];
+            network.nodes[node].y= graph["_nodes"][node]["y"];
         }
     }
 }
@@ -40,8 +40,8 @@ export function changeNetworkFromViz(json: object,network: Network){
         // get position (if one)
         if (Object.keys(json["objects"][node]).includes('pos')){
             const pos= json["objects"][node]["pos"].split(',');
-            network.nodes[nodeId]["x"]= parseFloat(pos[0]);
-            network.nodes[nodeId]["y"]= parseFloat(pos[1]);
+            network.nodes[nodeId].x= parseFloat(pos[0]);
+            network.nodes[nodeId].y= parseFloat(pos[1]);
         }
 
     }
@@ -95,25 +95,13 @@ export function dagreToNetwork(graph: dagre.graphlib.Graph): Network{
         const toNode=graph["\_edgeObjs"][link]["w"];
         network.links.push({
             id: fromNode+" -- "+toNode,
-            source: getNodeFromNetwork(fromNode,network),
-            target: getNodeFromNetwork(toNode,network),
+            source: network.nodes[fromNode],
+            target: network.nodes[toNode],
             directed: true
           }
           );
     }
 
     return network;
-
-}
-
-/**
- * Take an id string and return the corresponding node from the network
- * @param {Network} Network object
- * @param id identifier of the node 
- * @returns {Node} Return Node object 
- */
-function getNodeFromNetwork(id: string, network:Network): Node{
-
-    return network["nodes"][id]; 
 
 }
