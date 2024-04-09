@@ -3,7 +3,7 @@
         "id": "_304c6dd3_22d0_47e4_bddf_1523ca53d90b",
         "type": "metabolic",
         "nodes": {
-            "Node1": {
+            "Node1": { "id":"4",
                 "metadata": {
                     "position": {
                         "x": 100,
@@ -12,7 +12,7 @@
                 },
                 "label": "Node 1"
             },
-            "Node2": {
+            "Node2": { "id":"40",
                 "metadata": {
                     "position": {
                         "x": 200,
@@ -21,7 +21,7 @@
                 },
                 "label": "Node 2"
             },
-            "Node3": {
+            "Node3": {"id":"41",
                 "metadata": {
                     "position": {
                         "x": 200,
@@ -30,7 +30,7 @@
                 },
                 "label": "Node 3"
             },
-            "Node4": {
+            "Node4": {"id":"42",
                 "metadata": {
                     "position": {
                         "x": 300,
@@ -39,7 +39,7 @@
                 },
                 "label": "Node 4"
             },
-            "Node5": {
+            "Node5": { "id":"43",
                 "metadata": {
                     "position": {
                         "x": 400,
@@ -48,7 +48,7 @@
                 },
                 "label": "Node 5"
             },
-            "Node6": {
+            "Node6": {"id":"44",
                 "metadata": {
                     "position": {
                         "x": 500,
@@ -57,7 +57,7 @@
                 },
                 "label": "Node 6"
             },
-            "Node7": {
+            "Node7": {"id":"45",
                 "metadata": {
                     "position": {
                         "x": 600,
@@ -66,7 +66,7 @@
                 },
                 "label": "Node 7"
             },
-            "Node8": {
+            "Node8": {"id":"46",
                 "metadata": {
                     "position": {
                         "x": 700,
@@ -75,7 +75,7 @@
                 },
                 "label": "Node 8"
             },
-            "Node9": {
+            "Node9": {"id":"47",
                 "metadata": {
                     "position": {
                         "x": 800,
@@ -84,7 +84,7 @@
                 },
                 "label": "Node 9"
             },
-            "Node10": {
+            "Node10": {"id":"48",
                 "metadata": {
                     "position": {
                         "x": 800,
@@ -93,7 +93,7 @@
                 },
                 "label": "Node 10"
             },
-            "Node11": {
+            "Node11": {"id":"49",
                 "metadata": {
                     "position": {
                         "x": 800,
@@ -102,7 +102,7 @@
                 },
                 "label": "Node 11"
             },
-            "Node12": {
+            "Node12": {"id":"5",
                 "metadata": {
                     "position": {
                         "x": 800,
@@ -111,7 +111,7 @@
                 },
                 "label": "Node 12"
             },
-            "Node13": {
+            "Node13": {"id":"50",
                 "metadata": {
                     "position": {
                         "x": 800,
@@ -120,7 +120,7 @@
                 },
                 "label": "Node 13"
             },
-            "Node14": {
+            "Node14": {"id":"51",
                 "metadata": {
                     "position": {
                         "x": 800,
@@ -129,7 +129,7 @@
                 },
                 "label": "Node 14"
             },
-            "Node15": {
+            "Node15": {"id":"52",
                 "metadata": {
                     "position": {
                         "x": 800,
@@ -138,7 +138,7 @@
                 },
                 "label": "Node 15"
             },
-            "Node16": {
+            "Node16": {"id":"53",
                 "metadata": {
                     "position": {
                         "x": 800,
@@ -147,7 +147,7 @@
                 },
                 "label": "Node 16"
             },
-            "Node17": {
+            "Node17": {"id":"54",
                 "metadata": {
                     "position": {
                         "x": 800,
@@ -156,7 +156,7 @@
                 },
                 "label": "Node 17"
             },
-            "Node18": {
+            "Node18": {"id":"55",
                 "metadata": {
                     "position": {
                         "x": 800,
@@ -165,7 +165,7 @@
                 },
                 "label": "Node 18"
             },
-            "Node19": {
+            "Node19": {"id":"56",
                 "metadata": {
                     "position": {
                         "x": 800,
@@ -174,7 +174,7 @@
                 },
                 "label": "Node 19"
             },
-            "Node20": {
+            "Node20": {"id":"57",
                 "metadata": {
                     "position": {
                         "x": 800,
@@ -185,95 +185,98 @@
             }
         },
         "edges": [
-            {
+            {    "id":"3",
                 "source": "Node1",
                 "target": "Node2"
             },
-            {
+            {    "id":"29",
                 "source": "Node2",
                 "target": "Node3"
             },
-            {
+            {    "id":"28",
                 "source": "Node3",
                 "target": "Node1"
             },
-            {
+            {    "id":"27",
                 "source": "Node4",
                 "target": "Node5"
             },
-            {
+            {    "id":"26",
                 "source": "Node5",
                 "target": "Node6"
             },
-            {
+            {    "id":"25",
                 "source": "Node6",
                 "target": "Node7"
             },
-            {
+            {    "id":"24",
                 "source": "Node7",
                 "target": "Node4"
             },
-            {
+            {    "id":"23",
                 "source": "Node9",
                 "target": "Node8"
             },
-            {
+            {    "id":"22",
                 "source": "Node8",
                 "target": "Node10"
             },
-            {
+            {    "id":"21",
                 "source": "Node10",
                 "target": "Node11"
             },
-            {
+            {   "id":"2",
                 "source": "Node11",
                 "target": "Node12"
             },
-            {
+            {   "id":"19",
                 "source": "Node12",
                 "target": "Node9"
             },
-            {
+            {   "id":"18",
                 "source": "Node13",
                 "target": "Node14"
             },
-            {
+            {   "id":"17",
                 "source": "Node14",
                 "target": "Node15"
             },
-            {
+            {   "id":"16",
                 "source": "Node15",
                 "target": "Node16"
             },
-            {
+            {   "id":"15",
                 "source": "Node16",
                 "target": "Node17"
             },
-            {
+            {   "id":"14",
                 "source": "Node17",
                 "target": "Node18"
             },
             {
+                "id":"13",
                 "source": "Node18",
                 "target": "Node19"
             },
             {
+                "id":"12",
                 "source": "Node19",
                 "target": "Node20"
             },
-            {
+            {   
+                "id":"1",
                 "source": "Node20",
                 "target": "Node13"
             },
-            {
+            {   "id":"0",
                 "source": "Node1",
                 "target": "Node4"
             },
-            {
+            {   "id":"01",
                 "source": "Node5",
                 "target": "Node15"
             },
-            {
+            {   "id":"02",
                 "source": "Node3",
                 "target": "Node10"
             }
