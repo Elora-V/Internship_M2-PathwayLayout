@@ -73,15 +73,18 @@ async function callbackFunction() {
   
   window.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowLeft') {
-          dagreLayout(network.value);
+          dagreLayout(network.value,rescaleAfterAction);
         } else if (event.key === 'ArrowRight') {
-          vizLayout(network.value);
+          vizLayout(network.value,rescaleAfterAction);
         } else if (event.key=="d"){
           duplicateReversibleReactions(network.value);
         }
   });
 }
 
+function rescaleAfterAction(){
+  rescale(svgProperties);
+}
 
 onMounted(() => {
   svgProperties = initZoom();
