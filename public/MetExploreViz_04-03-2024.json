@@ -1,20 +1,2538 @@
 {
-"versionMetExploreViz":"3.3.15",
-"linkStyle":{"size":25,"lineWidth":2,"markerWidth":5,"markerHeight":5,"markerInColor":"red","markerOutColor":"green","markerStrokeColor":"black","markerStrokeWidth":"0.7","opacity":"1.0","strokeColor":"black","fontColor":"#000000","fontSize":10,"labelOpacity":1,"curvePath":false},
-"reactionStyle":{"backgroundColor":"#FFFFFF","height":10,"width":10,"rx":0,"ry":0,"opacity":1,"strokeColor":"black","strokeWidth":1,"fontColor":"#000000","fontSize":9,"labelOpacity":1,"label":"dbIdentifier","useAlias":true},
-"biosource":{"id":-1,"name":"","version":"2.40.7"},
-"generalStyle":{"websiteName":"MetExplore","valueMinMappingContinuous":"yellow","valueMaxMappingContinuous":"blue","maxReactionThreshold":500,"displayLabelsForOpt":false,"displayLinksForOpt":false,"displayConvexhulls":false,"displayCompartmentsOnLinks":false,"displayCaption":false,"eventForNodeInfo":true,"loadButtonHidden":false,"windowsAlertDisable":false},
-"metaboliteStyle":{"backgroundColor":"#FFFFFF","height":14,"width":14,"rx":7,"ry":7,"opacity":1,"strokeColor":"#b2ae92","strokeWidth":1,"fontColor":"#000000","fontSize":7,"labelOpacity":1,"label":"name","useAlias":true},
-"comparedPanels":[],
-"linkedByTypeOfMetabolite":false,
-"mappings":[],
-"sessions":{
-"viz":{
-"id":"viz",
-"animated": false ,
-"d3Data":{"id":"viz","pathways":[{"name":" ","identifier":" ","id":"","color":"#91EA06","hidden":"","collapsed":false}],"nodes":[{"name":"r0079","pathways":[" "],"dbIdentifier":"R_r0079","ec":"NA","id":"9035985","reactionReversibility":false,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":522.8267914681369,"y":409.8720747656334},{"name":"r0169","pathways":[" "],"dbIdentifier":"R_r0169","ec":"NA","id":"9037404","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":710.4957615106484,"y":-92.66897192826823},{"name":"r0180","pathways":[" "],"dbIdentifier":"R_r0180","ec":"NA","id":"9037364","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":678.197892499026,"y":830.8144066066791},{"name":"r0238","pathways":[" "],"dbIdentifier":"R_r0238","ec":"NA","id":"9035022","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":753.0358569191021,"y":102.80868814123562},{"name":"r0239","pathways":[" "],"dbIdentifier":"R_r0239","ec":"NA","id":"9035025","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":653.7634716105056,"y":95.72135361767636},{"name":"r0391","pathways":[" "],"dbIdentifier":"R_r0391","ec":"NA","id":"9035877","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":543.9197584434081,"y":256.33058099836},{"name":"r0403","pathways":[" "],"dbIdentifier":"R_r0403","ec":"NA","id":"9036320","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":532.3722890285577,"y":-83.65986285408458},{"name":"r0448","pathways":[" "],"dbIdentifier":"R_r0448","ec":"NA","id":"9036426","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":832.8702965643512,"y":564.573264236326},{"name":"r0449","pathways":[" "],"dbIdentifier":"R_r0449","ec":"NA","id":"9036428","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":782.2881985493962,"y":447.3217545166175},{"name":"r0450","pathways":[" "],"dbIdentifier":"R_r0450","ec":"NA","id":"9036404","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":740.4765761789021,"y":566.4714045865212},{"name":"r0454","pathways":[" "],"dbIdentifier":"R_r0454","ec":"NA","id":"9036383","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":788.8878651662272,"y":2.583450014561734},{"name":"r0455","pathways":[" "],"dbIdentifier":"R_r0455","ec":"NA","id":"9036386","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":837.5746365376774,"y":98.90944624480119},{"name":"r0460","pathways":[" "],"dbIdentifier":"R_r0460","ec":"NA","id":"9036478","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":832.8702965643512,"y":815.4160535157463},{"name":"r0525","pathways":[" "],"dbIdentifier":"R_r0525","ec":"NA","id":"9037039","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":703.0678244353683,"y":748.778652517298},{"name":"r0526","pathways":[" "],"dbIdentifier":"R_r0526","ec":"NA","id":"9037041","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":779.2936332249851,"y":750.7184283920911},{"name":"r0541","pathways":[" "],"dbIdentifier":"R_r0541","ec":"NA","id":"9037101","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":832.8702965643512,"y":634.7564917753886},{"name":"r0562","pathways":[" "],"dbIdentifier":"R_r0562","ec":"NA","id":"9037151","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":784.4448757954899,"y":250.60058133681406},{"name":"r0563","pathways":[" "],"dbIdentifier":"R_r0563","ec":"NA","id":"9037153","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":783.4448757954899,"y":175.55842791338836},{"name":"r0564","pathways":[" "],"dbIdentifier":"R_r0564","ec":"NA","id":"9037125","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":532.3722890285577,"y":24.87033772578576},{"name":"r0585","pathways":[" "],"dbIdentifier":"R_r0585","ec":"NA","id":"9037220","reactionReversibility":false,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":546.318193417695,"y":318.2158473338374},{"name":"r0588","pathways":[" "],"dbIdentifier":"R_r0588","ec":"NA","id":"9037197","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":832.8702965643512,"y":721.3754164947692},{"name":"r0623","pathways":[" "],"dbIdentifier":"R_r0623","ec":"NA","id":"9034806","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":594.0380218923708,"y":287.22874632657727},{"name":"r0645","pathways":[" "],"dbIdentifier":"R_r0645","ec":"NA","id":"9034862","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":783.4448757954899,"y":388.11894769159596},{"name":"r0646","pathways":[" "],"dbIdentifier":"R_r0646","ec":"NA","id":"9034864","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":654.7634716105056,"y":6.583450252980313},{"name":"r0647","pathways":[" "],"dbIdentifier":"R_r0647","ec":"NA","id":"9034866","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":894.7728455577625,"y":276.6116647746576},{"name":"r0662","pathways":[" "],"dbIdentifier":"R_r0662","ec":"NA","id":"9034930","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":894.7728455577625,"y":180.93861417481878},{"name":"r0675","pathways":[" "],"dbIdentifier":"R_r0675","ec":"NA","id":"9034878","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":706.650838321655,"y":285.7218360332824},{"name":"r0676","pathways":[" "],"dbIdentifier":"R_r0676","ec":"NA","id":"9034880","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":783.4448757954899,"y":328.11894769159596},{"name":"r0945","pathways":[" "],"dbIdentifier":"R_r0945","ec":"NA","id":"9036172","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":781.6821194478337,"y":503.99352180468543},{"name":"r2539","pathways":[" "],"dbIdentifier":"R_r2539","ec":"NA","id":"9035765","reactionReversibility":true,"biologicalType":"reaction","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"9px","fontBold":"9","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":740.4765761789021,"y":657.6233237160388},{"name":"2-Oxoadipate(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00273_c","id":"10005035","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":782.2881985493962,"y":475.07631599413855},{"name":"L-Formylkynurenine(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00985_c","id":"10005036","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":710.4958225458047,"y":-38.99254670968608},{"name":"2-Oxoadipate(m)","compartment":"mitochondria","pathways":[" "],"dbIdentifier":"M_HC00273_m","id":"10005042","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":781.7078152486149,"y":525.9706336210917},{"name":"Nicotinate_ribonucleotide(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00703_c","id":"10005312","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":553.9374549877887,"y":285.7218360332824},{"name":"Xanthurenate(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00945_c","id":"10005328","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":894.7728455577625,"y":314.41464341854385},{"name":"2-Aminoadipate_6-semialdehyde(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC01230_c","id":"10005373","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":711.804633533892,"y":635.6273933230178},{"name":"Deamido-NAD(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00564_c","id":"10005464","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":546.8243638959582,"y":367.5759941767631},{"name":"3-Hydroxyanthranilate(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00464_c","id":"10005551","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":783.4449368306462,"y":218.55842791338836},{"name":"Glutaryl-CoA(m)","compartment":"mitochondria","pathways":[" "],"dbIdentifier":"M_HC00411_m","id":"10005615","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":832.8702965643512,"y":601.1349707792948},{"name":"(S)-3-Hydroxybutyryl-CoA(m)","compartment":"mitochondria","pathways":[" "],"dbIdentifier":"M_HC00686_m","id":"10005685","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":832.8702965643512,"y":770.41445744521},{"name":"L-2-Aminoadipate(m)","compartment":"mitochondria","pathways":[" "],"dbIdentifier":"M_HC00599_m","id":"10005697","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":740.4765761789021,"y":607.621218001126},{"name":"2-Amino-3-carboxymuconate_semialdehyde(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC01288_c","id":"10005812","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":783.4448757954899,"y":285.7218360332824},{"name":"Quinolinate(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC01168_c","id":"10005851","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":648.5619287743659,"y":285.7218360332824},{"name":"Formylanthranilate(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC01553_c","id":"10005879","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":654.7634716105056,"y":59.17657931607482},{"name":"5-Hydroxy-L-tryptophan(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00472_c","id":"10005971","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":532.372350063714,"y":-17.194170354061015},{"name":"2-Aminomuconate_semialdehyde(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC01186_c","id":"10005976","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":783.2491970845524,"y":355.7349450060491},{"name":"Saccharopine(m)","compartment":"mitochondria","pathways":[" "],"dbIdentifier":"M_HC00363_m","id":"10006018","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":740.4765761789021,"y":791.4594534539955},{"name":"Glutamine(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00067_c","id":"10006079","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":582.2941018210535,"y":390.3563880194885},{"name":"3-Hydroxy-L-kynurenine(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC01079_c","id":"10006119","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":837.5747586079899,"y":145.4243159347426},{"name":"Tryptophan(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00080_c","id":"10006167","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":618.7441336732224,"y":-147.4010256849821},{"name":"Tetrahydrobiopterin(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00245_c","id":"10006245","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":491.9448239453659,"y":-115.8828045305962},{"name":"Kynurenine(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00278_c","id":"10006268","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":788.8879262013835,"y":53.03211546477189},{"name":"Anthranilate(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00107_c","id":"10004889","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":696.2303295206618,"y":141.85898078995405},{"name":"Lysine(m)","compartment":"mitochondria","pathways":[" "],"dbIdentifier":"M_HC00053_m","id":"10005113","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":591.4299841395685,"y":830.8144066066791},{"name":"Acetoacetyl-CoA(m)","compartment":"mitochondria","pathways":[" "],"dbIdentifier":"M_HC00282_m","id":"10005205","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":832.8702965643512,"y":863.7763531851447},{"name":"Dihydrobiopterin(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00242_c","id":"10005297","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":499.52467240510805,"y":-50.25677337477195},{"name":"2-Aminoadipate_6-semialdehyde(m)","compartment":"mitochondria","pathways":[" "],"dbIdentifier":"M_HC01230_m","id":"10005371","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":740.4765761789021,"y":705.8736333370568},{"name":"Serotonin(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00533_c","id":"10005639","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":532.372350063714,"y":76.78580155073655},{"name":"PRPP(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00117_c","id":"10005665","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":572.9514962238811,"y":237.32007196739482},{"name":"2-Aminomuconate(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00907_c","id":"10005687","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":783.4448757954899,"y":418.11894769159596},{"name":"L-2-Aminoadipate(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00599_c","id":"10005718","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":710.4245378090005,"y":681.2515453750809},{"name":"4-(2-Amino-3-hydroxyphenyl)-2,4-dioxobutanoate(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC01547_c","id":"10005975","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":894.7728455577625,"y":214.91879994516472},{"name":"Nicotinate(c)","compartment":"cytosol","pathways":[" "],"dbIdentifier":"M_HC00230_c","id":"10005991","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":522.8267914681369,"y":217.74556692704968},{"name":"Crotonyl-CoA(m)","compartment":"mitochondria","pathways":[" "],"dbIdentifier":"M_HC00572_m","id":"10006231","isSideCompound":false,"biologicalType":"metabolite","selected":false,"locked":true,"duplicated":false,"hidden":false,"labelVisible":true,"svg":"undefined","svgWidth":14,"svgHeight":14,"labelFont":{"font":"\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif","fontSize":"7px","fontBold":"300","fontItalic":"normal","fontUnderline":"none","fontOpacity":null,"fontX":null,"fontY":null,"fontTransform":null},"x":832.8702965643512,"y":681.3302222441386},{"name":" ","label":" ","alias":"","pathways":[" "],"dbIdentifier":" ","id":"0","reactionReversibility":false,"biologicalType":"pathway","selected":false,"locked":false,"duplicated":false,"hidden":true,"labelVisible":true}],"links":[{"id":"10005035 -- 9036172","source":30,"target":28,"interaction":"in","reversible":"false"},{"id":"10005035 -- 9036428","source":30,"target":8,"interaction":"in","reversible":"false"},{"id":"10005036 -- 9034864","source":31,"target":23,"interaction":"in","reversible":"false"},{"id":"10005036 -- 9036383","source":31,"target":10,"interaction":"in","reversible":"false"},{"id":"10005042 -- 9036426","source":32,"target":7,"interaction":"in","reversible":"false"},{"id":"10005312 -- 9034806","source":33,"target":21,"interaction":"in","reversible":"false"},{"id":"10005312 -- 9035877","source":33,"target":5,"interaction":"in","reversible":"false"},{"id":"10005312 -- 9037220","source":33,"target":19,"interaction":"in","reversible":"false"},{"id":"10005328 -- 9034866","source":34,"target":24,"interaction":"in","reversible":"false"},{"id":"10005373 -- 9035765","source":35,"target":29,"interaction":"in","reversible":"false"},{"id":"10005464 -- 9035985","source":36,"target":0,"interaction":"in","reversible":"false"},{"id":"10005551 -- 9037151","source":37,"target":16,"interaction":"in","reversible":"false"},{"id":"10005615 -- 9037101","source":38,"target":15,"interaction":"in","reversible":"false"},{"id":"10005685 -- 9036478","source":39,"target":12,"interaction":"in","reversible":"false"},{"id":"10005685 -- 9037197","source":39,"target":20,"interaction":"in","reversible":"false"},{"id":"10005697 -- 9035765","source":40,"target":29,"interaction":"in","reversible":"false"},{"id":"10005697 -- 9036404","source":40,"target":9,"interaction":"in","reversible":"false"},{"id":"10005812 -- 9034880","source":41,"target":27,"interaction":"in","reversible":"false"},{"id":"10005851 -- 9034878","source":42,"target":26,"interaction":"in","reversible":"false"},{"id":"10005879 -- 9035025","source":43,"target":4,"interaction":"in","reversible":"false"},{"id":"10005971 -- 9037125","source":44,"target":18,"interaction":"in","reversible":"false"},{"id":"10005976 -- 9034862","source":45,"target":22,"interaction":"in","reversible":"false"},{"id":"10006018 -- 9037039","source":46,"target":13,"interaction":"in","reversible":"false"},{"id":"10006018 -- 9037041","source":46,"target":14,"interaction":"in","reversible":"false"},{"id":"10006018 -- 9037364","source":46,"target":2,"interaction":"in","reversible":"false"},{"id":"10006079 -- 9035985","source":47,"target":0,"interaction":"in","reversible":"false"},{"id":"10006119 -- 9034930","source":48,"target":25,"interaction":"in","reversible":"false"},{"id":"10006119 -- 9037153","source":48,"target":17,"interaction":"in","reversible":"false"},{"id":"10006167 -- 9036320","source":49,"target":6,"interaction":"in","reversible":"false"},{"id":"10006167 -- 9037404","source":49,"target":1,"interaction":"in","reversible":"false"},{"id":"10006245 -- 9036320","source":50,"target":6,"interaction":"in","reversible":"false"},{"id":"10006268 -- 9035022","source":51,"target":3,"interaction":"in","reversible":"false"},{"id":"10006268 -- 9036386","source":51,"target":11,"interaction":"in","reversible":"false"},{"id":"9035022 -- 10004889","source":3,"target":52,"interaction":"out","reversible":"false"},{"id":"9035025 -- 10004889","source":4,"target":52,"interaction":"out","reversible":"false"},{"id":"9037404 -- 10005036","source":1,"target":31,"interaction":"out","reversible":"false"},{"id":"9036172 -- 10005042","source":28,"target":32,"interaction":"out","reversible":"false"},{"id":"9036404 -- 10005042","source":9,"target":32,"interaction":"out","reversible":"false"},{"id":"9037364 -- 10005113","source":2,"target":53,"interaction":"out","reversible":"false"},{"id":"9036478 -- 10005205","source":12,"target":54,"interaction":"out","reversible":"false"},{"id":"9036320 -- 10005297","source":6,"target":55,"interaction":"out","reversible":"false"},{"id":"9035765 -- 10005371","source":29,"target":56,"interaction":"out","reversible":"false"},{"id":"9037039 -- 10005371","source":13,"target":56,"interaction":"out","reversible":"false"},{"id":"9037041 -- 10005371","source":14,"target":56,"interaction":"out","reversible":"false"},{"id":"9037220 -- 10005464","source":19,"target":36,"interaction":"out","reversible":"false"},{"id":"9037153 -- 10005551","source":17,"target":37,"interaction":"out","reversible":"false"},{"id":"9036426 -- 10005615","source":7,"target":38,"interaction":"out","reversible":"false"},{"id":"9037125 -- 10005639","source":18,"target":57,"interaction":"out","reversible":"false"},{"id":"9034806 -- 10005665","source":21,"target":58,"interaction":"out","reversible":"false"},{"id":"9035877 -- 10005665","source":5,"target":58,"interaction":"out","reversible":"false"},{"id":"9034862 -- 10005687","source":22,"target":59,"interaction":"out","reversible":"false"},{"id":"9036428 -- 10005687","source":8,"target":59,"interaction":"out","reversible":"false"},{"id":"9035765 -- 10005718","source":29,"target":60,"interaction":"out","reversible":"false"},{"id":"9034878 -- 10005812","source":26,"target":41,"interaction":"out","reversible":"false"},{"id":"9037151 -- 10005812","source":16,"target":41,"interaction":"out","reversible":"false"},{"id":"9034806 -- 10005851","source":21,"target":42,"interaction":"out","reversible":"false"},{"id":"9034864 -- 10005879","source":23,"target":43,"interaction":"out","reversible":"false"},{"id":"9036320 -- 10005971","source":6,"target":44,"interaction":"out","reversible":"false"},{"id":"9034866 -- 10005975","source":24,"target":61,"interaction":"out","reversible":"false"},{"id":"9034930 -- 10005975","source":25,"target":61,"interaction":"out","reversible":"false"},{"id":"9034880 -- 10005976","source":27,"target":45,"interaction":"out","reversible":"false"},{"id":"9035877 -- 10005991","source":5,"target":62,"interaction":"out","reversible":"false"},{"id":"9036386 -- 10006119","source":11,"target":48,"interaction":"out","reversible":"false"},{"id":"9037101 -- 10006231","source":15,"target":63,"interaction":"out","reversible":"false"},{"id":"9037197 -- 10006231","source":20,"target":63,"interaction":"out","reversible":"false"},{"id":"9036383 -- 10006268","source":10,"target":51,"interaction":"out","reversible":"false"}]},
-"linked":false,
-"active":true,
-"duplicatedNodes":[],
-"selectedNodes":["10005624-9035025"],
-"resizable":false}}}
+    "versionMetExploreViz": "3.3.15",
+    "linkStyle": {
+        "size": 25,
+        "lineWidth": 2,
+        "markerWidth": 5,
+        "markerHeight": 5,
+        "markerInColor": "red",
+        "markerOutColor": "green",
+        "markerStrokeColor": "black",
+        "markerStrokeWidth": "0.7",
+        "opacity": "1.0",
+        "strokeColor": "black",
+        "fontColor": "#000000",
+        "fontSize": 10,
+        "labelOpacity": 1,
+        "curvePath": false
+    },
+    "reactionStyle": {
+        "backgroundColor": "#FFFFFF",
+        "height": 10,
+        "width": 10,
+        "rx": 0,
+        "ry": 0,
+        "opacity": 1,
+        "strokeColor": "black",
+        "strokeWidth": 1,
+        "fontColor": "#000000",
+        "fontSize": 9,
+        "labelOpacity": 1,
+        "label": "dbIdentifier",
+        "useAlias": true
+    },
+    "biosource": {
+        "id": -1,
+        "name": "",
+        "version": "2.40.7"
+    },
+    "generalStyle": {
+        "websiteName": "MetExplore",
+        "valueMinMappingContinuous": "yellow",
+        "valueMaxMappingContinuous": "blue",
+        "maxReactionThreshold": 500,
+        "displayLabelsForOpt": false,
+        "displayLinksForOpt": false,
+        "displayConvexhulls": false,
+        "displayCompartmentsOnLinks": false,
+        "displayCaption": false,
+        "eventForNodeInfo": true,
+        "loadButtonHidden": false,
+        "windowsAlertDisable": false
+    },
+    "metaboliteStyle": {
+        "backgroundColor": "#FFFFFF",
+        "height": 14,
+        "width": 14,
+        "rx": 7,
+        "ry": 7,
+        "opacity": 1,
+        "strokeColor": "#b2ae92",
+        "strokeWidth": 1,
+        "fontColor": "#000000",
+        "fontSize": 7,
+        "labelOpacity": 1,
+        "label": "name",
+        "useAlias": true
+    },
+    "comparedPanels": [],
+    "linkedByTypeOfMetabolite": false,
+    "mappings": [],
+    "sessions": {
+        "viz": {
+            "id": "viz",
+            "animated": false,
+            "d3Data": {
+                "id": "viz",
+                "pathways": [
+                    {
+                        "name": " ",
+                        "identifier": " ",
+                        "id": "",
+                        "color": "#91EA06",
+                        "hidden": "",
+                        "collapsed": false
+                    }
+                ],
+                "nodes": [
+                    {
+                        "name": "r0079",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0079",
+                        "ec": "NA",
+                        "id": "9035985",
+                        "reactionReversibility": false,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 522.8267914681369,
+                        "y": 409.8720747656334
+                    },
+                    {
+                        "name": "r0169",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0169",
+                        "ec": "NA",
+                        "id": "9037404",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 710.4957615106484,
+                        "y": -92.66897192826823
+                    },
+                    {
+                        "name": "r0180",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0180",
+                        "ec": "NA",
+                        "id": "9037364",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 678.197892499026,
+                        "y": 830.8144066066791
+                    },
+                    {
+                        "name": "r0238",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0238",
+                        "ec": "NA",
+                        "id": "9035022",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 753.0358569191021,
+                        "y": 102.80868814123562
+                    },
+                    {
+                        "name": "r0239",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0239",
+                        "ec": "NA",
+                        "id": "9035025",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 653.7634716105056,
+                        "y": 95.72135361767636
+                    },
+                    {
+                        "name": "r0391",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0391",
+                        "ec": "NA",
+                        "id": "9035877",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 543.9197584434081,
+                        "y": 256.33058099836
+                    },
+                    {
+                        "name": "r0403",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0403",
+                        "ec": "NA",
+                        "id": "9036320",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 532.3722890285577,
+                        "y": -83.65986285408458
+                    },
+                    {
+                        "name": "r0448",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0448",
+                        "ec": "NA",
+                        "id": "9036426",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 832.8702965643512,
+                        "y": 564.573264236326
+                    },
+                    {
+                        "name": "r0449",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0449",
+                        "ec": "NA",
+                        "id": "9036428",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 782.2881985493962,
+                        "y": 447.3217545166175
+                    },
+                    {
+                        "name": "r0450",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0450",
+                        "ec": "NA",
+                        "id": "9036404",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 740.4765761789021,
+                        "y": 566.4714045865212
+                    },
+                    {
+                        "name": "r0454",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0454",
+                        "ec": "NA",
+                        "id": "9036383",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 788.8878651662272,
+                        "y": 2.583450014561734
+                    },
+                    {
+                        "name": "r0455",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0455",
+                        "ec": "NA",
+                        "id": "9036386",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 837.5746365376774,
+                        "y": 98.90944624480119
+                    },
+                    {
+                        "name": "r0460",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0460",
+                        "ec": "NA",
+                        "id": "9036478",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 832.8702965643512,
+                        "y": 815.4160535157463
+                    },
+                    {
+                        "name": "r0525",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0525",
+                        "ec": "NA",
+                        "id": "9037039",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 703.0678244353683,
+                        "y": 748.778652517298
+                    },
+                    {
+                        "name": "r0526",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0526",
+                        "ec": "NA",
+                        "id": "9037041",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 779.2936332249851,
+                        "y": 750.7184283920911
+                    },
+                    {
+                        "name": "r0541",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0541",
+                        "ec": "NA",
+                        "id": "9037101",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 832.8702965643512,
+                        "y": 634.7564917753886
+                    },
+                    {
+                        "name": "r0562",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0562",
+                        "ec": "NA",
+                        "id": "9037151",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 784.4448757954899,
+                        "y": 250.60058133681406
+                    },
+                    {
+                        "name": "r0563",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0563",
+                        "ec": "NA",
+                        "id": "9037153",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 783.4448757954899,
+                        "y": 175.55842791338836
+                    },
+                    {
+                        "name": "r0564",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0564",
+                        "ec": "NA",
+                        "id": "9037125",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 532.3722890285577,
+                        "y": 24.87033772578576
+                    },
+                    {
+                        "name": "r0585",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0585",
+                        "ec": "NA",
+                        "id": "9037220",
+                        "reactionReversibility": false,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 546.318193417695,
+                        "y": 318.2158473338374
+                    },
+                    {
+                        "name": "r0588",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0588",
+                        "ec": "NA",
+                        "id": "9037197",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 832.8702965643512,
+                        "y": 721.3754164947692
+                    },
+                    {
+                        "name": "r0623",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0623",
+                        "ec": "NA",
+                        "id": "9034806",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 594.0380218923708,
+                        "y": 287.22874632657727
+                    },
+                    {
+                        "name": "r0645",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0645",
+                        "ec": "NA",
+                        "id": "9034862",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 783.4448757954899,
+                        "y": 388.11894769159596
+                    },
+                    {
+                        "name": "r0646",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0646",
+                        "ec": "NA",
+                        "id": "9034864",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 654.7634716105056,
+                        "y": 6.583450252980313
+                    },
+                    {
+                        "name": "r0647",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0647",
+                        "ec": "NA",
+                        "id": "9034866",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 894.7728455577625,
+                        "y": 276.6116647746576
+                    },
+                    {
+                        "name": "r0662",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0662",
+                        "ec": "NA",
+                        "id": "9034930",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 894.7728455577625,
+                        "y": 180.93861417481878
+                    },
+                    {
+                        "name": "r0675",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0675",
+                        "ec": "NA",
+                        "id": "9034878",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 706.650838321655,
+                        "y": 285.7218360332824
+                    },
+                    {
+                        "name": "r0676",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0676",
+                        "ec": "NA",
+                        "id": "9034880",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 783.4448757954899,
+                        "y": 328.11894769159596
+                    },
+                    {
+                        "name": "r0945",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r0945",
+                        "ec": "NA",
+                        "id": "9036172",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 781.6821194478337,
+                        "y": 503.99352180468543
+                    },
+                    {
+                        "name": "r2539",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "R_r2539",
+                        "ec": "NA",
+                        "id": "9035765",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "9px",
+                            "fontBold": "9",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 740.4765761789021,
+                        "y": 657.6233237160388
+                    },
+                    {
+                        "name": "2-Oxoadipate(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00273_c",
+                        "id": "10005035",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 782.2881985493962,
+                        "y": 475.07631599413855
+                    },
+                    {
+                        "name": "L-Formylkynurenine(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00985_c",
+                        "id": "10005036",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 710.4958225458047,
+                        "y": -38.99254670968608
+                    },
+                    {
+                        "name": "2-Oxoadipate(m)",
+                        "compartment": "mitochondria",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00273_m",
+                        "id": "10005042",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 781.7078152486149,
+                        "y": 525.9706336210917
+                    },
+                    {
+                        "name": "Nicotinate_ribonucleotide(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00703_c",
+                        "id": "10005312",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 553.9374549877887,
+                        "y": 285.7218360332824
+                    },
+                    {
+                        "name": "Xanthurenate(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00945_c",
+                        "id": "10005328",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 894.7728455577625,
+                        "y": 314.41464341854385
+                    },
+                    {
+                        "name": "2-Aminoadipate_6-semialdehyde(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC01230_c",
+                        "id": "10005373",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 711.804633533892,
+                        "y": 635.6273933230178
+                    },
+                    {
+                        "name": "Deamido-NAD(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00564_c",
+                        "id": "10005464",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 546.8243638959582,
+                        "y": 367.5759941767631
+                    },
+                    {
+                        "name": "3-Hydroxyanthranilate(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00464_c",
+                        "id": "10005551",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 783.4449368306462,
+                        "y": 218.55842791338836
+                    },
+                    {
+                        "name": "Glutaryl-CoA(m)",
+                        "compartment": "mitochondria",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00411_m",
+                        "id": "10005615",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 832.8702965643512,
+                        "y": 601.1349707792948
+                    },
+                    {
+                        "name": "(S)-3-Hydroxybutyryl-CoA(m)",
+                        "compartment": "mitochondria",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00686_m",
+                        "id": "10005685",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 832.8702965643512,
+                        "y": 770.41445744521
+                    },
+                    {
+                        "name": "L-2-Aminoadipate(m)",
+                        "compartment": "mitochondria",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00599_m",
+                        "id": "10005697",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 740.4765761789021,
+                        "y": 607.621218001126
+                    },
+                    {
+                        "name": "2-Amino-3-carboxymuconate_semialdehyde(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC01288_c",
+                        "id": "10005812",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 783.4448757954899,
+                        "y": 285.7218360332824
+                    },
+                    {
+                        "name": "Quinolinate(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC01168_c",
+                        "id": "10005851",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 648.5619287743659,
+                        "y": 285.7218360332824
+                    },
+                    {
+                        "name": "Formylanthranilate(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC01553_c",
+                        "id": "10005879",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 654.7634716105056,
+                        "y": 59.17657931607482
+                    },
+                    {
+                        "name": "5-Hydroxy-L-tryptophan(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00472_c",
+                        "id": "10005971",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 532.372350063714,
+                        "y": -17.194170354061015
+                    },
+                    {
+                        "name": "2-Aminomuconate_semialdehyde(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC01186_c",
+                        "id": "10005976",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 783.2491970845524,
+                        "y": 355.7349450060491
+                    },
+                    {
+                        "name": "Saccharopine(m)",
+                        "compartment": "mitochondria",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00363_m",
+                        "id": "10006018",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 740.4765761789021,
+                        "y": 791.4594534539955
+                    },
+                    {
+                        "name": "Glutamine(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00067_c",
+                        "id": "10006079",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 582.2941018210535,
+                        "y": 390.3563880194885
+                    },
+                    {
+                        "name": "3-Hydroxy-L-kynurenine(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC01079_c",
+                        "id": "10006119",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 837.5747586079899,
+                        "y": 145.4243159347426
+                    },
+                    {
+                        "name": "Tryptophan(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00080_c",
+                        "id": "10006167",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 618.7441336732224,
+                        "y": -147.4010256849821
+                    },
+                    {
+                        "name": "Tetrahydrobiopterin(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00245_c",
+                        "id": "10006245",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 491.9448239453659,
+                        "y": -115.8828045305962
+                    },
+                    {
+                        "name": "Kynurenine(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00278_c",
+                        "id": "10006268",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 788.8879262013835,
+                        "y": 53.03211546477189
+                    },
+                    {
+                        "name": "Anthranilate(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00107_c",
+                        "id": "10004889",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 696.2303295206618,
+                        "y": 141.85898078995405
+                    },
+                    {
+                        "name": "Lysine(m)",
+                        "compartment": "mitochondria",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00053_m",
+                        "id": "10005113",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 591.4299841395685,
+                        "y": 830.8144066066791
+                    },
+                    {
+                        "name": "Acetoacetyl-CoA(m)",
+                        "compartment": "mitochondria",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00282_m",
+                        "id": "10005205",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 832.8702965643512,
+                        "y": 863.7763531851447
+                    },
+                    {
+                        "name": "Dihydrobiopterin(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00242_c",
+                        "id": "10005297",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 499.52467240510805,
+                        "y": -50.25677337477195
+                    },
+                    {
+                        "name": "2-Aminoadipate_6-semialdehyde(m)",
+                        "compartment": "mitochondria",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC01230_m",
+                        "id": "10005371",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 740.4765761789021,
+                        "y": 705.8736333370568
+                    },
+                    {
+                        "name": "Serotonin(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00533_c",
+                        "id": "10005639",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 532.372350063714,
+                        "y": 76.78580155073655
+                    },
+                    {
+                        "name": "PRPP(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00117_c",
+                        "id": "10005665",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 572.9514962238811,
+                        "y": 237.32007196739482
+                    },
+                    {
+                        "name": "2-Aminomuconate(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00907_c",
+                        "id": "10005687",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 783.4448757954899,
+                        "y": 418.11894769159596
+                    },
+                    {
+                        "name": "L-2-Aminoadipate(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00599_c",
+                        "id": "10005718",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 710.4245378090005,
+                        "y": 681.2515453750809
+                    },
+                    {
+                        "name": "4-(2-Amino-3-hydroxyphenyl)-2,4-dioxobutanoate(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC01547_c",
+                        "id": "10005975",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 894.7728455577625,
+                        "y": 214.91879994516472
+                    },
+                    {
+                        "name": "Nicotinate(c)",
+                        "compartment": "cytosol",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00230_c",
+                        "id": "10005991",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 522.8267914681369,
+                        "y": 217.74556692704968
+                    },
+                    {
+                        "name": "Crotonyl-CoA(m)",
+                        "compartment": "mitochondria",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": "M_HC00572_m",
+                        "id": "10006231",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "7px",
+                            "fontBold": "300",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 832.8702965643512,
+                        "y": 681.3302222441386
+                    },
+                    {
+                        "name": " ",
+                        "label": " ",
+                        "alias": "",
+                        "pathways": [
+                            " "
+                        ],
+                        "dbIdentifier": " ",
+                        "id": "0",
+                        "reactionReversibility": false,
+                        "biologicalType": "pathway",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": false,
+                        "hidden": true,
+                        "labelVisible": true
+                    }
+                ],
+                "links": [
+                    {
+                        "id": "10005035 -- 9036172",
+                        "source": 30,
+                        "target": 28,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005035 -- 9036428",
+                        "source": 30,
+                        "target": 8,
+                        "interaction": "in",
+                        "reversible": "true"
+                    },
+                    {
+                        "id": "10005036 -- 9034864",
+                        "source": 31,
+                        "target": 23,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005036 -- 9036383",
+                        "source": 31,
+                        "target": 10,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005042 -- 9036426",
+                        "source": 32,
+                        "target": 7,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005312 -- 9034806",
+                        "source": 33,
+                        "target": 21,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005312 -- 9035877",
+                        "source": 33,
+                        "target": 5,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005312 -- 9037220",
+                        "source": 33,
+                        "target": 19,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005328 -- 9034866",
+                        "source": 34,
+                        "target": 24,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005373 -- 9035765",
+                        "source": 35,
+                        "target": 29,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005464 -- 9035985",
+                        "source": 36,
+                        "target": 0,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005551 -- 9037151",
+                        "source": 37,
+                        "target": 16,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005615 -- 9037101",
+                        "source": 38,
+                        "target": 15,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005685 -- 9036478",
+                        "source": 39,
+                        "target": 12,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005685 -- 9037197",
+                        "source": 39,
+                        "target": 20,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005697 -- 9035765",
+                        "source": 40,
+                        "target": 29,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005697 -- 9036404",
+                        "source": 40,
+                        "target": 9,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005812 -- 9034880",
+                        "source": 41,
+                        "target": 27,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005851 -- 9034878",
+                        "source": 42,
+                        "target": 26,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005879 -- 9035025",
+                        "source": 43,
+                        "target": 4,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005971 -- 9037125",
+                        "source": 44,
+                        "target": 18,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10005976 -- 9034862",
+                        "source": 45,
+                        "target": 22,
+                        "interaction": "in",
+                        "reversible": "true"
+                    },
+                    {
+                        "id": "10006018 -- 9037039",
+                        "source": 46,
+                        "target": 13,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10006018 -- 9037041",
+                        "source": 46,
+                        "target": 14,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10006018 -- 9037364",
+                        "source": 46,
+                        "target": 2,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10006079 -- 9035985",
+                        "source": 47,
+                        "target": 0,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10006119 -- 9034930",
+                        "source": 48,
+                        "target": 25,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10006119 -- 9037153",
+                        "source": 48,
+                        "target": 17,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10006167 -- 9036320",
+                        "source": 49,
+                        "target": 6,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10006167 -- 9037404",
+                        "source": 49,
+                        "target": 1,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10006245 -- 9036320",
+                        "source": 50,
+                        "target": 6,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10006268 -- 9035022",
+                        "source": 51,
+                        "target": 3,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "10006268 -- 9036386",
+                        "source": 51,
+                        "target": 11,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9035022 -- 10004889",
+                        "source": 3,
+                        "target": 52,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9035025 -- 10004889",
+                        "source": 4,
+                        "target": 52,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9037404 -- 10005036",
+                        "source": 1,
+                        "target": 31,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9036172 -- 10005042",
+                        "source": 28,
+                        "target": 32,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9036404 -- 10005042",
+                        "source": 9,
+                        "target": 32,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9037364 -- 10005113",
+                        "source": 2,
+                        "target": 53,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9036478 -- 10005205",
+                        "source": 12,
+                        "target": 54,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9036320 -- 10005297",
+                        "source": 6,
+                        "target": 55,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9035765 -- 10005371",
+                        "source": 29,
+                        "target": 56,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9037039 -- 10005371",
+                        "source": 13,
+                        "target": 56,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9037041 -- 10005371",
+                        "source": 14,
+                        "target": 56,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9037220 -- 10005464",
+                        "source": 19,
+                        "target": 36,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9037153 -- 10005551",
+                        "source": 17,
+                        "target": 37,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9036426 -- 10005615",
+                        "source": 7,
+                        "target": 38,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9037125 -- 10005639",
+                        "source": 18,
+                        "target": 57,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9034806 -- 10005665",
+                        "source": 21,
+                        "target": 58,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9035877 -- 10005665",
+                        "source": 5,
+                        "target": 58,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9034862 -- 10005687",
+                        "source": 22,
+                        "target": 59,
+                        "interaction": "out",
+                        "reversible": "true"
+                    },
+                    {
+                        "id": "9036428 -- 10005687",
+                        "source": 8,
+                        "target": 59,
+                        "interaction": "out",
+                        "reversible": "true"
+                    },
+                    {
+                        "id": "9035765 -- 10005718",
+                        "source": 29,
+                        "target": 60,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9034878 -- 10005812",
+                        "source": 26,
+                        "target": 41,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9037151 -- 10005812",
+                        "source": 16,
+                        "target": 41,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9034806 -- 10005851",
+                        "source": 21,
+                        "target": 42,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9034864 -- 10005879",
+                        "source": 23,
+                        "target": 43,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9036320 -- 10005971",
+                        "source": 6,
+                        "target": 44,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9034866 -- 10005975",
+                        "source": 24,
+                        "target": 61,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9034930 -- 10005975",
+                        "source": 25,
+                        "target": 61,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9034880 -- 10005976",
+                        "source": 27,
+                        "target": 45,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9035877 -- 10005991",
+                        "source": 5,
+                        "target": 62,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9036386 -- 10006119",
+                        "source": 11,
+                        "target": 48,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9037101 -- 10006231",
+                        "source": 15,
+                        "target": 63,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9037197 -- 10006231",
+                        "source": 20,
+                        "target": 63,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "9036383 -- 10006268",
+                        "source": 10,
+                        "target": 51,
+                        "interaction": "out",
+                        "reversible": "false"
+                    }
+                ]
+            },
+            "linked": false,
+            "active": true,
+            "duplicatedNodes": [],
+            "selectedNodes": [
+                "10005624-9035025"
+            ],
+            "resizable": false
+        }
+    }
+}
