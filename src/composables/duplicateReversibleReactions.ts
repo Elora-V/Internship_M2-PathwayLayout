@@ -77,8 +77,8 @@ function reversibleNodeReaction(
   const node: Node = {
     id: newNodeID,
     label: nodeLabel,
-    x: 0,
-    y: 0,
+    x: link[sourceOrTarget].x,
+    y: link[sourceOrTarget].y,
     classes: ["reaction" , "reversible","reversibleVersion"],
     metadata: {},
   };
