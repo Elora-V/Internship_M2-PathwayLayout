@@ -79,7 +79,7 @@ function reversibleNodeReaction(
     label: nodeLabel,
     x: 0,
     y: 0,
-    classes: ["reaction"],
+    classes: ["reaction" , "reversible","reversibleVersion"],
     metadata: {},
   };
 

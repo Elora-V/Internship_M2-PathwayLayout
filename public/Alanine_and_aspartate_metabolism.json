@@ -2,6 +2,33 @@
     "graph": {
         "id": "_304c6dd3_22d0_47e4_bddf_1523ca53d90b",
         "type": "metabolic",
+        "metadata": {
+            "style": {
+                "nodeStyles": {
+                    "metabolite": {
+                        "width": 25,
+                        "height": 25,
+                        "strokeWidth": 1,
+                        "shape": "circle"
+                    },
+                    "reaction": {
+                        "width": 15,
+                        "height": 15,
+                        "strokeWidth": 0.5,
+                        "shape": "rect",
+                        "fill": "grey"
+                    },
+                    "reversible": {
+                        "fill": "green",
+                        "shape": "inverseTriangle"
+                    },
+                    "reversibleVersion": {
+                        "fill": "red",
+                        "shape": "triangle"
+                    }
+                }
+            }
+        },
         "nodes": {
             "M_glu_L_c": {
                 "id": "M_glu_L_c",
@@ -10,8 +37,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 22,
-                        "y": 36
+                        "x": 48,
+                        "y": 33
                     }
                 },
                 "label": "L-glutamate(1-)"
@@ -23,8 +50,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 96,
-                        "y": 88
+                        "x": 13,
+                        "y": 9
                     }
                 },
                 "label": "glycine"
@@ -36,8 +63,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 58,
-                        "y": 93
+                        "x": 12,
+                        "y": 68
                     }
                 },
                 "label": "water"
@@ -49,8 +76,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 66,
-                        "y": 75
+                        "x": 7,
+                        "y": 71
                     }
                 },
                 "label": "L-aspartate(1-)"
@@ -62,8 +89,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 55,
-                        "y": 9
+                        "x": 94,
+                        "y": 36
                     }
                 },
                 "label": "glycine"
@@ -75,8 +102,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 64,
-                        "y": 28
+                        "x": 18,
+                        "y": 58
                     }
                 },
                 "label": "proton"
@@ -88,8 +115,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 32,
-                        "y": 81
+                        "x": 65,
+                        "y": 90
                     }
                 },
                 "label": "water"
@@ -101,8 +128,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 73,
-                        "y": 61
+                        "x": 71,
+                        "y": 9
                     }
                 },
                 "label": "L-argininium(1+)"
@@ -114,8 +141,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 100,
-                        "y": 5
+                        "x": 56,
+                        "y": 78
                     }
                 },
                 "label": "L-glutamate(1-)"
@@ -127,8 +154,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 72,
-                        "y": 99
+                        "x": 74,
+                        "y": 20
                     }
                 },
                 "label": "glutathionate(1-)"
@@ -140,7 +167,7 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 22,
+                        "x": 94,
                         "y": 1
                     }
                 },
@@ -153,8 +180,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 40,
-                        "y": 58
+                        "x": 99,
+                        "y": 93
                     }
                 },
                 "label": "N-acetyl-L-alanine"
@@ -166,8 +193,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 96,
-                        "y": 32
+                        "x": 57,
+                        "y": 36
                     }
                 },
                 "label": "diphosphate(3-)"
@@ -179,8 +206,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 93,
-                        "y": 29
+                        "x": 51,
+                        "y": 58
                     }
                 },
                 "label": "(N(omega)-L-arginino)succinate(1-)"
@@ -192,8 +219,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 88,
-                        "y": 43
+                        "x": 71,
+                        "y": 55
                     }
                 },
                 "label": "L-asparagine"
@@ -205,8 +232,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 5,
-                        "y": 49
+                        "x": 32,
+                        "y": 86
                     }
                 },
                 "label": "oxaloacetate(2-)"
@@ -218,8 +245,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 24,
-                        "y": 1
+                        "x": 66,
+                        "y": 64
                     }
                 },
                 "label": "L-alanine"
@@ -231,8 +258,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 51,
-                        "y": 82
+                        "x": 93,
+                        "y": 40
                     }
                 },
                 "label": "ATP(4-)"
@@ -244,8 +271,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 10,
-                        "y": 93
+                        "x": 30,
+                        "y": 27
                     }
                 },
                 "label": "gama-L-glutamyl-L-alanine"
@@ -257,8 +284,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 19,
-                        "y": 61
+                        "x": 79,
+                        "y": 2
                     }
                 },
                 "label": "ammonium"
@@ -270,8 +297,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 2,
-                        "y": 48
+                        "x": 58,
+                        "y": 3
                     }
                 },
                 "label": "oxaloacetate(2-)"
@@ -283,8 +310,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 74,
-                        "y": 84
+                        "x": 1,
+                        "y": 97
                     }
                 },
                 "label": "L-alanine"
@@ -296,8 +323,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 25,
-                        "y": 0
+                        "x": 91,
+                        "y": 59
                     }
                 },
                 "label": "coenzyme A(4-)"
@@ -309,8 +336,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 24,
-                        "y": 37
+                        "x": 80,
+                        "y": 32
                     }
                 },
                 "label": "oxaloacetate(2-)"
@@ -322,8 +349,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 81,
-                        "y": 90
+                        "x": 9,
+                        "y": 8
                     }
                 },
                 "label": "proton"
@@ -335,8 +362,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 12,
-                        "y": 13
+                        "x": 75,
+                        "y": 64
                     }
                 },
                 "label": "ammonium"
@@ -348,8 +375,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 82,
-                        "y": 12
+                        "x": 48,
+                        "y": 38
                     }
                 },
                 "label": "acetyl-CoA(4-)"
@@ -361,8 +388,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 13,
-                        "y": 26
+                        "x": 82,
+                        "y": 56
                     }
                 },
                 "label": "water"
@@ -374,8 +401,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 85,
-                        "y": 20
+                        "x": 38,
+                        "y": 79
                     }
                 },
                 "label": "D-alanine"
@@ -387,8 +414,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 34,
-                        "y": 23
+                        "x": 55,
+                        "y": 70
                     }
                 },
                 "label": "L-cysteinylglycine"
@@ -400,8 +427,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 84,
-                        "y": 19
+                        "x": 59,
+                        "y": 22
                     }
                 },
                 "label": "glyoxylate"
@@ -413,8 +440,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 69,
-                        "y": 19
+                        "x": 34,
+                        "y": 33
                     }
                 },
                 "label": "fumarate(2-)"
@@ -426,8 +453,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 39,
-                        "y": 2
+                        "x": 9,
+                        "y": 32
                     }
                 },
                 "label": "2-oxoglutarate(2-)"
@@ -439,8 +466,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 21,
-                        "y": 84
+                        "x": 2,
+                        "y": 97
                     }
                 },
                 "label": "hydrogen peroxide"
@@ -452,8 +479,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 32,
-                        "y": 39
+                        "x": 55,
+                        "y": 69
                     }
                 },
                 "label": "AMP(2-)"
@@ -465,8 +492,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 41,
-                        "y": 36
+                        "x": 88,
+                        "y": 70
                     }
                 },
                 "label": "glyoxylate"
@@ -478,8 +505,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 68,
-                        "y": 44
+                        "x": 39,
+                        "y": 69
                     }
                 },
                 "label": "ammonium"
@@ -491,8 +518,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 68,
-                        "y": 49
+                        "x": 5,
+                        "y": 73
                     }
                 },
                 "label": "L-asparagine"
@@ -504,8 +531,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 30,
-                        "y": 32
+                        "x": 93,
+                        "y": 33
                     }
                 },
                 "label": "2-oxoglutarate(2-)"
@@ -517,8 +544,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 7,
-                        "y": 77
+                        "x": 32,
+                        "y": 44
                     }
                 },
                 "label": "dioxygen"
@@ -530,8 +557,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 30,
-                        "y": 97
+                        "x": 71,
+                        "y": 58
                     }
                 },
                 "label": "N-acetyl-L-alanine"
@@ -543,8 +570,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 97,
-                        "y": 29
+                        "x": 98,
+                        "y": 49
                     }
                 },
                 "label": "L-glutamine"
@@ -556,8 +583,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 9,
-                        "y": 6
+                        "x": 20,
+                        "y": 3
                     }
                 },
                 "label": "L-citrulline"
@@ -569,8 +596,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 17,
-                        "y": 97
+                        "x": 71,
+                        "y": 77
                     }
                 },
                 "label": "pyruvate"
@@ -582,8 +609,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 50,
-                        "y": 5
+                        "x": 22,
+                        "y": 86
                     }
                 },
                 "label": "L-aspartate(1-)"
@@ -595,8 +622,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 9,
-                        "y": 63
+                        "x": 8,
+                        "y": 44
                     }
                 },
                 "label": "N-acetyl-L-aspartate(2-)"
@@ -608,8 +635,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 74,
-                        "y": 33
+                        "x": 51,
+                        "y": 15
                     }
                 },
                 "label": "acetate"
@@ -621,8 +648,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 34,
-                        "y": 4
+                        "x": 33,
+                        "y": 9
                     }
                 },
                 "label": "pyruvate"
@@ -634,8 +661,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 37,
-                        "y": 39
+                        "x": 60,
+                        "y": 90
                     }
                 },
                 "label": "N-acetyl-L-aspartate(2-)"
@@ -647,8 +674,8 @@
                         "metabolite"
                     ],
                     "position": {
-                        "x": 100,
-                        "y": 15
+                        "x": 12,
+                        "y": 47
                     }
                 },
                 "label": "D-aspartate(1-)"
@@ -657,11 +684,12 @@
                 "id": "r_0",
                 "metadata": {
                     "classes": [
-                        "reaction"
+                        "reaction",
+                        "irreversible"
                     ],
                     "position": {
-                        "x": 95,
-                        "y": 83
+                        "x": 0,
+                        "y": 38
                     }
                 },
                 "label": "r_0"
@@ -670,11 +698,12 @@
                 "id": "r_1",
                 "metadata": {
                     "classes": [
-                        "reaction"
+                        "reaction",
+                        "irreversible"
                     ],
                     "position": {
-                        "x": 93,
-                        "y": 54
+                        "x": 17,
+                        "y": 35
                     }
                 },
                 "label": "r_1"
@@ -683,11 +712,12 @@
                 "id": "r_2",
                 "metadata": {
                     "classes": [
-                        "reaction"
+                        "reaction",
+                        "irreversible"
                     ],
                     "position": {
-                        "x": 78,
-                        "y": 52
+                        "x": 79,
+                        "y": 34
                     }
                 },
                 "label": "r_2"
@@ -696,11 +726,12 @@
                 "id": "r_3",
                 "metadata": {
                     "classes": [
-                        "reaction"
+                        "reaction",
+                        "reversible"
                     ],
                     "position": {
-                        "x": 64,
-                        "y": 19
+                        "x": 66,
+                        "y": 84
                     }
                 },
                 "label": "r_3"
@@ -709,11 +740,12 @@
                 "id": "r_4",
                 "metadata": {
                     "classes": [
-                        "reaction"
+                        "reaction",
+                        "reversible"
                     ],
                     "position": {
-                        "x": 43,
-                        "y": 60
+                        "x": 9,
+                        "y": 48
                     }
                 },
                 "label": "r_4"
@@ -722,11 +754,12 @@
                 "id": "r_5",
                 "metadata": {
                     "classes": [
-                        "reaction"
+                        "reaction",
+                        "irreversible"
                     ],
                     "position": {
-                        "x": 25,
-                        "y": 62
+                        "x": 88,
+                        "y": 88
                     }
                 },
                 "label": "r_5"
@@ -735,11 +768,12 @@
                 "id": "r_6",
                 "metadata": {
                     "classes": [
-                        "reaction"
+                        "reaction",
+                        "reversible"
                     ],
                     "position": {
-                        "x": 61,
-                        "y": 80
+                        "x": 71,
+                        "y": 46
                     }
                 },
                 "label": "r_6"
@@ -748,11 +782,12 @@
                 "id": "r_7",
                 "metadata": {
                     "classes": [
-                        "reaction"
+                        "reaction",
+                        "reversible"
                     ],
                     "position": {
-                        "x": 73,
-                        "y": 89
+                        "x": 74,
+                        "y": 49
                     }
                 },
                 "label": "r_7"
@@ -761,11 +796,12 @@
                 "id": "r_8",
                 "metadata": {
                     "classes": [
-                        "reaction"
+                        "reaction",
+                        "irreversible"
                     ],
                     "position": {
-                        "x": 33,
-                        "y": 91
+                        "x": 27,
+                        "y": 73
                     }
                 },
                 "label": "r_8"
@@ -774,11 +810,12 @@
                 "id": "r_9",
                 "metadata": {
                     "classes": [
-                        "reaction"
+                        "reaction",
+                        "irreversible"
                     ],
                     "position": {
-                        "x": 28,
-                        "y": 90
+                        "x": 74,
+                        "y": 69
                     }
                 },
                 "label": "r_9"
@@ -787,11 +824,12 @@
                 "id": "r_10",
                 "metadata": {
                     "classes": [
-                        "reaction"
+                        "reaction",
+                        "reversible"
                     ],
                     "position": {
-                        "x": 19,
-                        "y": 22
+                        "x": 76,
+                        "y": 95
                     }
                 },
                 "label": "r_10"
@@ -800,11 +838,12 @@
                 "id": "r_11",
                 "metadata": {
                     "classes": [
-                        "reaction"
+                        "reaction",
+                        "irreversible"
                     ],
                     "position": {
-                        "x": 35,
-                        "y": 23
+                        "x": 16,
+                        "y": 4
                     }
                 },
                 "label": "r_11"
@@ -813,11 +852,12 @@
                 "id": "r_12",
                 "metadata": {
                     "classes": [
-                        "reaction"
+                        "reaction",
+                        "irreversible"
                     ],
                     "position": {
-                        "x": 13,
-                        "y": 54
+                        "x": 58,
+                        "y": 65
                     }
                 },
                 "label": "r_12"
@@ -826,11 +866,12 @@
                 "id": "r_13",
                 "metadata": {
                     "classes": [
-                        "reaction"
+                        "reaction",
+                        "irreversible"
                     ],
                     "position": {
-                        "x": 42,
-                        "y": 90
+                        "x": 90,
+                        "y": 10
                     }
                 },
                 "label": "r_13"
@@ -839,11 +880,12 @@
                 "id": "r_14",
                 "metadata": {
                     "classes": [
-                        "reaction"
+                        "reaction",
+                        "reversible"
                     ],
                     "position": {
-                        "x": 75,
-                        "y": 83
+                        "x": 38,
+                        "y": 65
                     }
                 },
                 "label": "r_14"
@@ -852,11 +894,12 @@
                 "id": "r_15",
                 "metadata": {
                     "classes": [
-                        "reaction"
+                        "reaction",
+                        "reversible"
                     ],
                     "position": {
-                        "x": 64,
-                        "y": 64
+                        "x": 80,
+                        "y": 82
                     }
                 },
                 "label": "r_15"
