@@ -70,25 +70,31 @@ async function callbackFunction() {
   rescale(svgProperties);
 
   removeSideCompounds(network.value);
-  
-  window.addEventListener('keydown', (event) => {
-        if (event.key === 'ArrowLeft') {
-          dagreLayout(network.value,rescaleAfterAction);
-        } else if (event.key === 'ArrowRight') {
-          vizLayout(network.value,rescaleAfterAction);
-        } else if (event.key=="d"){
-          duplicateReversibleReactions(network.value);
-        }
-  });
+  console.log(network.value);
+
+}
+
+function keydownHandler(event: KeyboardEvent) {
+  if (event.key === 'ArrowLeft') {
+    dagreLayout(network.value, rescaleAfterAction);
+  } else if (event.key === 'ArrowRight') {
+    vizLayout(network.value, rescaleAfterAction);
+  } else if (event.key === "d") {
+    duplicateReversibleReactions(network.value);
+  }
 }
 
 function rescaleAfterAction(){
+  console.log('rescaling');
   rescale(svgProperties);
+  console.log(network.value);
 }
 
 onMounted(() => {
   svgProperties = initZoom();
+  window.addEventListener('keydown', keydownHandler);
   importNetworkFromURL('/Alanine_and_aspartate_metabolism.json', network, networkStyle, callbackFunction); 
+  
 });
 function removeNode() {
   removeThisNode(menuProps.targetElement, network.value);
