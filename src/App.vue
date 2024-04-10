@@ -38,8 +38,8 @@ import { method_to_try } from './composables/methode_to_try';
 import { dagreLayout, vizLayout } from './composables/useLayout';
 import { removeSideCompounds } from "./composables/removeSideCompounds";
 import {duplicateReversibleReactions} from "./composables/duplicateReversibleReactions"
+import {importNetworkFromFile,importNetworkFromURL} from "./composables/importNetwork"
 import { initZoom, rescale } from "@metabohub/viz-core";
-import { importNetworkFromFile, importNetworkFromURL } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
@@ -65,22 +65,23 @@ function loadFile(event: Event) {
   importNetworkFromFile(file, network, networkStyle, callbackFunction);
 }
 
+
 async function callbackFunction() {
   rescale(svgProperties);
 
   removeSideCompounds(network.value);
-  duplicateReversibleReactions(network.value);
-
+  
   window.addEventListener('keydown', (event) => {
         if (event.key === 'ArrowLeft') {
           dagreLayout(network.value);
-          console.log(network.value);
         } else if (event.key === 'ArrowRight') {
           vizLayout(network.value);
-          console.log(network.value);
+        } else if (event.key=="d"){
+          duplicateReversibleReactions(network.value);
         }
-      });
+  });
 }
+
 
 onMounted(() => {
   svgProperties = initZoom();
