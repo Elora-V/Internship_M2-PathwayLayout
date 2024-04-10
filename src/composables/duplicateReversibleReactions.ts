@@ -11,7 +11,7 @@ export function duplicateReversibleReactions(network: Network) {
 
   for (const link in network.links) {
     // if the link is reversible :  get the reaction node and duplicate
-    if (network.links[link].classes.includes("reversible")) {
+    if (Object.keys(network.links[link]).includes("classes") && network.links[link].classes.includes("reversible")) {
       ////// Duplication of the reaction node
 
       // get nodes class : we only want to duplicate class "reaction"
