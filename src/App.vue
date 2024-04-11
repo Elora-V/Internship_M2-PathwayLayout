@@ -27,6 +27,7 @@
  */// Import -----------------
   // Utils ----------------
 import { ref, reactive, onMounted } from "vue";
+import { Serialized } from "graph-data-structure";
 
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
@@ -39,6 +40,7 @@ import { dagreLayout, vizLayout } from './composables/useLayout';
 import { removeSideCompounds } from "./composables/removeSideCompounds";
 import {duplicateReversibleReactions} from "./composables/duplicateReversibleReactions"
 import {importNetworkFromFile,importNetworkFromURL} from "./composables/importNetwork"
+import { NetworkToSerialized } from "@/composables/networkToGraph";
 import { initZoom, rescale } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
@@ -47,6 +49,8 @@ import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
   // Components -----------
 import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
+
+
 
 
 // Variables --------------
@@ -73,13 +77,15 @@ async function callbackFunction() {
   removeSideCompounds(network.value);
   console.log(network.value);
 
-
-  //import('graph-data-structure').then(gds => {
-  //  const graph = gds.Graph();
+  import('graph-data-structure').then(gds => {
+    const graph = gds.Graph();
   //  graph.addNode("b");
   //  graph.addEdge("a", "b");
-  //  console.log(graph.nodes());
-  //})
+    const networkSerialized: Serialized = NetworkToSerialized(network.value);
+    graph.deserialize(networkSerialized);
+  })
+
+
 
 }
 
