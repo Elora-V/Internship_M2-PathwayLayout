@@ -68,9 +68,18 @@ function loadFile(event: Event) {
 
 async function callbackFunction() {
   rescale(svgProperties);
+
   console.log('________New_graph__________');
   removeSideCompounds(network.value);
   console.log(network.value);
+
+
+  //import('graph-data-structure').then(gds => {
+  //  const graph = gds.Graph();
+  //  graph.addNode("b");
+  //  graph.addEdge("a", "b");
+  //  console.log(graph.nodes());
+  //})
 
 }
 
