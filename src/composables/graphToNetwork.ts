@@ -121,8 +121,8 @@ export function dagreToNetwork(graph: dagre.graphlib.Graph): Network{
         const toNode=graph["\_edgeObjs"][link]["w"];
         network.links.push({
             id: fromNode+" -- "+toNode,
-            source: getNodeFromNetwork(fromNode,network),
-            target: getNodeFromNetwork(toNode,network),
+            source: network.nodes[fromNode],
+            target: network.nodes[toNode],
             directed: true
           }
           );
