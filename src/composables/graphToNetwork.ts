@@ -7,7 +7,7 @@ import { type } from 'os';
 
 
 /**
- * Take dagre.graphlib.Graph object and the network associated (with the graph) : change the position of network node by the one of the graph.
+ * Take dagre.graphlib.Graph object and the network associated (with the graph) : change the position and metadata (rank and order) of network's node by the one of the graph.
  * The graph and network need to have the same nodes !
  * @param {dagre.graphlib.Graph}  dagre.graphlib.Graph object 
  * @param {Network} Network object (value of pointer)
@@ -15,7 +15,10 @@ import { type } from 'os';
 export function changeNetworkFromDagre(graph: dagre.graphlib.Graph,network: Network){
 
     for (const node in graph["_nodes"]){
-
+        // add metadata key
+        if ( !Object.keys(network.nodes[node]).includes("metadata")){
+            network.nodes[node]["metadata"]= {};
+        }
         // get x (if one)
         if (Object.keys(graph["_nodes"][node]).includes('x')){
             const x=graph["_nodes"][node]["x"];
@@ -27,12 +30,22 @@ export function changeNetworkFromDagre(graph: dagre.graphlib.Graph,network: Netw
             const y=graph["_nodes"][node]["y"];
             network.nodes[node]["y"]= y;
         }
+
+        // get order (if one)
+        if (Object.keys(graph["_nodes"][node]).includes('_order')){
+            network.nodes[node]["metadata"]["order"]= graph["_nodes"][node]["_order"];
+        }
+
+        // get rank (if one)
+        if (Object.keys(graph["_nodes"][node]).includes('_rank')){
+            network.nodes[node]["metadata"]["rank"]= graph["_nodes"][node]["_rank"]/2; //dagre has rank that goes 2 by 2 (rank 0,2,4...)
+        }
     }
 }
 
 
 /**
- * Take a json of a viz graph and the network associated (with the json) : change the position of network node by the one of the json.
+ * Take a json of a viz graph and the network associated (with the json) : change the position and metadata (rank and order) of network's node by the one of the json.
  * The json and network need to have the same nodes !
  * @param {object}  object return by render method from viz (renderJSON)
  * @param {Network} Network object (value of pointer)
@@ -56,8 +69,8 @@ export function changeNetworkFromViz(json: object, network: Network)  {
         }
     }
     
-    assignRankOrder(network,unique_y);
-    
+    assignRankOrder(network,unique_y); // the information of rank isn't in the result, unlike dagre 
+
 }
 
 
@@ -135,7 +148,7 @@ function getNodeFromNetwork(id: string, network:Network): Node{
 
 
 /**
- * Take network and all the unique coordinate y, add the rank (y position like first, second..., not coordinate) and order ( first, second,....for x axis) to metadata of network.
+ * Take network and all the unique y coordinate. Add the rank (y position : first, second...; not coordinate) and order ( x position in the rank: first, second,....) to metadata of network.
  * @param {Network} Network object
  * @param unique_y array of all unique y for node position
  */
