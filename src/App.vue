@@ -80,7 +80,7 @@ async function callbackFunction() {
 
 onMounted(() => {
   svgProperties = initZoom();
-  importNetworkFromURL('/circuit.json', network, networkStyle, callbackFunction);
+  importNetworkFromURL('/TRP.json', network, networkStyle, callbackFunction);
 });
 function removeNode() {
   removeThisNode(menuProps.targetElement, network.value);
