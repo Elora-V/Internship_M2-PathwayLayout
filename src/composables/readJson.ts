@@ -125,7 +125,6 @@ export function readJsonGraph(jsonGraph: string): { network: Network, networkSty
 		}
 	}
 
-
 	return { network, networkStyle };
 
 }

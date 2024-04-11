@@ -68,7 +68,7 @@ function loadFile(event: Event) {
 
 async function callbackFunction() {
   rescale(svgProperties);
-
+  console.log('________New_graph__________');
   removeSideCompounds(network.value);
   console.log(network.value);
 

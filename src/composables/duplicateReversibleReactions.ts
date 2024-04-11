@@ -7,55 +7,60 @@ import { Network } from "@metabohub/viz-core/src/types/Network";
  * @param {Network}  Network object
  */
 export function duplicateReversibleReactions(network: Network) {
+
+  console.log('duplicate');
+
   const newLinks: Array<Link> = []; //links associated with new reactions nodes
 
   for (const link in network.links) {
     // if the link is reversible :  get the reaction node and duplicate
-    if (Object.keys(network.links[link]).includes("classes") && network.links[link].classes.includes("reversible")) {
-      ////// Duplication of the reaction node
+    if (Object.keys(network.links[link]).includes("classes") ) {
+      if (typeof network.links[link].classes==='object' && network.links[link].classes.includes("reversible")){
+        ////// Duplication of the reaction node
 
-      // get nodes class : we only want to duplicate class "reaction"
-      const sourceClasses = network.links[link].source.classes;
-      const targetClasses = network.links[link].target.classes;
+        // get nodes class : we only want to duplicate class "reaction"
+        const sourceClasses = network.links[link].source.classes;
+        const targetClasses = network.links[link].target.classes;
 
-      let newReactionNode: Node;
-      let reactionIsSource: boolean;
+        let newReactionNode: Node;
+        let reactionIsSource: boolean;
 
-      if (sourceClasses.includes("reaction")) {
-        reactionIsSource = true;
-        // duplicate source node
-        newReactionNode = reversibleNodeReaction(network.links[link], "source");
-      } else if (targetClasses.includes("reaction")) {
-        reactionIsSource = false;
-        // duplicate target node
-        newReactionNode = reversibleNodeReaction(network.links[link], "target");
-      }
-      // adding new reaction node if not already the case
-      if (!Object.keys(network.nodes).includes(newReactionNode.id)) {
-        network.nodes[newReactionNode.id] = newReactionNode;
-      }
+        if (sourceClasses.includes("reaction")) {
+          reactionIsSource = true;
+          // duplicate source node
+          newReactionNode = reversibleNodeReaction(network.links[link], "source");
+        } else if (targetClasses.includes("reaction")) {
+          reactionIsSource = false;
+          // duplicate target node
+          newReactionNode = reversibleNodeReaction(network.links[link], "target");
+        }
+        // adding new reaction node if not already the case
+        if (!Object.keys(network.nodes).includes(newReactionNode.id)) {
+          network.nodes[newReactionNode.id] = newReactionNode;
+        }
 
-      //////// Adding link to new reaction node in reverse (target become source and source become target)
+        //////// Adding link to new reaction node in reverse (target become source and source become target)
 
-      if (reactionIsSource) {
-        const target = network.links[link].target;
-        newLinks.push({
-          id: target.id + "--" + newReactionNode.id,
-          source: network.nodes[target.id],
-          target: network.nodes[newReactionNode.id],
-          classes: ["reversible"],
-        });
-      } else {
-        const source = network.links[link].source;
-        newLinks.push({
-          id: newReactionNode.id + "--" + source.id,
-          source: network.nodes[newReactionNode.id],
-          target: network.nodes[source.id],
-          classes: ["reversible"],
-        });
+        if (reactionIsSource) {
+          const target = network.links[link].target;
+          newLinks.push({
+            id: target.id + "--" + newReactionNode.id,
+            source: network.nodes[target.id],
+            target: network.nodes[newReactionNode.id],
+            classes: ["reversible"],
+          });
+        } else {
+          const source = network.links[link].source;
+          newLinks.push({
+            id: newReactionNode.id + "--" + source.id,
+            source: network.nodes[newReactionNode.id],
+            target: network.nodes[source.id],
+            classes: ["reversible"],
+          });
       }
     }
   }
+}
 
   newLinks.forEach((link) => {
     network.links.push(link);

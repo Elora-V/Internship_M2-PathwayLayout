@@ -11,6 +11,8 @@ import { changeNetworkFromDagre, changeNetworkFromViz } from './graphToNetwork';
  */
 export function dagreLayout(network: Network,callbackFunction = () => {}) {
 
+    console.log('dagre');
+
     let graphDagre = NetworkToDagre(network);
     dagre.layout(graphDagre);
     changeNetworkFromDagre(graphDagre, network);
@@ -25,10 +27,12 @@ export function dagreLayout(network: Network,callbackFunction = () => {}) {
  */
 export function vizLayout(network: Network,callbackFunction = () => {}) {
 
+    console.log('viz');
+
     instance().then(viz => {
     const graphViz=NetworkToViz(network);
     const json=viz.renderJSON(graphViz);
-    changeNetworkFromViz(json,network)
+    changeNetworkFromViz(json,network);
     callbackFunction();
     })
 
