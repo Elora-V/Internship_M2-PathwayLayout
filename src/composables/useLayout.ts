@@ -26,7 +26,7 @@ export function vizLayout(network: Network) {
     instance().then(viz => {
     const graphViz=NetworkToViz(network);
     const json=viz.renderJSON(graphViz);
-    changeNetworkFromViz(json,network)
+    changeNetworkFromViz(json,network);
     })
 
 }
