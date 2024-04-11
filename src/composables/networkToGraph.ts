@@ -1,6 +1,7 @@
 import { Network } from '@metabohub/viz-core/src/types/Network';
 import  dagre  from 'dagrejs/dist/dagre.js';
 import { instance } from "@viz-js/viz";
+import { Serialized } from 'graph-data-structure';
 
 /** 
  * Take a network object and return a dagre.graphlib.Graph object containing the same nodes and edge 
@@ -62,4 +63,19 @@ export function NetworkToViz(network: Network): object{
 
     return g;
 
+}
+
+/**
+ * Take a network object and return a serialized object for graph-data-strucutre lib containing the same nodes and edge 
+ * @param {Network}  Network object 
+ * @returns {Serialized} Return serialized object for graph-data-strucutre
+ */
+export function NetworkToSerialized(network: Network): Serialized {
+    const serializedNodes = Object.values(network.nodes).map(node => ({ id: node.id }));
+    const serializedLinks = network.links.map(link => ({
+        source: link.source.id,
+        target: link.target.id,
+        weight: 1 
+    }));
+    return { nodes: serializedNodes, links: serializedLinks };
 }
