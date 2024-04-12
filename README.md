@@ -1,39 +1,97 @@
-# Pathway Layout for MetExplore3
+# Vue 3 project template
 
-## Sommaire
+This template includes :
 
-- [Library used](#lib)
-- [Functions](#functions)
-  - [`importNetwork`](#importNetwork)
-  - [`readJson`](#readJson)
-  - [`networkToGraph`](#networkToGraph)
-  - [`graphToNetwork`](#graphToNetwork)
-  - [`removeSideCompounds`](#removeSideCompounds)
-  - [`duplicateReversibleReactions`](#duplicateReversibleReactions)
-  - [`useLayout`](#useLayout)
+- Vue 3
+- [Vuetify 3](https://vuetifyjs.com/en/components/all/)
+- Typescript
+- ESlint
+- npm packaging configuration
+- [vitest](https://vitest.dev/guide/)
+- [storybook](https://storybook.js.org/docs/vue/get-started/whats-a-story)
 
+## Files to modify for the npm packaging
 
+This template is configured to build and publish an npm package on GitLab, following this [tutorial](https://forgemia.inra.fr/metabohub/mth/-/wikis/mth2-wp5-t3/webcomponents-npm). 
 
-## <a id="lib">Library used</a>
+Replace 'ComponentExample' with the name of the component to publish in these files :
+- lib/main.js
+- package.json
+- vite.config.ts
 
-...
+The package will be published with the GitLab CI.
 
-## <a id="functions">Functions</a>
+## Use the package in another project
 
-...
+```sh
+npm i -D @metabohub/component-example
+```
 
-### <a id="importNetwork">`importNetwork`</a>
+If your project is not using vuetify, you need to import it in `src/main.ts` :
+```ts
+import { createApp } from 'vue'
+import App from './App.vue'
+import { vuetify } from "@metabohub/component-example";
 
-### <a id="readJson">`readJson`</a>
+createApp(App).use(vuetify).mount('#app')
+```
 
-### <a id="networkToGraph">`networkToGraph`</a>
+Use the component : 
+```ts
+<script setup lang="ts">
+import { ComponentExample } from "@metabohub/component-example";
+import "@metabohub/component-example/dist/style.css";
+import type { SomeType } from "@metabohub/component-example";
+</script>
 
-### <a id="graphToNetwork">graphToNetwork</a>
+<template>
+  <ComponentExample />
+</template>
+```
 
-### <a id="removeSideCompounds">`removeSideCompounds`</a>
+## Project Setup
 
-### <a id="duplicateReversibleReactions">`duplicateReversibleReactions`</a>
+```sh
+npm install
+```
 
-### <a id="useLayout">`useLayout`</a>
+### Compile and Hot-Reload for Development
 
+```sh
+npm run dev
+```
 
+### Type-check
+
+```sh
+npm run type-check
+```
+
+### Compile for Production
+
+```sh
+npm run build
+```
+
+### Run Unit Tests with [Vitest](https://vitest.dev/)
+
+```sh
+npm run test:unit
+```
+
+Check the coverage :
+```sh
+npm run coverage
+```
+
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+npm run lint
+```
+
+### View stories with [Storybook](https://storybook.js.org/docs/vue/get-started/whats-a-story)
+
+```sh
+npm run storybook
+```
