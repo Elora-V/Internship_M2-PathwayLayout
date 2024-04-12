@@ -1,50 +1,61 @@
+import { JsonViz } from '@/types/JsonViz';
 import { Network } from '@metabohub/viz-core/src/types/Network';
 import type { Node } from "@metabohub/viz-core/src/types/Node";
 import  dagre  from 'dagrejs/dist/dagre.js';
+import { type } from 'os';
 
 
 
 
 /**
- * Take dagre.graphlib.Graph object and the network associated (with the graph) : change the position of network node by the one of the graph.
+ * Take dagre.graphlib.Graph object and the network associated (with the graph) : change the position and metadata (rank and order) of network's node by the one of the graph.
  * The graph and network need to have the same nodes !
  * @param {dagre.graphlib.Graph}  dagre.graphlib.Graph object 
  * @param {Network} Network object (value of pointer)
  */
-export function changeNetworkFromDagre(graph: dagre.graphlib.Graph,network: Network){
-
-    for (const node in graph["_nodes"]){
-
-        // get x (if one)
-        if (Object.keys(graph["_nodes"][node]).includes('x')){
-            network.nodes[node]["x"]= graph["_nodes"][node]["x"];
+export async function changeNetworkFromDagre(graph: dagre.graphlib.Graph,network: Network): Promise<void>{
+    Object.entries(graph["_nodes"]).forEach(([node, nodeData]:[string, dagre.graphlib.Node]) => {
+        if (!network.nodes[node].metadata) {
+            network.nodes[node].metadata = {};
         }
-        // get x (if one)
-        if (Object.keys(graph["_nodes"][node]).includes('y')){
-            network.nodes[node]["y"]= graph["_nodes"][node]["y"];
+        const { x, y, _order,_rank  } = nodeData;
+        // if there is some position x and y : network is updated
+        if (x !== undefined && y !== undefined){
+            network.nodes[node].x = x;
+            network.nodes[node].y = y;
+            network.nodes[node].metadata.order = _order;
+            network.nodes[node].metadata.rank = _rank / 2;
         }
-    }
+    });
 }
 
 
 /**
- * Take a json of a viz graph and the network associated (with the json) : change the position of network node by the one of the json.
+ * Take a json of a viz graph and the network associated (with the json) : change the position and metadata (rank and order) of network's node by the one of the json.
  * The json and network need to have the same nodes !
  * @param {object}  object return by render method from viz (renderJSON)
  * @param {Network} Network object (value of pointer)
  */
-export function changeNetworkFromViz(json: object,network: Network){
+export async function changeNetworkFromViz(json: JsonViz, network: Network): Promise<void> {
 
-    for (const node in json["objects"]){
-        const nodeId=json["objects"][node]["name"];
-        // get position (if one)
-        if (Object.keys(json["objects"][node]).includes('pos')){
-            const pos= json["objects"][node]["pos"].split(',');
-            network.nodes[nodeId]["x"]= parseFloat(pos[0]);
-            network.nodes[nodeId]["y"]= parseFloat(pos[1]);
+    const unique_y:Array<number> =[];
+
+    json["objects"].forEach((node) => {
+        const nodeId = node.name;
+        if ('pos' in node) {
+            const pos = node.pos.split(',');
+            const x = parseFloat(pos[0]);
+            const y = parseFloat(pos[1]);
+            network.nodes[nodeId].x = x;
+            network.nodes[nodeId].y = y;
+            if( !unique_y.includes(y)){
+                unique_y.push(y);
+            }
         }
+    });
+    
+    assignRankOrder(network,unique_y); // the information of rank isn't in the result, unlike dagre 
 
-    }
 }
 
 
@@ -64,56 +75,67 @@ export function dagreToNetwork(graph: dagre.graphlib.Graph): Network{
 	};
 
     // insert nodes into network
-    for (const node in graph["_nodes"]){
-
-        const labelNode=graph["_nodes"][node]["label"];
-        // get position if one
-        let xNode:number;
-        if (Object.keys(graph["_nodes"][node]).includes('x')){
-            xNode= graph["_nodes"][node]["x"];
-        }else{
-            xNode= NaN;
-        }
-        let yNode:number;
-        if (Object.keys(graph["_nodes"][node]).includes('y')){
-            yNode= graph["_nodes"][node]["y"];
-        }else{
-            yNode= NaN;
-        }
+    graph.nodes().forEach((node) => {
+        const { label, x, y } = graph.node(node);
         network.nodes[node] = {
-			id: node,
-			x: xNode,
-			y: yNode,
-            label : labelNode
-		};
+            id: node,
+            label: label,
+            x: x || NaN,
+            y: y || NaN
+        };
+    });
        
-    }
-
     // insert edges into network
-    for (const link in graph["\_edgeObjs"]){
-        const fromNode=graph["\_edgeObjs"][link]["v"];
-        const toNode=graph["\_edgeObjs"][link]["w"];
+    graph.edges().forEach((edge) => {
+        const fromNode = edge.v;
+        const toNode = edge.w;
         network.links.push({
-            id: fromNode+" -- "+toNode,
-            source: getNodeFromNetwork(fromNode,network),
-            target: getNodeFromNetwork(toNode,network),
+            id: `${fromNode} -- ${toNode}`,
+            source: network.nodes[fromNode],
+            target: network.nodes[toNode],
             directed: true
-          }
-          );
-    }
+        });
+    });
 
     return network;
 
 }
 
+
+
 /**
- * Take an id string and return the corresponding node from the network
+ * Take network and all the unique y coordinate. Add the rank (y position : first, second...; not coordinate) and order ( x position in the rank: first, second,....) to metadata of network.
  * @param {Network} Network object
- * @param id identifier of the node 
- * @returns {Node} Return Node object 
+ * @param unique_y array of all unique y for node position
  */
-function getNodeFromNetwork(id: string, network:Network): Node{
+function assignRankOrder(network: Network, unique_y: Array<number>) {
 
-    return network["nodes"][id]; 
+    // sort the y to know the associated rank for a y coordinate
+    unique_y.sort((a:number, b:number) => a - b);
 
+    // get the rank for each node
+    const xNodeByRank: number[][] = Array.from({ length: unique_y.length }, () => []);
+    Object.values(network.nodes).forEach((node) => {
+        const rank = unique_y.indexOf(node.y);
+        node.metadata = node.metadata || {}; 
+        node.metadata.rank = rank;
+        xNodeByRank[rank].push(node.x);
+    });
+
+    // sort the y by rank
+    xNodeByRank.forEach(sublist => {
+        sublist.sort((a, b) => a - b); 
+    });
+
+    // get the order for each node 
+    Object.values(network.nodes).forEach((node) => {
+        const rank = node.metadata.rank;
+        if (typeof rank === 'number') {
+            const order = xNodeByRank[rank].indexOf(node.x);
+            node.metadata.order = order;
+        } else {
+            console.error("Le rang n'est pas un nombre");
+            node.metadata.order = -1;
+        }
+    });
 }
