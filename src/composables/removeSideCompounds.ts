@@ -8,7 +8,7 @@ import {getContentFromURL} from "./importNetwork"
  */
 export async function removeSideCompounds(network:Network,pathListSideCompounds:string){
 
-  console.log('remove SC');
+  console.log('Remove SC');
 
   const sideCompoundsFile=pathListSideCompounds;
   const sideCompoundsString = await getContentFromURL(sideCompoundsFile);

@@ -86,7 +86,7 @@ async function callbackFunction() {
 
 function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
-    dagreLayout(network.value, rescaleAfterAction);
+    dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
     const attribut={ rankdir: "BT" };
     vizLayout(network.value, attribut ,rescaleAfterAction);
@@ -96,7 +96,7 @@ function keydownHandler(event: KeyboardEvent) {
 }
 
 function rescaleAfterAction(){
-  console.log('rescaling');
+  console.log('Rescaling');
   rescale(svgProperties);
   console.log(network.value);
 }

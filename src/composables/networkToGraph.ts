@@ -6,31 +6,27 @@ import { Serialized } from 'graph-data-structure';
 /** 
  * Take a network object and return a dagre.graphlib.Graph object containing the same nodes and edge 
  * @param {Network}  Network object 
+ * @param  graphAttributes for dagre layout (see https://github.com/dagrejs/dagre/wiki)
  * @returns {dagre.graphlib.Graph} Return dagre.graphlib.Graph object 
  */
-export function NetworkToDagre(network: Network): dagre.graphlib.Graph{
+export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graphlib.Graph{
 
     // initialisation dagre graph
     var g = new dagre.graphlib.Graph();
-    g.setGraph({});
-    g.setDefaultEdgeLabel(function() { return {}; });
+    g.setGraph(graphAttributes);
+    g.setDefaultEdgeLabel(() => ({}));
 
     // insert nodes into graph
-    for (const node in network.nodes){
-
-        const labelNode=network.nodes[node].label;    
-        const xNode= network.nodes[node].x;
-        const yNode= network.nodes[node].y;
-
-        g.setNode(node,    { label: labelNode,  width: 100, height: 100, x: xNode, y:yNode });
-    }
+    Object.values(network.nodes).forEach((node) => {
+        const { id, label, x, y } = node;
+        g.setNode(id, { label, width: 100, height: 100, x, y });
+    });
 
     // insert edges into graph
-    for (const link in network.links){
-        const fromNode=network.links[link].source.id;
-        const toNode=network.links[link].target.id;
-        g.setEdge(fromNode,   toNode);
-    }
+    network.links.forEach((link) => {
+        const { source, target } = link;
+        g.setEdge(source.id, target.id);
+    });
 
     return g;
 
