@@ -12,7 +12,7 @@ import { type } from 'os';
  * @param {dagre.graphlib.Graph}  dagre.graphlib.Graph object 
  * @param {Network} Network object (value of pointer)
  */
-export function changeNetworkFromDagre(graph: dagre.graphlib.Graph,network: Network){
+export async function changeNetworkFromDagre(graph: dagre.graphlib.Graph,network: Network): Promise<void>{
 
     for (const node in graph["_nodes"]){
         // add metadata key
@@ -50,7 +50,7 @@ export function changeNetworkFromDagre(graph: dagre.graphlib.Graph,network: Netw
  * @param {object}  object return by render method from viz (renderJSON)
  * @param {Network} Network object (value of pointer)
  */
-export function changeNetworkFromViz(json: object, network: Network)  {
+export async function changeNetworkFromViz(json: object, network: Network): Promise<void> {
     
     const unique_y:Array<number> =[];
 

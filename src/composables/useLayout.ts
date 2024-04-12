@@ -13,10 +13,14 @@ export function dagreLayout(network: Network,callbackFunction = () => {}) {
 
     console.log('dagre');
 
-    let graphDagre = NetworkToDagre(network);
-    dagre.layout(graphDagre);
-    changeNetworkFromDagre(graphDagre, network);
-    callbackFunction();
+    setTimeout(async function() {
+        let graphDagre = NetworkToDagre(network);
+        dagre.layout(graphDagre);
+        changeNetworkFromDagre(graphDagre, network).then(() => {
+            callbackFunction();
+        });
+    }, 1);
+        
 }
 
 
@@ -29,11 +33,15 @@ export function vizLayout(network: Network,callbackFunction = () => {}) {
 
     console.log('viz');
 
-    instance().then(viz => {
-    const graphViz=NetworkToViz(network);
-    const json=viz.renderJSON(graphViz);
-    changeNetworkFromViz(json,network);
-    callbackFunction();
-    })
+    setTimeout(async function() {
+        instance().then(viz => {
+        const graphViz=NetworkToViz(network);
+        const json=viz.renderJSON(graphViz);
+        changeNetworkFromViz(json,network).then(() => {
+            callbackFunction();
+        });
+        });
+    }, 1);
+    
 
 }
