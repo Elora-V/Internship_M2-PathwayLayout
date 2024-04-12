@@ -132,17 +132,6 @@ export function dagreToNetwork(graph: dagre.graphlib.Graph): Network{
 
 }
 
-/**
- * Take an id string and return the corresponding node from the network
- * @param {Network} Network object
- * @param id identifier of the node 
- * @returns {Node} Return Node object 
- */
-function getNodeFromNetwork(id: string, network:Network): Node{
-
-    return network["nodes"][id]; 
-
-}
 
 
 
