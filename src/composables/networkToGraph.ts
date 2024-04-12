@@ -1,6 +1,6 @@
 import { Network } from '@metabohub/viz-core/src/types/Network';
 import  dagre  from 'dagrejs/dist/dagre.js';
-import { instance } from "@viz-js/viz";
+import { Graph, instance } from "@viz-js/viz";
 import { Serialized } from 'graph-data-structure';
 
 /** 
@@ -40,28 +40,25 @@ export function NetworkToDagre(network: Network): dagre.graphlib.Graph{
 /**
  * Take a network object and return a graph object for viz containing the same nodes and edge 
  * @param {Network}  Network object 
- * @returns {object} Return graph object for viz
+ * @param  graphAttributes for viz dot layout (see https://graphviz.org/docs/layouts/dot/)
+ * @returns {Graph} Return graph object for viz
  */
-export function NetworkToViz(network: Network): object{
-
-    // initialisation dagre graph
-    const g ={
-        graphAttributes: {
-            rankdir: "BT", // why bottom-top to have a top-bottom ??
-            
-        },
+export function NetworkToViz(network: Network, graphAttributes={} ): Graph{
+    
+    // initialisation viz graph
+    const graphViz: Graph ={
+        graphAttributes: graphAttributes,
         directed: true,
         edges: []
     }
 
     // insert edges into graph
-    for (const link in network.links){
-        const fromNode=network.links[link].source.id;
-        const toNode=network.links[link].target.id;
-        g.edges.push({tail:fromNode, head:toNode});
-    }
+    graphViz.edges = network.links.map(link => ({
+        tail: link.source.id,
+        head: link.target.id
+    }));
 
-    return g;
+    return graphViz;
 
 }
 

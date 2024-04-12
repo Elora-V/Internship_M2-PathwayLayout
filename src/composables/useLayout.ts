@@ -1,6 +1,6 @@
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import dagre from 'dagrejs';
-import { instance } from "@viz-js/viz";
+import { Graph, instance } from "@viz-js/viz";
 import { NetworkToDagre, NetworkToViz } from './networkToGraph';
 import { changeNetworkFromDagre, changeNetworkFromViz } from './graphToNetwork';
 
@@ -29,13 +29,12 @@ export function dagreLayout(network: Network,callbackFunction = () => {}) {
  * @param {Network}  Network object
  * @param [callbackFunction=() => {}] function to do after the layout is done
  */
-export function vizLayout(network: Network,callbackFunction = () => {}) {
+export function vizLayout(network: Network, graphAttributes={}, callbackFunction = () => {}) {
 
     console.log('viz');
-
     setTimeout(async function() {
         instance().then(viz => {
-        const graphViz=NetworkToViz(network);
+        const graphViz=NetworkToViz(network,graphAttributes);
         const json=viz.renderJSON(graphViz);
         changeNetworkFromViz(json,network).then(() => {
             callbackFunction();
