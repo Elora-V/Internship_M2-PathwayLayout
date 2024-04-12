@@ -6,11 +6,11 @@ import {getContentFromURL} from "./importNetwork"
  * Remove side compounds of a network, the list of side compounds is predefined
  * @param {Network} Network that need removing of nodes
  */
-export async function removeSideCompounds(network:Network){
+export async function removeSideCompounds(network:Network,pathListSideCompounds:string){
 
-  console.log('remove SC');
+  console.log('Remove SC');
 
-  const sideCompoundsFile="/public/sideCompounds.txt"
+  const sideCompoundsFile=pathListSideCompounds;
   const sideCompoundsString = await getContentFromURL(sideCompoundsFile);
   const lines = sideCompoundsString.split('\n');
   const listId: Array<string> = [];

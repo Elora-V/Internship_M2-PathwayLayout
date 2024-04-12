@@ -27,6 +27,7 @@
  */// Import -----------------
   // Utils ----------------
 import { ref, reactive, onMounted } from "vue";
+import { Serialized } from "graph-data-structure";
 
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
@@ -34,11 +35,11 @@ import type { Network } from "@metabohub/viz-core/src/types/Network";
 
   // Composables ----------
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
-import { method_to_try } from './composables/methode_to_try';
 import { dagreLayout, vizLayout } from './composables/useLayout';
 import { removeSideCompounds } from "./composables/removeSideCompounds";
 import {duplicateReversibleReactions} from "./composables/duplicateReversibleReactions"
 import {importNetworkFromFile,importNetworkFromURL} from "./composables/importNetwork"
+import { NetworkToSerialized } from "@/composables/networkToGraph";
 import { initZoom, rescale } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
@@ -47,6 +48,8 @@ import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
   // Components -----------
 import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
+
+
 
 
 // Variables --------------
@@ -68,24 +71,32 @@ function loadFile(event: Event) {
 
 async function callbackFunction() {
   rescale(svgProperties);
+
   console.log('________New_graph__________');
-  removeSideCompounds(network.value);
+  removeSideCompounds(network.value,"/sideCompounds.txt");
   console.log(network.value);
+
+  // import('graph-data-structure').then(gds => {
+  //   const graph = gds.Graph();
+  //   const networkSerialized: Serialized = NetworkToSerialized(network.value);
+  //   graph.deserialize(networkSerialized);
+  // })
 
 }
 
 function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
-    dagreLayout(network.value, rescaleAfterAction);
+    dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
-    vizLayout(network.value, rescaleAfterAction);
+    const attribut={ rankdir: "BT" };
+    vizLayout(network.value, attribut ,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
   }
 }
 
 function rescaleAfterAction(){
-  console.log('rescaling');
+  console.log('Rescaling');
   rescale(svgProperties);
   console.log(network.value);
 }
