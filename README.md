@@ -40,10 +40,15 @@ Contains :
 
 - `getContentFromURL`
 
+<br>
+<br>
 
 ## <a id="readJson">`readJson.ts`</a>
 
 ...
+
+<br>
+<br>
 
 ## <a id="networkToGraph">`networkToGraph.ts`</a>
 
@@ -56,6 +61,10 @@ Contains :
 - `NetworkToViz`: for the Viz library, require a network object and graph attributes can be added. The attributs are arguments for the layout algotithm to apply on the returned object (a graph).
 
 - `NetworkToSerialized`: for the graph-data-structure library, require a network object and return a Serialized object.
+
+
+<br>
+<br>
 
 ## <a id="graphToNetwork">`graphToNetwork.ts`</a>
 
@@ -71,12 +80,17 @@ Contains :
 
 - `assignRankOrder` : Take a network and all the unique y coordinate of the nodes. Add the rank (y position : first, second...; not coordinate) and order ( x position in the rank: first, second,....) to metadata of network. The vector of unique y is required to avoid a loop in the function. This information is obtained in the general loop of `changeNetworkFromViz`. This reduce modularity but improve the optimization. 
 
+<br>
+<br>
 
 ## <a id="removeSideCompounds">`removeSideCompounds.ts`</a>
 
 Allow to remove side compounds from a graph. 
 
 - `removeSideCompounds` : Remove side compounds of a network, the list of side compounds is predefined. The argurments are the network and the path to the file containning the list of side compounds.
+
+<br>
+<br>
 
 ## <a id="duplicateReversibleReactions">`duplicateReversibleReactions.ts`</a>
 
@@ -87,6 +101,8 @@ Allow to duplicate all the reversible reaction of a network.
 
 - `reversibleNodeReaction` : Take a node and return a new node with same id and label but with a "_rev" added at the end. It is  the node of the reversible reaction, this function is called by `duplicateReversibleReactions`. 
 
+<br>
+<br>
 
 ## <a id="useLayout">`useLayout.ts`</a>
 
@@ -99,6 +115,8 @@ Apply a layout on the network.
 
 Those functions call a callbackfunction that rescale the graph after applying the layout. 
 
+<br>
+<br>
 
 
 
