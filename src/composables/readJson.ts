@@ -25,7 +25,7 @@ export function readJsonGraph(jsonGraph: string): { network: Network, networkSty
 		if (!jsonObject.sessions) {
 			throw new Error("graph attribute lacking in json graph format")
 		} else {
-			readJsonMetExploreViz(preprocessJsonGraph, network, networkStyle);
+			readJsonMetExploreViz(preprocessJsonGraph, network, networkStyle,reversibleClassNewEdge,changeNodeStyles);
 
 			return { network, networkStyle };
 		}
@@ -137,7 +137,9 @@ export function readJsonGraph(jsonGraph: string): { network: Network, networkSty
  * @param networkStyle Network style object
  * @returns {Network, GraphStyleProperties} Return network object and graphStyleProperties object
  */
-function readJsonMetExploreViz(jsonGraph: string, network: Network, networkStyle: GraphStyleProperties): { network: Network, networkStyle: GraphStyleProperties } {
+function readJsonMetExploreViz(jsonGraph: string, network: Network, networkStyle: GraphStyleProperties,
+	modifyEdge: (link: {[key: string]: string}, network: Network, sourceId: string, targetId: string, edge: Link) => void = (link, network, sourceId, targetId, edge) => {},
+	changeNodeStyles : (networkStyle:GraphStyleProperties,jsonObject:any) => void = (networkStyle, jsonObject) => {}): { network: Network, networkStyle: GraphStyleProperties } {
 	const jsonObject = JSON.parse(jsonGraph);
 	const d3Nodes = jsonObject.sessions.viz.d3Data.nodes;
 
@@ -197,7 +199,7 @@ function readJsonMetExploreViz(jsonGraph: string, network: Network, networkStyle
 				target: target
 			}
 
-			reversibleClassNewEdge(link,network,source.id,target.id,edge);
+			modifyEdge(link,network,source.id,target.id,edge);
 			network.links.push(edge);
 		}
 	});
@@ -272,7 +274,7 @@ function reversibleClassNewEdge(link: {[key: string]: string},network:Network,so
 }
 	
 
-function changeNodeStyles(networkStyle:GraphStyleProperties,jsonObject){
+function changeNodeStyles(networkStyle:GraphStyleProperties,jsonObject:any){
 	networkStyle.nodeStyles = {
 		metabolite: {
 			width: 20,
