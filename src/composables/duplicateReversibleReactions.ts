@@ -6,73 +6,94 @@ import { removeAllSelectedNode } from "@metabohub/viz-core";
 /**
  * Take a network and add a duplicated node of reversible reactions, and add links to this reaction
  * @param {Network}  Network object
+ * @param suffix to put at the end of id of the original reaction : can't be "" !
  */
 export function duplicateReversibleReactions(network: Network,suffix:string="_rev") {
 
+  if (suffix ==""){
+    console.error("Suffix to new reaction node can't be the same that original node (unique identifier).")
+  }
+
   console.log('Duplicate');
 
-  const newLinks: Array<Link> = []; //links associated with new reactions nodes
-  const nodeToSupress: Array<string> = [];
-
-  network.links.forEach((link) => {
-    // if the link is reversible :  get the reaction node and duplicate
-    if (link.classes && link.classes.includes("reversible")) {
-      ////// Duplication of the reaction node
-      // get nodes class : we only want to duplicate class "reaction"
-      let newReactionNode: Node;
-      let reactionIsSource: boolean;
-
-      if (link.source.classes?.includes("reaction")) {
-        reactionIsSource = true;
-        // duplicate source node
-        newReactionNode = reversibleNodeReaction(link.source,suffix);
-      } else if (link.target.classes?.includes("reaction")) {
-        reactionIsSource = false;
-        // duplicate target node
-        newReactionNode = reversibleNodeReaction(link.target,suffix);
-      }
-      // adding new reaction node if not already the case
-      if (!network.nodes[newReactionNode.id]) {
-        network.nodes[newReactionNode.id] = newReactionNode;
-      }
-
-      //////// Adding link to new reaction node in reverse (target become source and source become target)
-
-      if (reactionIsSource) {
-        const target = link.target;
-        newLinks.push({
-            id: `${target.id}--${newReactionNode.id}`,
-            source: network.nodes[target.id],
-            target: network.nodes[newReactionNode.id],
-            classes: ["reversible"],
-        });
-    } else {
-        const source = link.source;
-        newLinks.push({
-            id: `${newReactionNode.id}--${source.id}`,
-            source: network.nodes[newReactionNode.id],
-            target: network.nodes[source.id],
-            classes: ["reversible"],
-        });
-    }
-      
-    } else {
-      // if link not reversible : 
-      // but a the reaction associated had been reverted : this reaction isn't reversible for all links so it will be suppressed
-      if (link.source.classes?.includes("reaction") && !nodeToSupress.includes(link.source.id+suffix)){
-        nodeToSupress.push(link.source.id+suffix)
-      }
-      if (link.target.classes?.includes("reaction") && !nodeToSupress.includes(link.target.id+suffix)){
-        nodeToSupress.push(link.target.id+suffix)
-      }
+  // Duplication of reaction node involve with at least one reversible link
+  network.links.forEach((link)=> {
+      // if the link is reversible :  get the reaction node and duplicate
+      if (link.classes && link.classes.includes("reversible")) {
+        ////// Duplication of the reaction node
+        // get nodes class : we only want to duplicate class "reaction"
+        let newReactionNode: Node;
+        if (link.source.classes?.includes("reaction")) {
+          // duplicate source node
+          newReactionNode = reversibleNodeReaction(link.source,suffix);
+        } else if (link.target.classes?.includes("reaction")) {
+          // duplicate target node
+          newReactionNode = reversibleNodeReaction(link.target,suffix);
+        }
+        // adding new reaction node if not already the case
+        if (!network.nodes[newReactionNode.id]) {
+          network.nodes[newReactionNode.id] = newReactionNode;
+        }
     }
   });
+
+  // Adding link to duplicated node
+  const newLinks: Array<Link> = []; //links associated with new reactions nodes
+  network.links.forEach((link) => {
+    const newNodeSourceID=link.source.id+suffix;
+    const newNodeTargetID=link.target.id+suffix;
+    // if source node had been duplicated :
+    if (Object.keys(network.nodes).includes(newNodeSourceID)){
+      // if link reversible :
+      if (link.classes && link.classes.includes("reversible")) {
+        // link from target to reaction reversed (link is reversed)
+        const target = link.target;
+        newLinks.push({
+            id: `${target.id}--${newNodeSourceID}`,
+            source: network.nodes[target.id],
+            target: network.nodes[newNodeSourceID],
+            classes: ["reversible"],
+        });
+      } else{
+        // link not reversible but associated with a reversible reaction
+        newLinks.push({
+          id: `${newNodeSourceID}--${link.target.id}`,
+          source: network.nodes[newNodeSourceID],
+          target: network.nodes[link.target.id],
+          classes: ["irreversible"],
+        });
+      }
+    }
+
+      // if target node had been duplicated :
+    if (Object.keys(network.nodes).includes(newNodeTargetID)){
+      // if link reversible :
+      if (link.classes && link.classes.includes("reversible")) {
+        // link from reaction reversed to source  (link is reversed)
+        const target = link.target;
+        newLinks.push({
+            id: `${newNodeTargetID}--${link.source.id}`,
+            source: network.nodes[newNodeTargetID],
+            target: network.nodes[link.source.id],
+            classes: ["reversible"],
+        });
+      } else{
+        // link not reversible but associated with a reversible reaction
+        newLinks.push({
+          id: `${link.source.id}--${newNodeTargetID}`,
+          source: network.nodes[link.source.id],
+          target: network.nodes[newNodeTargetID],
+          classes: ["irreversible"],
+        });
+      }
+    }
+
+  });
+
 
   newLinks.forEach((link) => {
     network.links.push(link);
   });
-
-  removeAllSelectedNode(nodeToSupress,network);
 
   console.log(network);
 }
