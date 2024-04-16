@@ -1,16 +1,18 @@
 import { Link } from "@metabohub/viz-core/src/types/Link";
 import { Node } from "@metabohub/viz-core/src/types/Node";
 import { Network } from "@metabohub/viz-core/src/types/Network";
+import { removeAllSelectedNode } from "@metabohub/viz-core";
 
 /**
  * Take a network and add a duplicated node of reversible reactions, and add links to this reaction
  * @param {Network}  Network object
  */
-export function duplicateReversibleReactions(network: Network) {
+export function duplicateReversibleReactions(network: Network,suffix:string="_rev") {
 
   console.log('Duplicate');
 
   const newLinks: Array<Link> = []; //links associated with new reactions nodes
+  const nodeToSupress: Array<string> = [];
 
   network.links.forEach((link) => {
     // if the link is reversible :  get the reaction node and duplicate
@@ -23,11 +25,11 @@ export function duplicateReversibleReactions(network: Network) {
       if (link.source.classes?.includes("reaction")) {
         reactionIsSource = true;
         // duplicate source node
-        newReactionNode = reversibleNodeReaction(link.source);
+        newReactionNode = reversibleNodeReaction(link.source,suffix);
       } else if (link.target.classes?.includes("reaction")) {
         reactionIsSource = false;
         // duplicate target node
-        newReactionNode = reversibleNodeReaction(link.target);
+        newReactionNode = reversibleNodeReaction(link.target,suffix);
       }
       // adding new reaction node if not already the case
       if (!network.nodes[newReactionNode.id]) {
@@ -54,6 +56,15 @@ export function duplicateReversibleReactions(network: Network) {
         });
     }
       
+    } else {
+      // if link not reversible : 
+      // but a the reaction associated had been reverted : this reaction isn't reversible for all links so it will be suppressed
+      if (link.source.classes?.includes("reaction") && !nodeToSupress.includes(link.source.id+suffix)){
+        nodeToSupress.push(link.source.id+suffix)
+      }
+      if (link.target.classes?.includes("reaction") && !nodeToSupress.includes(link.target.id+suffix)){
+        nodeToSupress.push(link.target.id+suffix)
+      }
     }
   });
 
@@ -61,19 +72,22 @@ export function duplicateReversibleReactions(network: Network) {
     network.links.push(link);
   });
 
+  removeAllSelectedNode(nodeToSupress,network);
+
   console.log(network);
 }
 
 /**
  * Take a node and return a new node with same id and label but with a "_rev" at the end : the node of the reversible reaction
  * @param {Link}
+ * @param suffix to put at the end of id of the original reaction : can't be "" !
  * @returns {Node}
  */
-function reversibleNodeReaction(node: Node): Node {
+function reversibleNodeReaction(node: Node, suffix:string="_rev"): Node {
   const { id, label, x, y } = node;
   const newNode: Node = {
-      id: id + "_rev",
-      label: label + "_rev", // Change label to help in coding, but to remove after
+      id: id + suffix,
+      label: label + suffix, // Change label to help in coding, but to remove after
       x: x,
       y: y,
       classes: ["reaction", "reversible", "reversibleVersion"],
@@ -82,3 +96,5 @@ function reversibleNodeReaction(node: Node): Node {
 
   return newNode;
 }
+
+
