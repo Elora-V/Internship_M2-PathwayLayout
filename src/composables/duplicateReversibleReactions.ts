@@ -23,11 +23,11 @@ export function duplicateReversibleReactions(network: Network) {
       if (link.source.classes?.includes("reaction")) {
         reactionIsSource = true;
         // duplicate source node
-        newReactionNode = reversibleNodeReaction(link, "source");
+        newReactionNode = reversibleNodeReaction(link.source);
       } else if (link.target.classes?.includes("reaction")) {
         reactionIsSource = false;
         // duplicate target node
-        newReactionNode = reversibleNodeReaction(link, "target");
+        newReactionNode = reversibleNodeReaction(link.target);
       }
       // adding new reaction node if not already the case
       if (!network.nodes[newReactionNode.id]) {
@@ -65,14 +65,13 @@ export function duplicateReversibleReactions(network: Network) {
 }
 
 /**
- * Take a link and return a new link with same id and label but with a "_rev" at the end : the node of the reversible reaction
+ * Take a node and return a new node with same id and label but with a "_rev" at the end : the node of the reversible reaction
  * @param {Link}
- * @param sourceOrTarget indicate if the reaction on the link is the source or target
  * @returns {Node}
  */
-function reversibleNodeReaction(link: Link, sourceOrTarget: "source" | "target"): Node {
-  const { id, label, x, y } = link[sourceOrTarget];
-  const node: Node = {
+function reversibleNodeReaction(node: Node): Node {
+  const { id, label, x, y } = node;
+  const newNode: Node = {
       id: id + "_rev",
       label: label + "_rev", // Change label to help in coding, but to remove after
       x: x,
@@ -81,5 +80,5 @@ function reversibleNodeReaction(link: Link, sourceOrTarget: "source" | "target")
       metadata: {},
   };
 
-  return node;
+  return newNode;
 }
