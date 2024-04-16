@@ -14,9 +14,8 @@ export function duplicateReversibleReactions(network: Network) {
 
   network.links.forEach((link) => {
     // if the link is reversible :  get the reaction node and duplicate
-    if (link.classes && typeof link.classes==='object' && link.classes.includes("reversible")) {
+    if (link.classes && link.classes.includes("reversible")) {
       ////// Duplication of the reaction node
-
       // get nodes class : we only want to duplicate class "reaction"
       let newReactionNode: Node;
       let reactionIsSource: boolean;
@@ -61,6 +60,8 @@ export function duplicateReversibleReactions(network: Network) {
   newLinks.forEach((link) => {
     network.links.push(link);
   });
+
+  console.log(network);
 }
 
 /**
