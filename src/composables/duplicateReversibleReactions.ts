@@ -26,10 +26,14 @@ export function duplicateReversibleReactions(network: Network,suffix:string="_re
         reactionIsSource = true;
         // duplicate source node
         newReactionNode = reversibleNodeReaction(link.source);
+        // add attribut reversible to original reaction
+        network.nodes[link.source.id].classes=pushUniqueString(network.nodes[link.source.id].classes,"reversible");
       } else if (link.target.classes?.includes("reaction")) {
         reactionIsSource = false;
         // duplicate target node
         newReactionNode = reversibleNodeReaction(link.target);
+        // add attribut reversible to original reaction
+        network.nodes[link.target.id].classes=pushUniqueString(network.nodes[link.target.id].classes,"reversible");
       }
       // adding new reaction node if not already the case
       if (!network.nodes[newReactionNode.id]) {
