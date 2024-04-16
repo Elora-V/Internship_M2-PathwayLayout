@@ -247,18 +247,17 @@ function reversibleClassNewEdge(link: {[key: string]: string},network:Network,so
     } else if (typeof link.reversible === "boolean") {
         isReversible = link.reversible;
     }
-
 	// adding reversible class to new edge and reaction node (source and/or target node)
 	let reversible: string;
 	if (isReversible){
 		reversible="reversible";
 		// put the reaction node in "reversible"
 		////// for the source :
-		if (network.nodes[sourceID].classes.includes("reaction")){
+		if (network.nodes[sourceID].classes.includes("reaction") && !(network.nodes[sourceID].classes.includes("reversible"))){
 			network.nodes[sourceID].classes.push(reversible);
 		}
 		////// for the target :
-		if (network.nodes[targetID].classes.includes("reaction")){
+		if (network.nodes[targetID].classes.includes("reaction") && !(network.nodes[targetID].classes.includes("reversible"))){
 			network.nodes[targetID].classes.push(reversible);
 		}
 	} else {
