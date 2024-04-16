@@ -4,6 +4,7 @@ import { Node } from "@metabohub/viz-core/src/types/Node";
 import { Link } from "@metabohub/viz-core/src/types/Link";
 import { Network} from '@metabohub/viz-core/src/types/Network';
 import type { GraphStyleProperties } from "@metabohub/viz-core/src//types/GraphStyleProperties";
+import { JsonStyle } from '@/types/JsonStyle';
 
 
 
@@ -139,7 +140,7 @@ export function readJsonGraph(jsonGraph: string): { network: Network, networkSty
  */
 function readJsonMetExploreViz(jsonGraph: string, network: Network, networkStyle: GraphStyleProperties,
 	modifyEdge: (link: {[key: string]: string}, network: Network, sourceId: string, targetId: string, edge: Link) => void = (link, network, sourceId, targetId, edge) => {},
-	changeNodeStyles : (networkStyle:GraphStyleProperties,jsonObject:any) => void = (networkStyle, jsonObject) => {}): { network: Network, networkStyle: GraphStyleProperties } {
+	changeNodeStyles : (networkStyle:GraphStyleProperties,jsonObject:JsonStyle) => void = (networkStyle, jsonObject) => {}): { network: Network, networkStyle: GraphStyleProperties } {
 	const jsonObject = JSON.parse(jsonGraph);
 	const d3Nodes = jsonObject.sessions.viz.d3Data.nodes;
 
@@ -274,20 +275,19 @@ function reversibleClassNewEdge(link: {[key: string]: string},network:Network,so
 }
 	
 
-function changeNodeStyles(networkStyle:GraphStyleProperties,jsonObject:any){
+function changeNodeStyles(networkStyle:GraphStyleProperties,jsonObject:JsonStyle){
+	console.log(jsonObject);
 	networkStyle.nodeStyles = {
 		metabolite: {
 			width: 20,
 			height: 20,
-			fill: jsonObject.metaboliteStyle.backgroundColor ? jsonObject.metaboliteStyle.backgroundColor : '#FFFFFF',
-			strokeWidth: jsonObject.metaboliteStyle.strokeColor,
+			fill: jsonObject.metaboliteStyle.backgroundColor ? String(jsonObject.metaboliteStyle.backgroundColor) : '#FFFFFF',
 			shape: 'circle'
 		},
 		reaction: {
 			width: 15,
 			height: 15,
 			fill: "grey",
-			strokeWidth: jsonObject.reactionStyle.strokeColor,
 			shape: 'rect'
 		},
 		reversible : {
