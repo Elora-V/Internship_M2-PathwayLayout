@@ -45,7 +45,8 @@ export function NetworkToViz(network: Network, graphAttributes={} ): Graph{
     const graphViz: Graph ={
         graphAttributes: graphAttributes,
         directed: true,
-        edges: []
+        edges: [],
+        subgraphs:[]
     }
 
     // insert edges into graph
@@ -71,4 +72,15 @@ export function NetworkToSerialized(network: Network): Serialized {
         weight: 1 
     }));
     return { nodes: serializedNodes, links: serializedLinks };
+}
+
+export function addClusterViz(vizGraph:Graph,name:string, vizNodesList:Array<VizNode>){
+    if (!Object.keys(vizGraph).includes("subgraphs")){
+        vizGraph.subgraphs=[];
+    }
+    vizGraph.subgraphs.push({
+        name:"cluster_"+name,
+        nodes:vizNodesList
+    });
+    return vizGraph;
 }
