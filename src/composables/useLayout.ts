@@ -29,18 +29,16 @@ export function dagreLayout(network: Network,graphAttributes={},callbackFunction
 /** 
  * Take a network object and change the (x,y) position of the node with viz lib
  * @param {Network}  Network object
- * @param clusters clusters for viz
+ * @param clusters clusters for viz (type version for quick search)
  * @param graphAttributes for viz dot layout (see https://graphviz.org/docs/layouts/dot/)
  * @param [callbackFunction=() => {}] function to do after the layout is done
  */
-export function vizLayout(network: Network,clusters:Array<SubgraphViz>=[], graphAttributes={}, callbackFunction = () => {}) {
-
+export function vizLayout(network: Network,clusters:Array<SubgraphObject>=[], graphAttributes={}, callbackFunction = () => {}) {
     console.log('Viz');
     setTimeout(async function() {
         instance().then(viz => {
-        const graphViz=NetworkToViz(network,clusters,graphAttributes);
+        const graphViz=NetworkToViz(network,clusters,graphAttributes,true);
         const json=viz.renderJSON(graphViz) as JsonViz;
-        console.log(json);
         changeNetworkFromViz(json,network).then(() => {
             callbackFunction();
         });

@@ -77,7 +77,7 @@ const networkStyle = ref<GraphStyleProperties>({nodeStyles: {}, linkStyles: {}})
 let svgProperties = reactive({});
 const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNode},{label:'Duplicate', action:duplicateNode},{label:'AddToCluster', action:addToCluster}])
 let undoFunction: any = reactive({});
-let clusters : Array<SubgraphViz> =reactive([])
+let clusters : Array<SubgraphObject> =reactive([])
 let attributViz : AttributesViz=reactive({});
 
 // Functions --------------
@@ -138,12 +138,17 @@ function duplicateNode() {
   duplicateThisNode(menuProps.targetElement, network.value, networkStyle.value);
 }
 function addToCluster() {
-  clusters[clusters.length-1].nodes.push({
-  name: menuProps.targetElement});
+  if (clusters.length===0){
+    newCluster();
+  }
+  const lastCluster=clusters[clusters.length-1];
+  if (!("nodes" in lastCluster)){
+    lastCluster.nodes={};
+  }
+  lastCluster.nodes[menuProps.targetElement]={name: menuProps.targetElement};
 }
 function newCluster(){
-  clusters.push({name:String(clusters.length),nodes:[]});
-  //clusters[clusters.length-1]=addAttributClusterViz(clusters[clusters.length-1],"rank","source");
+  clusters.push({name:String(clusters.length),nodes:{},edges:[]});
 }
 function ordering(value:string="default"){
   if (value == "default" && "ordering" in attributViz){
