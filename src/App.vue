@@ -3,6 +3,22 @@
     Rescale
   </button>
   <input type="file" accept=".json" label="File input" v-on:change="loadFile" />
+  <br>
+  <button v-on:click="newCluster()">
+     New_Cluster
+  </button>
+  <br>
+  <button v-on:click="ordering('default')">
+     Ordering default
+  </button>
+  <br>
+  <button v-on:click="ordering('out')">
+     Ordering out
+  </button>
+  <br>
+  <button v-on:click="ordering('in')">
+     Ordering in
+  </button>
   <NetworkComponent 
     v-on:contextmenu.prevent
     :network="network"
@@ -31,6 +47,7 @@ import { Serialized } from "graph-data-structure";
 
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
+import {SubgraphViz} from "./types/VizType";
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
   // Composables ----------
@@ -48,6 +65,8 @@ import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
   // Components -----------
 import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
+import { node } from "prop-types";
+import { addAttributClusterViz } from "@/composables/modifyVizGraph";
 
 
 
@@ -56,8 +75,10 @@ import { ContextMenu } from "@metabohub/viz-context-menu";
 const network = ref<Network>({id: '', nodes: {}, links: []});
 const networkStyle = ref<GraphStyleProperties>({nodeStyles: {}, linkStyles: {}});
 let svgProperties = reactive({});
-const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNode},{label:'Duplicate', action:duplicateNode}])
+const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNode},{label:'Duplicate', action:duplicateNode},{label:'AddToCluster', action:addToCluster}])
 let undoFunction: any = reactive({});
+let clusters : Array<SubgraphObject> =reactive([])
+let attributViz : AttributesViz=reactive({});
 
 // Functions --------------
 
@@ -88,10 +109,11 @@ function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
     dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
-    const attribut={ rankdir: "BT" };
-    vizLayout(network.value, attribut ,rescaleAfterAction);
+    vizLayout(network.value, clusters ,attributViz ,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
+  } else if (event.key =="c"){
+    console.log(clusters);
   }
 }
 
@@ -103,6 +125,8 @@ function rescaleAfterAction(){
 
 onMounted(() => {
   svgProperties = initZoom();
+  newCluster();
+  attributViz={rankdir: "BT" , newrank:true, compound:true};
   window.addEventListener('keydown', keydownHandler);
   importNetworkFromURL('/pathways/Alanine_and_aspartate_metabolism.json', network, networkStyle, callbackFunction); 
   
@@ -113,6 +137,27 @@ function removeNode() {
 function duplicateNode() {
   duplicateThisNode(menuProps.targetElement, network.value, networkStyle.value);
 }
+function addToCluster() {
+  if (clusters.length===0){
+    newCluster();
+  }
+  const lastCluster=clusters[clusters.length-1];
+  if (!("nodes" in lastCluster)){
+    lastCluster.nodes={};
+  }
+  lastCluster.nodes[menuProps.targetElement]={name: menuProps.targetElement};
+}
+function newCluster(){
+  clusters.push({name:String(clusters.length),nodes:{},edges:[]});
+}
+function ordering(value:string="default"){
+  if (value == "default" && "ordering" in attributViz){
+    delete attributViz.ordering;
+  } else if (value == "in" || value == "out"){
+    attributViz.ordering=value;
+  }
+}
+
 function openContextMenu(Event: MouseEvent, nodeId: string) {
   UseContextMenu.showContextMenu(Event, nodeId);
 }
