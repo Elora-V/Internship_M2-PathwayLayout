@@ -8,14 +8,22 @@ import { Graph } from "@viz-js/viz";
  * @param {Array<NodeViz>} vizNodesList An array of viz node objects representing the nodes to be included in the cluster.
  * @returns {Graph} The updated graph object with the cluster visualization added.
  */
-export function addClusterViz(vizGraph:Graph,name:string, vizNodesList:Array<NodeViz>):Graph{
+export function addClusterViz(vizGraph:Graph,cluster:SubgraphViz):Graph{
     if (!Object.keys(vizGraph).includes("subgraphs")){
         vizGraph.subgraphs=[];
     }
-    vizGraph.subgraphs.push({
-        name:"cluster_"+name,
-        nodes:vizNodesList
-    });
+    if (!cluster.name.startsWith("cluster_")) {
+        cluster.name = "cluster_" + cluster.name;
+    }
+    vizGraph.subgraphs.push(cluster);
     return vizGraph;
+}
+
+export function addAttributClusterViz(cluster:SubgraphViz,nameAttribut:string,valueAttribut:string | number | boolean ):SubgraphViz{
+    if (!Object.keys(cluster).includes("graphAttributes")){
+        cluster.graphAttributes={};
+    }
+    cluster.graphAttributes[nameAttribut]=valueAttribut;
+    return cluster;
 }
 

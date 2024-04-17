@@ -3,6 +3,10 @@
     Rescale
   </button>
   <input type="file" accept=".json" label="File input" v-on:change="loadFile" />
+  <br>
+  <button v-on:click="newCluster()">
+     New_Cluster
+  </button>
   <NetworkComponent 
     v-on:contextmenu.prevent
     :network="network"
@@ -31,6 +35,7 @@ import { Serialized } from "graph-data-structure";
 
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
+import {SubgraphViz} from "./types/VizType";
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
   // Composables ----------
@@ -56,8 +61,10 @@ import { ContextMenu } from "@metabohub/viz-context-menu";
 const network = ref<Network>({id: '', nodes: {}, links: []});
 const networkStyle = ref<GraphStyleProperties>({nodeStyles: {}, linkStyles: {}});
 let svgProperties = reactive({});
-const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNode},{label:'Duplicate', action:duplicateNode}])
+const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNode},{label:'Duplicate', action:duplicateNode},{label:'AddToCluster', action:addToCluster}])
 let undoFunction: any = reactive({});
+let clusters : Array<SubgraphViz> =reactive([])
+
 
 // Functions --------------
 
@@ -103,6 +110,7 @@ function rescaleAfterAction(){
 
 onMounted(() => {
   svgProperties = initZoom();
+  newCluster();
   window.addEventListener('keydown', keydownHandler);
   importNetworkFromURL('/pathways/Alanine_and_aspartate_metabolism.json', network, networkStyle, callbackFunction); 
   
@@ -113,6 +121,15 @@ function removeNode() {
 function duplicateNode() {
   duplicateThisNode(menuProps.targetElement, network.value, networkStyle.value);
 }
+function addToCluster() {
+  clusters[clusters.length-1].nodes.push({
+  name: menuProps.targetElement});
+}
+function newCluster(){
+  clusters.push({name:String(clusters.length),nodes:[]});
+  //clusters[clusters.length-1]=addAttributClusterViz(clusters[clusters.length-1],"rank","same");
+}
+
 function openContextMenu(Event: MouseEvent, nodeId: string) {
   UseContextMenu.showContextMenu(Event, nodeId);
 }

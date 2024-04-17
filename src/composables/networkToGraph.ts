@@ -2,6 +2,8 @@ import { Network } from '@metabohub/viz-core/src/types/Network';
 import  dagre  from 'dagrejs/dist/dagre.js';
 import { Graph, instance } from "@viz-js/viz";
 import { Serialized } from 'graph-data-structure';
+import { object } from 'prop-types';
+import { addClusterViz } from './modifyVizGraph';
 
 /** 
  * Take a network object and return a dagre.graphlib.Graph object containing the same nodes and edge 
@@ -37,12 +39,13 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
  * Take a network object and return a graph object for viz containing the same nodes and edge 
  * @param {Network}  Network object 
  * @param  graphAttributes for viz dot layout (see https://graphviz.org/docs/layouts/dot/)
+ * @param clusters clusters for viz
  * @returns {Graph} Return graph object for viz
  */
-export function NetworkToViz(network: Network, graphAttributes={} ): Graph{
+export function NetworkToViz(network: Network,clusters:Array<SubgraphViz>=[],graphAttributes={} ): Graph{
     
     // initialisation viz graph
-    const graphViz: Graph ={
+    let graphViz: Graph ={
         graphAttributes: graphAttributes,
         directed: true,
         edges: [],
@@ -55,6 +58,10 @@ export function NetworkToViz(network: Network, graphAttributes={} ): Graph{
         head: link.target.id
     }));
 
+    // insert subgraphs
+    clusters.forEach((cluster) => {
+        graphViz=addClusterViz(graphViz,cluster);
+    });
     return graphViz;
 
 }
@@ -74,13 +81,3 @@ export function NetworkToSerialized(network: Network): Serialized {
     return { nodes: serializedNodes, links: serializedLinks };
 }
 
-export function addClusterViz(vizGraph:Graph,name:string, vizNodesList:Array<VizNode>){
-    if (!Object.keys(vizGraph).includes("subgraphs")){
-        vizGraph.subgraphs=[];
-    }
-    vizGraph.subgraphs.push({
-        name:"cluster_"+name,
-        nodes:vizNodesList
-    });
-    return vizGraph;
-}
