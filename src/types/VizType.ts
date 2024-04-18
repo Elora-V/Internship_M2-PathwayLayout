@@ -35,15 +35,3 @@ nodes?: NodeViz[]
 edges?: EdgeViz[] 
 subgraphs?: SubgraphViz[]
 }
-
-// version of SubgraphViz modified to quicker search (with object instead of array for edge)
-interface SubgraphObject {
-    name?: string
-    classes?:Array<string> // adding classes 
-    graphAttributes?: AttributesViz
-    nodeAttributes?: AttributesViz
-    edgeAttributes?: AttributesViz
-    nodes?: {[key:string]:NodeViz} // adding object format to allow rapid search by node name
-    edges?: EdgeViz[]
-    subgraphs?: SubgraphViz[]
-    }
