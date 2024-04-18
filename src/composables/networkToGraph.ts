@@ -5,6 +5,7 @@ import { Serialized } from 'graph-data-structure';
 import { object } from 'prop-types';
 import { addClusterViz } from './modifyVizGraph';
 import cluster from 'cluster';
+import { Cluster } from '@/types/Cluster';
 
 /** 
  * Take a network object and return a dagre.graphlib.Graph object containing the same nodes and edge 
@@ -41,10 +42,9 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
  * @param {Network}  Network object 
  * @param  graphAttributes for viz dot layout (see https://graphviz.org/docs/layouts/dot/)
  * @param clusters clusters for viz
- * @param edgeInCluster true if edge are placed inside the right clusters, false if all edges in the general graph
  * @returns {Graph} Return graph object for viz
  */
-export function NetworkToViz(network: Network,clusters:Array<SubgraphObject>=[],graphAttributes={}, edgeInCluster:boolean=false ): Graph{
+export function NetworkToViz(network: Network,clusters:Array<Cluster>=[],graphAttributes={}): Graph{
     // initialisation viz graph
     let graphViz: Graph ={
         graphAttributes: graphAttributes,
@@ -53,38 +53,23 @@ export function NetworkToViz(network: Network,clusters:Array<SubgraphObject>=[],
         subgraphs:[]
     }
 
-    // insert edge in cluster or general graph
+    // insert edge 
     network.links.forEach((link)=>{
-        let notInCluster=true;
-        // if edge need to be placed inside clusters :
-        if(edgeInCluster){
-            // adding edges in cluster if source and target node in cluster
-            clusters.forEach((cluster)=>{
-                if (link.source.id in cluster.nodes && link.target.id in cluster.nodes){
-                    notInCluster=false;
-                    cluster.edges.push({
-                        tail: link.source.id,
-                        head: link.target.id,
-                    });
-                }
+        graphViz.edges.push({
+            tail: link.source.id,
+            head: link.target.id,
             });
-        }
-        //if the edge is associated with no cluster: put it in the general graph
-        if (notInCluster){
-            graphViz.edges.push({
-                tail: link.source.id,
-                head: link.target.id,
-              });
-        }
     })
 
     // insert subgraphs (with edges)
     clusters.forEach((cluster) => {
         graphViz=addClusterViz(graphViz,cluster);
     });
+
     return graphViz;
 
 }
+
 
 /**
  * Take a network object and return a serialized object for graph-data-strucutre lib containing the same nodes and edge 
