@@ -2,6 +2,10 @@ import { Network } from '@metabohub/viz-core/src/types/Network';
 import  dagre  from 'dagrejs/dist/dagre.js';
 import { Graph, instance } from "@viz-js/viz";
 import { Serialized } from 'graph-data-structure';
+import { object } from 'prop-types';
+import { addClusterViz } from './modifyVizGraph';
+import cluster from 'cluster';
+import { Cluster } from '@/types/Cluster';
 
 /** 
  * Take a network object and return a dagre.graphlib.Graph object containing the same nodes and edge 
@@ -37,26 +41,35 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
  * Take a network object and return a graph object for viz containing the same nodes and edge 
  * @param {Network}  Network object 
  * @param  graphAttributes for viz dot layout (see https://graphviz.org/docs/layouts/dot/)
+ * @param clusters clusters for viz
  * @returns {Graph} Return graph object for viz
  */
-export function NetworkToViz(network: Network, graphAttributes={} ): Graph{
-    
+export function NetworkToViz(network: Network,clusters:Array<Cluster>=[],graphAttributes={}): Graph{
     // initialisation viz graph
-    const graphViz: Graph ={
+    let graphViz: Graph ={
         graphAttributes: graphAttributes,
         directed: true,
-        edges: []
+        edges: [],
+        subgraphs:[]
     }
 
-    // insert edges into graph
-    graphViz.edges = network.links.map(link => ({
-        tail: link.source.id,
-        head: link.target.id
-    }));
+    // insert edge 
+    network.links.forEach((link)=>{
+        graphViz.edges.push({
+            tail: link.source.id,
+            head: link.target.id,
+            });
+    })
+
+    // insert subgraphs (with edges)
+    clusters.forEach((cluster) => {
+        graphViz=addClusterViz(graphViz,cluster);
+    });
 
     return graphViz;
 
 }
+
 
 /**
  * Take a network object and return a serialized object for graph-data-strucutre lib containing the same nodes and edge 
@@ -72,3 +85,4 @@ export function NetworkToSerialized(network: Network): Serialized {
     }));
     return { nodes: serializedNodes, links: serializedLinks };
 }
+
