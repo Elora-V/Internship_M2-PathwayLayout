@@ -254,15 +254,15 @@ function reversibleClassNewEdge(link: {[key: string]: string},network:Network,so
 	let reversible: string;
 	if (isReversible){
 		reversible="reversible";
-		// put the reaction node in "reversible"
-		////// for the source :
-		if (network.nodes[sourceID].classes.includes("reaction") && !(network.nodes[sourceID].classes.includes("reversible"))){
-			network.nodes[sourceID].classes.push(reversible);
-		}
-		////// for the target :
-		if (network.nodes[targetID].classes.includes("reaction") && !(network.nodes[targetID].classes.includes("reversible"))){
-			network.nodes[targetID].classes.push(reversible);
-		}
+		// // put the reaction node in "reversible"
+		// ////// for the source :
+		// if (network.nodes[sourceID].classes.includes("reaction") && !(network.nodes[sourceID].classes.includes("reversible"))){
+		// 	network.nodes[sourceID].classes.push(reversible);
+		// }
+		// ////// for the target :
+		// if (network.nodes[targetID].classes.includes("reaction") && !(network.nodes[targetID].classes.includes("reversible"))){
+		// 	network.nodes[targetID].classes.push(reversible);
+		// }
 	} else {
 		reversible="irreversible";
 	}
@@ -276,7 +276,6 @@ function reversibleClassNewEdge(link: {[key: string]: string},network:Network,so
 	
 
 function changeNodeStyles(networkStyle:GraphStyleProperties,jsonObject:JsonStyle){
-	console.log(jsonObject);
 	networkStyle.nodeStyles = {
 		metabolite: {
 			width: 20,
