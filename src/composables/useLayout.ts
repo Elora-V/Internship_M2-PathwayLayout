@@ -34,7 +34,7 @@ export function dagreLayout(network: Network,graphAttributes={},callbackFunction
  * @param graphAttributes for viz dot layout (see https://graphviz.org/docs/layouts/dot/)
  * @param [callbackFunction=() => {}] function to do after the layout is done
  */
-export function vizLayout(network: Network,clusters:Array<Cluster>=[], graphAttributes={}, callbackFunction = () => {}) {
+export function vizLayout(network: Network,clusters:{[key:string]:Cluster}={}, graphAttributes={}, callbackFunction = () => {}) {
     console.log('Viz');
     setTimeout(async function() {
         instance().then(viz => {

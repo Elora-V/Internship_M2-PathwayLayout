@@ -66,6 +66,7 @@ import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
 import { node } from "prop-types";
 import { Cluster } from "@/types/Cluster";
+import { ClusterNetwork } from "@/types/ClusterNetwork";
 
 
 
@@ -76,8 +77,9 @@ const networkStyle = ref<GraphStyleProperties>({nodeStyles: {}, linkStyles: {}})
 let svgProperties = reactive({});
 const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNode},{label:'Duplicate', action:duplicateNode},{label:'AddToCluster', action:addToCluster}])
 let undoFunction: any = reactive({});
-let clusters : Array<Cluster> =reactive([])
-let attributGraphViz : AttributesViz=reactive({});
+//let clusters : Array<Cluster> =reactive([])
+//let attributGraphViz : AttributesViz=reactive({});
+let clusterNetwork:ClusterNetwork={network:network,attributs:{},clusters:{}};
 
 // Functions --------------
 
@@ -108,24 +110,24 @@ function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
     dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
-    vizLayout(network.value, clusters ,attributGraphViz ,rescaleAfterAction);
+    vizLayout(network.value, clusterNetwork.clusters ,clusterNetwork.attributs ,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
   } else if (event.key =="c"){
-    console.log(clusters);
+    console.log(clusterNetwork);
+  } else if (event.key =="n"){
+    console.log(network.value);
   }
 }
 
 function rescaleAfterAction(){
   console.log('Rescaling');
   rescale(svgProperties);
-  console.log(network.value);
 }
 
 onMounted(() => {
   svgProperties = initZoom();
-  newCluster();
-  attributGraphViz={rankdir: "BT" , newrank:true, compound:true};
+  clusterNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
   window.addEventListener('keydown', keydownHandler);
   importNetworkFromURL('/pathways/Alanine_and_aspartate_metabolism.json', network, networkStyle, callbackFunction); 
   
@@ -138,19 +140,28 @@ function duplicateNode() {
 }
 
 function newCluster(){
-  const numberCluster=clusters.length;
-  clusters.push(new Cluster(String(numberCluster)));
+  const numberCluster=Object.keys(clusterNetwork.clusters).length;
+  const cluster=new Cluster(String(numberCluster));
+  clusterNetwork.clusters[cluster.name]=cluster;
 }
 
 function addToCluster() {
-  clusters[clusters.length-1].addNode({name:menuProps.targetElement});
+  let numberCluster=Object.keys(clusterNetwork.clusters).length;
+  if (numberCluster === 0){
+    newCluster();
+    numberCluster+=1;
+  }
+  clusterNetwork.clusters[String(numberCluster-1)].addNode(menuProps.targetElement); 
 }
 
 function ordering(value:string="default"){
-  if (value == "default" && "ordering" in attributGraphViz){
-    delete attributGraphViz.ordering;
+  if (!clusterNetwork.attributs){
+    clusterNetwork.attributs={};
+  }
+  if (value == "default" && "ordering" in clusterNetwork.attributs){
+    delete clusterNetwork.attributs.ordering;
   } else if (value == "in" || value == "out"){
-    attributGraphViz.ordering=value;
+    clusterNetwork.attributs.ordering=value;
   }
 }
 

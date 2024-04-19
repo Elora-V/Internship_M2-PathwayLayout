@@ -44,7 +44,7 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
  * @param clusters clusters for viz
  * @returns {Graph} Return graph object for viz
  */
-export function NetworkToViz(network: Network,clusters:Array<Cluster>=[],graphAttributes={}): Graph{
+export function NetworkToViz(network: Network,clusters:{[key:string]:Cluster}={},graphAttributes={}): Graph{
     // initialisation viz graph
     let graphViz: Graph ={
         graphAttributes: graphAttributes,
@@ -62,7 +62,7 @@ export function NetworkToViz(network: Network,clusters:Array<Cluster>=[],graphAt
     })
 
     // insert subgraphs (with edges)
-    clusters.forEach((cluster) => {
+    Object.values(clusters).forEach((cluster) => {
         graphViz=addClusterViz(graphViz,cluster);
     });
 
