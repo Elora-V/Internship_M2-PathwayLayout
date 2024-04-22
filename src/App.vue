@@ -80,6 +80,7 @@ let undoFunction: any = reactive({});
 //let clusters : Array<Cluster> =reactive([])
 //let attributGraphViz : AttributesViz=reactive({});
 let clusterNetwork:ClusterNetwork={network:network,attributs:{},clusters:{}};
+let rank0:Array<string>=[];
 
 // Functions --------------
 
@@ -98,11 +99,6 @@ async function callbackFunction() {
   removeSideCompounds(network.value,"/sideCompounds.txt");
   console.log(network.value);
 
-  // import('graph-data-structure').then(gds => {
-  //   const graph = gds.Graph();
-  //   const networkSerialized: Serialized = NetworkToSerialized(network.value);
-  //   graph.deserialize(networkSerialized);
-  // })
 
 }
 
@@ -123,6 +119,25 @@ function keydownHandler(event: KeyboardEvent) {
 function rescaleAfterAction(){
   console.log('Rescaling');
   rescale(svgProperties);
+  rank0=[];
+  Object.values(network.value.nodes).forEach(node =>{
+      if (node.metadata && (Object.keys(node.metadata).includes("rank")) && node.metadata.rank===0){
+        rank0.push(node.id);
+      }
+    });
+
+    import('graph-data-structure').then(gds => {
+    const graph = gds.Graph();
+    const networkSerialized: Serialized = NetworkToSerialized(network.value);
+    graph.deserialize(networkSerialized);
+
+    const dfs= rank0.length !== 0 ? graph.depthFirstSearch(rank0) : graph.depthFirstSearch();
+    console.log(rank0);
+    dfs.forEach(node => {
+      console.log(network.value.nodes[node].label);
+    }
+    );
+  })
 }
 
 onMounted(() => {
