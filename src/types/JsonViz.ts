@@ -1,20 +1,14 @@
+
+
 export interface JsonViz {
     directed?: boolean,
     edges:Array<EdgeViz>,
     objects:Array<ObjectsViz>
 }
 
-interface EdgeViz {
-    tail: string,
-    head: string,
-    attributes?: Attributes
-  }
-
-interface ObjectsViz {
+interface ObjectsViz { 
     name: string,
     pos?: string,
-}
-
-interface Attributes {
-[name: string]: string | number | boolean 
+    bb?: string,
+    nodes?:Array<number> // the index in the JsonViz.objects for all nodes
 }

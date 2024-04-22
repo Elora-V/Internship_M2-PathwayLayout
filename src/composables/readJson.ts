@@ -4,6 +4,8 @@ import { Node } from "@metabohub/viz-core/src/types/Node";
 import { Link } from "@metabohub/viz-core/src/types/Link";
 import { Network} from '@metabohub/viz-core/src/types/Network';
 import type { GraphStyleProperties } from "@metabohub/viz-core/src//types/GraphStyleProperties";
+import { JsonStyle } from '@/types/JsonStyle';
+
 
 
 export function readJsonGraph(jsonGraph: string): { network: Network, networkStyle: GraphStyleProperties } {
@@ -24,7 +26,7 @@ export function readJsonGraph(jsonGraph: string): { network: Network, networkSty
 		if (!jsonObject.sessions) {
 			throw new Error("graph attribute lacking in json graph format")
 		} else {
-			readJsonMetExploreViz(preprocessJsonGraph, network, networkStyle);
+			readJsonMetExploreViz(preprocessJsonGraph, network, networkStyle,reversibleClassNewEdge,changeNodeStyles);
 
 			return { network, networkStyle };
 		}
@@ -136,7 +138,9 @@ export function readJsonGraph(jsonGraph: string): { network: Network, networkSty
  * @param networkStyle Network style object
  * @returns {Network, GraphStyleProperties} Return network object and graphStyleProperties object
  */
-function readJsonMetExploreViz(jsonGraph: string, network: Network, networkStyle: GraphStyleProperties): { network: Network, networkStyle: GraphStyleProperties } {
+function readJsonMetExploreViz(jsonGraph: string, network: Network, networkStyle: GraphStyleProperties,
+	modifyEdge: (link: {[key: string]: string}, network: Network, sourceId: string, targetId: string, edge: Link) => void = (link, network, sourceId, targetId, edge) => {},
+	changeNodeStyles : (networkStyle:GraphStyleProperties,jsonObject:JsonStyle) => void = (networkStyle, jsonObject) => {}): { network: Network, networkStyle: GraphStyleProperties } {
 	const jsonObject = JSON.parse(jsonGraph);
 	const d3Nodes = jsonObject.sessions.viz.d3Data.nodes;
 
@@ -181,51 +185,22 @@ function readJsonMetExploreViz(jsonGraph: string, network: Network, networkStyle
 		}
 	});
 
-	jsonObject.sessions.viz.d3Data.links.forEach((link: {[key: string]: string}) => {	
+	jsonObject.sessions.viz.d3Data.links.forEach((link: {[key: string]: string}) => {
 		const d3Source = d3Nodes[link.source];
 		const d3Target = d3Nodes[link.target];
 
 		const source = network.nodes[d3Source.dbIdentifier];
 		const target = network.nodes[d3Target.dbIdentifier];
 
-		// adding reversible class to link
-
-		let isReversible :boolean;
-		if (typeof link.reversible == "string"){
-			if ( link.reversible.trim() =="true"){isReversible=true;}
-			else if (link.reversible.trim()=="false"){isReversible=false;}
-		}else if (typeof link.reversible == "boolean"){
-			isReversible=link.reversible;
-		}
-		let reversible: string;
-		if (isReversible){
-			reversible="reversible";
-			// put the reaction node in "reversible"
-			////// for the source :
-			if (source.classes.includes("reaction")){
-				network.nodes[d3Source.dbIdentifier].classes.push("reversible");
-			}
-			////// for the target :
-			if (target.classes.includes("reaction")){
-				network.nodes[d3Target.dbIdentifier].classes.push("reversible");
-			}
-		} else {
-			reversible="irreversible";
-		}
-		
-
 		if (target && source) {
 
 			const edge: Link = {
 				id: link.id,
 				source: source,
-				target: target,
-				classes: [
-					reversible
-				]
-                
+				target: target
 			}
 
+			modifyEdge(link,network,source.id,target.id,edge);
 			network.links.push(edge);
 		}
 	});
@@ -243,26 +218,85 @@ function readJsonMetExploreViz(jsonGraph: string, network: Network, networkStyle
 				shape: 'circle'
 			},
 			reaction: {
-				width: 15,
-				height: 15,
-				fill: "grey",
-				//fill: jsonObject.reactionStyle.backgroundColor ? jsonObject.reactionStyle.backgroundColor : '#FFFFFF',
+				width: 10,
+				height: 10,
+				fill: jsonObject.reactionStyle.backgroundColor ? jsonObject.reactionStyle.backgroundColor : '#FFFFFF',
 				strokeWidth: jsonObject.reactionStyle.strokeColor,
 				shape: 'rect'
-			},
-			reversible : {
-				fill : "green",
-				shape:"inverseTriangle"
-			},
-			reversibleVersion:{
-				fill:"red",
-				shape: "triangle"
 			}
-
 		}
+
+		changeNodeStyles(networkStyle,jsonObject);
 	}
 
 	return {network, networkStyle};
 }
 
 
+/**
+ * Take some information about a link and 
+ * @param link the d3 link with the reversible information
+ * @param network the network that need change
+ * @param source the source node from the network
+ * @param target the target node from the network
+ * @param newEdge the edge in construction that will be push in network
+ */
+function reversibleClassNewEdge(link: {[key: string]: string},network:Network,sourceID:string,targetID:string,newEdge:Link){
+
+	// d3 link is reversible ?
+	let isReversible :boolean;
+	if (typeof link.reversible === "string") {
+        isReversible = link.reversible.trim() === "true";
+    } else if (typeof link.reversible === "boolean") {
+        isReversible = link.reversible;
+    }
+	// adding reversible class to new edge and reaction node (source and/or target node)
+	let reversible: string;
+	if (isReversible){
+		reversible="reversible";
+		// // put the reaction node in "reversible"
+		// ////// for the source :
+		// if (network.nodes[sourceID].classes.includes("reaction") && !(network.nodes[sourceID].classes.includes("reversible"))){
+		// 	network.nodes[sourceID].classes.push(reversible);
+		// }
+		// ////// for the target :
+		// if (network.nodes[targetID].classes.includes("reaction") && !(network.nodes[targetID].classes.includes("reversible"))){
+		// 	network.nodes[targetID].classes.push(reversible);
+		// }
+	} else {
+		reversible="irreversible";
+	}
+
+	if (!newEdge.classes){
+		newEdge.classes=[]	
+	}
+	// reversible class to new edge
+	newEdge.classes.push(reversible);	
+}
+	
+
+function changeNodeStyles(networkStyle:GraphStyleProperties,jsonObject:JsonStyle){
+	networkStyle.nodeStyles = {
+		metabolite: {
+			width: 20,
+			height: 20,
+			fill: jsonObject.metaboliteStyle.backgroundColor ? String(jsonObject.metaboliteStyle.backgroundColor) : '#FFFFFF',
+			shape: 'circle'
+		},
+		reaction: {
+			width: 15,
+			height: 15,
+			fill: "grey",
+			shape: 'rect'
+		},
+		reversible : {
+			fill : "green",
+			shape:"inverseTriangle"
+		},
+		reversibleVersion:{
+			fill:"red",
+			shape: "triangle"
+		}
+
+	}
+}
