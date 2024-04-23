@@ -3,6 +3,22 @@
     Rescale
   </button>
   <input type="file" accept=".json" label="File input" v-on:change="loadFile" />
+  <br>
+  <button v-on:click="newCluster()">
+     New_Cluster
+  </button>
+  <br>
+  <button v-on:click="ordering('default')">
+     Ordering default
+  </button>
+  <br>
+  <button v-on:click="ordering('out')">
+     Ordering out
+  </button>
+  <br>
+  <button v-on:click="ordering('in')">
+     Ordering in
+  </button>
   <NetworkComponent 
     v-on:contextmenu.prevent
     :network="network"
@@ -27,6 +43,7 @@
  */// Import -----------------
   // Utils ----------------
 import { ref, reactive, onMounted } from "vue";
+import { Serialized } from "graph-data-structure";
 
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
@@ -34,11 +51,12 @@ import type { Network } from "@metabohub/viz-core/src/types/Network";
 
   // Composables ----------
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
-import { method_to_try } from './composables/methode_to_try';
 import { dagreLayout, vizLayout } from './composables/useLayout';
-import { removeSideCompounds } from "@/composables/removeSideCompounds";
+import { removeSideCompounds } from "./composables/removeSideCompounds";
+import {duplicateReversibleReactions} from "./composables/duplicateReversibleReactions"
+import {importNetworkFromFile,importNetworkFromURL} from "./composables/importNetwork"
+import { NetworkToSerialized } from "@/composables/networkToGraph";
 import { initZoom, rescale } from "@metabohub/viz-core";
-import { importNetworkFromFile, importNetworkFromURL } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
@@ -46,14 +64,22 @@ import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
   // Components -----------
 import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
+import { node } from "prop-types";
+import { Cluster } from "@/types/Cluster";
+import { ClusterNetwork } from "@/types/ClusterNetwork";
+
+
 
 
 // Variables --------------
 const network = ref<Network>({id: '', nodes: {}, links: []});
 const networkStyle = ref<GraphStyleProperties>({nodeStyles: {}, linkStyles: {}});
 let svgProperties = reactive({});
-const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNode},{label:'Duplicate', action:duplicateNode}])
+const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNode},{label:'Duplicate', action:duplicateNode},{label:'AddToCluster', action:addToCluster}])
 let undoFunction: any = reactive({});
+//let clusters : Array<Cluster> =reactive([])
+//let attributGraphViz : AttributesViz=reactive({});
+let clusterNetwork:ClusterNetwork={network:network,attributs:{},clusters:{}};
 
 // Functions --------------
 
@@ -64,23 +90,47 @@ function loadFile(event: Event) {
   importNetworkFromFile(file, network, networkStyle, callbackFunction);
 }
 
+
 async function callbackFunction() {
   rescale(svgProperties);
 
-  removeSideCompounds(network.value);
+  console.log('________New_graph__________');
+  removeSideCompounds(network.value,"/sideCompounds.txt");
+  console.log(network.value);
 
-  window.addEventListener('keydown', (event) => {
-        if (event.key === 'ArrowLeft') {
-          dagreLayout(network.value);
-        } else if (event.key === 'ArrowRight') {
-          vizLayout(network.value);
-        }
-      });
+  // import('graph-data-structure').then(gds => {
+  //   const graph = gds.Graph();
+  //   const networkSerialized: Serialized = NetworkToSerialized(network.value);
+  //   graph.deserialize(networkSerialized);
+  // })
+
+}
+
+function keydownHandler(event: KeyboardEvent) {
+  if (event.key === 'ArrowLeft') {
+    dagreLayout(network.value,{}, rescaleAfterAction);
+  } else if (event.key === 'ArrowRight') {
+    vizLayout(network.value, clusterNetwork.clusters ,clusterNetwork.attributs ,rescaleAfterAction);
+  } else if (event.key === "d") {
+    duplicateReversibleReactions(network.value);
+  } else if (event.key =="c"){
+    console.log(clusterNetwork);
+  } else if (event.key =="n"){
+    console.log(network.value);
+  }
+}
+
+function rescaleAfterAction(){
+  console.log('Rescaling');
+  rescale(svgProperties);
 }
 
 onMounted(() => {
   svgProperties = initZoom();
-  importNetworkFromURL('/MetExploreViz_04-03-2024.json', network, networkStyle, callbackFunction);
+  clusterNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
+  window.addEventListener('keydown', keydownHandler);
+  importNetworkFromURL('/pathways/Alanine_and_aspartate_metabolism.json', network, networkStyle, callbackFunction); 
+  
 });
 function removeNode() {
   removeThisNode(menuProps.targetElement, network.value);
@@ -88,6 +138,33 @@ function removeNode() {
 function duplicateNode() {
   duplicateThisNode(menuProps.targetElement, network.value, networkStyle.value);
 }
+
+function newCluster(){
+  const numberCluster=Object.keys(clusterNetwork.clusters).length;
+  const cluster=new Cluster(String(numberCluster));
+  clusterNetwork.clusters[cluster.name]=cluster;
+}
+
+function addToCluster() {
+  let numberCluster=Object.keys(clusterNetwork.clusters).length;
+  if (numberCluster === 0){
+    newCluster();
+    numberCluster+=1;
+  }
+  clusterNetwork.clusters[String(numberCluster-1)].addNode(menuProps.targetElement); 
+}
+
+function ordering(value:string="default"){
+  if (!clusterNetwork.attributs){
+    clusterNetwork.attributs={};
+  }
+  if (value == "default" && "ordering" in clusterNetwork.attributs){
+    delete clusterNetwork.attributs.ordering;
+  } else if (value == "in" || value == "out"){
+    clusterNetwork.attributs.ordering=value;
+  }
+}
+
 function openContextMenu(Event: MouseEvent, nodeId: string) {
   UseContextMenu.showContextMenu(Event, nodeId);
 }
