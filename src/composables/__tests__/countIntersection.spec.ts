@@ -19,4 +19,15 @@ describe("countIntersections.ts", () => {
         // EXPECT
         expect(result).toEqual(1);
     });
+
+    test("should return 2 when given a network with 2 crossings", () => {
+        // DATA
+        const network: Network = getNetworkFromUrl('public/test_intersect/network_two_crossings.json');
+
+        // TEST
+        const result = countIntersection(network);
+
+        // EXPECT
+        expect(result).toEqual(2);
+    });
 });
