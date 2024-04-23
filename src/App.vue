@@ -19,6 +19,7 @@
   <button v-on:click="ordering('in')">
      Ordering in
   </button>
+  {{ checkIntersection(1, 1, 5, 4, 1, 2, 4, 3) }}
   <NetworkComponent 
     v-on:contextmenu.prevent
     :network="network"
@@ -44,6 +45,7 @@
   // Utils ----------------
 import { ref, reactive, onMounted } from "vue";
 import { Serialized } from "graph-data-structure";
+import { checkIntersection } from 'line-intersect';
 
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
