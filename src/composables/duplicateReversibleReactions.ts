@@ -8,7 +8,7 @@ import { removeAllSelectedNode } from "@metabohub/viz-core";
  * @param {Network}  Network object
  * @param suffix to put at the end of id of the original reaction : can't be "" !
  */
-export function duplicateReversibleReactions(network: Network,suffix:string="_rev") {
+export function duplicateReversibleReactions(network: Network,suffix:string="_rev"):void {
 
   console.log('Duplicate');
 

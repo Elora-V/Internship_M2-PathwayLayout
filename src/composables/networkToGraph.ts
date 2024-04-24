@@ -87,11 +87,11 @@ export function NetworkToSerialized(network: Network): GDS.Serialized {
 
 
 /**
- * 
+ * Take a network object and return a graph for graph-data-structure
  * @param network 
- * @returns 
+ * @returns Graph object as {[key:string]:Function}
  */
-export function NetworkToGDSGraph(network: Network){ 
+export function NetworkToGDSGraph(network: Network):{[key:string]:Function}{ 
     const graph = GDS.Graph();
     const networkSerialized: GDS.Serialized = NetworkToSerialized(network);
     graph.deserialize(networkSerialized);
