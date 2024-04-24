@@ -59,6 +59,7 @@ import { NetworkToSerialized } from "@/composables/networkToGraph";
 import { initZoom, rescale } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
+import {createCluster,addNodeCluster} from "./composables/UseClusterNetwork";
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
 // import { createUndoFunction } from "./composables/UseUndo";
   // Components -----------
@@ -156,7 +157,7 @@ function duplicateNode() {
 
 function newCluster(){
   const numberCluster=Object.keys(clusterNetwork.clusters).length;
-  const cluster=new Cluster(String(numberCluster));
+  const cluster= createCluster(String(numberCluster));
   clusterNetwork.clusters[cluster.name]=cluster;
 }
 
@@ -166,7 +167,7 @@ function addToCluster() {
     newCluster();
     numberCluster+=1;
   }
-  clusterNetwork.clusters[String(numberCluster-1)].addNode(menuProps.targetElement); 
+  clusterNetwork.clusters[String(numberCluster-1)]=addNodeCluster(clusterNetwork.clusters[String(numberCluster-1)],menuProps.targetElement); 
 }
 
 function ordering(value:string="default"){

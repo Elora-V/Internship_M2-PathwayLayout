@@ -39,8 +39,9 @@ export async function changeNetworkFromDagre(graph: dagre.graphlib.Graph,network
  * The json and network need to have the same nodes !
  * @param {object}  object return by render method from viz (renderJSON)
  * @param {Network} Network object (value of pointer)
+ * @param assignRank boolean that indicates if rank and order need to be infered and assigned to nodes
  */
-export async function changeNetworkFromViz(json: JsonViz, network: Network): Promise<void> {
+export async function changeNetworkFromViz(json: JsonViz, network: Network, assignRank:boolean=false): Promise<void> {
 
     const unique_y:Array<number> =[];
     json["objects"].forEach((node) => {
@@ -57,7 +58,9 @@ export async function changeNetworkFromViz(json: JsonViz, network: Network): Pro
         }
     });
     
-    assignRankOrder(network,unique_y); // the information of rank isn't in the result, unlike dagre 
+    if(assignRank){
+        assignRankOrder(network,unique_y); // the information of rank isn't in the result, unlike dagre 
+    }
 
 }
 
