@@ -114,7 +114,7 @@ export function dagreToNetwork(graph: dagre.graphlib.Graph): Network{
  * @param {Network} Network object
  * @param unique_y array of all unique y for node position
  */
-function assignRankOrder(network: Network, unique_y: Array<number>) {
+function assignRankOrder(network: Network, unique_y: Array<number>):void {
 
     // sort the y to know the associated rank for a y coordinate
     unique_y.sort((a:number, b:number) => a - b);
