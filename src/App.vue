@@ -3,6 +3,22 @@
     Rescale
   </button>
   <input type="file" accept=".json" label="File input" v-on:change="loadFile" />
+  <br>
+  <button v-on:click="newCluster()">
+     New_Cluster
+  </button>
+  <br>
+  <button v-on:click="ordering('default')">
+     Ordering default
+  </button>
+  <br>
+  <button v-on:click="ordering('out')">
+     Ordering out
+  </button>
+  <br>
+  <button v-on:click="ordering('in')">
+     Ordering in
+  </button>
   <NetworkComponent 
     v-on:contextmenu.prevent
     :network="network"
@@ -48,6 +64,9 @@ import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
   // Components -----------
 import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
+import { node } from "prop-types";
+import { Cluster } from "@/types/Cluster";
+import { ClusterNetwork } from "@/types/ClusterNetwork";
 
 
 
@@ -56,8 +75,11 @@ import { ContextMenu } from "@metabohub/viz-context-menu";
 const network = ref<Network>({id: '', nodes: {}, links: []});
 const networkStyle = ref<GraphStyleProperties>({nodeStyles: {}, linkStyles: {}});
 let svgProperties = reactive({});
-const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNode},{label:'Duplicate', action:duplicateNode}])
+const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNode},{label:'Duplicate', action:duplicateNode},{label:'AddToCluster', action:addToCluster}])
 let undoFunction: any = reactive({});
+//let clusters : Array<Cluster> =reactive([])
+//let attributGraphViz : AttributesViz=reactive({});
+let clusterNetwork:ClusterNetwork={network:network,attributs:{},clusters:{}};
 
 // Functions --------------
 
@@ -88,21 +110,24 @@ function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
     dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
-    const attribut={ rankdir: "BT" };
-    vizLayout(network.value, attribut ,rescaleAfterAction);
+    vizLayout(network.value, clusterNetwork.clusters ,clusterNetwork.attributs ,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
+  } else if (event.key =="c"){
+    console.log(clusterNetwork);
+  } else if (event.key =="n"){
+    console.log(network.value);
   }
 }
 
 function rescaleAfterAction(){
   console.log('Rescaling');
   rescale(svgProperties);
-  console.log(network.value);
 }
 
 onMounted(() => {
   svgProperties = initZoom();
+  clusterNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
   window.addEventListener('keydown', keydownHandler);
   importNetworkFromURL('/pathways/Alanine_and_aspartate_metabolism.json', network, networkStyle, callbackFunction); 
   
@@ -113,6 +138,33 @@ function removeNode() {
 function duplicateNode() {
   duplicateThisNode(menuProps.targetElement, network.value, networkStyle.value);
 }
+
+function newCluster(){
+  const numberCluster=Object.keys(clusterNetwork.clusters).length;
+  const cluster=new Cluster(String(numberCluster));
+  clusterNetwork.clusters[cluster.name]=cluster;
+}
+
+function addToCluster() {
+  let numberCluster=Object.keys(clusterNetwork.clusters).length;
+  if (numberCluster === 0){
+    newCluster();
+    numberCluster+=1;
+  }
+  clusterNetwork.clusters[String(numberCluster-1)].addNode(menuProps.targetElement); 
+}
+
+function ordering(value:string="default"){
+  if (!clusterNetwork.attributs){
+    clusterNetwork.attributs={};
+  }
+  if (value == "default" && "ordering" in clusterNetwork.attributs){
+    delete clusterNetwork.attributs.ordering;
+  } else if (value == "in" || value == "out"){
+    clusterNetwork.attributs.ordering=value;
+  }
+}
+
 function openContextMenu(Event: MouseEvent, nodeId: string) {
   UseContextMenu.showContextMenu(Event, nodeId);
 }

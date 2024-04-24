@@ -21,8 +21,12 @@ export async function changeNetworkFromDagre(graph: dagre.graphlib.Graph,network
         const { x, y, _order,_rank  } = nodeData;
         // if there is some position x and y : network is updated
         if (x !== undefined && y !== undefined){
-            network.nodes[node].x = x;
-            network.nodes[node].y = y;
+            if (network.nodes[node]) {
+                network.nodes[node].x = x;
+                network.nodes[node].y = y;
+            } else {
+                console.warn(`Node '${node}' not found in the network.`);
+            }
             network.nodes[node].metadata.order = _order;
             network.nodes[node].metadata.rank = _rank / 2;
         }
@@ -39,7 +43,6 @@ export async function changeNetworkFromDagre(graph: dagre.graphlib.Graph,network
 export async function changeNetworkFromViz(json: JsonViz, network: Network): Promise<void> {
 
     const unique_y:Array<number> =[];
-
     json["objects"].forEach((node) => {
         const nodeId = node.name;
         if ('pos' in node) {
