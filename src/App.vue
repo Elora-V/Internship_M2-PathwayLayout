@@ -60,6 +60,8 @@ import { initZoom, rescale } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
 import {createCluster,addNodeCluster} from "./composables/UseClusterNetwork";
+import { DFSWithSources } from "@/composables/algoDFS";
+
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
 // import { createUndoFunction } from "./composables/UseUndo";
   // Components -----------
@@ -81,6 +83,7 @@ let undoFunction: any = reactive({});
 //let clusters : Array<Cluster> =reactive([])
 //let attributGraphViz : AttributesViz=reactive({});
 let clusterNetwork:ClusterNetwork={network:network,attributs:{},clusters:{}};
+let rank0:Array<string>=[];
 
 // Functions --------------
 
@@ -98,12 +101,6 @@ async function callbackFunction() {
   console.log('________New_graph__________');
   removeSideCompounds(network.value,"/sideCompounds.txt");
   console.log(network.value);
-
-  // import('graph-data-structure').then(gds => {
-  //   const graph = gds.Graph();
-  //   const networkSerialized: Serialized = NetworkToSerialized(network.value);
-  //   graph.deserialize(networkSerialized);
-  // })
 
 }
 
@@ -124,6 +121,10 @@ function keydownHandler(event: KeyboardEvent) {
 function rescaleAfterAction(){
   console.log('Rescaling');
   rescale(svgProperties);
+  const dfs=DFSWithSources(network.value);
+  dfs.forEach(node=>{
+    console.log(network.value.nodes[node].label);
+  })
 }
 
 onMounted(() => {
