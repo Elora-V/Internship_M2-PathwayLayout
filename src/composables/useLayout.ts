@@ -12,7 +12,7 @@ import { Cluster } from "@/types/Cluster";
  * @param  graphAttributes for dagre layout (see https://github.com/dagrejs/dagre/wiki)
  * @param [callbackFunction=() => {}] function to do after the layout is done
  */
-export function dagreLayout(network: Network,graphAttributes={},callbackFunction = () => {}) {
+export function dagreLayout(network: Network,graphAttributes={},callbackFunction = () => {}):void {
 
     console.log('Dagre');
 
@@ -34,7 +34,7 @@ export function dagreLayout(network: Network,graphAttributes={},callbackFunction
  * @param graphAttributes for viz dot layout (see https://graphviz.org/docs/layouts/dot/)
  * @param [callbackFunction=() => {}] function to do after the layout is done
  */
-export function vizLayout(network: Network,clusters:{[key:string]:Cluster}={}, graphAttributes={}, callbackFunction = () => {}) {
+export function vizLayout(network: Network,clusters:{[key:string]:Cluster}={}, graphAttributes={}, callbackFunction = () => {}):void {
     console.log('Viz');
     setTimeout(async function() {
         instance().then(viz => {
