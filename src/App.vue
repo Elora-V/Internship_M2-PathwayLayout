@@ -60,7 +60,7 @@ import { initZoom, rescale } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
 import {createCluster,addNodeCluster} from "./composables/UseClusterNetwork";
-import { DFSWithSources } from "@/composables/algoDFS";
+import { DFSWithSources, getSources } from "@/composables/algoDFS";
 
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
 // import { createUndoFunction } from "./composables/UseUndo";
@@ -70,6 +70,7 @@ import { ContextMenu } from "@metabohub/viz-context-menu";
 import { node } from "prop-types";
 import { Cluster } from "@/types/Cluster";
 import { ClusterNetwork } from "@/types/ClusterNetwork";
+import { SourceType } from "@/types/EnumArgs";
 
 
 
@@ -108,7 +109,7 @@ function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
     dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
-    vizLayout(network.value, clusterNetwork.clusters ,clusterNetwork.attributs ,rescaleAfterAction);
+    vizLayout(network.value, clusterNetwork.clusters ,clusterNetwork.attributs ,true,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
   } else if (event.key =="c"){
@@ -121,6 +122,7 @@ function keydownHandler(event: KeyboardEvent) {
 function rescaleAfterAction(){
   console.log('Rescaling');
   rescale(svgProperties);
+  const sources= getSources(network.value,SourceType.RANK)
   const dfs=DFSWithSources(network.value);
   dfs.forEach(node=>{
     console.log(network.value.nodes[node].label);
