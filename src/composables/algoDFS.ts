@@ -49,7 +49,7 @@ export function getSources(network:Network, typeSource:SourceType):Array<string>
 
         // add node that are rank 0 (if not already added)
         if(!nodeIsAdded && typeSource==SourceType.RANK || typeSource==SourceType.SOURCE_RANK){
-            if(node.metadata && node.metadata.rank ){
+            if(node.metadata && Object.keys(node.metadata).includes("rank") ){
                 if (node.metadata.rank===0){
                     sources.push(node.id);
                 }
