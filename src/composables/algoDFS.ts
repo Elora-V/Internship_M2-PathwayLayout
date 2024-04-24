@@ -1,7 +1,7 @@
 import { Network } from '@metabohub/viz-core/src/types/Network';
 import { NetworkToSerialized } from './networkToGraph';
 import { Serialized} from 'graph-data-structure';
-import indegree from "graph-data-structure";
+import Graph from "graph-data-structure";
 
 export function DFSWithSources(network:Network, sources:Array<string>=undefined):Array<string>{
 
@@ -12,30 +12,22 @@ export function DFSWithSources(network:Network, sources:Array<string>=undefined)
     //     }
     //   });
 
-    try {
-    import('graph-data-structure').then(gds => {
+    // create graph for library from network
+    const graph = Graph();
+    const networkSerialized: Serialized = NetworkToSerialized(network);
+    graph.deserialize(networkSerialized);
 
-        // create graph for library from network
-        const graph = gds.Graph();
-        const networkSerialized: Serialized = NetworkToSerialized(network);
-        graph.deserialize(networkSerialized);
-
-        //get sources nodes if undefined by user
-        if (!sources){
-            sources=[];
-            graph.nodes().forEach(node =>{
-                // add node that are source (indegree of 0)
-                if(graph.indegree(node)===0){
-                    sources.push(node);
-                }
-            });
-        }
-        // apply DFS
-        return graph.depthFirstSearch(sources);
-    
-    });
-    }catch{
-        return [];
+    //get sources nodes if undefined by user
+    if (!sources){
+        sources=[];
+        graph.nodes().forEach(node =>{
+            // add node that are source (indegree of 0)
+            if(graph.indegree(node)===0){
+                sources.push(node);
+            }
+        });
     }
+    // apply DFS
+    return graph.depthFirstSearch(sources);
 
 }
