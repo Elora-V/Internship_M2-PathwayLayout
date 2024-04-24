@@ -60,6 +60,8 @@ import { initZoom, rescale } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
 import {createCluster,addNodeCluster} from "./composables/UseClusterNetwork";
+import { DFSWithSources } from "@/composables/algoDFS";
+
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
 // import { createUndoFunction } from "./composables/UseUndo";
   // Components -----------
@@ -100,7 +102,6 @@ async function callbackFunction() {
   removeSideCompounds(network.value,"/sideCompounds.txt");
   console.log(network.value);
 
-
 }
 
 function keydownHandler(event: KeyboardEvent) {
@@ -120,24 +121,9 @@ function keydownHandler(event: KeyboardEvent) {
 function rescaleAfterAction(){
   console.log('Rescaling');
   rescale(svgProperties);
-  rank0=[];
-  Object.values(network.value.nodes).forEach(node =>{
-      if (node.metadata && (Object.keys(node.metadata).includes("rank")) && node.metadata.rank===0){
-        rank0.push(node.id);
-      }
-    });
-
-    import('graph-data-structure').then(gds => {
-    const graph = gds.Graph();
-    const networkSerialized: Serialized = NetworkToSerialized(network.value);
-    graph.deserialize(networkSerialized);
-
-    const dfs= rank0.length !== 0 ? graph.depthFirstSearch(rank0) : graph.depthFirstSearch();
-    console.log(rank0);
-    dfs.forEach(node => {
-      console.log(network.value.nodes[node].label);
-    }
-    );
+  const dfs=DFSWithSources(network.value);
+  dfs.forEach(node=>{
+    console.log(network.value.nodes[node].label);
   })
 }
 
