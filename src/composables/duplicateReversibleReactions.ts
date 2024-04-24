@@ -29,6 +29,9 @@ export function duplicateReversibleReactions(network: Network,suffix:string="_re
         // add attribut reversible to original reaction
         network.nodes[link.source.id].classes=pushUniqueString(network.nodes[link.source.id].classes,"reversible");
         // add metadata of reversibleVersion for original reaction
+        if(!network.nodes[link.source.id].metadata){
+          network.nodes[link.source.id].metadata={};
+        }
         network.nodes[link.source.id].metadata.reversibleVersion=newReactionNode.id;
       } else if (link.target.classes?.includes("reaction")) {
         reactionIsSource = false;
@@ -37,6 +40,9 @@ export function duplicateReversibleReactions(network: Network,suffix:string="_re
         // add attribut reversible to original reaction
         network.nodes[link.target.id].classes=pushUniqueString(network.nodes[link.target.id].classes,"reversible");
         // add metadata of reversibleVersion for original reaction
+        if(!network.nodes[link.target.id].metadata){
+          network.nodes[link.target.id].metadata={};
+        }
         network.nodes[link.target.id].metadata.reversibleVersion=newReactionNode.id;
       }
       // adding new reaction node if not already the case
