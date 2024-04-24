@@ -6,7 +6,7 @@ import {getContentFromURL} from "./importNetwork"
  * Remove side compounds of a network, the list of side compounds is predefined
  * @param {Network} Network that need removing of nodes
  */
-export async function removeSideCompounds(network:Network,pathListSideCompounds:string):void{
+export async function removeSideCompounds(network:Network,pathListSideCompounds:string):Promise<void>{
 
   console.log('Remove SC');
 
