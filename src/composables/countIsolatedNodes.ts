@@ -1,3 +1,5 @@
 import { Network } from "@metabohub/viz-core/src/types/Network";
 
-export function countIsolatedNodes(network: Network) {}
+export function countIsolatedNodes(network: Network): number {
+    return 0;
+}
