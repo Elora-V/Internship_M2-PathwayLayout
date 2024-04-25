@@ -8,7 +8,7 @@ import { removeAllSelectedNode } from "@metabohub/viz-core";
  * @param {Network}  Network object
  * @param suffix to put at the end of id of the original reaction : can't be "" !
  */
-export function duplicateReversibleReactions(network: Network,suffix:string="_rev") {
+export function duplicateReversibleReactions(network: Network,suffix:string="_rev"):void {
 
   console.log('Duplicate');
 
@@ -28,12 +28,22 @@ export function duplicateReversibleReactions(network: Network,suffix:string="_re
         newReactionNode = reversibleNodeReaction(link.source);
         // add attribut reversible to original reaction
         network.nodes[link.source.id].classes=pushUniqueString(network.nodes[link.source.id].classes,"reversible");
+        // add metadata of reversibleVersion for original reaction
+        if(!network.nodes[link.source.id].metadata){
+          network.nodes[link.source.id].metadata={};
+        }
+        network.nodes[link.source.id].metadata.reversibleVersion=newReactionNode.id;
       } else if (link.target.classes?.includes("reaction")) {
         reactionIsSource = false;
         // duplicate target node
         newReactionNode = reversibleNodeReaction(link.target);
         // add attribut reversible to original reaction
         network.nodes[link.target.id].classes=pushUniqueString(network.nodes[link.target.id].classes,"reversible");
+        // add metadata of reversibleVersion for original reaction
+        if(!network.nodes[link.target.id].metadata){
+          network.nodes[link.target.id].metadata={};
+        }
+        network.nodes[link.target.id].metadata.reversibleVersion=newReactionNode.id;
       }
       // adding new reaction node if not already the case
       if (!network.nodes[newReactionNode.id]) {
@@ -77,15 +87,32 @@ export function duplicateReversibleReactions(network: Network,suffix:string="_re
  * @param suffix to put at the end of id of the original reaction : can't be "" !
  * @returns {Node}
  */
-function reversibleNodeReaction(node: Node, suffix:string="_rev"): Node {
-  const { id, label, x, y } = node;
+function reversibleNodeReaction(node: Node, suffix: string = "_rev"): Node {
+  const { id, label, x, y, classes } = node;
+
+  const newId = id.endsWith(suffix) ? id.slice(0, -suffix.length) : id + suffix;
+  const newLabel = label.endsWith(suffix) ? label.slice(0, -suffix.length) : label + suffix;
+
+  const newClasses: string[] = [];
+  // add classes of original reaction, 
+  // and add class reversibleVersion if not present, removed if present
+  classes.forEach(item =>{
+    newClasses.push(item)
+  });
+  const revIndex = newClasses.indexOf("reversibleVersion");
+  if (revIndex !== -1) {
+    newClasses.splice(revIndex, 1);
+  }else{
+    newClasses.push("reversibleVersion");
+  }
+  
   const newNode: Node = {
-      id: id + suffix,
-      label: label + suffix, // Change label to help in coding, but to remove after
-      x: x,
-      y: y,
-      classes: ["reaction", "reversible", "reversibleVersion","fullReversible"],
-      metadata: {},
+    id: newId,
+    label: newLabel,
+    x: x,
+    y: y,
+    classes: newClasses,
+    metadata: {reversibleVersion:id},
   };
 
   return newNode;

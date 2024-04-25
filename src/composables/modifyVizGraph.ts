@@ -12,10 +12,9 @@ export function addClusterViz(vizGraph: Graph, cluster: Cluster): Graph {
   // get values from cluster and change nodes format : new cluster format (for viz)
   let { name, nodes } = cluster;
   const clusterViz: SubgraphViz = {
-    name,
-    nodes: nodes === undefined ? [] : Object.values(nodes),
+    name: name.startsWith("cluster_") ? name : "cluster_" + name,
+    nodes: nodes?.map((name: string) => ({ name:name })) || []
   };
-
   // push cluster for viz
   if (!Object.keys(vizGraph).includes("subgraphs")) {
     vizGraph.subgraphs = [];
