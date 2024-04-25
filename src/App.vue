@@ -19,7 +19,7 @@
   <button v-on:click="ordering('in')">
      Ordering in
   </button>
-  {{ checkIntersection(1, 1, 5, 4, 1, 2, 4, 3) }}
+  <h5>Number of crossings in the Network :</h5>{{ countIntersection(network) }}
   <NetworkComponent 
     v-on:contextmenu.prevent
     :network="network"
@@ -45,7 +45,7 @@
   // Utils ----------------
 import { ref, reactive, onMounted } from "vue";
 import { Serialized } from "graph-data-structure";
-import { checkIntersection } from 'line-intersect';
+import { countIntersection } from "./composables/countIntersections";
 
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
