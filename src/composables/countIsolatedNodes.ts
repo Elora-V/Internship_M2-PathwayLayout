@@ -1,5 +1,10 @@
 import { Network } from "@metabohub/viz-core/src/types/Network";
 
+/**
+ * Count how many nodes have no edges in the network 
+ * @param network the network
+ * @returns the number of isolated nodes
+ */
 export function countIsolatedNodes(network: Network): number {
     let nb: number = 0;
     const nodesCount: { [x: string]: number} = {};
@@ -14,9 +19,11 @@ export function countIsolatedNodes(network: Network): number {
     });
 
     /*
-    // get nodes that have no links
+    // get the nodes
     for (const [key, value] of Object.entries(nodesCount)) {
-        
+        ...  
+        // if value == 0
+        // get key
     }
     */
     Object.values(nodesCount).forEach(count => {
