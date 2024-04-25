@@ -1,12 +1,23 @@
 import { parseString } from 'xml2js';
 import type { JSONGraphFormat, XMLSpecies, XMLReactions } from '@/types/JSONGraphFormat';
 
+/**
+ * Return a number between min (inclusive) and max (inclusive)
+ * @param min 
+ * @param max 
+ * @returns a number
+ */
 function getRandomInt(min: number, max: number): number {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+/**
+ * Convert an xml graph into a JSON graph format
+ * @param sbmlString the xml file as a string
+ * @returns the graph as a Promise 
+ */
 export async function sbml2json(sbmlString: string): Promise<JSONGraphFormat> {
     return new Promise((resolve, reject) => {
         parseString(sbmlString, { explicitArray: false }, (err, result) => {
