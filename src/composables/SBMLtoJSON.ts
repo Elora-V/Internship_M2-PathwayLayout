@@ -1,4 +1,3 @@
-import libsbml from 'libsbmljs_stable';
 import { parseString } from 'xml2js';
 import type { JSONGraphFormat, XMLSpecies, XMLReactions } from '@/types/JSONGraphFormat';
 
