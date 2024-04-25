@@ -1,47 +1,6 @@
 import libsbml from 'libsbmljs_stable';
 import { parseString } from 'xml2js';
-
-
-
-export interface JsonGraphFormat {
-    graph: {
-        id: any;
-        type: string;
-        metadata: {
-            style: {
-                nodeStyles: {
-                    /*
-                    metabolite: {};
-                    reaction: {};
-                    reversible: {};
-                    reversibleVersion: {};
-                    */
-                };
-            };
-        };
-        nodes: {
-            [x: string]: {
-                id: string;
-                metadata: {
-                    classes?: string[];
-                    position?: {
-                        x: number;
-                        y: number;
-                    };
-                };
-                label: string;
-            };
-        };
-        edges: {
-            id: string;
-            source: string;
-            target: string;
-            metadata: {
-                classes?: string[];
-            };
-        }[];
-    };
-}
+import type { JSONGraphFormat, XMLSpecies, XMLReactions } from '@/types/JSONGraphFormat';
 
 function getRandomInt(min: number, max: number): number {
     min = Math.ceil(min);
@@ -49,7 +8,7 @@ function getRandomInt(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export async function sbml2json(sbmlString: string): Promise<JsonGraphFormat> {
+export async function sbml2json(sbmlString: string): Promise<JSONGraphFormat> {
     return new Promise((resolve, reject) => {
         parseString(sbmlString, { explicitArray: false }, (err, result) => {
             if (err) {
@@ -59,7 +18,7 @@ export async function sbml2json(sbmlString: string): Promise<JsonGraphFormat> {
             } else {
                 const model = result.sbml.model;
                 // graph to return
-                const graph: JsonGraphFormat = {
+                const graph: JSONGraphFormat = {
                     graph: {
                         id: model.$.id,
                         type: 'metabolic',
@@ -98,7 +57,7 @@ export async function sbml2json(sbmlString: string): Promise<JsonGraphFormat> {
                 // Transform species to nodes
                 const speciesList = model.listOfSpecies.species;
                 // add a metabolite node for each species
-                speciesList.forEach((species: { $: { compartment: string; id: string; name: string; species: string } }) => {
+                speciesList.forEach((species: XMLSpecies) => {
                     graph.graph.nodes[species.$.id] = {
                         id: species.$.id,
                         metadata: {
@@ -114,29 +73,29 @@ export async function sbml2json(sbmlString: string): Promise<JsonGraphFormat> {
 
                 // Transform reactions to nodes and edges
                 const reactions = model.listOfReactions.reaction;
-                reactions.forEach((reaction: any) => {
+                reactions.forEach((reaction: XMLReactions) => {
                     const reactionId = reaction.$.id;
 
                     // get the reactants and products for every reaction
-                    const reactants: any[] = [];
-                    if (reaction.listOfReactants.speciesReference != undefined && reaction.listOfReactants.speciesReference.length != undefined) {
+                    const reactants: string[] = [];
+                    if (reaction.listOfReactants.speciesReference != undefined && (reaction.listOfReactants.speciesReference as Partial<XMLSpecies>[]).length != undefined) {
                         // type : array
-                        reaction.listOfReactants.speciesReference.forEach((ref: any) => {
+                        (reaction.listOfReactants.speciesReference as Partial<XMLSpecies>[]).forEach((ref: Partial<XMLSpecies>) => {
                             reactants.push(ref.$.species);
                         });
                     } else if (reaction.listOfReactants.speciesReference != undefined) {
                         // type : object
-                        reactants.push(reaction.listOfReactants.speciesReference.$.species);
+                        reactants.push((reaction.listOfReactants.speciesReference as Partial<XMLSpecies>).$.species);
                     }
-                    const products: any[] = [];
-                    if (reaction.listOfProducts.speciesReference != undefined && reaction.listOfProducts.speciesReference.length != undefined) {
+                    const products: string[] = [];
+                    if (reaction.listOfProducts.speciesReference != undefined && (reaction.listOfProducts.speciesReference as Partial<XMLSpecies>[]).length != undefined) {
                         // type : array
-                        reaction.listOfProducts.speciesReference.forEach((ref: any) => {
+                        (reaction.listOfProducts.speciesReference as Partial<XMLSpecies>[]).forEach((ref: Partial<XMLSpecies>) => {
                             products.push(ref.$.species);
                         });
                     } else if (reaction.listOfProducts.speciesReference != undefined) {
                         // type : object
-                        products.push(reaction.listOfProducts.speciesReference.$.species);
+                        products.push((reaction.listOfProducts.speciesReference as Partial<XMLSpecies>).$.species);
                     }
 
                     // add the reaction as a node
@@ -154,7 +113,6 @@ export async function sbml2json(sbmlString: string): Promise<JsonGraphFormat> {
 
                     // add the edges for the reaction and its reactants and products
                     reactants.forEach((reactant: string) => {
-                        console.log(`         ${reactant}--${reactionId}`);
                         graph.graph.edges.push({
                             id: `${reactant}--${reactionId}`,
                             source: reactant,
@@ -165,7 +123,6 @@ export async function sbml2json(sbmlString: string): Promise<JsonGraphFormat> {
                         });
                     });
                     products.forEach((product: string) => {
-                        console.log(`         ${reactionId}--${product}`);
                         graph.graph.edges.push({
                             id: `${reactionId}--${product}`,
                             source: reactionId,

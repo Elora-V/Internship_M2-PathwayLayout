@@ -1,5 +1,6 @@
 import { expect, describe, test } from 'vitest';
-import { JsonGraphFormat, sbml2json } from '../SBMLtoJSON';
+import { sbml2json } from '../SBMLtoJSON';
+import type { JSONGraphFormat } from "@/types/JSONGraphFormat";
 
 describe('sbml2json.ts', () => {
     test('should return a JSON with 3 nodes', async () => {
@@ -9,7 +10,7 @@ describe('sbml2json.ts', () => {
                 const sbmlString: string = await res.text();
 
                 // FUNCTION
-                const result: JsonGraphFormat = await sbml2json(sbmlString);
+                const result: JSONGraphFormat = await sbml2json(sbmlString);
                 const nodes = result.graph.nodes;
 
                 // EXPECT
@@ -27,7 +28,7 @@ describe('sbml2json.ts', () => {
                 const sbmlString: string = await res.text();
 
                 // FUNCTION
-                const result: JsonGraphFormat = await sbml2json(sbmlString);
+                const result: JSONGraphFormat = await sbml2json(sbmlString);
                 const nodes = result.graph.nodes;
 
                 // EXPECT
@@ -48,7 +49,7 @@ describe('sbml2json.ts', () => {
                 const sbmlString: string = await res.text();
 
                 // FUNCTION
-                const result: JsonGraphFormat = await sbml2json(sbmlString);
+                const result: JSONGraphFormat = await sbml2json(sbmlString);
                 const nodes = result.graph.nodes;
 
                 // EXPECT
@@ -69,7 +70,7 @@ describe('sbml2json.ts', () => {
                 const sbmlString: string = await res.text();
 
                 // FUNCTION
-                const result: JsonGraphFormat = await sbml2json(sbmlString);
+                const result: JSONGraphFormat = await sbml2json(sbmlString);
                 const nodes = result.graph.nodes;
 
                 // EXPECT
@@ -88,7 +89,7 @@ describe('sbml2json.ts', () => {
                 const sbmlString: string = await res.text();
 
                 // FUNCTION
-                const result: JsonGraphFormat = await sbml2json(sbmlString);
+                const result: JSONGraphFormat = await sbml2json(sbmlString);
                 const edges = result.graph.edges;
 
                 // EXPECT
@@ -106,7 +107,7 @@ describe('sbml2json.ts', () => {
                 const sbmlString: string = await res.text();
 
                 // FUNCTION
-                const result: JsonGraphFormat = await sbml2json(sbmlString);
+                const result: JSONGraphFormat = await sbml2json(sbmlString);
                 const edge = result.graph.edges[0];
 
                 // EXPECT
