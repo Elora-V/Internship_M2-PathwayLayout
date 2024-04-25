@@ -48,7 +48,7 @@ import { Serialized } from "graph-data-structure";
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
-import {removeThisNode} from "@metabohub/viz-core";
+
   // Composables ----------
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
 import { dagreLayout, vizLayout } from './composables/useLayout';
