@@ -4,6 +4,7 @@ import { Graph, instance } from "@viz-js/viz";
 import { NetworkToDagre, NetworkToViz } from './networkToGraph';
 import { changeNetworkFromDagre, changeNetworkFromViz, dagreToNetwork } from './graphToNetwork';
 import { JsonViz } from "@/types/JsonViz";
+import { Cluster } from "@/types/Cluster";
 
 /** 
  * Take a network object and change the (x,y) position of the node with dagre lib
@@ -11,7 +12,7 @@ import { JsonViz } from "@/types/JsonViz";
  * @param  graphAttributes for dagre layout (see https://github.com/dagrejs/dagre/wiki)
  * @param [callbackFunction=() => {}] function to do after the layout is done
  */
-export function dagreLayout(network: Network,graphAttributes={},callbackFunction = () => {}) {
+export function dagreLayout(network: Network,graphAttributes={},callbackFunction = () => {}):void {
 
     console.log('Dagre');
 
@@ -31,15 +32,16 @@ export function dagreLayout(network: Network,graphAttributes={},callbackFunction
  * @param {Network}  Network object
  * @param clusters clusters for viz (type version for quick search)
  * @param graphAttributes for viz dot layout (see https://graphviz.org/docs/layouts/dot/)
+ * @param assignRank indicates if rank and order need to be infered after layout is applied
  * @param [callbackFunction=() => {}] function to do after the layout is done
  */
-export function vizLayout(network: Network,clusters:Array<SubgraphObject>=[], graphAttributes={}, callbackFunction = () => {}) {
+export function vizLayout(network: Network,clusters:{[key:string]:Cluster}={}, graphAttributes={},assignRank:boolean=false, callbackFunction = () => {}):void {
     console.log('Viz');
     setTimeout(async function() {
         instance().then(viz => {
-        const graphViz=NetworkToViz(network,clusters,graphAttributes,true);
+        const graphViz=NetworkToViz(network,clusters,graphAttributes);
         const json=viz.renderJSON(graphViz) as JsonViz;
-        changeNetworkFromViz(json,network).then(() => {
+        changeNetworkFromViz(json,network,assignRank).then(() => {
             callbackFunction();
         });
         });
