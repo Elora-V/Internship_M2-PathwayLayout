@@ -5,16 +5,21 @@ import { Serialized} from 'graph-data-structure';
 import Graph from "graph-data-structure";
 import { SourceType } from '@/types/EnumArgs';
 
-export function DFSWithSources(network:Network, sources:Array<string>=undefined,typeSource:SourceType=SourceType.SOURCE_ALL):Array<string>{
+export function DFSWithSources(network:Network, sources:Array<string>|SourceType):Array<string>{
 
     // create graph for library from network
     const graph=NetworkToGDSGraph(network);
+
     //get sources nodes if no list from user
-    if (!sources){
-        sources=getSources(network, typeSource);
+    let sources_list: Array<string>;
+    if (Array.isArray(sources)) {
+        sources_list = sources;
+    } else {
+        sources_list = getSources(network, sources);
     }
+
     // apply DFS
-    return graph.depthFirstSearch(sources);
+    return graph.depthFirstSearch(sources_list);
 
 }
 
