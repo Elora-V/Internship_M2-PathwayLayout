@@ -35,7 +35,7 @@ export function dagreLayout(network: Network,graphAttributes={},callbackFunction
  * @param assignRank indicates if rank and order need to be infered after layout is applied
  * @param [callbackFunction=() => {}] function to do after the layout is done
  */
-export function vizLayout(network: Network,clusters:{[key:string]:Cluster}={}, graphAttributes={},assignRank:boolean=false, callbackFunction = () => {}):void {
+export async function vizLayout(network: Network,clusters:{[key:string]:Cluster}={}, graphAttributes={},assignRank:boolean=false, callbackFunction = () => {}): Promise<void> {
     console.log('Viz');
     setTimeout(async function() {
         instance().then(viz => {
