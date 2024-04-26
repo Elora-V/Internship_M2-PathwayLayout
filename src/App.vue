@@ -71,6 +71,7 @@ import { node } from "prop-types";
 import { Cluster } from "@/types/Cluster";
 import { ClusterNetwork } from "@/types/ClusterNetwork";
 import { SourceType } from "@/types/EnumArgs";
+import { addLonguestPathClusterFromSources } from "@/composables/chooseSubgraph";
 
 
 
@@ -84,7 +85,6 @@ let undoFunction: any = reactive({});
 //let clusters : Array<Cluster> =reactive([])
 //let attributGraphViz : AttributesViz=reactive({});
 let clusterNetwork:ClusterNetwork={network:network,attributs:{},clusters:{}};
-let rank0:Array<string>=[];
 
 // Functions --------------
 
@@ -118,6 +118,9 @@ function keydownHandler(event: KeyboardEvent) {
     console.log(network.value);
   }else if (event.key =="r"){
     chooseReversibleReaction(network.value,SourceType.RANK_SOURCE_ALL);
+  }else if (event.key =="p"){
+    console.log('create cluster loguest path');
+    clusterNetwork=addLonguestPathClusterFromSources(clusterNetwork,SourceType.RANK_ONLY);
   }
 }
 
