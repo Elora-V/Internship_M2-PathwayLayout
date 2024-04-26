@@ -119,14 +119,42 @@ function keydownHandler(event: KeyboardEvent) {
   }else if (event.key =="r"){
     chooseReversibleReaction(network.value,SourceType.RANK_SOURCE_ALL);
   }else if (event.key =="p"){
-    console.log('create cluster loguest path');
+    console.log('create cluster longuest path');
     clusterNetwork=addLonguestPathClusterFromSources(clusterNetwork,SourceType.RANK_ONLY);
+  } else if (event.key == "a"){
+    allSteps(clusterNetwork);
   }
 }
 
 function rescaleAfterAction(){
   console.log('Rescaling');
   rescale(svgProperties);
+}
+
+async function allSteps(clusterNetwork: ClusterNetwork) {
+
+    let network=clusterNetwork.network.value;
+
+    duplicateReversibleReactions(network);
+
+    console.log('viz for dsf of duplication');
+    vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true, () => {
+      console.log('choose duplication');
+      chooseReversibleReaction(network, SourceType.RANK_SOURCE_ALL);
+
+      console.log('viz for choosing path');
+      vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true, () => {
+
+        console.log('choosing path');
+        clusterNetwork = addLonguestPathClusterFromSources(clusterNetwork, SourceType.RANK_SOURCE);
+
+        console.log('final viz');
+        vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, false, rescaleAfterAction);
+      });
+
+
+    });
+
 }
 
 onMounted(() => {
