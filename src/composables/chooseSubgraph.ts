@@ -5,6 +5,21 @@ import { NetworkToGDSGraph } from "./networkToGraph";
 import { ClusterNetwork } from "@/types/ClusterNetwork";
 import { createCluster } from "./UseClusterNetwork";
 
+
+/**
+ * Add clusters : a dfs for each sources is done and the longuest path associated with each source is used as new cluster. BEWARE : if sources is an array of node ID, the order of the id can change the result.
+ * @param clusterNetwork an object with the network and object for clusters
+ * @param sources array of node ID or a type of method to get sources automatically
+ * RANK_ONLY : sources are nodes of rank 0
+ * SOURCE_ONLY : sources are topological sources of the network (nul indegree)
+ * RANK_SOURCE : sources are node of rank 0, then source nodes
+ * ALL : sources are all nodes
+ * SOURCE_ALL : sources are topological sources, then all the others nodes
+ * RANK_SOURCE_ALL : sources are node of rank 0, then topological sources, then all the other nodes
+ * For this function, the advised choice is either RANK_ONLY, SOURCE_ONLY or RANK_SOURCE.
+ * 
+ * @returns the clusterNetwork with more cluster
+ */
 export function addLonguestPathClusterFromSources(clusterNetwork:ClusterNetwork, sources:Array<string>|SourceType):ClusterNetwork{
 
     // create graph for library from network
@@ -23,13 +38,38 @@ export function addLonguestPathClusterFromSources(clusterNetwork:ClusterNetwork,
         if (path.length > 3){
             const cluster= createCluster(source, RankEnum.EMPTY, path,[], ["longest_path"]);
             clusterNetwork.clusters[source]=cluster;
+            // add metadata for node in cluster
+            path.forEach(nodeID=>{
+                if (! ("metadata" in network.nodes[nodeID]) ){
+                    network.nodes[nodeID].metadata={};
+                }
+                if (!("clusters" in network.nodes[nodeID].metadata)){
+                    network.nodes[nodeID].metadata.clusters=[]
+                }
+               const clusters=network.nodes[nodeID].metadata.clusters as Array<string>;
+               clusters.push(source);
+            });
         }
     });
 
     return clusterNetwork;
 }
 
-
+/**
+ * The longuest path associated with each source with the DFS is found. BEWARE : the order of the id can change the result.
+ * @param graph object for graph-data-structure library
+ * @param dfs the return string (of nodes id) of a dfs (logically obtained with same sources as the sources for this functions)
+ * @param sources array of node ID or a type of method to get sources automatically
+ * RANK_ONLY : sources are nodes of rank 0
+ * SOURCE_ONLY : sources are topological sources of the network (nul indegree)
+ * RANK_SOURCE : sources are node of rank 0, then source nodes
+ * ALL : sources are all nodes
+ * SOURCE_ALL : sources are topological sources, then all the others nodes
+ * RANK_SOURCE_ALL : sources are node of rank 0, then topological sources, then all the other nodes
+ * For this function, the advised choice is either RANK_ONLY, SOURCE_ONLY or RANK_SOURCE.
+ * 
+ * @returns an object for the different path, the key is the source of the path
+ */
 export function longuestPathFromDFS(graph:{[key:string]:Function},dfs:Array<string>,sources:Array<string>):{[key:string]:Array<string>}{
 
     let longuestPaths:{[key:string]:Array<string>}={};
