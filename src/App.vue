@@ -84,7 +84,7 @@ const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNod
 let undoFunction: any = reactive({});
 //let clusters : Array<Cluster> =reactive([])
 //let attributGraphViz : AttributesViz=reactive({});
-let clusterNetwork:ClusterNetwork={network:network,attributs:{},clusters:{}};
+let clusterNetwork:ClusterNetwork;
 
 // Functions --------------
 
@@ -146,7 +146,7 @@ async function allSteps(clusterNetwork: ClusterNetwork) {
       vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true, () => {
 
         console.log('choosing path');
-        clusterNetwork = addLonguestPathClusterFromSources(clusterNetwork, SourceType.RANK_SOURCE);
+        clusterNetwork = addLonguestPathClusterFromSources(clusterNetwork, SourceType.RANK_ONLY);
 
         console.log('final viz');
         vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, false, rescaleAfterAction);
@@ -159,6 +159,7 @@ async function allSteps(clusterNetwork: ClusterNetwork) {
 
 onMounted(() => {
   svgProperties = initZoom();
+  clusterNetwork={network:network,attributs:{},clusters:{}};
   clusterNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
   window.addEventListener('keydown', keydownHandler);
   importNetworkFromURL('/pathways/Alanine_and_aspartate_metabolism.json', network, networkStyle, callbackFunction); 
