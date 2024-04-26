@@ -100,6 +100,8 @@ async function callbackFunction() {
   rescale(svgProperties);
 
   console.log('________New_graph__________');
+  clusterNetwork={network:network,attributs:{},clusters:{}};
+  clusterNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
   removeSideCompounds(network.value,"/sideCompounds.txt");
   console.log(network.value);
 
@@ -159,8 +161,6 @@ async function allSteps(clusterNetwork: ClusterNetwork) {
 
 onMounted(() => {
   svgProperties = initZoom();
-  clusterNetwork={network:network,attributs:{},clusters:{}};
-  clusterNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
   window.addEventListener('keydown', keydownHandler);
   importNetworkFromURL('/pathways/Alanine_and_aspartate_metabolism.json', network, networkStyle, callbackFunction); 
   
