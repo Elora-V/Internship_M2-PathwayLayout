@@ -1,10 +1,9 @@
-import { Cluster, RankEnum } from "@/types/Cluster";
+import { RankEnum } from "@/types/Cluster";
 import { SourceType } from "@/types/EnumArgs";
-import { Network } from "@metabohub/viz-core/src/types/Network";
 import { DFSWithSources, getSources } from "./algoDFS";
 import { NetworkToGDSGraph } from "./networkToGraph";
 import { ClusterNetwork } from "@/types/ClusterNetwork";
-import { addClassCluster, createCluster } from "./UseClusterNetwork";
+import { createCluster } from "./UseClusterNetwork";
 
 export function addLonguestPathClusterFromSources(clusterNetwork:ClusterNetwork, sources:Array<string>|SourceType):ClusterNetwork{
 
@@ -48,7 +47,7 @@ export function longuestPathFromDFS(graph:{[key:string]:Function},dfs:Array<stri
             
             if (source!==undefined){
                 // end the path (of the previous source, if one)
-                endPath(source,longuestPaths,path);
+                longuestPaths=endPath(source,longuestPaths,path);
                 // suppress nodes after the current node (those already analysed in while loop, because backward reading)
                 dfs.splice(i + 1);
             }
@@ -68,7 +67,15 @@ export function longuestPathFromDFS(graph:{[key:string]:Function},dfs:Array<stri
             }else{
                 // end the path if a node has been added in the last pass of the loop
                 if (add && source!==undefined){
-                    endPath(source,longuestPaths,path);
+                    if (source==="M_Nacasp_c"){
+                        console.log('not child');
+                        console.log(longuestPaths);
+                    }
+                    longuestPaths=endPath(source,longuestPaths,path);
+                    if (source==="M_Nacasp_c"){
+                        console.log('after endPath');
+                        console.log(longuestPaths);
+                    }
                 }
                 // remove previous visited node if this node is not the parent of current node
                 dfs.splice(i+1,1);
@@ -80,8 +87,6 @@ export function longuestPathFromDFS(graph:{[key:string]:Function},dfs:Array<stri
 
         i--; //backward reading
     }
-
-
     return longuestPaths;
 }
 
@@ -89,8 +94,13 @@ function nodeIsChildOf(graph:{[key:string]:Function},node:string, parentNode:str
     return graph.adjacent(parentNode).includes(node);
 }
 
-function endPath(source:string, longuestPaths:{[key:string]:Array<string>},path:Array<string>):void{
-    if (source in longuestPaths && longuestPaths[source].length < path.length){
-        longuestPaths[source]=path;
+function endPath(source:string, longuestPaths:{[key:string]:Array<string>},path:Array<string>):{[key:string]:Array<string>}{
+    if (source in longuestPaths){
+        if(longuestPaths[source].length < path.length){
+            longuestPaths[source]=path.slice();
+        }
+    }else{
+        console.error("source key not in object")
     }
+    return longuestPaths;
 }
