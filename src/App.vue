@@ -122,20 +122,20 @@ function keydownHandler(event: KeyboardEvent) {
 function rescaleAfterAction(){
   console.log('Rescaling');
   rescale(svgProperties);
-  const sources= getSources(network.value,SourceType.SOURCE);
+  const sources= getSources(network.value,SourceType.RANK_ONLY);
   sources.forEach(node=>{
     console.log(network.value.nodes[node].label);
   });
-  console.log('__________________________________________________________');
-  const dfs=DFSWithSources(network.value);
-  dfs.forEach(node=>{
-    const index=sources.indexOf(node);
+  // console.log('__________________________________________________________');
+  // const dfs=DFSWithSources(network.value);
+  // dfs.forEach(node=>{
+  //   const index=sources.indexOf(node);
     
-    console.log(network.value.nodes[node].label);
-    if(index !==-1){
-      console.log('____source__'+index+'____');
-    }
-  })
+  //   console.log(network.value.nodes[node].label);
+  //   if(index !==-1){
+  //     console.log('____source__'+index+'____');
+  //   }
+  // })
 }
 
 onMounted(() => {

@@ -1,65 +1,75 @@
 import { Network } from '@metabohub/viz-core/src/types/Network';
+import { Node } from '@metabohub/viz-core/src/types/Node';
 import { NetworkToGDSGraph, NetworkToSerialized } from './networkToGraph';
 import { Serialized} from 'graph-data-structure';
 import Graph from "graph-data-structure";
 import { SourceType } from '@/types/EnumArgs';
 
-export function DFSWithSources(network:Network, sources:Array<string>=undefined,typeSource:SourceType=SourceType.SOURCE):Array<string>{
+export function DFSWithSources(network:Network, sources:Array<string>|SourceType):Array<string>{
 
     // create graph for library from network
     const graph=NetworkToGDSGraph(network);
 
-    //get sources nodes if not list from user
-    if (!sources){
-        sources=getSources(network, typeSource);
+    //get sources nodes if no list from user
+    let sources_list: Array<string>;
+    if (Array.isArray(sources)) {
+        sources_list = sources;
+    } else {
+        sources_list = getSources(network, sources);
     }
+
     // apply DFS
-    return graph.depthFirstSearch(sources);
+    return graph.depthFirstSearch(sources_list);
 
 }
 
 
 export function getSources(network:Network, typeSource:SourceType):Array<string>{
 
-    const sources=[];
-    let graph:any; //pb de typage
-
     // if all nodes as source
     if (typeSource==SourceType.ALL){
         return Object.keys(network.nodes);
     }
 
-    // if degree of node needed (for source) : get graph object
-    if(typeSource==SourceType.SOURCE || typeSource==SourceType.SOURCE_RANK){
+    const sources_rank=[];
+    const sources_source=[];
+    const sources_all=[];
+
+    // get object for data-graph-structure if indegree information needed (when source nodes needed)
+    let graph:{[key:string]:Function};
+    if(needSource(typeSource)){
         graph=NetworkToGDSGraph(network);
     }
 
-    // adding node depending on sourcetype : 
-    Object.values(network.nodes).forEach(node =>{
-        
-        let nodeIsAdded=false;
-
-        // add node that are source (indegree of 0)
-        if(typeSource==SourceType.SOURCE || typeSource==SourceType.SOURCE_RANK){
-            if(graph.indegree(node.id)===0){
-                sources.push(node.id);
-                nodeIsAdded=true;
-            }
-        }
-
-        // add node that are rank 0 (if not already added)
-        if(!nodeIsAdded && typeSource==SourceType.RANK || typeSource==SourceType.SOURCE_RANK){
-            if(node.metadata && Object.keys(node.metadata).includes("rank") ){
-                if (node.metadata.rank===0){
-                    sources.push(node.id);
-                }
-            }else{
-                console.error("Source by rank demanded, but no rank for network.")
-            }
-        }
-
+    // adding node depending on sourcetype : Order is important !! 
+    // always rank, then source, then all
+    Object.values(network.nodes).forEach(node =>{      
+        if(needRank(typeSource) && hasRank0(node)){
+            sources_rank.push(node.id);
+        } else if (needSource(typeSource) && graph.indegree(node.id)===0){
+            sources_source.push(node.id);
+        } else if (needAll(typeSource)) {
+            sources_all.push(node.id);
+        }       
     });
-
-    return sources;
+    
+    return sources_rank.concat(sources_source, sources_all);
 
 }
+
+function hasRank0(node:Node):boolean{
+    return (node.metadata && Object.keys(node.metadata).includes("rank") && node.metadata.rank===0);
+}
+
+function needRank(sourcetype:SourceType):boolean{
+    return [SourceType.RANK_ONLY,SourceType.RANK_SOURCE,SourceType.RANK_SOURCE_ALL].includes(sourcetype);
+}
+
+function needSource(sourcetype:SourceType):boolean{
+    return [SourceType.SOURCE_ONLY,SourceType.SOURCE_ALL,SourceType.RANK_SOURCE,SourceType.RANK_SOURCE_ALL].includes(sourcetype);
+}
+
+function needAll(sourcetype:SourceType):boolean{
+    return [SourceType.ALL,SourceType.SOURCE_ALL,SourceType.RANK_SOURCE_ALL].includes(sourcetype);
+}
+
