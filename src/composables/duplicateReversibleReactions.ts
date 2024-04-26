@@ -2,6 +2,8 @@ import { Link } from "@metabohub/viz-core/src/types/Link";
 import { Node } from "@metabohub/viz-core/src/types/Node";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { removeAllSelectedNode } from "@metabohub/viz-core";
+import { DFSWithSources } from "./algoDFS";
+import { SourceType } from "@/types/EnumArgs";
 
 /**
  * Take a network and add a duplicated node of reversible reactions, and add links to this reaction
@@ -127,5 +129,33 @@ export function pushUniqueString(object:Array<string>, value: string): Array<str
   return object;
 }
 
+/**
+ * Take a network with duplicated nodes (a node is duplicated if the id of the duplicated version is in metadata.reversibleVersion of a node),
+ * and remove one of the duplication. A DFS is used for the choice, the source for DFS are in parameter of the function. The node that is keeped 
+ * is the first of the DFS (when read backward).
+ * BEWARE : a DFS with not all sources might miss some duplicated nodes
+ * @param network the network with the duplicated nodes
+ * @param typeSource type of sources to used for dfs if sources is not given : ALL, SOURCE (source nodes), RANK (rank 0), SOURCE_RANK (both methods)
+ * Parameter is needed because of Javascript even if not used (even if user has his source list).
+ * @param sources sources nodes (id) to use for dfs
+ */
+export function chooseReversibleReaction(network:Network, sources:Array<string> |SourceType):void{
+  const reactionToRemove:Array<string>=[];
 
+  const dfs=DFSWithSources(network, sources);
+  // for a dfs : need to read the output backward (because of implementation of a dfs algorithm)
+  for(let i=dfs.length-1;i>=0;i--){
+    const nodeID=dfs[i];
+    // if there is a reversible version of the current node:
+    if(network.nodes[nodeID].metadata && network.nodes[nodeID].metadata.reversibleVersion){
+      const reversibleNodeID=network.nodes[nodeID].metadata.reversibleVersion;
+      // add the reversible reaction to the list of nodes to remove
+      reactionToRemove.push(String(reversibleNodeID));
+      // remove metadata information about reversible node for current node and its reversible version
+      delete network.nodes[nodeID].metadata.reversibleVersion;
+      delete network.nodes[String(reversibleNodeID)].metadata.reversibleVersion;
+    }
+  }
 
+  removeAllSelectedNode(reactionToRemove,network);
+}

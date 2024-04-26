@@ -53,7 +53,7 @@ import type { Network } from "@metabohub/viz-core/src/types/Network";
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
 import { dagreLayout, vizLayout } from './composables/useLayout';
 import { removeSideCompounds } from "./composables/removeSideCompounds";
-import {duplicateReversibleReactions} from "./composables/duplicateReversibleReactions"
+import {chooseReversibleReaction, duplicateReversibleReactions} from "./composables/duplicateReversibleReactions"
 import {importNetworkFromFile,importNetworkFromURL} from "./composables/importNetwork"
 import { NetworkToSerialized } from "@/composables/networkToGraph";
 import { initZoom, rescale } from "@metabohub/viz-core";
@@ -116,26 +116,14 @@ function keydownHandler(event: KeyboardEvent) {
     console.log(clusterNetwork);
   } else if (event.key =="n"){
     console.log(network.value);
+  }else if (event.key =="r"){
+    chooseReversibleReaction(network.value,SourceType.RANK_SOURCE_ALL);
   }
 }
 
 function rescaleAfterAction(){
   console.log('Rescaling');
   rescale(svgProperties);
-  const sources= getSources(network.value,SourceType.RANK_ONLY);
-  sources.forEach(node=>{
-    console.log(network.value.nodes[node].label);
-  });
-  // console.log('__________________________________________________________');
-  // const dfs=DFSWithSources(network.value);
-  // dfs.forEach(node=>{
-  //   const index=sources.indexOf(node);
-    
-  //   console.log(network.value.nodes[node].label);
-  //   if(index !==-1){
-  //     console.log('____source__'+index+'____');
-  //   }
-  // })
 }
 
 onMounted(() => {
