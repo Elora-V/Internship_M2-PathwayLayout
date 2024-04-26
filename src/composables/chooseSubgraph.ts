@@ -20,7 +20,7 @@ export function addLonguestPathClusterFromSources(clusterNetwork:ClusterNetwork,
     // get new clusters : longuest paths from sources with DFS
     const newClusters=longuestPathFromDFS(graph,dfs,sources);
     Object.entries(newClusters).forEach(([source,path]:[string,Array<string>])=>{
-        if (path.length > 2){
+        if (path.length > 3){
             const cluster= createCluster(source, RankEnum.EMPTY, path,[], ["longest_path"]);
             clusterNetwork.clusters[source]=cluster;
         }

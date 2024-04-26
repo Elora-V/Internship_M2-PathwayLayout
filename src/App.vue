@@ -19,6 +19,17 @@
   <button v-on:click="ordering('in')">
      Ordering in
   </button>
+  <br>
+  <br>
+  <button v-on:click="sourcesChoice('rank_only')">
+     Rank only
+  </button><br>
+  <button v-on:click="sourcesChoice('rank_source')">
+     Rank source
+  </button><br>
+  <button v-on:click="sourcesChoice('source_only')">
+     Source only
+  </button><br>
   <NetworkComponent 
     v-on:contextmenu.prevent
     :network="network"
@@ -85,6 +96,7 @@ let undoFunction: any = reactive({});
 //let clusters : Array<Cluster> =reactive([])
 //let attributGraphViz : AttributesViz=reactive({});
 let clusterNetwork:ClusterNetwork;
+let sourceTypePath:SourceType=SourceType.RANK_ONLY;
 
 // Functions --------------
 
@@ -124,7 +136,7 @@ function keydownHandler(event: KeyboardEvent) {
     console.log('create cluster longuest path');
     clusterNetwork=addLonguestPathClusterFromSources(clusterNetwork,SourceType.RANK_ONLY);
   } else if (event.key == "a"){
-    allSteps(clusterNetwork);
+    allSteps(clusterNetwork,sourceTypePath);
   }
 }
 
@@ -133,7 +145,7 @@ function rescaleAfterAction(){
   rescale(svgProperties);
 }
 
-async function allSteps(clusterNetwork: ClusterNetwork) {
+async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType=SourceType.RANK_ONLY) {
 
     let network=clusterNetwork.network.value;
 
@@ -148,7 +160,7 @@ async function allSteps(clusterNetwork: ClusterNetwork) {
       vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true, () => {
 
         console.log('choosing path');
-        clusterNetwork = addLonguestPathClusterFromSources(clusterNetwork, SourceType.RANK_ONLY);
+        clusterNetwork = addLonguestPathClusterFromSources(clusterNetwork, sourceTypePath);
 
         console.log('final viz');
         vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, false, rescaleAfterAction);
@@ -196,6 +208,20 @@ function ordering(value:string="default"){
   } else if (value == "in" || value == "out"){
     clusterNetwork.attributs.ordering=value;
   }
+}
+
+function sourcesChoice(sourcetype:string):void{
+  if (sourcetype==SourceType.RANK_ONLY){
+    sourceTypePath=SourceType.RANK_ONLY;
+  }
+  else if (sourcetype==SourceType.RANK_SOURCE){
+    sourceTypePath=SourceType.RANK_SOURCE;
+  }
+  else if (sourcetype==SourceType.SOURCE_ONLY){
+    sourceTypePath=SourceType.SOURCE_ONLY;
+  }
+  console.log(sourceTypePath);
+  clusterNetwork.clusters={}; // temporaire, je reset les clusters pour pas ajouter les nouveaux aux vieux
 }
 
 function openContextMenu(Event: MouseEvent, nodeId: string) {
