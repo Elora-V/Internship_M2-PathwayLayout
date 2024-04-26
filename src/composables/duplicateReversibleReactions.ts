@@ -139,10 +139,10 @@ export function pushUniqueString(object:Array<string>, value: string): Array<str
  * Parameter is needed because of Javascript even if not used (even if user has his source list).
  * @param sources sources nodes (id) to use for dfs
  */
-export function chooseReversibleReaction(network:Network, sources:Array<string>=undefined,typeSource:SourceType=SourceType.SOURCE):void{
+export function chooseReversibleReaction(network:Network, sources:Array<string> |SourceType):void{
   const reactionToRemove:Array<string>=[];
 
-  const dfs=DFSWithSources(network, sources,typeSource);
+  const dfs=DFSWithSources(network, sources);
   // for a dfs : need to read the output backward (because of implementation of a dfs algorithm)
   for(let i=dfs.length-1;i>=0;i--){
     const nodeID=dfs[i];
@@ -158,22 +158,4 @@ export function chooseReversibleReaction(network:Network, sources:Array<string>=
   }
 
   removeAllSelectedNode(reactionToRemove,network);
-}
-
-/**
- * Take a network with duplicated nodes (a node is duplicated if the id of the duplicated version is in metadata.reversibleVersion of a node),
- * and remove one of the duplication. A DFS is used for the choice, the source for DFS are in parameter of the function. The node that is keeped 
- * is the first of the DFS (when read backward).
- * BEWARE : a DFS with not all sources might miss some duplicated nodes thus the algorithm is run a second time with all nodes as sources
- * @param network the network with the duplicated nodes
- * @param typeSource type of sources to used for dfs if sources is not given : ALL, SOURCE (source nodes), RANK (rank 0), SOURCE_RANK (both methods)
- * Parameter is needed because of Javascript even if not used (even if user has his source list).
- * @param sources sources nodes (id) to use for dfs 
- */
-export function chooseAllReversibleReaction(network:Network, typeSource:SourceType=SourceType.SOURCE,sources:Array<string>=undefined):void{
-  chooseReversibleReaction(network, sources,typeSource);
-  if (typeSource!==SourceType.ALL){
-    chooseReversibleReaction(network, undefined,SourceType.ALL);
-  }
-
 }
