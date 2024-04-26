@@ -67,15 +67,7 @@ export function longuestPathFromDFS(graph:{[key:string]:Function},dfs:Array<stri
             }else{
                 // end the path if a node has been added in the last pass of the loop
                 if (add && source!==undefined){
-                    if (source==="M_Nacasp_c"){
-                        console.log('not child');
-                        console.log(longuestPaths);
-                    }
                     longuestPaths=endPath(source,longuestPaths,path);
-                    if (source==="M_Nacasp_c"){
-                        console.log('after endPath');
-                        console.log(longuestPaths);
-                    }
                 }
                 // remove previous visited node if this node is not the parent of current node
                 dfs.splice(i+1,1);
