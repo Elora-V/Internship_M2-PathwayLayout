@@ -46,7 +46,7 @@ export async function changeNetworkFromViz(json: JsonViz, network: Network, assi
     const unique_y:Array<number> =[];
     json["objects"].forEach((node) => {
         const nodeId = node.name;
-        if ('pos' in node) {
+        if ('pos' in node && "x" in network.nodes[nodeId] && "y" in network.nodes[nodeId]) {
             const pos = node.pos.split(',');
             const x = parseFloat(pos[0]);
             const y = parseFloat(pos[1]);
