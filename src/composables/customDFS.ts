@@ -30,15 +30,15 @@ function createGraphForDFS(network:Network):DFS{
 
 
 
-function customDFS(network:Network, sources:Array<string>) {
+export function customDFS(network:Network, sources:Array<string>):Array<string> {
     let DFS=createGraphForDFS(network);
-
-    sources.forEach( source =>{
+    sources.forEach(source =>{
         const sourceIndex=DFS.nodesID.indexOf(source);
         if (sourceIndex!==-1 && !DFS.visited[sourceIndex]){
-            DFS=nodeDFS(DFS,sourceIndex);
+            DFS=nodeDFS(DFS,sourceIndex);           
         }
     });
+    return DFS.dfsOrder;
 }
 
 
@@ -47,9 +47,6 @@ function nodeDFS(DFS:DFS,nodeIndex:number):DFS{
     // mark the node as visited
     DFS.visited[nodeIndex] = true;
     
-    // add the node to the dfs order
-    DFS.dfsOrder.push(DFS.nodesID[nodeIndex]); // change position of line?
-    
     // get the starting time for the node
     DFS.start_time[nodeIndex] = DFS.time;
     
@@ -57,7 +54,8 @@ function nodeDFS(DFS:DFS,nodeIndex:number):DFS{
     DFS.time += 1;
     
     // loop through the children of the node
-    DFS.GDSgraph.adjacent(nodeIndex).forEach(childID => {
+
+    DFS.GDSgraph.adjacent(DFS.nodesID[nodeIndex]).forEach(childID => {
 
         // get the index of the child
         const childIndex = DFS.nodesID.indexOf(childID);
@@ -104,6 +102,9 @@ function nodeDFS(DFS:DFS,nodeIndex:number):DFS{
     
     // get the ending time for the node
     DFS.end_time[nodeIndex] = DFS.time;
+
+    // add the node to the dfs order
+    DFS.dfsOrder.push(DFS.nodesID[nodeIndex]); 
     
     // increment the time by 1
     DFS.time += 1;
