@@ -83,6 +83,8 @@ import { Cluster } from "@/types/Cluster";
 import { ClusterNetwork } from "@/types/ClusterNetwork";
 import { SourceType } from "@/types/EnumArgs";
 import { addLonguestPathClusterFromSources } from "@/composables/chooseSubgraph";
+import { RefSymbol } from "@vue/reactivity";
+import { customDFS } from "@/composables/customDFS";
 
 
 
@@ -137,6 +139,10 @@ function keydownHandler(event: KeyboardEvent) {
     clusterNetwork=addLonguestPathClusterFromSources(clusterNetwork,SourceType.RANK_ONLY);
   } else if (event.key == "a"){
     allSteps(clusterNetwork,sourceTypePath);
+  } else if (event.key == "f"){
+    const sources=getSources(network.value,SourceType.RANK_ONLY);
+    const {dfs,crossEdge}=customDFS(network.value,sources);
+    console.log(crossEdge);
   }
 }
 

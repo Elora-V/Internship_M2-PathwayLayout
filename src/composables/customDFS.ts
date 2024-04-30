@@ -1,44 +1,37 @@
 import { Network } from '@metabohub/viz-core/src/types/Network';
 import * as GDS from 'graph-data-structure';
 import { NetworkToGDSGraph } from './networkToGraph';
+import { Link } from '@metabohub/viz-core/src/types/Link';
 
 //https://www.geeksforgeeks.org/tree-back-edge-and-cross-edges-in-dfs-of-graph/
 
-interface DFS {
-    time:number
-    dfsOrder: Array<string>
-    GDSgraph: {[key:string]:Function}
-    nodesID:Array<string>
-    visited:Array<boolean>
-    start_time:Array<number>
-    end_time:Array<number>
-}
 
 function createGraphForDFS(network:Network):DFS{
     const nbNode=Object.keys(network.nodes).length;
     const graphGDS=NetworkToGDSGraph(network);
     return  {
         time:0,
-        dfsOrder: [], // TO CHANGE : REVERSED ??
+        dfsOrder: [], 
         GDSgraph: graphGDS,
         nodesID:graphGDS.nodes(),
         visited:Array.from({ length: nbNode }, () => false),
-        start_time:Array.from({ length: nbNode }, () => 0), // the first time the node is visited
-        end_time:Array.from({ length: nbNode }, () => 0)    // time of visit when backward reading
+        start_time:Array.from({ length: nbNode }, () => undefined), // the first time the node is visited
+        end_time:Array.from({ length: nbNode }, () => undefined),    // time of visit when backward reading
+        crossEdge:[]
     }
 }
 
 
 
-export function customDFS(network:Network, sources:Array<string>):Array<string> {
+export function customDFS(network:Network, sources:Array<string>):{dfs:Array<string>,crossEdge:Array<{source:string,target:string}>} {
     let DFS=createGraphForDFS(network);
-    sources.forEach(source =>{
-        const sourceIndex=DFS.nodesID.indexOf(source);
+    sources.forEach(sourceID =>{
+        const sourceIndex=DFS.nodesID.indexOf(sourceID);
         if (sourceIndex!==-1 && !DFS.visited[sourceIndex]){
             DFS=nodeDFS(DFS,sourceIndex);           
         }
     });
-    return DFS.dfsOrder;
+    return {dfs:DFS.dfsOrder,crossEdge:DFS.crossEdge};
 }
 
 
@@ -65,37 +58,41 @@ function nodeDFS(DFS:DFS,nodeIndex:number):DFS{
             if (!DFS.visited[childIndex]){
             
                 // mark the edge as a tree edge
-                console.log("Tree Edge: " + DFS.nodesID[nodeIndex] + "-->" + DFS.nodesID[childIndex]+"\n");
+                //console.log("Tree Edge: " + DFS.nodesID[nodeIndex] + "-->" + DFS.nodesID[childIndex]+"\n");
                 
                 // dfs through the child node
                 DFS=nodeDFS(DFS,childIndex);
 
             } else { // if the child node had already been visited
-            
+
                 // if this node had been visited for the first time after his child node
-                // and ???????????  (child endtime not done, so 0??) 
+                // and child has no endtime 
                 // => back edge 
-                if ( DFS.start_time[nodeIndex] > DFS.start_time[childIndex] && DFS.end_time[nodeIndex] < DFS.end_time[childIndex]){
-                
-                    console.log("Back Edge: " + DFS.nodesID[nodeIndex] + "-->" + DFS.nodesID[childIndex]+"\n");
-                }
+                // if ( DFS.start_time[nodeIndex] > DFS.start_time[childIndex] && DFS.end_time[childIndex]===undefined){
+                //     console.log("Back Edge: " + DFS.nodesID[nodeIndex] + "-->" + DFS.nodesID[childIndex]+"\n");
+                // }
                     
                 // if this node is an ancestor of the child node, but not a tree edge
                 // i.e node first visited before his child
-                // and ??? (node endtime not done, so 0??) 
+                // and child has  endtime 
                 // => forward edge
-                else if ( DFS.start_time[nodeIndex] < DFS.start_time[childIndex] && DFS.end_time[nodeIndex] > DFS.end_time[childIndex]) {
-                    console.log("Forward Edge: " + DFS.nodesID[nodeIndex] + "-->" + DFS.nodesID[childIndex]+"\n");
-                }
-                
+                // else if ( DFS.start_time[nodeIndex] < DFS.start_time[childIndex] && DFS.end_time[childIndex] !== undefined) {
+                //     console.log("Forward Edge: " + DFS.nodesID[nodeIndex] + "-->" + DFS.nodesID[childIndex]+"\n");
+                // }  
+            
                 // if parent and neighbour node do not 
                 // have any ancestor and descendant relationship between them
                 // if this node had been visited for the first time after his child node
-                // and ???? (node endtime not done, so 0??)
+                // and child has endtime 
                 // => cross edge
-                else if (DFS.start_time[nodeIndex] > DFS.start_time[childIndex] && DFS.end_time[nodeIndex] > DFS.end_time[childIndex]) {
-                    console.log("Cross Edge: " + DFS.nodesID[nodeIndex] + "-->" + DFS.nodesID[childIndex]+"\n");
+
+                //else 
+                if (DFS.start_time[nodeIndex] > DFS.start_time[childIndex] && DFS.end_time[childIndex] !== undefined) {
+                    //console.log("Cross Edge: " + DFS.nodesID[nodeIndex] + "-->" + DFS.nodesID[childIndex]+"\n");
+                    DFS.crossEdge.push({source:DFS.nodesID[nodeIndex],target:childID});
                 }
+
+  
             }
         }
     });
