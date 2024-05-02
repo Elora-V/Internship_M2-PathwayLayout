@@ -1,3 +1,4 @@
+import { JsonViz } from '@/types/JsonViz';
 import { Network } from '@metabohub/viz-core/src/types/Network';
 import type { Node } from "@metabohub/viz-core/src/types/Node";
 import  dagre  from 'dagrejs/dist/dagre.js';
@@ -12,35 +13,24 @@ import { type } from 'os';
  * @param {dagre.graphlib.Graph}  dagre.graphlib.Graph object 
  * @param {Network} Network object (value of pointer)
  */
-export function changeNetworkFromDagre(graph: dagre.graphlib.Graph,network: Network){
-
-    for (const node in graph["_nodes"]){
-        // add metadata key
-        if ( !Object.keys(network.nodes[node]).includes("metadata")){
-            network.nodes[node]["metadata"]= {};
+export async function changeNetworkFromDagre(graph: dagre.graphlib.Graph,network: Network): Promise<void>{
+    Object.entries(graph["_nodes"]).forEach(([node, nodeData]:[string, dagre.graphlib.Node]) => {
+        if (!network.nodes[node].metadata) {
+            network.nodes[node].metadata = {};
         }
-        // get x (if one)
-        if (Object.keys(graph["_nodes"][node]).includes('x')){
-            const x=graph["_nodes"][node]["x"];
-            network.nodes[node]["x"]= x;
+        const { x, y, _order,_rank  } = nodeData;
+        // if there is some position x and y : network is updated
+        if (x !== undefined && y !== undefined){
+            if (network.nodes[node]) {
+                network.nodes[node].x = x;
+                network.nodes[node].y = y;
+            } else {
+                console.warn(`Node '${node}' not found in the network.`);
+            }
+            network.nodes[node].metadata.order = _order;
+            network.nodes[node].metadata.rank = _rank / 2;
         }
-            
-        // get y (if one)
-        if (Object.keys(graph["_nodes"][node]).includes('y')){
-            const y=graph["_nodes"][node]["y"];
-            network.nodes[node]["y"]= y;
-        }
-
-        // get order (if one)
-        if (Object.keys(graph["_nodes"][node]).includes('_order')){
-            network.nodes[node]["metadata"]["order"]= graph["_nodes"][node]["_order"];
-        }
-
-        // get rank (if one)
-        if (Object.keys(graph["_nodes"][node]).includes('_rank')){
-            network.nodes[node]["metadata"]["rank"]= graph["_nodes"][node]["_rank"]/2; //dagre has rank that goes 2 by 2 (rank 0,2,4...)
-        }
-    }
+    });
 }
 
 
@@ -49,27 +39,30 @@ export function changeNetworkFromDagre(graph: dagre.graphlib.Graph,network: Netw
  * The json and network need to have the same nodes !
  * @param {object}  object return by render method from viz (renderJSON)
  * @param {Network} Network object (value of pointer)
+ * @param assignRank boolean that indicates if rank and order need to be infered and assigned to nodes
  */
-export function changeNetworkFromViz(json: object, network: Network)  {
-    
-    const unique_y:Array<number> =[];
+export async function changeNetworkFromViz(json: JsonViz, network: Network, assignRank:boolean=false): Promise<void> {
 
-    for (const node in json["objects"]) {
-        const nodeId = json["objects"][node]["name"];
-        // get position (if one)
-        if (Object.keys(json["objects"][node]).includes('pos')) {
-            const pos = json["objects"][node]["pos"].split(',');
-            const x = parseFloat(pos[0]);
-            const y = parseFloat(pos[1]);
-            network.nodes[nodeId]["x"] = x;
-            network.nodes[nodeId]["y"] = y;
-            if( !unique_y.includes(y)){
-                unique_y.push(y);
+    const unique_y:Array<number> =[];
+    json["objects"].forEach((node) => {
+        const nodeId = node.name;
+        if (nodeId in network.nodes){
+            if ('pos' in node) {
+                const pos = node.pos.split(',');
+                const x = parseFloat(pos[0]);
+                const y = parseFloat(pos[1]);
+                network.nodes[nodeId].x = x;
+                network.nodes[nodeId].y = y;
+                if( !unique_y.includes(y)){
+                    unique_y.push(y);
+                }
             }
         }
-    }
+    });
     
-    assignRankOrder(network,unique_y); // the information of rank isn't in the result, unlike dagre 
+    if(assignRank){
+        assignRankOrder(network,unique_y); // the information of rank isn't in the result, unlike dagre 
+    }
 
 }
 
@@ -90,60 +83,31 @@ export function dagreToNetwork(graph: dagre.graphlib.Graph): Network{
 	};
 
     // insert nodes into network
-    for (const node in graph["_nodes"]){
-
-        const labelNode=graph["_nodes"][node]["label"];
-        // get position if one
-        let xNode:number;
-        if (Object.keys(graph["_nodes"][node]).includes('x')){
-            xNode= graph["_nodes"][node]["x"];
-        }else{
-            xNode= NaN;
-        }
-        let yNode:number;
-        if (Object.keys(graph["_nodes"][node]).includes('y')){
-            yNode= graph["_nodes"][node]["y"];
-        }else{
-            yNode= NaN;
-        }
+    graph.nodes().forEach((node) => {
+        const { label, x, y } = graph.node(node);
         network.nodes[node] = {
-			id: node,
-			x: xNode,
-			y: yNode,
-            label : labelNode
-		};
+            id: node,
+            label: label,
+            x: x || NaN,
+            y: y || NaN
+        };
+    });
        
-    }
-
     // insert edges into network
-    for (const link in graph["\_edgeObjs"]){
-        const fromNode=graph["\_edgeObjs"][link]["v"];
-        const toNode=graph["\_edgeObjs"][link]["w"];
+    graph.edges().forEach((edge) => {
+        const fromNode = edge.v;
+        const toNode = edge.w;
         network.links.push({
-            id: fromNode+" -- "+toNode,
-            source: getNodeFromNetwork(fromNode,network),
-            target: getNodeFromNetwork(toNode,network),
+            id: `${fromNode} -- ${toNode}`,
+            source: network.nodes[fromNode],
+            target: network.nodes[toNode],
             directed: true
-          }
-          );
-    }
+        });
+    });
 
     return network;
 
 }
-
-/**
- * Take an id string and return the corresponding node from the network
- * @param {Network} Network object
- * @param id identifier of the node 
- * @returns {Node} Return Node object 
- */
-function getNodeFromNetwork(id: string, network:Network): Node{
-
-    return network["nodes"][id]; 
-
-}
-
 
 
 
@@ -152,21 +116,19 @@ function getNodeFromNetwork(id: string, network:Network): Node{
  * @param {Network} Network object
  * @param unique_y array of all unique y for node position
  */
-function assignRankOrder(network: Network, unique_y: Array<number>) {
+function assignRankOrder(network: Network, unique_y: Array<number>):void {
 
     // sort the y to know the associated rank for a y coordinate
     unique_y.sort((a:number, b:number) => a - b);
 
     // get the rank for each node
     const xNodeByRank: number[][] = Array.from({ length: unique_y.length }, () => []);
-    for (const node in network["nodes"]){
-        const rank = unique_y.indexOf(network.nodes[node].y);
-        if (!Object.keys(network.nodes).includes("metadata")){
-            network.nodes[node]["metadata"]={};
-        }
-        network.nodes[node].metadata["rank"]=rank;
-        xNodeByRank[rank].push(network.nodes[node].x);
-    }
+    Object.values(network.nodes).forEach((node) => {
+        const rank = unique_y.indexOf(node.y);
+        node.metadata = node.metadata || {}; 
+        node.metadata.rank = rank;
+        xNodeByRank[rank].push(node.x);
+    });
 
     // sort the y by rank
     xNodeByRank.forEach(sublist => {
@@ -174,14 +136,14 @@ function assignRankOrder(network: Network, unique_y: Array<number>) {
     });
 
     // get the order for each node 
-    for (const node in network["nodes"]){
-        const rank= network.nodes[node].metadata["rank"];
-        if (typeof rank === 'number'){
-            const order = xNodeByRank[rank].indexOf(network.nodes[node].x);
-            network.nodes[node].metadata["order"]=order;
+    Object.values(network.nodes).forEach((node) => {
+        const rank = node.metadata.rank;
+        if (typeof rank === 'number') {
+            const order = xNodeByRank[rank].indexOf(node.x);
+            node.metadata.order = order;
         } else {
-            console.error("Rank isn't a number");
-            network.nodes[node].metadata["order"]=0; // order by default
+            console.error("Le rang n'est pas un nombre");
+            node.metadata.order = -1;
         }
-    }
+    });
 }

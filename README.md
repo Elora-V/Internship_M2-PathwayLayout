@@ -1,97 +1,122 @@
-# Vue 3 project template
+# Pathway Layout for MetExplore3
 
-This template includes :
+# Summary
 
-- Vue 3
-- [Vuetify 3](https://vuetifyjs.com/en/components/all/)
-- Typescript
-- ESlint
-- npm packaging configuration
-- [vitest](https://vitest.dev/guide/)
-- [storybook](https://storybook.js.org/docs/vue/get-started/whats-a-story)
+- [Library used](#lib)
+- [Functions](#functions)
+  - [`importNetwork`](#importNetwork)
+  - [`readJson`](#readJson)
+  - [`networkToGraph`](#networkToGraph)
+  - [`graphToNetwork`](#graphToNetwork)
+  - [`removeSideCompounds`](#removeSideCompounds)
+  - [`duplicateReversibleReactions`](#duplicateReversibleReactions)
+  - [`useLayout`](#useLayout)
 
-## Files to modify for the npm packaging
 
-This template is configured to build and publish an npm package on GitLab, following this [tutorial](https://forgemia.inra.fr/metabohub/mth/-/wikis/mth2-wp5-t3/webcomponents-npm). 
 
-Replace 'ComponentExample' with the name of the component to publish in these files :
-- lib/main.js
-- package.json
-- vite.config.ts
+# <a id="lib">Library used</a>
 
-The package will be published with the GitLab CI.
+To apply the Sugiyama layout, two libraries were used (to keep the best result) : Dagre (https://github.com/dagrejs/dagre) and Viz (https://github.com/mdaines/viz-js).
 
-## Use the package in another project
+To use graph algorithms, the library graph-data-structure (https://www.npmjs.com/package/graph-data-structure) is imported.
 
-```sh
-npm i -D @metabohub/component-example
-```
+# <a id="functions">Functions</a>
 
-If your project is not using vuetify, you need to import it in `src/main.ts` :
-```ts
-import { createApp } from 'vue'
-import App from './App.vue'
-import { vuetify } from "@metabohub/component-example";
+The functions are implemented in the `src/composables` directory.
 
-createApp(App).use(vuetify).mount('#app')
-```
+## <a id="importNetwork">`importNetwork.ts`</a>
 
-Use the component : 
-```ts
-<script setup lang="ts">
-import { ComponentExample } from "@metabohub/component-example";
-import "@metabohub/component-example/dist/style.css";
-import type { SomeType } from "@metabohub/component-example";
-</script>
 
-<template>
-  <ComponentExample />
-</template>
-```
+There is no change compared to the functions of import from MetExplore.
+Allow to import a file and call `readJsonGraph` to put the file informations into a network object.
 
-## Project Setup
+Contains : 
 
-```sh
-npm install
-```
+- `importNetworkFromURL`
 
-### Compile and Hot-Reload for Development
+- `importNetworkFromFile`
 
-```sh
-npm run dev
-```
+- `loadNetwork`
 
-### Type-check
+- `getContentFromURL`
 
-```sh
-npm run type-check
-```
+<br>
+<br>
 
-### Compile for Production
+## <a id="readJson">`readJson.ts`</a>
 
-```sh
-npm run build
-```
+...
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+<br>
+<br>
 
-```sh
-npm run test:unit
-```
+## <a id="networkToGraph">`networkToGraph.ts`</a>
 
-Check the coverage :
-```sh
-npm run coverage
-```
+Allow convertion of the network to a format for the libraries.
 
-### Lint with [ESLint](https://eslint.org/)
+Contains : 
 
-```sh
-npm run lint
-```
+- `NetworkToDagre` : for the Dagre library, require a network object and graph attributes can be added. The attributs are arguments for the layout algotithm to apply on the returned object (a dagre graph).
 
-### View stories with [Storybook](https://storybook.js.org/docs/vue/get-started/whats-a-story)
+- `NetworkToViz`: for the Viz library, require a network object and graph attributes can be added. The attributs are arguments for the layout algotithm to apply on the returned object (a graph).
 
-```sh
-npm run storybook
-```
+- `NetworkToSerialized`: for the graph-data-structure library, require a network object and return a Serialized object.
+
+
+<br>
+<br>
+
+## <a id="graphToNetwork">`graphToNetwork.ts`</a>
+
+Allow to change or create a network object.
+
+Contains :
+
+- `changeNetworkFromDagre` : Take dagre.graphlib.Graph object and the network associated (with the graph) : change the position and metadata (rank and order) of network's node by the one of the graph. The graph and network need to have the same nodes ! The function is asynchrone. The rank and order are in the dagre graph.
+
+- `changeNetworkFromViz` : Take a json of a viz graph (type JsonViz implemented in `src/types`) and the network associated (with the json) : change the position and metadata (rank and order) of network's node by the one of the json. The graph and network need to have the same nodes ! The function is asynchrone. The rank and orderneed to be infered with the coordinates (cf `assignRankOrder`).
+
+- `dagreToNetwork` : Take a dagre.graphlib.Graph object and return a Network object containing the same nodes and edge
+
+- `assignRankOrder` : Take a network and all the unique y coordinate of the nodes. Add the rank (y position : first, second...; not coordinate) and order ( x position in the rank: first, second,....) to metadata of network. The vector of unique y is required to avoid a loop in the function. This information is obtained in the general loop of `changeNetworkFromViz`. This reduce modularity but improve the optimization. 
+
+<br>
+<br>
+
+## <a id="removeSideCompounds">`removeSideCompounds.ts`</a>
+
+Allow to remove side compounds from a graph. 
+
+- `removeSideCompounds` : Remove side compounds of a network, the list of side compounds is predefined. The argurments are the network and the path to the file containning the list of side compounds.
+
+<br>
+<br>
+
+## <a id="duplicateReversibleReactions">`duplicateReversibleReactions.ts`</a>
+
+Allow to duplicate all the reversible reaction of a network.
+
+- `duplicateReversibleReactions` :  Take a network and add a duplicated node of reversible reactions, and add links to this reaction. The links added are the same that for the original reaction, but source and target are inverted. A reaction node need the class "reaction" and "reversible" to be considered a reversible reaction.
+
+
+- `reversibleNodeReaction` : Take a node and return a new node with same id and label but with a "_rev" added at the end. It is  the node of the reversible reaction, this function is called by `duplicateReversibleReactions`. 
+
+<br>
+<br>
+
+## <a id="useLayout">`useLayout.ts`</a>
+
+
+Apply a layout on the network.
+
+- `dagreLayout` : Take a network object and change the (x,y) position of the node with dagre lib. It use `NetworkToDagre`and `changeNetworkFromDagre`to pass by a format accepted by the dagre library.
+
+- `vizLayout` : Take a network object and change the (x,y) position of the node with viz lib. It use `NetworkToViz`and `changeNetworkFromViz`to pass by a format accepted by the dagre library.
+
+Those functions call a callbackfunction that rescale the graph after applying the layout. 
+
+<br>
+<br>
+
+
+
