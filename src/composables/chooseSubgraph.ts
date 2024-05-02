@@ -8,7 +8,7 @@ import { createCluster } from "./UseClusterNetwork";
 
 /**
  * Add clusters : a dfs for each sources is done and the longuest path associated with each source is used as new cluster. BEWARE : if sources is an array of node ID, the order of the id can change the result.
- * @param clusterNetwork an object with the network and object for clusters
+ * @param subgraphNetwork an object with the network and object for clusters
  * @param sources array of node ID or a type of method to get sources automatically
  * RANK_ONLY : sources are nodes of rank 0
  * SOURCE_ONLY : sources are topological sources of the network (nul indegree)
@@ -20,10 +20,10 @@ import { createCluster } from "./UseClusterNetwork";
  * 
  * @returns the clusterNetwork with more cluster
  */
-export function addLonguestPathClusterFromSources(clusterNetwork:SubgraphNetwork, sources:Array<string>|SourceType):SubgraphNetwork{
+export function addLonguestPathClusterFromSources(subgraphNetwork:SubgraphNetwork, sources:Array<string>|SourceType):SubgraphNetwork{
 
     // create graph for library from network
-    const network=clusterNetwork.network.value;
+    const network=subgraphNetwork.network.value;
     const graph=NetworkToGDSGraph(network);
 
     // DFS
@@ -32,12 +32,12 @@ export function addLonguestPathClusterFromSources(clusterNetwork:SubgraphNetwork
     }
     const dfs=DFSWithSources(network, sources);
 
-    // get new clusters : longuest paths from sources with DFS
-    const newClusters=longuestPathFromDFS(graph,dfs,sources);
+    // get new clusters : longuest paths from sources with DFS = main chain of reaction
+    const newClusters=longuestPathFromDFS(graph,dfs,sources,subgraphNetwork.cycles);
     Object.entries(newClusters).forEach(([source,path]:[string,Array<string>])=>{
         if (path.length > 3){
             const cluster= createCluster(source, RankEnum.EMPTY, path,[], ["longest_path"]);
-            clusterNetwork.mainChains[source]=cluster;
+            subgraphNetwork.mainChains[source]=cluster;
             // add metadata for node in cluster
             path.forEach(nodeID=>{
                 if (! ("metadata" in network.nodes[nodeID]) ){
@@ -52,7 +52,7 @@ export function addLonguestPathClusterFromSources(clusterNetwork:SubgraphNetwork
         }
     });
 
-    return clusterNetwork;
+    return subgraphNetwork;
 }
 
 /**
@@ -70,7 +70,7 @@ export function addLonguestPathClusterFromSources(clusterNetwork:SubgraphNetwork
  * 
  * @returns an object for the different path, the key is the source of the path
  */
-export function longuestPathFromDFS(graph:{[key:string]:Function},dfs:Array<string>,sources:Array<string>):{[key:string]:Array<string>}{
+export function longuestPathFromDFS(graph:{[key:string]:Function},dfs:Array<string>,sources:Array<string>,cycles?:{[key:string]:Array<string>}):{[key:string]:Array<string>}{
 
     let longuestPaths:{[key:string]:Array<string>}={};
     let path:Array<string>;
@@ -126,7 +126,7 @@ function nodeIsChildOf(graph:{[key:string]:Function},node:string, parentNode:str
     return graph.adjacent(parentNode).includes(node);
 }
 
-function endPath(source:string, longuestPaths:{[key:string]:Array<string>},path:Array<string>):{[key:string]:Array<string>}{
+function endPath(source:string, longuestPaths:{[key:string]:Array<string>},path:Array<string>,cycles?:{[key:string]:Array<string>}):{[key:string]:Array<string>}{
     if (source in longuestPaths){
         if(longuestPaths[source].length < path.length){
             longuestPaths[source]=path.slice();
