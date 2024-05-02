@@ -55,9 +55,14 @@
   // Utils ----------------
 import { ref, reactive, onMounted } from "vue";
 import { Serialized } from "graph-data-structure";
+import { RefSymbol } from "@vue/reactivity";
 
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
+import { SourceType } from "@/types/EnumArgs";
+import { Cluster } from "@/types/Cluster";
+import { ClusterNetwork } from "@/types/ClusterNetwork";
+
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
   // Composables ----------
@@ -72,6 +77,10 @@ import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
 import {createCluster,addNodeCluster} from "./composables/UseClusterNetwork";
 import { DFSWithSources, getSources } from "@/composables/algoDFS";
+import { customDFS } from "@/composables/customDFS";
+import { JohnsonAlgorithm, graphForJohnson } from "@/composables/findCycle";
+import { addLonguestPathClusterFromSources } from "@/composables/chooseSubgraph";
+
 
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
 // import { createUndoFunction } from "./composables/UseUndo";
@@ -79,12 +88,8 @@ import { DFSWithSources, getSources } from "@/composables/algoDFS";
 import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
 import { node } from "prop-types";
-import { Cluster } from "@/types/Cluster";
-import { ClusterNetwork } from "@/types/ClusterNetwork";
-import { SourceType } from "@/types/EnumArgs";
-import { addLonguestPathClusterFromSources } from "@/composables/chooseSubgraph";
-import { RefSymbol } from "@vue/reactivity";
-import { customDFS } from "@/composables/customDFS";
+
+
 
 
 
@@ -143,6 +148,17 @@ function keydownHandler(event: KeyboardEvent) {
     const sources=getSources(network.value,SourceType.RANK_ONLY);
     const {dfs,crossEdge}=customDFS(network.value,sources);
     console.log(crossEdge);
+  } else if (event.key == "j"){
+    const nodes=Object.keys(network.value.nodes);
+    const graph=graphForJohnson(network.value,nodes);
+    const cycles=JohnsonAlgorithm(graph);
+    cycles.forEach(cycle=>{
+      console.log('Cycle :');
+      cycle.forEach(nodeIndex=>{
+        console.log(network.value.nodes[nodes[nodeIndex]].label);
+      });
+      console.log('\n');
+    });
   }
 }
 
