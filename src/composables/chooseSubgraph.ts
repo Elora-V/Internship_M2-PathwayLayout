@@ -2,7 +2,7 @@ import { RankEnum } from "@/types/Cluster";
 import { SourceType } from "@/types/EnumArgs";
 import { DFSWithSources, getSources } from "./algoDFS";
 import { NetworkToGDSGraph } from "./networkToGraph";
-import { ClusterNetwork } from "@/types/ClusterNetwork";
+import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { createCluster } from "./UseClusterNetwork";
 
 
@@ -20,7 +20,7 @@ import { createCluster } from "./UseClusterNetwork";
  * 
  * @returns the clusterNetwork with more cluster
  */
-export function addLonguestPathClusterFromSources(clusterNetwork:ClusterNetwork, sources:Array<string>|SourceType):ClusterNetwork{
+export function addLonguestPathClusterFromSources(clusterNetwork:SubgraphNetwork, sources:Array<string>|SourceType):SubgraphNetwork{
 
     // create graph for library from network
     const network=clusterNetwork.network.value;
@@ -37,7 +37,7 @@ export function addLonguestPathClusterFromSources(clusterNetwork:ClusterNetwork,
     Object.entries(newClusters).forEach(([source,path]:[string,Array<string>])=>{
         if (path.length > 3){
             const cluster= createCluster(source, RankEnum.EMPTY, path,[], ["longest_path"]);
-            clusterNetwork.clusters[source]=cluster;
+            clusterNetwork.mainChains[source]=cluster;
             // add metadata for node in cluster
             path.forEach(nodeID=>{
                 if (! ("metadata" in network.nodes[nodeID]) ){

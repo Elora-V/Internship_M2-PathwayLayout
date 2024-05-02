@@ -1,7 +1,16 @@
+import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 
 
-export function graphForJohnson(network:Network, list_nodes:Array<string>):number[][]{
+export function addCycleToSubgraphNetwork(subNetwork:SubgraphNetwork):SubgraphNetwork{
+    const nodes=Object.keys(subNetwork.network.value.nodes);
+    const graph=graphForJohnson(subNetwork.network.value,nodes);
+    subNetwork.cycles=JohnsonAlgorithm(graph,nodes);
+    return subNetwork;
+}
+
+
+export function graphForJohnson(network:Network, list_nodes:string[]):number[][]{
     let graph: number[][] = Array.from({ length: list_nodes.length }, () => []);
     network.links.forEach(link=>{
         const sourceIndex=list_nodes.indexOf(link.source.id);
@@ -13,8 +22,9 @@ export function graphForJohnson(network:Network, list_nodes:Array<string>):numbe
 }
 
 
-export function JohnsonAlgorithm(graph: number[][], flag: "Single" | "All"="All"): number[][] {
+export function JohnsonAlgorithm(graph: number[][], list_nodes:string[],flag: "Single" | "All"="All"): {[key:string]:string[]} {
     const nVertices: number = graph.length;
+    let nbcycle:number=0;
     let start: number = 0;
     let Ak:  number[][] = graph;
     let B: number[][] = [];
@@ -29,7 +39,7 @@ export function JohnsonAlgorithm(graph: number[][], flag: "Single" | "All"="All"
     }
     let stackTop: number = 0;
     const nbNodeToRun: number = (flag === "Single") ? 1 : nVertices;
-    let result: number[][] = [];
+    let result: {[key:string]:string[]} ={};
 
     function unblock(u: number): void {
         blocked[u] = false;
@@ -55,10 +65,15 @@ export function JohnsonAlgorithm(graph: number[][], flag: "Single" | "All"="All"
             if (w === start) {
                 let cycle: number[] = stack.slice(0, stackTop);
                 if (cycle.length > 3) {
+                    const cycleID:string[]=[];
+                    stack.slice(0, stackTop).forEach(nodeIndex=>{
+                        cycleID.push(list_nodes[nodeIndex]);
+                    });
                     //adding check that not already found in the case of undirected cycle
-                    let isDuplicate = result.some(existingCycle => arePermutations(existingCycle, cycle));
+                    let isDuplicate =  Object.values(result).some(existingCycle => arePermutations(existingCycle, cycleID));
                     if (!isDuplicate) {
-                        result.push(stack.slice(0, stackTop) as number[]);
+                        result["cycle_"+String(nbcycle)]=cycleID;
+                        nbcycle+=1;
                     }
                 }
                 f = true;
@@ -120,7 +135,7 @@ export function JohnsonAlgorithm(graph: number[][], flag: "Single" | "All"="All"
 }
 
 //chatgtp function
-function arePermutations(arr1: number[], arr2: number[]): boolean {
+function arePermutations(arr1: string[], arr2: string[]): boolean {
     if (arr1.length !== arr2.length) return false;
 
     const sortedArr1 = arr1.slice().sort();

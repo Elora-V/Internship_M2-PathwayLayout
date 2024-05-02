@@ -61,7 +61,7 @@ import { RefSymbol } from "@vue/reactivity";
 import type { Network } from "@metabohub/viz-core/src/types/Network";
 import { SourceType } from "@/types/EnumArgs";
 import { Cluster } from "@/types/Cluster";
-import { ClusterNetwork } from "@/types/ClusterNetwork";
+import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
@@ -78,7 +78,7 @@ import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
 import {createCluster,addNodeCluster} from "./composables/UseClusterNetwork";
 import { DFSWithSources, getSources } from "@/composables/algoDFS";
 import { customDFS } from "@/composables/customDFS";
-import { JohnsonAlgorithm, graphForJohnson } from "@/composables/findCycle";
+import { JohnsonAlgorithm, addCycleToSubgraphNetwork, graphForJohnson } from "@/composables/findCycle";
 import { addLonguestPathClusterFromSources } from "@/composables/chooseSubgraph";
 
 
@@ -102,7 +102,7 @@ const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNod
 let undoFunction: any = reactive({});
 //let clusters : Array<Cluster> =reactive([])
 //let attributGraphViz : AttributesViz=reactive({});
-let clusterNetwork:ClusterNetwork;
+let subgraphNetwork:SubgraphNetwork;
 let sourceTypePath:SourceType=SourceType.RANK_ONLY;
 
 // Functions --------------
@@ -119,8 +119,8 @@ async function callbackFunction() {
   rescale(svgProperties);
 
   console.log('________New_graph__________');
-  clusterNetwork={network:network,attributs:{},clusters:{}};
-  clusterNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
+  subgraphNetwork={network:network,attributs:{},mainChains:{}};
+  subgraphNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
   removeSideCompounds(network.value,"/sideCompounds.txt");
   console.log(network.value);
 
@@ -130,36 +130,23 @@ function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
     dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
-    vizLayout(network.value, clusterNetwork.clusters ,clusterNetwork.attributs ,true,rescaleAfterAction);
+    vizLayout(network.value, subgraphNetwork.mainChains ,subgraphNetwork.attributs ,true,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
   } else if (event.key =="c"){
-    console.log(clusterNetwork);
+    console.log(subgraphNetwork);
   } else if (event.key =="n"){
     console.log(network.value);
   }else if (event.key =="r"){
     chooseReversibleReaction(network.value,SourceType.RANK_SOURCE_ALL);
   }else if (event.key =="p"){
     console.log('create cluster longuest path');
-    clusterNetwork=addLonguestPathClusterFromSources(clusterNetwork,SourceType.RANK_ONLY);
+    subgraphNetwork=addLonguestPathClusterFromSources(subgraphNetwork,SourceType.RANK_ONLY);
   } else if (event.key == "a"){
-    allSteps(clusterNetwork,sourceTypePath);
-  } else if (event.key == "f"){
-    const sources=getSources(network.value,SourceType.RANK_ONLY);
-    const {dfs,crossEdge}=customDFS(network.value,sources);
-    console.log(crossEdge);
+    allSteps(subgraphNetwork,sourceTypePath);
   } else if (event.key == "j"){
-    const nodes=Object.keys(network.value.nodes);
-    const graph=graphForJohnson(network.value,nodes);
-    const cycles=JohnsonAlgorithm(graph);
-    cycles.forEach(cycle=>{
-      console.log('Cycle :');
-      cycle.forEach(nodeIndex=>{
-        console.log(network.value.nodes[nodes[nodeIndex]].label);
-      });
-      console.log('\n');
-    });
-  }
+    subgraphNetwork=addCycleToSubgraphNetwork(subgraphNetwork);
+  } 
 }
 
 function rescaleAfterAction(){
@@ -167,25 +154,25 @@ function rescaleAfterAction(){
   rescale(svgProperties);
 }
 
-async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType=SourceType.RANK_ONLY) {
+async function allSteps(clusterNetwork: SubgraphNetwork,sourceTypePath:SourceType=SourceType.RANK_ONLY) {
 
     let network=clusterNetwork.network.value;
 
     duplicateReversibleReactions(network);
 
     console.log('viz for dsf of duplication');
-    vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true, () => {
+    vizLayout(network, clusterNetwork.mainChains, clusterNetwork.attributs, true, () => {
       console.log('choose duplication');
       chooseReversibleReaction(network, SourceType.RANK_SOURCE_ALL);
 
       console.log('viz for choosing path');
-      vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true, () => {
+      vizLayout(network, clusterNetwork.mainChains, clusterNetwork.attributs, true, () => {
 
         console.log('choosing path');
         clusterNetwork = addLonguestPathClusterFromSources(clusterNetwork, sourceTypePath);
 
         console.log('final viz');
-        vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, false, rescaleAfterAction);
+        vizLayout(network, clusterNetwork.mainChains, clusterNetwork.attributs, false, rescaleAfterAction);
       });
 
 
@@ -207,28 +194,28 @@ function duplicateNode() {
 }
 
 function newCluster(){
-  const numberCluster=Object.keys(clusterNetwork.clusters).length;
+  const numberCluster=Object.keys(subgraphNetwork.mainChains).length;
   const cluster= createCluster(String(numberCluster));
-  clusterNetwork.clusters[cluster.name]=cluster;
+  subgraphNetwork.mainChains[cluster.name]=cluster;
 }
 
 function addToCluster() {
-  let numberCluster=Object.keys(clusterNetwork.clusters).length;
+  let numberCluster=Object.keys(subgraphNetwork.mainChains).length;
   if (numberCluster === 0){
     newCluster();
     numberCluster+=1;
   }
-  clusterNetwork.clusters[String(numberCluster-1)]=addNodeCluster(clusterNetwork.clusters[String(numberCluster-1)],menuProps.targetElement); 
+  subgraphNetwork.mainChains[String(numberCluster-1)]=addNodeCluster(subgraphNetwork.mainChains[String(numberCluster-1)],menuProps.targetElement); 
 }
 
 function ordering(value:string="default"){
-  if (!clusterNetwork.attributs){
-    clusterNetwork.attributs={};
+  if (!subgraphNetwork.attributs){
+    subgraphNetwork.attributs={};
   }
-  if (value == "default" && "ordering" in clusterNetwork.attributs){
-    delete clusterNetwork.attributs.ordering;
+  if (value == "default" && "ordering" in subgraphNetwork.attributs){
+    delete subgraphNetwork.attributs.ordering;
   } else if (value == "in" || value == "out"){
-    clusterNetwork.attributs.ordering=value;
+    subgraphNetwork.attributs.ordering=value;
   }
 }
 
@@ -243,7 +230,7 @@ function sourcesChoice(sourcetype:string):void{
     sourceTypePath=SourceType.SOURCE_ONLY;
   }
   console.log(sourceTypePath);
-  clusterNetwork.clusters={}; // temporaire, je reset les clusters pour pas ajouter les nouveaux aux vieux
+  subgraphNetwork.mainChains={}; // temporaire, je reset les clusters pour pas ajouter les nouveaux aux vieux
 }
 
 function openContextMenu(Event: MouseEvent, nodeId: string) {
