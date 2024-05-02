@@ -22,7 +22,7 @@ import { customDFS } from './customDFS';
 export function DFSWithSources(network:Network, sources:Array<string>|SourceType):Array<string>{
 
     // create graph for library from network
-    //const graph=NetworkToGDSGraph(network);
+    const graph=NetworkToGDSGraph(network);
 
     //get sources nodes if no list from user
     let sources_list: Array<string>;
@@ -33,9 +33,7 @@ export function DFSWithSources(network:Network, sources:Array<string>|SourceType
     }
 
     // apply DFS
-    //return graph.depthFirstSearch(sources_list);
-    const {dfs,crossEdge}=customDFS(network,sources_list);
-    return dfs;
+    return graph.depthFirstSearch(sources_list);
 
 }
 
