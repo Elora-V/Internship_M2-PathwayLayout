@@ -126,8 +126,12 @@ function assignRankOrder(network: Network, unique_y: Array<number>):void {
     Object.values(network.nodes).forEach((node) => {
         const rank = unique_y.indexOf(node.y);
         node.metadata = node.metadata || {}; 
-        node.metadata.rank = rank;
-        xNodeByRank[rank].push(node.x);
+        if(rank!==-1){
+            node.metadata.rank = rank;
+            xNodeByRank[rank].push(node.x);
+        }else{
+            node.metadata.rank = undefined;
+        }
     });
 
     // sort the y by rank
@@ -142,8 +146,7 @@ function assignRankOrder(network: Network, unique_y: Array<number>):void {
             const order = xNodeByRank[rank].indexOf(node.x);
             node.metadata.order = order;
         } else {
-            console.error("Le rang n'est pas un nombre");
-            node.metadata.order = -1;
+            node.metadata.order = undefined;
         }
     });
 }
