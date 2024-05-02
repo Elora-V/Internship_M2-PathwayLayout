@@ -3,8 +3,8 @@ interface DFS {
     dfsOrder: Array<string>
     GDSgraph: {[key:string]:Function}
     nodesID:Array<string>
-    visited:Array<boolean>
+    visitedFrom:Array<string>
     start_time:Array<number>
     end_time:Array<number>
-    crossEdge:Array<{source:string,target:string}>
+    crossEdge:{[key:string]:Array<{source:string,target:string}>}
 }
