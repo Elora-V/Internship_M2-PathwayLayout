@@ -86,7 +86,7 @@ import { node } from "prop-types";
 import { Cluster } from "@/types/Cluster";
 import { ClusterNetwork } from "@/types/ClusterNetwork";
 import { SourceType } from "@/types/EnumArgs";
-import { addLonguestPathClusterFromSources } from "@/composables/chooseSubgraph";
+import { addLonguestPathClusterFromSources, addNoConstraint } from "@/composables/chooseSubgraph";
 import { RefSymbol } from "@vue/reactivity";
 import { customDFS } from "@/composables/customDFS";
 
@@ -170,6 +170,10 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
     ).then(
       () => {
         clusterNetwork = addLonguestPathClusterFromSources(clusterNetwork, sourceTypePath);
+      }
+    ).then(
+      () => {
+        //clusterNetwork = addNoConstraint(clusterNetwork);
       }
     ).then(
       () => {

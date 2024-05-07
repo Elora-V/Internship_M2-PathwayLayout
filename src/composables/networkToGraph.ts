@@ -54,9 +54,14 @@ export function NetworkToViz(network: Network,clusters:{[key:string]:Cluster}={}
 
     // insert edge 
     network.links.forEach((link)=>{
+        let attributs:AttributesViz={}
+        if (link.metadata && link.metadata.constraint){
+            attributs["constaint"]=link.metadata.constraint as string;
+        }
         graphViz.edges.push({
             tail: link.source.id,
             head: link.target.id,
+            attributes:attributs
             });
     })
 

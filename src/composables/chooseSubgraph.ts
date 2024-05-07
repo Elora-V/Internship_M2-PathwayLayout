@@ -136,3 +136,40 @@ function endPath(source:string, longuestPaths:{[key:string]:Array<string>},path:
     }
     return longuestPaths;
 }
+
+
+export function addNoConstraint(clusterNetwork:ClusterNetwork):ClusterNetwork{
+    let network=clusterNetwork.network.value;
+    network.links.forEach(link=>{
+        let clusterSource: string[] = [];
+        let clusterTarget: string[] = [];
+        if ( Object.keys(link.source).includes("metadata") && Object.keys(link.source.metadata).includes("clusters")){
+            clusterSource=link.source.metadata.clusters as string[];
+        }
+
+        if ( Object.keys(link.target).includes("metadata") && Object.keys(link.target.metadata).includes("clusters")){
+            clusterTarget=link.source.metadata.clusters as string[];
+        }
+
+        let sameClusters=true;
+        if (clusterTarget.length===clusterSource.length){
+            clusterTarget.sort;
+            clusterSource.sort;
+            for (let i = 0; i < clusterTarget.length; ++i) {
+                if (clusterTarget[i] !== clusterSource[i]){
+                    sameClusters=false;
+                }
+            }
+        }
+
+        if (!sameClusters){
+            if(!link.metadata){
+                link.metadata={};
+            }
+            link.metadata["constraint"]="false";
+        }
+        
+    });
+
+    return clusterNetwork;
+}
