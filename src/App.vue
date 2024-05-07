@@ -159,25 +159,23 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
 
     let network=clusterNetwork.network.value;
 
-    duplicateReversibleReactions(network);
-
-    console.log('viz for dsf of duplication');
-    vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true, () => {
-      console.log('choose duplication');
-      chooseReversibleReaction(network, SourceType.RANK_SOURCE_ALL);
-
-      console.log('viz for choosing path');
-      vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true, () => {
-
-        console.log('choosing path');
+    await vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true).then(
+      () => {
+        duplicateReversibleReactions(network);
+      }
+    ).then(
+      () => {
+        chooseReversibleReaction(network, SourceType.RANK_SOURCE_ALL);
+      }
+    ).then(
+      () => {
         clusterNetwork = addLonguestPathClusterFromSources(clusterNetwork, sourceTypePath);
-
-        console.log('final viz');
+      }
+    ).then(
+      () => {
         vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, false, rescaleAfterAction);
-      });
-
-
-    });
+      }
+    )
 
 }
 
@@ -244,4 +242,5 @@ function openContextMenu(Event: MouseEvent, nodeId: string) {
 </script><style>
 @import "@metabohub/viz-core/dist/style.css";
 @import "@metabohub/viz-context-menu/dist/style.css"; 
+
 </style>./composables/methode_to_try./composables/toNetwork./composables/convertToGraph./composables/networkToGraph./composables/graphToNetwork

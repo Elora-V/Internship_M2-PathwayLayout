@@ -37,15 +37,11 @@ export function dagreLayout(network: Network,graphAttributes={},callbackFunction
  */
 export async function vizLayout(network: Network,clusters:{[key:string]:Cluster}={}, graphAttributes={},assignRank:boolean=false, callbackFunction = () => {}): Promise<void> {
     console.log('Viz');
-    setTimeout(async function() {
-        instance().then(viz => {
+    await instance().then(viz => {
         const graphViz=NetworkToViz(network,clusters,graphAttributes);
         const json=viz.renderJSON(graphViz) as JsonViz;
         changeNetworkFromViz(json,network,assignRank).then(() => {
             callbackFunction();
         });
-        });
-    }, 1);
-    
-
+    });
 }
