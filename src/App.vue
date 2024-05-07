@@ -3,6 +3,9 @@
     Rescale
   </button>
   <input type="file" accept=".json" label="File input" v-on:change="loadFile" />
+  <button v-on:click="algoForce()">
+    ForceAlgo
+  </button>
   <br>
   <button v-on:click="newCluster()">
      New_Cluster
@@ -72,6 +75,7 @@ import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
 import {createCluster,addNodeCluster} from "./composables/UseClusterNetwork";
 import { DFSWithSources, getSources } from "@/composables/algoDFS";
+import { createStaticForceLayout } from "@metabohub/viz-core";
 
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
 // import { createUndoFunction } from "./composables/UseUndo";
@@ -228,6 +232,10 @@ function sourcesChoice(sourcetype:string):void{
   }
   console.log(sourceTypePath);
   clusterNetwork.clusters={}; // temporaire, je reset les clusters pour pas ajouter les nouveaux aux vieux
+}
+
+function algoForce(){
+  network.value=createStaticForceLayout(network.value);
 }
 
 function openContextMenu(Event: MouseEvent, nodeId: string) {
