@@ -10,7 +10,7 @@ import { SourceType } from "@/types/EnumArgs";
  * @param {Network}  Network object
  * @param suffix to put at the end of id of the original reaction : can't be "" !
  */
-export function duplicateReversibleReactions(network: Network,suffix:string="_rev"):void {
+export async function duplicateReversibleReactions(network: Network,suffix:string="_rev"):Promise<void> {
 
   console.log('Duplicate');
 
@@ -139,7 +139,7 @@ export function pushUniqueString(object:Array<string>, value: string): Array<str
  * Parameter is needed because of Javascript even if not used (even if user has his source list).
  * @param sources sources nodes (id) to use for dfs
  */
-export function chooseReversibleReaction(network:Network, sources:Array<string> |SourceType):void{
+export async function chooseReversibleReaction(network:Network, sources:Array<string> |SourceType):Promise<void>{
   const reactionToRemove:Array<string>=[];
 
   const dfs=DFSWithSources(network, sources);

@@ -3,6 +3,9 @@
     Rescale
   </button>
   <input type="file" accept=".json" label="File input" v-on:change="loadFile" />
+  <button v-on:click="algoForce()">
+    ForceAlgo
+  </button>
   <br>
   <button v-on:click="newCluster()">
      New_Cluster
@@ -72,6 +75,7 @@ import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
 import {createCluster,addNodeCluster} from "./composables/UseClusterNetwork";
 import { DFSWithSources, getSources } from "@/composables/algoDFS";
+import { createStaticForceLayout } from "@metabohub/viz-core";
 
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
 // import { createUndoFunction } from "./composables/UseUndo";
@@ -155,25 +159,23 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
 
     let network=clusterNetwork.network.value;
 
-    duplicateReversibleReactions(network);
-
-    console.log('viz for dsf of duplication');
-    vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true, () => {
-      console.log('choose duplication');
-      chooseReversibleReaction(network, SourceType.RANK_SOURCE_ALL);
-
-      console.log('viz for choosing path');
-      vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true, () => {
-
-        console.log('choosing path');
+    await vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true).then(
+      () => {
+        duplicateReversibleReactions(network);
+      }
+    ).then(
+      () => {
+        chooseReversibleReaction(network, SourceType.RANK_SOURCE_ALL);
+      }
+    ).then(
+      () => {
         clusterNetwork = addLonguestPathClusterFromSources(clusterNetwork, sourceTypePath);
-
-        console.log('final viz');
+      }
+    ).then(
+      () => {
         vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, false, rescaleAfterAction);
-      });
-
-
-    });
+      }
+    )
 
 }
 
@@ -230,10 +232,15 @@ function sourcesChoice(sourcetype:string):void{
   clusterNetwork.clusters={}; // temporaire, je reset les clusters pour pas ajouter les nouveaux aux vieux
 }
 
+function algoForce(){
+  network.value=createStaticForceLayout(network.value);
+}
+
 function openContextMenu(Event: MouseEvent, nodeId: string) {
   UseContextMenu.showContextMenu(Event, nodeId);
 }
 </script><style>
 @import "@metabohub/viz-core/dist/style.css";
 @import "@metabohub/viz-context-menu/dist/style.css"; 
+
 </style>./composables/methode_to_try./composables/toNetwork./composables/convertToGraph./composables/networkToGraph./composables/graphToNetwork
