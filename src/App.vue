@@ -85,6 +85,7 @@ import { SourceType } from "@/types/EnumArgs";
 import { addLonguestPathClusterFromSources } from "@/composables/chooseSubgraph";
 import { RefSymbol } from "@vue/reactivity";
 import { customDFS } from "@/composables/customDFS";
+import cluster from "cluster";
 
 
 
@@ -158,23 +159,15 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
     duplicateReversibleReactions(network);
 
     console.log('viz for dsf of duplication');
-    vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true, () => {
-      console.log('choose duplication');
-      chooseReversibleReaction(network, SourceType.RANK_SOURCE_ALL);
-
-      console.log('viz for choosing path');
-      vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true, () => {
-
-        console.log('choosing path');
-        clusterNetwork = addLonguestPathClusterFromSources(clusterNetwork, sourceTypePath);
-
-        console.log('final viz');
-        vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, false, rescaleAfterAction);
-      });
-
-
-    });
-
+    vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true).then(
+      () => {
+        duplicateReversibleReactions(network);
+      }
+    ).then(
+      () => {
+        chooseReversibleReaction(network, SourceType.RANK_SOURCE_ALL);
+      }
+    )
 }
 
 onMounted(() => {
