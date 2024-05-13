@@ -169,7 +169,7 @@ export function addNoConstraint(clusterNetwork:ClusterNetwork):ClusterNetwork{
             if(!link.metadata){
                 link.metadata={};
             }
-            link.metadata["constraint"]="false";
+            link.metadata["constraint"]=false;
         }
     });
 

@@ -173,7 +173,7 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
       }
     ).then(
       () => {
-        //clusterNetwork = addNoConstraint(clusterNetwork);
+        clusterNetwork = addNoConstraint(clusterNetwork);
       }
     ).then(
       () => {

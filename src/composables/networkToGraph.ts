@@ -54,9 +54,10 @@ export function NetworkToViz(network: Network,clusters:{[key:string]:Cluster}={}
 
     // insert edge 
     network.links.forEach((link)=>{
-        let attributs:AttributesViz={}
-        if (link.metadata && link.metadata.constraint){
-            attributs["constaint"]=link.metadata.constraint as string;
+        let attributs:AttributesViz={};
+        if (link.metadata && Object.keys(link.metadata).includes("constraint")){
+            attributs.constraint=link.metadata["constraint"] as boolean;
+            //console.log(link);
         }
         graphViz.edges.push({
             tail: link.source.id,
@@ -69,7 +70,7 @@ export function NetworkToViz(network: Network,clusters:{[key:string]:Cluster}={}
     Object.values(clusters).forEach((cluster) => {
         graphViz=addClusterViz(graphViz,cluster);
     });
-
+    console.log(graphViz);
     return graphViz;
 
 }
