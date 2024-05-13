@@ -144,14 +144,14 @@ export function addNoConstraint(clusterNetwork:ClusterNetwork):ClusterNetwork{
         let clusterSource: string[] = [];
         let clusterTarget: string[] = [];
         if ( Object.keys(link.source).includes("metadata") && Object.keys(link.source.metadata).includes("clusters")){
-            clusterSource=link.source.metadata.clusters as string[];
+            clusterSource= link.source.metadata?.clusters ? link.source.metadata.clusters as string[] : [];
         }
 
         if ( Object.keys(link.target).includes("metadata") && Object.keys(link.target.metadata).includes("clusters")){
-            clusterTarget=link.source.metadata.clusters as string[];
-        }
-
+            clusterTarget= link.target.metadata?.clusters ? link.target.metadata.clusters as string[] : [];
+        }        
         let sameClusters=true;
+        // if same number of cluster : let's check if there are the same
         if (clusterTarget.length===clusterSource.length){
             clusterTarget.sort;
             clusterSource.sort;
@@ -160,6 +160,9 @@ export function addNoConstraint(clusterNetwork:ClusterNetwork):ClusterNetwork{
                     sameClusters=false;
                 }
             }
+        }else{
+            // if not the same number of cluster : the two nodes can't be in the exact same clusters
+            sameClusters=false;
         }
 
         if (!sameClusters){
@@ -168,7 +171,6 @@ export function addNoConstraint(clusterNetwork:ClusterNetwork):ClusterNetwork{
             }
             link.metadata["constraint"]="false";
         }
-        
     });
 
     return clusterNetwork;
