@@ -2,12 +2,14 @@ import { Network } from "@metabohub/viz-core/src/types/Network";
 
 export function networkToAdjacentObject(network:Network):{[key : string]:string[]}{
     const adjacence:{[key : string]:string[]}={};
+    Object.keys(network.nodes).forEach(node=>{
+        if (!(node in Object.keys(adjacence))){
+            adjacence[node]=[];
+        }
+    })
     network.links.forEach(link=>{
         const source=link.source.id;
         const target=link.target.id;
-        if (!(source in Object.keys(adjacence))){
-            adjacence[source]=[];
-        }
         adjacence[source].push(target);
     });
     return adjacence;
