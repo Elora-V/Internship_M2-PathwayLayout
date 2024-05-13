@@ -89,6 +89,7 @@ import { SourceType } from "@/types/EnumArgs";
 import { addLonguestPathClusterFromSources } from "@/composables/chooseSubgraph";
 import { RefSymbol } from "@vue/reactivity";
 import { customDFS } from "@/composables/customDFS";
+import { BFS, networkToAdjacentObject } from "@/composables/algoBFS";
 
 
 
@@ -147,6 +148,11 @@ function keydownHandler(event: KeyboardEvent) {
     const sources=getSources(network.value,SourceType.RANK_ONLY);
     const {dfs,crossEdge}=customDFS(network.value,sources);
     console.log(crossEdge);
+  }
+  else if (event.key == "b"){
+    const adj=networkToAdjacentObject(network.value);
+    const bfsNodes=BFS(adj,"M_CE1554_c");
+    console.log(bfsNodes);
   }
 }
 
