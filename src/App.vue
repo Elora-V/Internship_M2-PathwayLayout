@@ -22,6 +22,8 @@
   <button v-on:click="ordering('in')">
      Ordering in
   </button>
+  <h5>Number of crossings in the Network : {{ countIntersection(network) }}</h5>
+  <h5>Number of isolated nodes : {{ countIsolatedNodes(network) }}</h5>
   <br>
   <br>
   <button v-on:click="sourcesChoice('rank_only')">
@@ -58,6 +60,8 @@
   // Utils ----------------
 import { ref, reactive, onMounted } from "vue";
 import { Serialized } from "graph-data-structure";
+import { countIntersection } from "./composables/countIntersections";
+import { countIsolatedNodes } from "./composables/countIsolatedNodes";
 
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";

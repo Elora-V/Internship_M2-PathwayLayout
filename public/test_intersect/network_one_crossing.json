@@ -1,0 +1,162 @@
+{
+    "graph": {
+        "type": "metabolic",
+        "edges": [
+            {
+                "id": "A-Z",
+                "metadata": {
+                    "classes": [
+                        "reversible"
+                    ]
+                },
+                "source": "A",
+                "target": "Z"
+            },
+            {
+                "id": "A-Y",
+                "metadata": {
+                    "classes": [
+                        "reversible"
+                    ]
+                },
+                "source": "A",
+                "target": "Y"
+            },
+            {
+                "id": "B-Z",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                },
+                "source": "B",
+                "target": "Z"
+            },
+            {
+                "id": "B-Y",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                },
+                "source": "B",
+                "target": "Y"
+            },
+            {
+                "id": "Z-C",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                },
+                "source": "Z",
+                "target": "C"
+            },
+            {
+                "id": "Y-C",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                },
+                "source": "Y",
+                "target": "C"
+            }
+        ],
+        "id": "_304c6dd3_22d0_47e4_bddf_1523ca53d90b",
+        "metadata": {
+            "style": {
+                "nodeStyles": {
+                    "metabolite": {
+                        "height": 25,
+                        "shape": "circle",
+                        "strokeWidth": 1,
+                        "width": 25
+                    },
+                    "reaction": {
+                        "fill": "grey",
+                        "height": 15,
+                        "shape": "rect",
+                        "strokeWidth": 0.5,
+                        "width": 15
+                    },
+                    "reversible": {
+                        "fill": "green",
+                        "shape": "inverseTriangle"
+                    },
+                    "reversibleVersion": {
+                        "fill": "red",
+                        "shape": "triangle"
+                    }
+                }
+            }
+        },
+        "nodes": {
+            "A": {
+                "id": "A",
+                "label": "m_A",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "position": {
+                        "x": 30,
+                        "y": 100
+                    }
+                }
+            },
+            "B": {
+                "id": "B",
+                "label": "m_B",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "position": {
+                        "x": 80,
+                        "y": 100
+                    }
+                }
+            },
+            "Z": {
+                "id": "Z",
+                "label": "r_Z",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "position": {
+                        "x": 30,
+                        "y": 50
+                    }
+                }
+            },
+            "Y": {
+                "id": "Y",
+                "label": "r_Y",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "position": {
+                        "x": 80,
+                        "y": 50
+                    }
+                }
+            },
+            "C": {
+                "id": "C",
+                "label": "m_C",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "position": {
+                        "x": 65,
+                        "y": 10
+                    }
+                }
+            }
+        }
+    }
+}
