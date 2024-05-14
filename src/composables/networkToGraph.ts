@@ -1,11 +1,10 @@
 import { Network } from '@metabohub/viz-core/src/types/Network';
 import  dagre  from 'dagrejs/dist/dagre.js';
-import { Graph, instance } from "@viz-js/viz";
-import { Serialized } from 'graph-data-structure';
-import { object } from 'prop-types';
+import { Graph } from "@viz-js/viz";
 import { addClusterViz } from './modifyVizGraph';
-import cluster from 'cluster';
 import { Cluster } from '@/types/Cluster';
+import * as GDS from 'graph-data-structure';
+
 
 /** 
  * Take a network object and return a dagre.graphlib.Graph object containing the same nodes and edge 
@@ -76,7 +75,7 @@ export function NetworkToViz(network: Network,clusters:{[key:string]:Cluster}={}
  * @param {Network}  Network object 
  * @returns {Serialized} Return serialized object for graph-data-strucutre
  */
-export function NetworkToSerialized(network: Network): Serialized {
+export function NetworkToSerialized(network: Network): GDS.Serialized {
     const serializedNodes = Object.values(network.nodes).map(node => ({ id: node.id }));
     const serializedLinks = network.links.map(link => ({
         source: link.source.id,
@@ -85,4 +84,18 @@ export function NetworkToSerialized(network: Network): Serialized {
     }));
     return { nodes: serializedNodes, links: serializedLinks };
 }
+
+
+/**
+ * Take a network object and return a graph for graph-data-structure
+ * @param network 
+ * @returns Graph object as {[key:string]:Function}
+ */
+export function NetworkToGDSGraph(network: Network):{[key:string]:Function}{ 
+    const graph = GDS.Graph();
+    const networkSerialized: GDS.Serialized = NetworkToSerialized(network);
+    graph.deserialize(networkSerialized);
+    return graph;
+}
+
 

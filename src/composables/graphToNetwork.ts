@@ -39,25 +39,30 @@ export async function changeNetworkFromDagre(graph: dagre.graphlib.Graph,network
  * The json and network need to have the same nodes !
  * @param {object}  object return by render method from viz (renderJSON)
  * @param {Network} Network object (value of pointer)
+ * @param assignRank boolean that indicates if rank and order need to be infered and assigned to nodes
  */
-export async function changeNetworkFromViz(json: JsonViz, network: Network): Promise<void> {
+export async function changeNetworkFromViz(json: JsonViz, network: Network, assignRank:boolean=false): Promise<void> {
 
     const unique_y:Array<number> =[];
     json["objects"].forEach((node) => {
         const nodeId = node.name;
-        if ('pos' in node) {
-            const pos = node.pos.split(',');
-            const x = parseFloat(pos[0]);
-            const y = parseFloat(pos[1]);
-            network.nodes[nodeId].x = x;
-            network.nodes[nodeId].y = y;
-            if( !unique_y.includes(y)){
-                unique_y.push(y);
+        if (nodeId in network.nodes){
+            if ('pos' in node) {
+                const pos = node.pos.split(',');
+                const x = parseFloat(pos[0]);
+                const y = parseFloat(pos[1]);
+                network.nodes[nodeId].x = x;
+                network.nodes[nodeId].y = y;
+                if( !unique_y.includes(y)){
+                    unique_y.push(y);
+                }
             }
         }
     });
     
-    assignRankOrder(network,unique_y); // the information of rank isn't in the result, unlike dagre 
+    if(assignRank){
+        assignRankOrder(network,unique_y); // the information of rank isn't in the result, unlike dagre 
+    }
 
 }
 
@@ -111,7 +116,7 @@ export function dagreToNetwork(graph: dagre.graphlib.Graph): Network{
  * @param {Network} Network object
  * @param unique_y array of all unique y for node position
  */
-function assignRankOrder(network: Network, unique_y: Array<number>) {
+function assignRankOrder(network: Network, unique_y: Array<number>):void {
 
     // sort the y to know the associated rank for a y coordinate
     unique_y.sort((a:number, b:number) => a - b);
