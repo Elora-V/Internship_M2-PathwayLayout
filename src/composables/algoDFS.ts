@@ -43,22 +43,23 @@ export function DFSWithSources(network:Network, sources:Array<string>|SourceType
 
 
 /**
- * DFS with sources in input ...(function to change)
+ * DFS with sources in input
  * @param network 
  * @param sources to use as staring node for DFS
- * @returns ... (function to change)
+ * @returns the reverse dfs order (topological sort) and a graph object without the cycles accessible from the sources (DAG for sources) 
  */
-export function customDFS(network:Network, sources:Array<string>):Array<string> {
+export function DFSsourceDAG(network:Network, sources:Array<string>):{dfs:Array<string>, graph:{[key:string]:Function} } {
     let DFS=createGraphForDFS(network);
 
     sources.forEach(sourceID =>{
         const sourceIndex=DFS.nodesID.indexOf(sourceID);
         // if the source exist in the network and it's not already visited : dfs from this source
         if (sourceIndex!==-1 && !DFS.visited[sourceIndex]){
-            DFS=nodeDFS(DFS,sourceIndex);           
+            DFS=nodeDagDFS(DFS,sourceIndex,[]);           
         }
     });
-    return DFS.dfsOrder.reverse();
+
+    return { dfs:DFS.dfsOrder.reverse(),graph:DFS.GDSgraph };
 }
 
 /**
@@ -73,7 +74,7 @@ function createGraphForDFS(network:Network):DFS{
         dfsOrder: [], 
         GDSgraph: graphGDS,
         nodesID:graphGDS.nodes(),
-        visited:Array.from({ length: nbNode }, () => false)
+        visited:Array.from({ length: nbNode }, () => false),
     }
 }
 
@@ -81,13 +82,18 @@ function createGraphForDFS(network:Network):DFS{
  * DFS from a node
  * @param DFS dfs object with visited nodes, adjacent information ...
  * @param nodeIndex of the node ro process
+ * @param currentPath the dfs path from the source to this node
  * @returns the DFS object with visited nodes, adjacent information ...
  */
-function nodeDFS(DFS:DFS,nodeIndex:number):DFS{
+function nodeDagDFS(DFS:DFS,nodeIndex:number,currentPath:number[]):DFS{
 
     // mark the node as visited
     DFS.visited[nodeIndex] = true;
-    
+
+    // add node to current path (copy of path, else pointer)
+    const path=Array.from(currentPath);
+    path.push(nodeIndex)
+
     // loop through the children of the node
     DFS.GDSgraph.adjacent(DFS.nodesID[nodeIndex]).forEach(childID => {
 
@@ -99,10 +105,14 @@ function nodeDFS(DFS:DFS,nodeIndex:number):DFS{
             if (!DFS.visited[childIndex]){
 
                 // dfs through the child node
-                DFS=nodeDFS(DFS,childIndex);
+                DFS=nodeDFS(DFS,childIndex,path);
 
             } else { // if the child node had already been visited
-
+                // and that the node is in the current path : there is a cycle
+                if(path.includes(childIndex)){
+                    const parentID=DFS.nodesID[nodeIndex];
+                    DFS.GDSgraph.removeEdge(parentID,childID)
+                }
                 
             }
         }
