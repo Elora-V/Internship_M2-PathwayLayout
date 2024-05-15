@@ -4,7 +4,7 @@ import { NetworkToGDSGraph, NetworkToSerialized } from './networkToGraph';
 import { Serialized} from 'graph-data-structure';
 import Graph from "graph-data-structure";
 import { SourceType } from '@/types/EnumArgs';
-import { customDFS } from './customDFS';
+import { getSources } from './rankAndSources';
 
 /**
  * Take a network and sources, return the dfs result (that is an array of string of node ID)
@@ -40,84 +40,119 @@ export function DFSWithSources(network:Network, sources:Array<string>|SourceType
 
 }
 
-/**
- * Get a list of nodes to use as input for DFS (as sources) for example
- * @param network 
- * @param typeSource type of sources to get, with a certain order if several types
- * RANK_ONLY : sources are nodes of rank 0
- * SOURCE_ONLY : sources are topological sources of the network (nul indegree)
- * RANK_SOURCE : sources are node of rank 0, then source nodes
- * ALL : sources are all nodes
- * SOURCE_ALL : sources are topological sources, then all the others nodes
- * RANK_SOURCE_ALL : sources are node of rank 0, then topological sources, then all the other nodes
- * @returns the id of the sources
- */
-export function getSources(network:Network, typeSource:SourceType):Array<string>{
 
-    // if all nodes as source
-    if (typeSource==SourceType.ALL){
-        return Object.keys(network.nodes);
+
+
+function createGraphForDFS(network:Network):DFS{
+    const nbNode=Object.keys(network.nodes).length;
+    const graphGDS=NetworkToGDSGraph(network);
+    return  {
+        time:0,
+        dfsOrder: [], 
+        GDSgraph: graphGDS,
+        nodesID:graphGDS.nodes(),
+        visitedFrom:Array.from({ length: nbNode }, () => undefined),
+        start_time:Array.from({ length: nbNode }, () => undefined), // the first time the node is visited
+        end_time:Array.from({ length: nbNode }, () => undefined),    // time of visit when backward reading
+        crossEdge:{}
     }
+}
 
-    const sources_rank=[];
-    const sources_source=[];
-    const sources_all=[];
 
-    // get object for data-graph-structure if indegree information needed (when source nodes needed)
-    let graph:{[key:string]:Function};
-    if(needSource(typeSource)){
-        graph=NetworkToGDSGraph(network);
-    }
 
-    // adding node depending on sourcetype : Order is important !! 
-    // always rank, then source, then all
-    Object.values(network.nodes).forEach(node =>{      
-        if(needRank(typeSource) && hasRank0(node)){
-            sources_rank.push(node.id);
-        } else if (needSource(typeSource) && graph.indegree(node.id)===0){
-            sources_source.push(node.id);
-        } else if (needAll(typeSource)) {
-            sources_all.push(node.id);
-        }       
+export function DFS(network:Network, sources:Array<string>):{dfs:Array<string>,crossEdge:{[key:string]:Array<{source:string,target:string}>}} {
+    let DFS=createGraphForDFS(network);
+    sources.forEach(sourceID =>{
+        const sourceIndex=DFS.nodesID.indexOf(sourceID);
+        if (sourceIndex!==-1 && !DFS.visitedFrom[sourceIndex]){
+            DFS=nodeDFS(DFS,sourceIndex,sourceID);           
+        }
+    });
+    return {dfs:DFS.dfsOrder,crossEdge:DFS.crossEdge};
+}
+
+
+function nodeDFS(DFS:DFS,nodeIndex:number,sourceID?:string):DFS{
+    //https://www.geeksforgeeks.org/tree-back-edge-and-cross-edges-in-dfs-of-graph/
+    
+    // mark the node as visited
+    DFS.visitedFrom[nodeIndex] = sourceID?sourceID:DFS.nodesID[nodeIndex];
+    
+    // get the starting time for the node
+    DFS.start_time[nodeIndex] = DFS.time;
+    
+    // increment the time by 1
+    DFS.time += 1;
+    
+    // loop through the children of the node
+    DFS.GDSgraph.adjacent(DFS.nodesID[nodeIndex]).forEach(childID => {
+
+        // get the index of the child
+        const childIndex = DFS.nodesID.indexOf(childID);
+        if(childIndex!==-1){
+
+            // if the child node had never been visited : the edge is an tree edge
+            if (DFS.visitedFrom[childIndex] === undefined){
+            
+                // mark the edge as a tree edge
+                //console.log("Tree Edge: " + DFS.nodesID[nodeIndex] + "-->" + DFS.nodesID[childIndex]+"\n");
+                
+                // dfs through the child node
+                DFS=nodeDFS(DFS,childIndex,sourceID);
+
+            } else { // if the child node had already been visited
+
+                // if this node had been visited for the first time after his child node
+                // and child has no endtime 
+                // => back edge 
+                // if ( DFS.start_time[nodeIndex] > DFS.start_time[childIndex] && DFS.end_time[childIndex]===undefined){
+                //     console.log("Back Edge: " + DFS.nodesID[nodeIndex] + "-->" + DFS.nodesID[childIndex]+"\n");
+                // }
+                    
+                // if this node is an ancestor of the child node, but not a tree edge
+                // i.e node first visited before his child
+                // and child has  endtime 
+                // => forward edge
+                // else if ( DFS.start_time[nodeIndex] < DFS.start_time[childIndex] && DFS.end_time[childIndex] !== undefined) {
+                //     console.log("Forward Edge: " + DFS.nodesID[nodeIndex] + "-->" + DFS.nodesID[childIndex]+"\n");
+                // }  
+            
+                // if parent and neighbour node do not 
+                // have any ancestor and descendant relationship between them
+                // if this node had been visited for the first time after his child node
+                // and child has endtime 
+                // => cross edge either between path of 2 sources, or between the same (so cycle for the source)
+
+                //else 
+                if (DFS.start_time[nodeIndex] > DFS.start_time[childIndex] && DFS.end_time[childIndex] !== undefined) {
+                    //console.log("Cross Edge: " + DFS.nodesID[nodeIndex] + "-->" + DFS.nodesID[childIndex]+"\n");
+
+                    // if the child had been visited for the first time with the same source node : it is the type of cross edge wanted
+                    if (DFS.visitedFrom[childIndex]===sourceID){ 
+                        const key=sourceID? sourceID: DFS.nodesID[nodeIndex];
+                        if (!(key in DFS.crossEdge)){
+                            DFS.crossEdge[key]=[];
+                        }
+                        DFS.crossEdge[key].push({source:DFS.nodesID[nodeIndex],target:childID});
+                    }
+                }
+
+  
+            }
+        }
     });
     
-    return sources_rank.concat(sources_source, sources_all);
+    // get the ending time for the node
+    DFS.end_time[nodeIndex] = DFS.time;
 
-}
+    // add the node to the dfs order
+    DFS.dfsOrder.push(DFS.nodesID[nodeIndex]); 
+    
+    // increment the time by 1
+    DFS.time += 1;
 
-/**
- * Node has rank 0 in metadata ?
- * @param node Node
- * @returns boolean
- */
-function hasRank0(node:Node):boolean{
-    return (node.metadata && Object.keys(node.metadata).includes("rank") && node.metadata.rank===0);
+    return DFS;
 }
+    
 
-/**
- * Depending on the sourcetype, does the information of rank is needed ?
- * @param sourcetype 
- * @returns boolean
- */
-function needRank(sourcetype:SourceType):boolean{
-    return [SourceType.RANK_ONLY,SourceType.RANK_SOURCE,SourceType.RANK_SOURCE_ALL].includes(sourcetype);
-}
-
-/**
- * Depending on the sourcetype, does the information of topological source is needed ?
- * @param sourcetype 
- * @returns boolean
- */
-function needSource(sourcetype:SourceType):boolean{
-    return [SourceType.SOURCE_ONLY,SourceType.SOURCE_ALL,SourceType.RANK_SOURCE,SourceType.RANK_SOURCE_ALL].includes(sourcetype);
-}
-
-/**
- * Depending on the sourcetype, does all the nodes are needed ?
- * @param sourcetype 
- * @returns boolean
- */
-function needAll(sourcetype:SourceType):boolean{
-    return [SourceType.ALL,SourceType.SOURCE_ALL,SourceType.RANK_SOURCE_ALL].includes(sourcetype);
-}
 

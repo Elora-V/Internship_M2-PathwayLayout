@@ -3,6 +3,7 @@ import { Network } from '@metabohub/viz-core/src/types/Network';
 import type { Node } from "@metabohub/viz-core/src/types/Node";
 import  dagre  from 'dagrejs/dist/dagre.js';
 import { type } from 'os';
+import { assignRankOrder } from './rankAndSources';
 
 
 
@@ -111,39 +112,3 @@ export function dagreToNetwork(graph: dagre.graphlib.Graph): Network{
 
 
 
-/**
- * Take network and all the unique y coordinate. Add the rank (y position : first, second...; not coordinate) and order ( x position in the rank: first, second,....) to metadata of network.
- * @param {Network} Network object
- * @param unique_y array of all unique y for node position
- */
-function assignRankOrder(network: Network, unique_y: Array<number>):void {
-
-    // sort the y to know the associated rank for a y coordinate
-    unique_y.sort((a:number, b:number) => a - b);
-
-    // get the rank for each node
-    const xNodeByRank: number[][] = Array.from({ length: unique_y.length }, () => []);
-    Object.values(network.nodes).forEach((node) => {
-        const rank = unique_y.indexOf(node.y);
-        node.metadata = node.metadata || {}; 
-        node.metadata.rank = rank;
-        xNodeByRank[rank].push(node.x);
-    });
-
-    // sort the y by rank
-    xNodeByRank.forEach(sublist => {
-        sublist.sort((a, b) => a - b); 
-    });
-
-    // get the order for each node 
-    Object.values(network.nodes).forEach((node) => {
-        const rank = node.metadata.rank;
-        if (typeof rank === 'number') {
-            const order = xNodeByRank[rank].indexOf(node.x);
-            node.metadata.order = order;
-        } else {
-            console.error("Le rang n'est pas un nombre");
-            node.metadata.order = -1;
-        }
-    });
-}
