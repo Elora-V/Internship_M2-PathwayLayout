@@ -4,6 +4,7 @@ import { Network } from "@metabohub/viz-core/src/types/Network";
 import { removeAllSelectedNode } from "@metabohub/viz-core";
 import { DFSWithSources } from "./algoDFS";
 import { SourceType } from "@/types/EnumArgs";
+import { BFSWithSources } from "./algoBFS";
 
 /**
  * Take a network and add a duplicated node of reversible reactions, and add links to this reaction
@@ -129,23 +130,49 @@ export function pushUniqueString(object:Array<string>, value: string): Array<str
   return object;
 }
 
+
+
 /**
  * Take a network with duplicated nodes (a node is duplicated if the id of the duplicated version is in metadata.reversibleVersion of a node),
- * and remove one of the duplication. A DFS is used for the choice, the source for DFS are in parameter of the function. The node that is keeped 
- * is the first of the DFS (when read backward).
- * BEWARE : a DFS with not all sources might miss some duplicated nodes
+ * and remove one of the duplication. A method in argument (nodeOrderFunction) is used for the choice, the source nodes for the method are in parameter of the function. The node that is keeped 
+ * is the first in the returned array.
+ * BEWARE : the method with not all sources might miss some duplicated nodes
  * @param network the network with the duplicated nodes
- * @param typeSource type of sources to used for dfs if sources is not given : ALL, SOURCE (source nodes), RANK (rank 0), SOURCE_RANK (both methods)
- * Parameter is needed because of Javascript even if not used (even if user has his source list).
- * @param sources sources nodes (id) to use for dfs
+ * @param sources sources nodes (id) to use, if type source :
+ * RANK_ONLY : sources are nodes of rank 0
+ * SOURCE_ONLY : sources are topological sources of the network (nul indegree)
+ * RANK_SOURCE : sources are node of rank 0, then source nodes
+ * ALL : sources are all nodes
+ * SOURCE_ALL : sources are topological sources, then all the others nodes
+ * RANK_SOURCE_ALL : sources are node of rank 0, then topological sources, then all the other nodes
+ * For this method, a source type with "all" is advised, to not miss any duplicated reaction.
+ * @param nodeOrderFunction the method that return an array of nodes order (a same node can be present several time!), with sources as input
  */
-export async function chooseReversibleReaction(network:Network, sources:Array<string> |SourceType):Promise<void>{
+export async function chooseReversibleReaction(
+  network: Network,
+  sources: Array<string> | SourceType,
+  nodeOrderFunction: (network: Network, sources: Array<string> | SourceType) => string[] = BFSWithSources
+): Promise<void> {
+  let nodeOrder: string[] = [];
+
+  // get node order
+  nodeOrder = nodeOrderFunction(network, sources);
+
+  // keep the first node seen only, for duplicated nodes
+  keepFirstReversibleNode(network, nodeOrder);
+}
+
+
+/**
+ * Keeps the first reversible node in the given node order, removing all others and their corresponding reversible versions from the network.
+ * @param network The network containing nodes and reactions.
+ * @param nodeOrder The order of nodes to consider for keeping the first reversible node.
+ */
+function keepFirstReversibleNode(network,nodeOrder:string[]){
   const reactionToRemove:Array<string>=[];
 
-  const dfs=DFSWithSources(network, sources);
-  // for a dfs : need to read the output backward (because of implementation of a dfs algorithm)
-  for(let i=dfs.length-1;i>=0;i--){
-    const nodeID=dfs[i];
+  for(let i=0;i<nodeOrder.length;i++){
+    const nodeID=nodeOrder[i];
     // if there is a reversible version of the current node:
     if(network.nodes[nodeID].metadata && network.nodes[nodeID].metadata.reversibleVersion){
       const reversibleNodeID=network.nodes[nodeID].metadata.reversibleVersion;
