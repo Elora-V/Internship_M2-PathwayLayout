@@ -21,6 +21,8 @@ import { customDFS } from './customDFS';
  */
 export function DFSWithSources(network:Network, sources:Array<string>|SourceType):Array<string>{
 
+    console.log('DFS');
+
     // create graph for library from network
     const graph=NetworkToGDSGraph(network);
 
@@ -32,8 +34,9 @@ export function DFSWithSources(network:Network, sources:Array<string>|SourceType
         sources_list = getSources(network, sources);
     }
 
-    // apply DFS
-    return graph.depthFirstSearch(sources_list);
+    // apply DFS (reverse order because DFS is a backward reading)
+    const dfs= graph.depthFirstSearch(sources_list);
+    return dfs.reverse();
 
 }
 

@@ -93,6 +93,7 @@ import { SourceType } from "@/types/EnumArgs";
 import { addLonguestPathClusterFromSources } from "@/composables/chooseSubgraph";
 import { RefSymbol } from "@vue/reactivity";
 import { customDFS } from "@/composables/customDFS";
+import { BFS, BFSWithSources, networkToAdjacentObject } from "@/composables/algoBFS";
 
 
 
@@ -141,7 +142,7 @@ function keydownHandler(event: KeyboardEvent) {
   } else if (event.key =="n"){
     console.log(network.value);
   }else if (event.key =="r"){
-    chooseReversibleReaction(network.value,SourceType.RANK_SOURCE_ALL);
+    chooseReversibleReaction(network.value,SourceType.RANK_SOURCE_ALL,BFSWithSources);
   }else if (event.key =="p"){
     console.log('create cluster longuest path');
     clusterNetwork=addLonguestPathClusterFromSources(clusterNetwork,SourceType.RANK_ONLY);
@@ -151,6 +152,14 @@ function keydownHandler(event: KeyboardEvent) {
     const sources=getSources(network.value,SourceType.RANK_ONLY);
     const {dfs,crossEdge}=customDFS(network.value,sources);
     console.log(crossEdge);
+  }
+  else if (event.key == "b"){
+    const sources=getSources(network.value,SourceType.RANK_ONLY);
+    const bfs=BFSWithSources(network.value,sources);
+    bfs.forEach(node=>{
+      console.log(network.value.nodes[node].label);
+    })
+
   }
 }
 
@@ -169,7 +178,7 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
       }
     ).then(
       () => {
-        chooseReversibleReaction(network, SourceType.RANK_SOURCE_ALL);
+        chooseReversibleReaction(network, SourceType.RANK_SOURCE_ALL,BFSWithSources);
       }
     ).then(
       () => {
@@ -186,7 +195,7 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
 onMounted(() => {
   svgProperties = initZoom();
   window.addEventListener('keydown', keydownHandler);
-  importNetworkFromURL('/pathways/Alanine_and_aspartate_metabolism.json', network, networkStyle, callbackFunction); 
+  importNetworkFromURL('/pathways/Aminosugar_metabolism.json', network, networkStyle, callbackFunction); 
   
 });
 function removeNode() {
