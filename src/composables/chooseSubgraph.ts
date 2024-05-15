@@ -70,7 +70,9 @@ export function addLonguestPathClusterFromSources(clusterNetwork:ClusterNetwork,
  * 
  * @returns an object for the different path, the key is the source of the path
  */
-export function longuestPathFromDFS(graph:{[key:string]:Function},dfs:Array<string>,sources:Array<string>):{[key:string]:Array<string>}{
+export function longuestPathFromDFS(graph:{[key:string]:Function},fowardDFS:Array<string>,sources:Array<string>):{[key:string]:Array<string>}{
+
+    let dfs = Array.from(fowardDFS).reverse(); // the code has been done whith a backward reading of dfs
 
     let longuestPaths:{[key:string]:Array<string>}={};
     let path:Array<string>;
