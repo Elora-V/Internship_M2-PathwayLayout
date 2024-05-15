@@ -2,7 +2,7 @@
   <button v-on:click="rescale(svgProperties)">
     Rescale
   </button>
-  <input type="file" accept=".json" label="File input" v-on:change="loadFile" />
+  <input type="file" accept=".json, .xml" label="File input" v-on:change="loadFile" />
   <button v-on:click="algoForce()">
     ForceAlgo
   </button>
