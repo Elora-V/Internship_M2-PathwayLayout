@@ -78,7 +78,7 @@ import { initZoom, rescale } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
 import {createCluster,addNodeCluster} from "./composables/UseClusterNetwork";
-import { DFSWithSources, getSources } from "@/composables/algoDFS";
+import { customDFS, DFSWithSources } from "@/composables/algoDFS";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
@@ -92,8 +92,8 @@ import { ClusterNetwork } from "@/types/ClusterNetwork";
 import { SourceType } from "@/types/EnumArgs";
 import { addLonguestPathClusterFromSources } from "@/composables/chooseSubgraph";
 import { RefSymbol } from "@vue/reactivity";
-import { customDFS } from "@/composables/customDFS";
-import { BFS, BFSWithSources, networkToAdjacentObject } from "@/composables/algoBFS";
+import { BFS, BFSWithSources } from "@/composables/algoBFS";
+import { getSources } from "@/composables/rankAndSources";
 
 
 

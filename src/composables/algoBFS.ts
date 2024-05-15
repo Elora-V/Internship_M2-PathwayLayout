@@ -1,27 +1,9 @@
 import { SourceType } from "@/types/EnumArgs";
 import { Network } from "@metabohub/viz-core/src/types/Network";
-import { getSources } from "./algoDFS";
+import { getSources } from "./rankAndSources";
+import { NetworkToAdjacentObject } from "./networkToGraph";
 
 
-/**
- * Convert a network into an adjacency object.
- * @param network The network to convert.
- * @returns An adjacency object representing the network.
- */
-export function networkToAdjacentObject(network:Network):{[key : string]:string[]}{
-    const adjacence:{[key : string]:string[]}={};
-    Object.keys(network.nodes).forEach(node=>{
-        if (!(node in Object.keys(adjacence))){
-            adjacence[node]=[];
-        }
-    })
-    network.links.forEach(link=>{
-        const source=link.source.id;
-        const target=link.target.id;
-        adjacence[source].push(target);
-    });
-    return adjacence;
-}
 
 /**
  * Perform Breadth-First Search (BFS) on a graph represented by an adjacency object.
@@ -69,7 +51,7 @@ export function BFSWithSources(network:Network, sources:Array<string>|SourceType
     let bfsAllSources:string[] =[];
 
     // create graph for library from network
-    const adj=networkToAdjacentObject(network);
+    const adj=NetworkToAdjacentObject(network);
 
     //get sources nodes if no list from user
     let sources_list: Array<string>;

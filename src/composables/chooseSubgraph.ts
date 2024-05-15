@@ -1,9 +1,10 @@
 import { RankEnum } from "@/types/Cluster";
 import { SourceType } from "@/types/EnumArgs";
-import { DFSWithSources, getSources } from "./algoDFS";
+import { DFSWithSources } from "./algoDFS";
 import { NetworkToGDSGraph } from "./networkToGraph";
 import { ClusterNetwork } from "@/types/ClusterNetwork";
 import { createCluster } from "./UseClusterNetwork";
+import { getSources } from "./rankAndSources";
 
 
 /**
@@ -33,7 +34,7 @@ export function addLonguestPathClusterFromSources(clusterNetwork:ClusterNetwork,
     const dfs=DFSWithSources(network, sources);
 
     // get new clusters : longuest paths from sources with DFS
-    const newClusters=longuestPathFromDFS(graph,dfs,sources);
+    const newClusters=longuestPathFromDFS(graph,dfs,sources as string[]);
     Object.entries(newClusters).forEach(([source,path]:[string,Array<string>])=>{
         if (path.length > 3){
             const cluster= createCluster(source, RankEnum.EMPTY, path,[], ["longest_path"]);
