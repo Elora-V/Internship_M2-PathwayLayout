@@ -90,7 +90,7 @@ import { node } from "prop-types";
 import { Cluster } from "@/types/Cluster";
 import { ClusterNetwork } from "@/types/ClusterNetwork";
 import { SourceType } from "@/types/EnumArgs";
-import { addLonguestPathClusterFromSources, addNoConstraint } from "@/composables/chooseSubgraph";
+import { addLonguestPathClusterFromSources, addNoConstraint, pathsToTargetNodeFromSources } from "@/composables/chooseSubgraph";
 import { RefSymbol } from "@vue/reactivity";
 import { BFS, BFSWithSources } from "@/composables/algoBFS";
 import { getSources } from "@/composables/rankAndSources";
@@ -144,8 +144,9 @@ function keydownHandler(event: KeyboardEvent) {
   }else if (event.key =="r"){
     chooseReversibleReaction(network.value,SourceType.RANK_SOURCE_ALL,BFSWithSources);
   }else if (event.key =="p"){
-    console.log('create cluster longuest path');
-    clusterNetwork=addLonguestPathClusterFromSources(clusterNetwork,SourceType.RANK_ONLY);
+    //console.log('create cluster longuest path');
+    //clusterNetwork=addLonguestPathClusterFromSources(clusterNetwork,SourceType.RANK_ONLY);
+    pathsToTargetNodeFromSources(network.value,SourceType.RANK_ONLY); /// DEBUG !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   } else if (event.key == "a"){
     allSteps(clusterNetwork,sourceTypePath);
   } else if (event.key == "f"){
@@ -160,6 +161,7 @@ function keydownHandler(event: KeyboardEvent) {
     bfs.forEach(node=>{
       console.log(network.value.nodes[node].label);
     })
+   
 
   }
 }

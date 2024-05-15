@@ -1,10 +1,11 @@
 import { RankEnum } from "@/types/Cluster";
 import { SourceType } from "@/types/EnumArgs";
-import { DFSWithSources } from "./algoDFS";
+import { DFSWithSources, DFSsourceDAG } from "./algoDFS";
 import { NetworkToGDSGraph } from "./networkToGraph";
 import { ClusterNetwork } from "@/types/ClusterNetwork";
 import { createCluster } from "./UseClusterNetwork";
 import { getSources } from "./rankAndSources";
+import { Network } from "@metabohub/viz-core/src/types/Network";
 
 
 /**
@@ -179,6 +180,26 @@ export function addNoConstraint(clusterNetwork:ClusterNetwork):ClusterNetwork{
     return clusterNetwork;
 }
 
+export function pathsToTargetNodeFromSources(network:Network, sources:Array<string>|SourceType){
+
+    // get source if not given (not array)
+    let sources_list: Array<string>;
+    if (Array.isArray(sources)) {
+        sources_list = sources;
+    } else {
+        sources_list = getSources(network, sources);
+    }
+
+    // for each source : do an independant dfs
+    sources_list.forEach(source=>{
+        const {dfs,graph}=DFSsourceDAG(network,[source]);
+        const {distances, parents}=DistanceFromSourceDAG(graph,dfs);
+        const targetNode=findMaxKey(distances);
+        console.log(source+" ----> "+targetNode);
+        // puis remonter chemin...
+    })
+
+}
 
 function DistanceFromSourceDAG(graph:{[key:string]:Function}, topologicalOrderFromSource:string[]):{distances:{[key:string]:number}, parents:{[key:string]:string[]}} {
 
@@ -207,4 +228,23 @@ function DistanceFromSourceDAG(graph:{[key:string]:Function}, topologicalOrderFr
     });
 
     return {distances:distanceFromSource, parents:parentsFromSource};
+}
+
+/**
+ * Find the key associated with the maximum value in the object.
+ * @param obj The object containing key-value pairs.
+ * @returns The key associated with the maximum value, or undefined if the object is empty.
+ */
+function findMaxKey(obj: { [key: string]: number }): string | undefined {
+    let maxKey: string | undefined;
+    let maxValue = -Infinity;
+
+    Object.entries(obj).forEach(([key, value]) => {
+        if (value > maxValue) {
+            maxValue = value;
+            maxKey = key;
+        }
+    });
+
+    return maxKey;
 }
