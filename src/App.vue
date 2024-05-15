@@ -178,7 +178,7 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
       }
     ).then(
       () => {
-        chooseReversibleReaction(network, SourceType.RANK_SOURCE_ALL);
+        chooseReversibleReaction(network, SourceType.RANK_SOURCE_ALL,BFSWithSources);
       }
     ).then(
       () => {
@@ -195,7 +195,7 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
 onMounted(() => {
   svgProperties = initZoom();
   window.addEventListener('keydown', keydownHandler);
-  importNetworkFromURL('/pathways/Alanine_and_aspartate_metabolism.json', network, networkStyle, callbackFunction); 
+  importNetworkFromURL('/pathways/Aminosugar_metabolism.json', network, networkStyle, callbackFunction); 
   
 });
 function removeNode() {
