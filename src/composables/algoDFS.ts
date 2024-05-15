@@ -42,7 +42,28 @@ export function DFSWithSources(network:Network, sources:Array<string>|SourceType
 
 
 
+/**
+ * DFS with sources in input ...(function to change)
+ * @param network 
+ * @param sources to use as staring node for DFS
+ * @returns ... (function to change)
+ */
+export function customDFS(network:Network, sources:Array<string>):{dfs:Array<string>,crossEdge:{[key:string]:Array<{source:string,target:string}>}} {
+    let DFS=createGraphForDFS(network);
+    sources.forEach(sourceID =>{
+        const sourceIndex=DFS.nodesID.indexOf(sourceID);
+        if (sourceIndex!==-1 && !DFS.visitedFrom[sourceIndex]){
+            DFS=nodeDFS(DFS,sourceIndex,sourceID);           
+        }
+    });
+    return {dfs:DFS.dfsOrder,crossEdge:DFS.crossEdge};
+}
 
+/**
+ * Initialize a dfs object from the network
+ * @param network 
+ * @returns initialized DFS object
+ */
 function createGraphForDFS(network:Network):DFS{
     const nbNode=Object.keys(network.nodes).length;
     const graphGDS=NetworkToGDSGraph(network);
@@ -58,20 +79,13 @@ function createGraphForDFS(network:Network):DFS{
     }
 }
 
-
-
-export function DFS(network:Network, sources:Array<string>):{dfs:Array<string>,crossEdge:{[key:string]:Array<{source:string,target:string}>}} {
-    let DFS=createGraphForDFS(network);
-    sources.forEach(sourceID =>{
-        const sourceIndex=DFS.nodesID.indexOf(sourceID);
-        if (sourceIndex!==-1 && !DFS.visitedFrom[sourceIndex]){
-            DFS=nodeDFS(DFS,sourceIndex,sourceID);           
-        }
-    });
-    return {dfs:DFS.dfsOrder,crossEdge:DFS.crossEdge};
-}
-
-
+/**
+ * DFS from a node
+ * @param DFS dfs object with visited nodes, times of visit ...
+ * @param nodeIndex of the node for the dfs
+ * @param sourceID id of the starting node of the 'first' DFS : allow to determine type of edge in the dfs graph from the source
+ * @returns the DFS object with visited nodes, times of visit ...
+ */
 function nodeDFS(DFS:DFS,nodeIndex:number,sourceID?:string):DFS{
     //https://www.geeksforgeeks.org/tree-back-edge-and-cross-edges-in-dfs-of-graph/
     

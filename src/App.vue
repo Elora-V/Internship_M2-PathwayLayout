@@ -78,7 +78,7 @@ import { initZoom, rescale } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
 import {createCluster,addNodeCluster} from "./composables/UseClusterNetwork";
-import { DFS, DFSWithSources } from "@/composables/algoDFS";
+import { customDFS, DFSWithSources } from "@/composables/algoDFS";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
@@ -150,7 +150,7 @@ function keydownHandler(event: KeyboardEvent) {
     allSteps(clusterNetwork,sourceTypePath);
   } else if (event.key == "f"){
     const sources=getSources(network.value,SourceType.RANK_ONLY);
-    const {dfs,crossEdge}=DFS(network.value,sources);
+    const {dfs,crossEdge}=customDFS(network.value,sources);
     console.log(crossEdge);
   }
   else if (event.key == "b"){
