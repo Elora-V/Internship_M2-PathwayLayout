@@ -241,7 +241,7 @@ function readJsonMetExploreViz(jsonGraph: string, network: Network, networkStyle
  * @param target the target node from the network
  * @param newEdge the edge in construction that will be push in network
  */
-function reversibleClassNewEdge(link: {[key: string]: string},network:Network,sourceID:string,targetID:string,newEdge:Link){
+function reversibleClassNewEdge(link: {[key: string]: string},network:Network,sourceID:string,targetID:string,newEdge:Link):void{
 
 	// d3 link is reversible ?
 	let isReversible :boolean;
@@ -275,7 +275,7 @@ function reversibleClassNewEdge(link: {[key: string]: string},network:Network,so
 }
 	
 
-function changeNodeStyles(networkStyle:GraphStyleProperties,jsonObject:JsonStyle){
+function changeNodeStyles(networkStyle:GraphStyleProperties,jsonObject:JsonStyle):void{
 	networkStyle.nodeStyles = {
 		metabolite: {
 			width: 20,

@@ -3,6 +3,9 @@
     Rescale
   </button>
   <input type="file" accept=".json" label="File input" v-on:change="loadFile" />
+  <button v-on:click="algoForce()">
+    ForceAlgo
+  </button>
   <br>
   <button v-on:click="newCluster()">
      New_Cluster
@@ -19,6 +22,19 @@
   <button v-on:click="ordering('in')">
      Ordering in
   </button>
+  <h5>Number of crossings in the Network : {{ countIntersection(network) }}</h5>
+  <h5>Number of isolated nodes : {{ countIsolatedNodes(network) }}</h5>
+  <br>
+  <br>
+  <button v-on:click="sourcesChoice('rank_only')">
+     Rank only
+  </button><br>
+  <button v-on:click="sourcesChoice('rank_source')">
+     Rank source
+  </button><br>
+  <button v-on:click="sourcesChoice('source_only')">
+     Source only
+  </button><br>
   <NetworkComponent 
     v-on:contextmenu.prevent
     :network="network"
@@ -44,6 +60,8 @@
   // Utils ----------------
 import { ref, reactive, onMounted } from "vue";
 import { Serialized } from "graph-data-structure";
+import { countIntersection } from "./composables/countIntersections";
+import { countIsolatedNodes } from "./composables/countIsolatedNodes";
 
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
@@ -53,13 +71,16 @@ import type { Network } from "@metabohub/viz-core/src/types/Network";
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
 import { dagreLayout, vizLayout } from './composables/useLayout';
 import { removeSideCompounds } from "./composables/removeSideCompounds";
-import {duplicateReversibleReactions} from "./composables/duplicateReversibleReactions"
+import {chooseReversibleReaction, duplicateReversibleReactions} from "./composables/duplicateReversibleReactions"
 import {importNetworkFromFile,importNetworkFromURL} from "./composables/importNetwork"
 import { NetworkToSerialized } from "@/composables/networkToGraph";
 import { initZoom, rescale } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
 import {createCluster,addNodeCluster} from "./composables/UseClusterNetwork";
+import { DFSWithSources, getSources } from "@/composables/algoDFS";
+import { createStaticForceLayout } from "@metabohub/viz-core";
+
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
 // import { createUndoFunction } from "./composables/UseUndo";
   // Components -----------
@@ -68,6 +89,10 @@ import { ContextMenu } from "@metabohub/viz-context-menu";
 import { node } from "prop-types";
 import { Cluster } from "@/types/Cluster";
 import { ClusterNetwork } from "@/types/ClusterNetwork";
+import { SourceType } from "@/types/EnumArgs";
+import { addLonguestPathClusterFromSources } from "@/composables/chooseSubgraph";
+import { RefSymbol } from "@vue/reactivity";
+import { customDFS } from "@/composables/customDFS";
 
 
 
@@ -80,7 +105,8 @@ const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNod
 let undoFunction: any = reactive({});
 //let clusters : Array<Cluster> =reactive([])
 //let attributGraphViz : AttributesViz=reactive({});
-let clusterNetwork:ClusterNetwork={network:network,attributs:{},clusters:{}};
+let clusterNetwork:ClusterNetwork;
+let sourceTypePath:SourceType=SourceType.RANK_ONLY;
 
 // Functions --------------
 
@@ -96,14 +122,10 @@ async function callbackFunction() {
   rescale(svgProperties);
 
   console.log('________New_graph__________');
+  clusterNetwork={network:network,attributs:{},clusters:{}};
+  clusterNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
   removeSideCompounds(network.value,"/sideCompounds.txt");
   console.log(network.value);
-
-  // import('graph-data-structure').then(gds => {
-  //   const graph = gds.Graph();
-  //   const networkSerialized: Serialized = NetworkToSerialized(network.value);
-  //   graph.deserialize(networkSerialized);
-  // })
 
 }
 
@@ -111,13 +133,24 @@ function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
     dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
-    vizLayout(network.value, clusterNetwork.clusters ,clusterNetwork.attributs ,rescaleAfterAction);
+    vizLayout(network.value, clusterNetwork.clusters ,clusterNetwork.attributs ,true,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
   } else if (event.key =="c"){
     console.log(clusterNetwork);
   } else if (event.key =="n"){
     console.log(network.value);
+  }else if (event.key =="r"){
+    chooseReversibleReaction(network.value,SourceType.RANK_SOURCE_ALL);
+  }else if (event.key =="p"){
+    console.log('create cluster longuest path');
+    clusterNetwork=addLonguestPathClusterFromSources(clusterNetwork,SourceType.RANK_ONLY);
+  } else if (event.key == "a"){
+    allSteps(clusterNetwork,sourceTypePath);
+  } else if (event.key == "f"){
+    const sources=getSources(network.value,SourceType.RANK_ONLY);
+    const {dfs,crossEdge}=customDFS(network.value,sources);
+    console.log(crossEdge);
   }
 }
 
@@ -126,9 +159,32 @@ function rescaleAfterAction(){
   rescale(svgProperties);
 }
 
+async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType=SourceType.RANK_ONLY) {
+
+    let network=clusterNetwork.network.value;
+
+    await vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true).then(
+      () => {
+        duplicateReversibleReactions(network);
+      }
+    ).then(
+      () => {
+        chooseReversibleReaction(network, SourceType.RANK_SOURCE_ALL);
+      }
+    ).then(
+      () => {
+        clusterNetwork = addLonguestPathClusterFromSources(clusterNetwork, sourceTypePath);
+      }
+    ).then(
+      () => {
+        vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, false, rescaleAfterAction);
+      }
+    )
+
+}
+
 onMounted(() => {
   svgProperties = initZoom();
-  clusterNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
   window.addEventListener('keydown', keydownHandler);
   importNetworkFromURL('/pathways/Alanine_and_aspartate_metabolism.json', network, networkStyle, callbackFunction); 
   
@@ -166,10 +222,29 @@ function ordering(value:string="default"){
   }
 }
 
+function sourcesChoice(sourcetype:string):void{
+  if (sourcetype==SourceType.RANK_ONLY){
+    sourceTypePath=SourceType.RANK_ONLY;
+  }
+  else if (sourcetype==SourceType.RANK_SOURCE){
+    sourceTypePath=SourceType.RANK_SOURCE;
+  }
+  else if (sourcetype==SourceType.SOURCE_ONLY){
+    sourceTypePath=SourceType.SOURCE_ONLY;
+  }
+  console.log(sourceTypePath);
+  clusterNetwork.clusters={}; // temporaire, je reset les clusters pour pas ajouter les nouveaux aux vieux
+}
+
+function algoForce(){
+  network.value=createStaticForceLayout(network.value);
+}
+
 function openContextMenu(Event: MouseEvent, nodeId: string) {
   UseContextMenu.showContextMenu(Event, nodeId);
 }
 </script><style>
 @import "@metabohub/viz-core/dist/style.css";
 @import "@metabohub/viz-context-menu/dist/style.css"; 
+
 </style>./composables/methode_to_try./composables/toNetwork./composables/convertToGraph./composables/networkToGraph./composables/graphToNetwork
