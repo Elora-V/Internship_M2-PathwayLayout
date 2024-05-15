@@ -16,23 +16,23 @@ export function networkToAdjacentObject(network:Network):{[key : string]:string[
 }
 
 
-export function BFS(adjacency: { [key: string]: string[] }, source: string):string[] {
-    const visitedNodes:Array<string>=[] ;
-    const nodesToProcess: Array<string> = [source];
+export function BFS(adjacency: { [key: string]: string[] }, source: string): string[] {
+    const visitedNodes: Set<string> = new Set();
+    const nodesToProcess: string[] = [source];
 
     while (nodesToProcess.length) {
         const currentNode = nodesToProcess.shift()!;
 
-        if (currentNode) {
-            visitedNodes.push(currentNode);
-            const children = adjacency[currentNode];
+        if (currentNode && !visitedNodes.has(currentNode)) {
+            visitedNodes.add(currentNode);
+            const children = adjacency[currentNode] || [];
             children.forEach(child => {
-                if (!(child in visitedNodes)) {
+                if (!visitedNodes.has(child)) {
                     nodesToProcess.push(child);
                 }
             });
         }
     }
 
-    return visitedNodes;
+    return Array.from(visitedNodes);
 }
