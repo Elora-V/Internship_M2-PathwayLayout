@@ -93,7 +93,7 @@ import { SourceType } from "@/types/EnumArgs";
 import { addLonguestPathClusterFromSources } from "@/composables/chooseSubgraph";
 import { RefSymbol } from "@vue/reactivity";
 import { customDFS } from "@/composables/customDFS";
-import { BFS, networkToAdjacentObject } from "@/composables/algoBFS";
+import { BFS, BFSWithSources, networkToAdjacentObject } from "@/composables/algoBFS";
 
 
 
@@ -154,12 +154,10 @@ function keydownHandler(event: KeyboardEvent) {
     console.log(crossEdge);
   }
   else if (event.key == "b"){
-    const adj=networkToAdjacentObject(network.value);
     const sources=getSources(network.value,SourceType.RANK_ONLY);
-    sources.forEach(source=>{
-      const bfsNodes=BFS(adj,source); 
-      console.log(bfsNodes);
-      console.log('\n');
+    const bfs=BFSWithSources(network.value,sources);
+    bfs.forEach(node=>{
+      console.log(network.value.nodes[node].label);
     })
 
   }
