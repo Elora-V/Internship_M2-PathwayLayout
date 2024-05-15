@@ -105,3 +105,24 @@ export function NetworkToGDSGraph(network: Network):{[key:string]:Function}{
 }
 
 
+/**
+ * Convert a network into an adjacency object.
+ * @param network The network to convert.
+ * @returns An adjacency object representing the network : an object with nodes as key, and children of node as values
+ */
+export function NetworkToAdjacentObject(network:Network):{[key : string]:string[]}{
+    const adjacence:{[key : string]:string[]}={};
+    Object.keys(network.nodes).forEach(node=>{
+        if (!(node in Object.keys(adjacence))){
+            adjacence[node]=[];
+        }
+    })
+    network.links.forEach(link=>{
+        const source=link.source.id;
+        const target=link.target.id;
+        adjacence[source].push(target);
+    });
+    return adjacence;
+}
+
+

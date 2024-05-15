@@ -22,6 +22,8 @@
   <button v-on:click="ordering('in')">
      Ordering in
   </button>
+  <h5>Number of crossings in the Network : {{ countIntersection(network) }}</h5>
+  <h5>Number of isolated nodes : {{ countIsolatedNodes(network) }}</h5>
   <br>
   <br>
   <button v-on:click="sourcesChoice('rank_only')">
@@ -58,6 +60,8 @@
   // Utils ----------------
 import { ref, reactive, onMounted } from "vue";
 import { Serialized } from "graph-data-structure";
+import { countIntersection } from "./composables/countIntersections";
+import { countIsolatedNodes } from "./composables/countIsolatedNodes";
 
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
@@ -74,7 +78,7 @@ import { initZoom, rescale } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
 import {createCluster,addNodeCluster} from "./composables/UseClusterNetwork";
-import { DFSWithSources, getSources } from "@/composables/algoDFS";
+import { customDFS, DFSWithSources } from "@/composables/algoDFS";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
@@ -88,7 +92,8 @@ import { ClusterNetwork } from "@/types/ClusterNetwork";
 import { SourceType } from "@/types/EnumArgs";
 import { addLonguestPathClusterFromSources, addNoConstraint } from "@/composables/chooseSubgraph";
 import { RefSymbol } from "@vue/reactivity";
-import { customDFS } from "@/composables/customDFS";
+import { BFS, BFSWithSources } from "@/composables/algoBFS";
+import { getSources } from "@/composables/rankAndSources";
 
 
 
@@ -137,7 +142,7 @@ function keydownHandler(event: KeyboardEvent) {
   } else if (event.key =="n"){
     console.log(network.value);
   }else if (event.key =="r"){
-    chooseReversibleReaction(network.value,SourceType.RANK_SOURCE_ALL);
+    chooseReversibleReaction(network.value,SourceType.RANK_SOURCE_ALL,BFSWithSources);
   }else if (event.key =="p"){
     console.log('create cluster longuest path');
     clusterNetwork=addLonguestPathClusterFromSources(clusterNetwork,SourceType.RANK_ONLY);
@@ -147,6 +152,14 @@ function keydownHandler(event: KeyboardEvent) {
     const sources=getSources(network.value,SourceType.RANK_ONLY);
     const {dfs,crossEdge}=customDFS(network.value,sources);
     console.log(crossEdge);
+  }
+  else if (event.key == "b"){
+    const sources=getSources(network.value,SourceType.RANK_ONLY);
+    const bfs=BFSWithSources(network.value,sources);
+    bfs.forEach(node=>{
+      console.log(network.value.nodes[node].label);
+    })
+
   }
 }
 
@@ -165,7 +178,7 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
       }
     ).then(
       () => {
-        chooseReversibleReaction(network, SourceType.RANK_SOURCE_ALL);
+        chooseReversibleReaction(network, SourceType.RANK_SOURCE_ALL,BFSWithSources);
       }
     ).then(
       () => {
@@ -186,7 +199,7 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
 onMounted(() => {
   svgProperties = initZoom();
   window.addEventListener('keydown', keydownHandler);
-  importNetworkFromURL('/pathways/Alanine_and_aspartate_metabolism.json', network, networkStyle, callbackFunction); 
+  importNetworkFromURL('/pathways/Aminosugar_metabolism.json', network, networkStyle, callbackFunction); 
   
 });
 function removeNode() {

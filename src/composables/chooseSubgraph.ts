@@ -1,9 +1,10 @@
 import { RankEnum } from "@/types/Cluster";
 import { SourceType } from "@/types/EnumArgs";
-import { DFSWithSources, getSources } from "./algoDFS";
+import { DFSWithSources } from "./algoDFS";
 import { NetworkToGDSGraph } from "./networkToGraph";
 import { ClusterNetwork } from "@/types/ClusterNetwork";
 import { createCluster } from "./UseClusterNetwork";
+import { getSources } from "./rankAndSources";
 
 
 /**
@@ -33,7 +34,7 @@ export function addLonguestPathClusterFromSources(clusterNetwork:ClusterNetwork,
     const dfs=DFSWithSources(network, sources);
 
     // get new clusters : longuest paths from sources with DFS
-    const newClusters=longuestPathFromDFS(graph,dfs,sources);
+    const newClusters=longuestPathFromDFS(graph,dfs,sources as string[]);
     Object.entries(newClusters).forEach(([source,path]:[string,Array<string>])=>{
         if (path.length > 3){
             const cluster= createCluster(source, RankEnum.EMPTY, path,[], ["longest_path"]);
@@ -70,7 +71,9 @@ export function addLonguestPathClusterFromSources(clusterNetwork:ClusterNetwork,
  * 
  * @returns an object for the different path, the key is the source of the path
  */
-export function longuestPathFromDFS(graph:{[key:string]:Function},dfs:Array<string>,sources:Array<string>):{[key:string]:Array<string>}{
+export function longuestPathFromDFS(graph:{[key:string]:Function},fowardDFS:Array<string>,sources:Array<string>):{[key:string]:Array<string>}{
+
+    let dfs = Array.from(fowardDFS).reverse(); // the code has been done whith a backward reading of dfs
 
     let longuestPaths:{[key:string]:Array<string>}={};
     let path:Array<string>;
