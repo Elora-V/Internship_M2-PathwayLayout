@@ -105,7 +105,7 @@ function nodeDagDFS(DFS:DFS,nodeIndex:number,currentPath:number[]):DFS{
             if (!DFS.visited[childIndex]){
 
                 // dfs through the child node
-                DFS=nodeDFS(DFS,childIndex,path);
+                DFS=nodeDagDFS(DFS,childIndex,path);
 
             } else { // if the child node had already been visited
                 // and that the node is in the current path : there is a cycle
