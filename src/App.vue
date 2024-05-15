@@ -142,7 +142,7 @@ function keydownHandler(event: KeyboardEvent) {
   } else if (event.key =="n"){
     console.log(network.value);
   }else if (event.key =="r"){
-    chooseReversibleReaction(network.value,SourceType.RANK_SOURCE_ALL);
+    chooseReversibleReaction(network.value,SourceType.RANK_SOURCE_ALL,BFSWithSources);
   }else if (event.key =="p"){
     console.log('create cluster longuest path');
     clusterNetwork=addLonguestPathClusterFromSources(clusterNetwork,SourceType.RANK_ONLY);

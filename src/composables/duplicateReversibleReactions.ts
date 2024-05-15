@@ -151,12 +151,12 @@ export function pushUniqueString(object:Array<string>, value: string): Array<str
 export async function chooseReversibleReaction(
   network: Network,
   sources: Array<string> | SourceType,
-  nodeOrderFunction: (network: Network, sources: Array<string> | SourceType) => string[] = BFSWithSources
+  nodeOrderFunction: (network: Network, sources: Array<string> | SourceType) => string[] =BFSWithSources
 ): Promise<void> {
   let nodeOrder: string[] = [];
 
   // get node order
-  nodeOrder = nodeOrderFunction(network, sources);
+  nodeOrder = nodeOrderFunction(network,sources);
 
   // keep the first node seen only, for duplicated nodes
   keepFirstReversibleNode(network, nodeOrder);
