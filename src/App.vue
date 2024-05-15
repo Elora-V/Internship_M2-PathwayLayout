@@ -155,10 +155,13 @@ function keydownHandler(event: KeyboardEvent) {
   }
   else if (event.key == "b"){
     const adj=networkToAdjacentObject(network.value);
-    const bfsNodes=BFS(adj,"M_Nacasp_c");
-    Object.keys(bfsNodes).forEach(node=>{
-      console.log(bfsNodes[node]+" "+network.value.nodes[node].label);
+    const sources=getSources(network.value,SourceType.RANK_ONLY);
+    sources.forEach(source=>{
+      const bfsNodes=BFS(adj,source); 
+      console.log(bfsNodes);
+      console.log('\n');
     })
+
   }
 }
 
