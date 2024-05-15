@@ -178,3 +178,33 @@ export function addNoConstraint(clusterNetwork:ClusterNetwork):ClusterNetwork{
 
     return clusterNetwork;
 }
+
+
+function DistanceFromSourceDAG(graph:{[key:string]:Function}, topologicalOrderFromSource:string[]):{distances:{[key:string]:number}, parents:{[key:string]:string[]}} {
+
+    // the source is the first node in the topological order
+    const source=topologicalOrderFromSource[0];
+    
+    // Initialization
+    const distanceFromSource:{[key:string]:number} = {};
+    const parentsFromSource:{[key:string]:string[]}={};
+    topologicalOrderFromSource.forEach(node=> {
+        distanceFromSource[node] = node === source ? 0 : Number.NEGATIVE_INFINITY;
+        parentsFromSource[node]=[];
+    });
+    
+    // Process node in topological order
+    topologicalOrderFromSource.forEach(parent=> {
+        // For each children
+        graph.adjacent(parent).forEach( child => {
+            const childDistance= distanceFromSource[child];
+            const newDistance=distanceFromSource[parent] + graph.getEdgeWeight(parent,child);
+            if ( newDistance > childDistance) {
+                distanceFromSource[child] = childDistance;
+                parentsFromSource[child].push(parent);
+            }
+        })
+    });
+
+    return {distances:distanceFromSource, parents:parentsFromSource};
+}
