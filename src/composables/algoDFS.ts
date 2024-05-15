@@ -21,6 +21,8 @@ import { customDFS } from './customDFS';
  */
 export function DFSWithSources(network:Network, sources:Array<string>|SourceType):Array<string>{
 
+    console.log('DFS');
+
     // create graph for library from network
     const graph=NetworkToGDSGraph(network);
 

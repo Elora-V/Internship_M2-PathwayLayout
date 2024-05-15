@@ -65,6 +65,7 @@ export function BFS(adjacency: { [key: string]: string[] }, source: string): str
  * @returns An array of nodes visited in BFS order, a node can appear several time if it is a descendant of several sources.
  */
 export function BFSWithSources(network:Network, sources:Array<string>|SourceType):Array<string>{
+    console.log('BFS');
     let bfsAllSources:string[] =[];
 
     // create graph for library from network
@@ -80,8 +81,11 @@ export function BFSWithSources(network:Network, sources:Array<string>|SourceType
 
     // apply BFS
     sources_list.forEach(source=>{
-        const bfs=BFS(adj,source); 
-        bfsAllSources = bfsAllSources.concat(bfs);
+        // bfs on source only if source not already visited
+        if( !bfsAllSources.includes(source)){
+            const bfs=BFS(adj,source); 
+            bfsAllSources = bfsAllSources.concat(bfs);
+        }
     })
   
     return bfsAllSources
