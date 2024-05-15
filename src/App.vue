@@ -150,8 +150,8 @@ function keydownHandler(event: KeyboardEvent) {
     allSteps(clusterNetwork,sourceTypePath);
   } else if (event.key == "f"){
     const sources=getSources(network.value,SourceType.RANK_ONLY);
-    const {dfs,crossEdge}=customDFS(network.value,sources);
-    console.log(crossEdge);
+    const dfs=customDFS(network.value,sources);
+    console.log(dfs);
   }
   else if (event.key == "b"){
     const sources=getSources(network.value,SourceType.RANK_ONLY);
@@ -186,7 +186,7 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
       }
     ).then(
       () => {
-        clusterNetwork = addNoConstraint(clusterNetwork);
+        //clusterNetwork = addNoConstraint(clusterNetwork);
       }
     ).then(
       () => {
