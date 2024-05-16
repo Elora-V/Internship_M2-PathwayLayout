@@ -6,6 +6,7 @@ import { ClusterNetwork } from "@/types/ClusterNetwork";
 import { createCluster } from "./UseClusterNetwork";
 import { getSources } from "./rankAndSources";
 import { Network } from "@metabohub/viz-core/src/types/Network";
+import { BFS } from "./algoBFS";
 
 
 /**
@@ -72,9 +73,9 @@ export function addLonguestPathClusterFromSources(clusterNetwork:ClusterNetwork,
  * 
  * @returns an object for the different path, the key is the source of the path
  */
-export function longuestPathFromDFS(graph:{[key:string]:Function},fowardDFS:Array<string>,sources:Array<string>):{[key:string]:Array<string>}{
+export function longuestPathFromDFS(graph:{[key:string]:Function},DFSreversed:Array<string>,sources:Array<string>):{[key:string]:Array<string>}{
 
-    let dfs = Array.from(fowardDFS).reverse(); // the code has been done whith a backward reading of dfs
+    let dfs = Array.from(DFSreversed).reverse(); // the code has been done whith a backward reading of dfs
 
     let longuestPaths:{[key:string]:Array<string>}={};
     let path:Array<string>;
@@ -180,7 +181,7 @@ export function addNoConstraint(clusterNetwork:ClusterNetwork):ClusterNetwork{
     return clusterNetwork;
 }
 
-export function pathsToTargetNodeFromSources(network:Network, sources:Array<string>|SourceType){
+export function pathsToTargetNodeFromSources(network:Network, sources:Array<string>|SourceType):{[key:string]:Array<string>}{
 
     // get source if not given (not array)
     let sources_list: Array<string>;
@@ -190,15 +191,22 @@ export function pathsToTargetNodeFromSources(network:Network, sources:Array<stri
         sources_list = getSources(network, sources);
     }
 
+    let pathsFromSources:{[key:string]:Array<string>}={}
+
     // for each source : do an independant dfs
     sources_list.forEach(source=>{
+        // DFS to get a DAG from this source, and get topological sort
         const {dfs,graph}=DFSsourceDAG(network,[source]);
+        // get max distance from source node for all nodes, and by which parent nodes the node had been accessed
         const {distances, parents}=DistanceFromSourceDAG(graph,dfs);
+        // get the farthest node from source (node with max distance)
         const targetNode=findMaxKey(distances);
-        console.log(source+" ----> "+targetNode);
-        // puis remonter chemin...
+        // get the parents that goes from source to target node 
+        const nodesBetweenSourceTarget=BFS(parents,targetNode);
+        // merge with an existing path if node in common
+        pathsFromSources=mergeNewPath(source,nodesBetweenSourceTarget,pathsFromSources);
     })
-
+    return pathsFromSources;
 }
 
 function DistanceFromSourceDAG(graph:{[key:string]:Function}, topologicalOrderFromSource:string[]):{distances:{[key:string]:number}, parents:{[key:string]:string[]}} {
@@ -222,7 +230,9 @@ function DistanceFromSourceDAG(graph:{[key:string]:Function}, topologicalOrderFr
             const newDistance=distanceFromSource[parent] + graph.getEdgeWeight(parent,child);
             if ( newDistance > childDistance) {
                 distanceFromSource[child] = newDistance;
-                parentsFromSource[child].push(parent);
+
+                // if the parent keeped is only the only for the longest path :
+                parentsFromSource[child]=[parent];
             }
         })
     });
@@ -247,4 +257,32 @@ function findMaxKey(obj: { [key: string]: number }): string | undefined {
     });
 
     return maxKey;
+}
+
+
+function mergeNewPath(source:string,newPath:string[],pathsFromSources:{[key:string]:string[]}):{[key:string]:string[]}{
+    const keys=Object.keys(pathsFromSources);
+    let hasmerged=false;
+    console.log(keys);
+    keys.forEach(key=>{
+        const keyPath = pathsFromSources[key];
+        // Check for common nodes
+        const commonNodes = keyPath.find(node => newPath.includes(node));
+        if (commonNodes) {
+            // Merge paths
+            const mergedPath = Array.from(new Set(keyPath.concat(newPath)));
+            // Create new key
+            const newKey = `${key}--${source}`;
+            // Update pathsFromSources object
+            pathsFromSources[newKey] = mergedPath;
+            // Remove old key
+            delete pathsFromSources[key];
+            hasmerged=true;
+        }
+    });
+    // if no merge : added on it's own
+    if (!hasmerged){
+        pathsFromSources[source]=newPath;
+    }
+    return pathsFromSources;
 }
