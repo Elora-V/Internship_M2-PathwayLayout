@@ -24,11 +24,12 @@ import { BFS } from "./algoBFS";
  * @param minsize minimum size of a cluster to be added
  * @returns the clusterNetwork with more cluster
  */
-export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Array<string>,
-    getClusters:(network: Network, sources: Array<string> | SourceType) => {[key:string]:Array<string>}=pathsToTargetNodeFromSources,
+export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Array<string> | SourceType,
+    getClusters:(network: Network, sources: Array<string>) => {[key:string]:Array<string>}=getPathSourcesToTargetNode,
     minsize:number=4
 ):ClusterNetwork{
 
+    console.log('create cluster longest path');
     const network=clusterNetwork.network.value;
     
     // get sources
@@ -37,7 +38,7 @@ export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Arr
     }
 
     // get cluster of paths from sources
-    const newClusters=getClusters(network,sources);
+    const newClusters=getClusters(network,sources as string[]);
 
     // add cluster if length > minsize, and add information of cluster for nodes
     Object.entries(newClusters).forEach(([clusterID,nodesCluster]:[string,Array<string>])=>{
@@ -74,6 +75,7 @@ export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Arr
  * @returns some node clusters with id
  */
 export function getLongPathDFS(network:Network,sources:string[]):{[key:string]:Array<string>}{ 
+    console.log('DFS long path');
     // create graph for library from network 
     const graph=NetworkToGDSGraph(network);  
     // DFS
@@ -193,20 +195,14 @@ function endPath(source:string, longestPaths:{[key:string]:Array<string>},path:A
  * @param sources to use for the paths
  * @returns some node clusters with id
  */
-export function pathsToTargetNodeFromSources(network:Network, sources:Array<string>|SourceType):{[key:string]:Array<string>}{
+export function getPathSourcesToTargetNode(network:Network, sources:string[]):{[key:string]:Array<string>}{
 
-    // get source if not given (not array)
-    let sources_list: Array<string>;
-    if (Array.isArray(sources)) {
-        sources_list = sources;
-    } else {
-        sources_list = getSources(network, sources);
-    }
+    console.log('DAG_Dijkstra');
 
     let pathsFromSources:{[key:string]:Array<string>}={}
 
     // for each source : do an independant dfs
-    sources_list.forEach(source=>{
+    sources.forEach(source=>{
         // DFS to get a DAG from this source, and get topological sort
         const {dfs,graph}=DFSsourceDAG(network,[source]);
         // get max distance from source node for all nodes, and by which parent nodes the node had been accessed

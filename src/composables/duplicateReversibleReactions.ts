@@ -79,9 +79,6 @@ export async function duplicateReversibleReactions(network: Network,suffix:strin
   newLinks.forEach((link) => {
     network.links.push(link);
   });
-
-  console.log(network);
-
 }
 
 /**

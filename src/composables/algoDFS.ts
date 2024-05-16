@@ -43,10 +43,10 @@ export function DFSWithSources(network:Network, sources:Array<string>|SourceType
 
 
 /**
- * DFS with sources in input
+ * Do a DFS from a source and remove the last edge of cycle to get a "source DAG". 
  * @param network 
  * @param sources to use as staring node for DFS
- * @returns the reverse dfs order (topological sort) and a graph object without the cycles accessible from the sources (DAG for sources) 
+ * @returns the reverse dfs order (topological sort) and a graph object without the cycles accessible from the sources 
  */
 export function DFSsourceDAG(network:Network, sources:Array<string>):{dfs:Array<string>, graph:{[key:string]:Function} } {
     let DFS=createGraphForDFS(network);
