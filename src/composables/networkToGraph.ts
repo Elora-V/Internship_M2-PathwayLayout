@@ -123,7 +123,11 @@ export function NetworkToAdjacentObject(network:Network):{[key : string]:string[
     return adjacence;
 }
 
-
+/**
+ * Return a copy of the network
+ * @param network 
+ * @returns a copy of the network
+ */
 export function networkCopy(network: Network): Network {
     const newNetwork: Network = {
         id: network.id,
@@ -144,7 +148,6 @@ export function networkCopy(network: Network): Network {
         newlink.target=newNetwork.nodes[item.target.id];
         newNetwork.links.push(newlink);
     });
-
     return newNetwork;
 }
 

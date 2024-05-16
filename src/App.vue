@@ -117,13 +117,17 @@ import { addClusterFromSources, getPathSourcesToTargetNode,getLongPathDFS } from
 import { RefSymbol } from "@vue/reactivity";
 import { BFS, BFSWithSources } from "@/composables/algoBFS";
 import { getSources } from "@/composables/rankAndSources";
+import { addBoldLinkMainChain } from "@/composables/useSubgraphs";
 
 
 
 
 // Variables --------------
 const network = ref<Network>({id: '', nodes: {}, links: []});
-const networkStyle = ref<GraphStyleProperties>({nodeStyles: {}, linkStyles: {}});
+const networkStyle = ref<GraphStyleProperties>({
+  nodeStyles: {}, 
+  linkStyles: {}
+});
 let svgProperties = reactive({});
 const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNode},{label:'Duplicate', action:duplicateNode},{label:'AddToCluster', action:addToCluster}])
 let undoFunction: any = reactive({});
@@ -162,6 +166,12 @@ async function callbackFunction() {
     ()=>{
       rescale(svgProperties);
     });
+
+    // set style
+    if (!("linkStyles" in networkStyle.value)){
+      networkStyle.value.linkStyles={}
+    }
+    networkStyle.value.linkStyles["mainChain"]={strokeWidth:3,stroke:"blue"};
 
 }
 
@@ -223,7 +233,7 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
       }
     ).then(
       () => {
-        //clusterNetwork = addNoConstraint(clusterNetwork);
+        clusterNetwork = addBoldLinkMainChain(clusterNetwork);
       }
     ).then(
       () => {
@@ -293,6 +303,7 @@ function algoForce(){
 
 
 async function clusterAlgorithm(algorithm:string) {
+    console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
       getOriginalNetwork().then(
         ()=>{
           if (algorithm === 'DFS') {
@@ -310,9 +321,11 @@ async function clusterAlgorithm(algorithm:string) {
 }
 
 async function getOriginalNetwork():Promise<void>{
+  console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
+
   clusterNetwork={network:network,attributs:{},clusters:{}};
   clusterNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
-  clusterNetwork.network.value=networkCopy(originalNetwork);
+  clusterNetwork.network.value=networkCopy(originalNetwork); 
 }
 
 

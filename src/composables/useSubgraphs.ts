@@ -63,3 +63,44 @@ export function addNoConstraint(clusterNetwork:ClusterNetwork):ClusterNetwork{
 
   return clusterNetwork;
 }
+
+export function addBoldLinkMainChain(clusterNetwork:ClusterNetwork):ClusterNetwork{
+    let network=clusterNetwork.network.value;
+    network.links.forEach(link=>{
+        let clusterSource: string[] = [];
+        let clusterTarget: string[] = [];
+        if ( Object.keys(link.source).includes("metadata") && Object.keys(link.source.metadata).includes("clusters")){
+            clusterSource= link.source.metadata?.clusters ? link.source.metadata.clusters as string[] : [];
+        }
+  
+        if ( Object.keys(link.target).includes("metadata") && Object.keys(link.target.metadata).includes("clusters")){
+            clusterTarget= link.target.metadata?.clusters ? link.target.metadata.clusters as string[] : [];
+        }        
+        let sameClusters=true;
+        // if same number of cluster, and in a cluster: let's check if there are the same
+        if (clusterTarget.length===clusterSource.length && clusterSource.length!==0){
+            clusterTarget.sort;
+            clusterSource.sort;
+            for (let i = 0; i < clusterTarget.length; ++i) {
+                if (clusterTarget[i] !== clusterSource[i]){
+                    sameClusters=false;
+                }
+            }
+        }else{
+            // if not the same number of cluster : the two nodes can't be in the exact same clusters
+            sameClusters=false;
+        }
+  
+        if (sameClusters){
+            if(!link.classes){
+                link.classes=[];
+            }
+            if (!("mainChain" in link.classes)){
+                link.classes.push("mainChain");
+            }
+        }
+    });
+  
+    return clusterNetwork;
+  }
+  
