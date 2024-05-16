@@ -221,7 +221,7 @@ function DistanceFromSourceDAG(graph:{[key:string]:Function}, topologicalOrderFr
             const childDistance= distanceFromSource[child];
             const newDistance=distanceFromSource[parent] + graph.getEdgeWeight(parent,child);
             if ( newDistance > childDistance) {
-                distanceFromSource[child] = childDistance;
+                distanceFromSource[child] = newDistance;
                 parentsFromSource[child].push(parent);
             }
         })
