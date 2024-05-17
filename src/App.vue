@@ -2,39 +2,62 @@
   <button v-on:click="rescale(svgProperties)">
     Rescale
   </button>
-  <input type="file" accept=".json" label="File input" v-on:change="loadFile" />
-  <button v-on:click="algoForce()">
-    ForceAlgo
-  </button>
-  <br>
-  <button v-on:click="newCluster()">
+  <input type="file" accept=".json" label="File input" v-on:change="loadFile" class="margin"/>
+  <button v-on:click="newCluster()" class="margin">
      New_Cluster
   </button>
-  <br>
-  <button v-on:click="ordering('default')">
-     Ordering default
+  
+  <button v-on:click="algoForce()" class="margin">
+    ForceAlgo
   </button>
-  <br>
-  <button v-on:click="ordering('out')">
-     Ordering out
+
+  <button v-on:click="getOriginalNetwork()" class="margin">
+      originalLayout
+    </button>
+  
+
+    <button v-on:click="clusterAlgorithm('DFS')" class="margin">
+      All_steps_with_DFS
+    </button>
+    <button v-on:click="clusterAlgorithm('DAG_Dijkstra')">
+      All_steps_with_DAG_Dijkstra
+    </button>
+ 
+
+
+  <div>
+  <button v-on:click="sourcesChoice('rank_only')" class="margin">
+     Rank_only
   </button>
-  <br>
-  <button v-on:click="ordering('in')">
-     Ordering in
+  <button v-on:click="sourcesChoice('rank_source')" class="margin"> 
+     Rank_source
   </button>
+  <button v-on:click="sourcesChoice('source_only')" class="margin">
+     Source_only
+  </button>
+</div>
+
+
+  <div>
+ 
+  <button v-on:click="ordering('default')" class="margin">
+     Ordering_default
+  </button>
+  
+  <button v-on:click="ordering('out')" class="margin">
+     Ordering_out
+  </button>
+ 
+  <button v-on:click="ordering('in')" class="margin">
+     Ordering_in
+  </button>
+</div>
+
+
   <h5>Number of crossings in the Network : {{ countIntersection(network) }}</h5>
   <h5>Number of isolated nodes : {{ countIsolatedNodes(network) }}</h5>
-  <br>
-  <br>
-  <button v-on:click="sourcesChoice('rank_only')">
-     Rank only
-  </button><br>
-  <button v-on:click="sourcesChoice('rank_source')">
-     Rank source
-  </button><br>
-  <button v-on:click="sourcesChoice('source_only')">
-     Source only
-  </button><br>
+  
+
   <NetworkComponent 
     v-on:contextmenu.prevent
     :network="network"
@@ -73,12 +96,12 @@ import { dagreLayout, vizLayout } from './composables/useLayout';
 import { removeSideCompounds } from "./composables/removeSideCompounds";
 import {chooseReversibleReaction, duplicateReversibleReactions} from "./composables/duplicateReversibleReactions"
 import {importNetworkFromFile,importNetworkFromURL} from "./composables/importNetwork"
-import { NetworkToSerialized } from "@/composables/networkToGraph";
+import { NetworkToSerialized, networkCopy } from "@/composables/networkToGraph";
 import { initZoom, rescale } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
 import {createCluster,addNodeCluster} from "./composables/UseClusterNetwork";
-import { customDFS, DFSWithSources } from "@/composables/algoDFS";
+import { DFSsourceDAG, DFSWithSources } from "@/composables/algoDFS";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
@@ -90,24 +113,30 @@ import { node } from "prop-types";
 import { Cluster } from "@/types/Cluster";
 import { ClusterNetwork } from "@/types/ClusterNetwork";
 import { SourceType } from "@/types/EnumArgs";
-import { addLonguestPathClusterFromSources } from "@/composables/chooseSubgraph";
+import { addClusterFromSources, getPathSourcesToTargetNode,getLongPathDFS } from "@/composables/chooseSubgraph";
 import { RefSymbol } from "@vue/reactivity";
 import { BFS, BFSWithSources } from "@/composables/algoBFS";
 import { getSources } from "@/composables/rankAndSources";
+import { addBoldLinkMainChain } from "@/composables/useSubgraphs";
 
 
 
 
 // Variables --------------
 const network = ref<Network>({id: '', nodes: {}, links: []});
-const networkStyle = ref<GraphStyleProperties>({nodeStyles: {}, linkStyles: {}});
+const networkStyle = ref<GraphStyleProperties>({
+  nodeStyles: {}, 
+  linkStyles: {}
+});
 let svgProperties = reactive({});
 const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNode},{label:'Duplicate', action:duplicateNode},{label:'AddToCluster', action:addToCluster}])
 let undoFunction: any = reactive({});
 //let clusters : Array<Cluster> =reactive([])
 //let attributGraphViz : AttributesViz=reactive({});
 let clusterNetwork:ClusterNetwork;
-let sourceTypePath:SourceType=SourceType.RANK_ONLY;
+let sourceTypePath:SourceType=SourceType.RANK_SOURCE;
+let getCluster=getPathSourcesToTargetNode;
+let originalNetwork:Network;
 
 // Functions --------------
 
@@ -120,13 +149,29 @@ function loadFile(event: Event) {
 
 
 async function callbackFunction() {
-  rescale(svgProperties);
 
   console.log('________New_graph__________');
   clusterNetwork={network:network,attributs:{},clusters:{}};
   clusterNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
-  removeSideCompounds(network.value,"/sideCompounds.txt");
-  console.log(network.value);
+
+  await removeSideCompounds(network.value,"/sideCompounds.txt").then(
+    ()=>{
+      originalNetwork=networkCopy(network.value);
+    }
+  ).then(
+    ()=>{
+      algoForce();
+    }
+  ).then(
+    ()=>{
+      rescale(svgProperties);
+    });
+
+    // set style
+    if (!("linkStyles" in networkStyle.value)){
+      networkStyle.value.linkStyles={}
+    }
+    networkStyle.value.linkStyles["mainChain"]={strokeWidth:3,stroke:"blue"};
 
 }
 
@@ -144,14 +189,13 @@ function keydownHandler(event: KeyboardEvent) {
   }else if (event.key =="r"){
     chooseReversibleReaction(network.value,SourceType.RANK_SOURCE_ALL,BFSWithSources);
   }else if (event.key =="p"){
-    console.log('create cluster longuest path');
-    clusterNetwork=addLonguestPathClusterFromSources(clusterNetwork,SourceType.RANK_ONLY);
+    clusterNetwork=addClusterFromSources(clusterNetwork,SourceType.RANK_ONLY,getCluster);
   } else if (event.key == "a"){
     allSteps(clusterNetwork,sourceTypePath);
   } else if (event.key == "f"){
     const sources=getSources(network.value,SourceType.RANK_ONLY);
-    const {dfs,crossEdge}=customDFS(network.value,sources);
-    console.log(crossEdge);
+    const {dfs,graph}=DFSsourceDAG(network.value,sources);
+    console.log(dfs);
   }
   else if (event.key == "b"){
     const sources=getSources(network.value,SourceType.RANK_ONLY);
@@ -159,6 +203,7 @@ function keydownHandler(event: KeyboardEvent) {
     bfs.forEach(node=>{
       console.log(network.value.nodes[node].label);
     })
+   
 
   }
 }
@@ -168,9 +213,11 @@ function rescaleAfterAction(){
   rescale(svgProperties);
 }
 
-async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType=SourceType.RANK_ONLY) {
+async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType=SourceType.RANK_ONLY):Promise<void> {
 
     let network=clusterNetwork.network.value;
+
+    console.log(sourceTypePath);
 
     await vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true).then(
       () => {
@@ -182,13 +229,18 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
       }
     ).then(
       () => {
-        clusterNetwork = addLonguestPathClusterFromSources(clusterNetwork, sourceTypePath);
+        clusterNetwork = addClusterFromSources(clusterNetwork, sourceTypePath,getCluster);
+      }
+    ).then(
+      () => {
+        clusterNetwork = addBoldLinkMainChain(clusterNetwork);
       }
     ).then(
       () => {
         vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, false, rescaleAfterAction);
       }
     )
+    console.log('-------------------');
 
 }
 
@@ -241,13 +293,41 @@ function sourcesChoice(sourcetype:string):void{
   else if (sourcetype==SourceType.SOURCE_ONLY){
     sourceTypePath=SourceType.SOURCE_ONLY;
   }
-  console.log(sourceTypePath);
   clusterNetwork.clusters={}; // temporaire, je reset les clusters pour pas ajouter les nouveaux aux vieux
 }
 
 function algoForce(){
+  console.log('Force');
   network.value=createStaticForceLayout(network.value);
 }
+
+
+async function clusterAlgorithm(algorithm:string) {
+    console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
+      getOriginalNetwork().then(
+        ()=>{
+          if (algorithm === 'DFS') {
+            getCluster = getLongPathDFS;
+          } else if (algorithm === 'DAG_Dijkstra') {
+            getCluster = getPathSourcesToTargetNode;
+          }
+          allSteps(clusterNetwork,sourceTypePath).then(
+            ()=>{
+              rescale(svgProperties)
+            }
+          );
+        }
+      );
+}
+
+async function getOriginalNetwork():Promise<void>{
+  console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
+
+  clusterNetwork={network:network,attributs:{},clusters:{}};
+  clusterNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
+  clusterNetwork.network.value=networkCopy(originalNetwork); 
+}
+
 
 function openContextMenu(Event: MouseEvent, nodeId: string) {
   UseContextMenu.showContextMenu(Event, nodeId);
@@ -255,5 +335,7 @@ function openContextMenu(Event: MouseEvent, nodeId: string) {
 </script><style>
 @import "@metabohub/viz-core/dist/style.css";
 @import "@metabohub/viz-context-menu/dist/style.css"; 
-
+.margin {
+  margin: 10px; 
+}
 </style>./composables/methode_to_try./composables/toNetwork./composables/convertToGraph./composables/networkToGraph./composables/graphToNetwork

@@ -43,20 +43,23 @@ export function DFSWithSources(network:Network, sources:Array<string>|SourceType
 
 
 /**
- * DFS with sources in input ...(function to change)
+ * Do a DFS from a source and remove the last edge of cycle to get a "source DAG". 
  * @param network 
  * @param sources to use as staring node for DFS
- * @returns ... (function to change)
+ * @returns the reverse dfs order (topological sort) and a graph object without the cycles accessible from the sources 
  */
-export function customDFS(network:Network, sources:Array<string>):{dfs:Array<string>,crossEdge:{[key:string]:Array<{source:string,target:string}>}} {
+export function DFSsourceDAG(network:Network, sources:Array<string>):{dfs:Array<string>, graph:{[key:string]:Function} } {
     let DFS=createGraphForDFS(network);
+
     sources.forEach(sourceID =>{
         const sourceIndex=DFS.nodesID.indexOf(sourceID);
-        if (sourceIndex!==-1 && !DFS.visitedFrom[sourceIndex]){
-            DFS=nodeDFS(DFS,sourceIndex,sourceID);           
+        // if the source exist in the network and it's not already visited : dfs from this source
+        if (sourceIndex!==-1 && !DFS.visited[sourceIndex]){
+            DFS=nodeDagDFS(DFS,sourceIndex,[]);           
         }
     });
-    return {dfs:DFS.dfsOrder,crossEdge:DFS.crossEdge};
+
+    return { dfs:DFS.dfsOrder.reverse(),graph:DFS.GDSgraph };
 }
 
 /**
@@ -68,36 +71,29 @@ function createGraphForDFS(network:Network):DFS{
     const nbNode=Object.keys(network.nodes).length;
     const graphGDS=NetworkToGDSGraph(network);
     return  {
-        time:0,
         dfsOrder: [], 
         GDSgraph: graphGDS,
         nodesID:graphGDS.nodes(),
-        visitedFrom:Array.from({ length: nbNode }, () => undefined),
-        start_time:Array.from({ length: nbNode }, () => undefined), // the first time the node is visited
-        end_time:Array.from({ length: nbNode }, () => undefined),    // time of visit when backward reading
-        crossEdge:{}
+        visited:Array.from({ length: nbNode }, () => false),
     }
 }
 
 /**
  * DFS from a node
- * @param DFS dfs object with visited nodes, times of visit ...
- * @param nodeIndex of the node for the dfs
- * @param sourceID id of the starting node of the 'first' DFS : allow to determine type of edge in the dfs graph from the source
- * @returns the DFS object with visited nodes, times of visit ...
+ * @param DFS dfs object with visited nodes, adjacent information ...
+ * @param nodeIndex of the node ro process
+ * @param currentPath the dfs path from the source to this node
+ * @returns the DFS object with visited nodes, adjacent information ...
  */
-function nodeDFS(DFS:DFS,nodeIndex:number,sourceID?:string):DFS{
-    //https://www.geeksforgeeks.org/tree-back-edge-and-cross-edges-in-dfs-of-graph/
-    
+function nodeDagDFS(DFS:DFS,nodeIndex:number,currentPath:number[]):DFS{
+
     // mark the node as visited
-    DFS.visitedFrom[nodeIndex] = sourceID?sourceID:DFS.nodesID[nodeIndex];
-    
-    // get the starting time for the node
-    DFS.start_time[nodeIndex] = DFS.time;
-    
-    // increment the time by 1
-    DFS.time += 1;
-    
+    DFS.visited[nodeIndex] = true;
+
+    // add node to current path (copy of path, else pointer)
+    const path=Array.from(currentPath);
+    path.push(nodeIndex)
+
     // loop through the children of the node
     DFS.GDSgraph.adjacent(DFS.nodesID[nodeIndex]).forEach(childID => {
 
@@ -106,65 +102,25 @@ function nodeDFS(DFS:DFS,nodeIndex:number,sourceID?:string):DFS{
         if(childIndex!==-1){
 
             // if the child node had never been visited : the edge is an tree edge
-            if (DFS.visitedFrom[childIndex] === undefined){
-            
-                // mark the edge as a tree edge
-                //console.log("Tree Edge: " + DFS.nodesID[nodeIndex] + "-->" + DFS.nodesID[childIndex]+"\n");
-                
+            if (!DFS.visited[childIndex]){
+
                 // dfs through the child node
-                DFS=nodeDFS(DFS,childIndex,sourceID);
+                DFS=nodeDagDFS(DFS,childIndex,path);
 
             } else { // if the child node had already been visited
-
-                // if this node had been visited for the first time after his child node
-                // and child has no endtime 
-                // => back edge 
-                // if ( DFS.start_time[nodeIndex] > DFS.start_time[childIndex] && DFS.end_time[childIndex]===undefined){
-                //     console.log("Back Edge: " + DFS.nodesID[nodeIndex] + "-->" + DFS.nodesID[childIndex]+"\n");
-                // }
-                    
-                // if this node is an ancestor of the child node, but not a tree edge
-                // i.e node first visited before his child
-                // and child has  endtime 
-                // => forward edge
-                // else if ( DFS.start_time[nodeIndex] < DFS.start_time[childIndex] && DFS.end_time[childIndex] !== undefined) {
-                //     console.log("Forward Edge: " + DFS.nodesID[nodeIndex] + "-->" + DFS.nodesID[childIndex]+"\n");
-                // }  
-            
-                // if parent and neighbour node do not 
-                // have any ancestor and descendant relationship between them
-                // if this node had been visited for the first time after his child node
-                // and child has endtime 
-                // => cross edge either between path of 2 sources, or between the same (so cycle for the source)
-
-                //else 
-                if (DFS.start_time[nodeIndex] > DFS.start_time[childIndex] && DFS.end_time[childIndex] !== undefined) {
-                    //console.log("Cross Edge: " + DFS.nodesID[nodeIndex] + "-->" + DFS.nodesID[childIndex]+"\n");
-
-                    // if the child had been visited for the first time with the same source node : it is the type of cross edge wanted
-                    if (DFS.visitedFrom[childIndex]===sourceID){ 
-                        const key=sourceID? sourceID: DFS.nodesID[nodeIndex];
-                        if (!(key in DFS.crossEdge)){
-                            DFS.crossEdge[key]=[];
-                        }
-                        DFS.crossEdge[key].push({source:DFS.nodesID[nodeIndex],target:childID});
-                    }
+                // and that the node is in the current path : there is a cycle
+                if(path.includes(childIndex)){
+                    const parentID=DFS.nodesID[nodeIndex];
+                    DFS.GDSgraph.removeEdge(parentID,childID)
                 }
-
-  
+                
             }
         }
     });
     
-    // get the ending time for the node
-    DFS.end_time[nodeIndex] = DFS.time;
-
     // add the node to the dfs order
     DFS.dfsOrder.push(DFS.nodesID[nodeIndex]); 
     
-    // increment the time by 1
-    DFS.time += 1;
-
     return DFS;
 }
     
