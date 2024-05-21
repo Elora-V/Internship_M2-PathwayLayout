@@ -20,13 +20,14 @@ import { BFS } from "./algoBFS";
  * SOURCE_ALL : sources are topological sources, then all the others nodes
  * RANK_SOURCE_ALL : sources are node of rank 0, then topological sources, then all the other nodes
  * For this function, the advised choice is either RANK_ONLY, SOURCE_ONLY or RANK_SOURCE.
- * @param merge if true, merge the path with an existing one if a common node is found, else common nodes in several clusters
  * @param getClusters function that return the clusters to add
+ * @param merge if true, merge the path with an existing one if a common node is found, else common nodes in several clusters
  * @param minHeight minimum size of a cluster to be added
  * @returns the clusterNetwork with more cluster
  */
-export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Array<string> | SourceType, merge:boolean=true,
+export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Array<string> | SourceType, 
     getClusters:(network: Network, sources: Array<string>,merge?:boolean) => {[key:string]:{nodes:Array<string>, height:number}}=getPathSourcesToTargetNode,
+    merge:boolean=true,
     minHeight:number=4
 ):ClusterNetwork{
 

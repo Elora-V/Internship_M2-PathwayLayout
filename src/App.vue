@@ -23,7 +23,14 @@
       All_steps_with_DAG_Dijkstra
     </button>
  
+    <button v-on:click="mergeChoice('true')" class="margin">
+      merge
+    </button>
 
+    <button v-on:click="mergeChoice('false')" class="margin">
+      No_merge
+    </button>
+  
 
   <div>
   <button v-on:click="sourcesChoice('rank_only')" class="margin">
@@ -137,6 +144,7 @@ let clusterNetwork:ClusterNetwork;
 let sourceTypePath:SourceType=SourceType.RANK_SOURCE;
 let getCluster=getPathSourcesToTargetNode;
 let originalNetwork:Network;
+let merge:boolean=true;
 
 // Functions --------------
 
@@ -229,7 +237,7 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
       }
     ).then(
       () => {
-        clusterNetwork = addClusterFromSources(clusterNetwork, sourceTypePath,getCluster);
+        clusterNetwork = addClusterFromSources(clusterNetwork, sourceTypePath,getCluster, merge);
       }
     ).then(
       () => {
@@ -294,6 +302,16 @@ function sourcesChoice(sourcetype:string):void{
     sourceTypePath=SourceType.SOURCE_ONLY;
   }
   clusterNetwork.clusters={}; // temporaire, je reset les clusters pour pas ajouter les nouveaux aux vieux
+}
+
+function mergeChoice(value) {
+    if (value === 'true') {
+        merge = true;
+    } else if (value === 'false') {
+        merge = false;
+    } else {
+        console.error('Invalid argument. Expected "true" or "false".');
+    }
 }
 
 function algoForce(){
