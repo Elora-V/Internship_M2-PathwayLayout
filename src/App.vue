@@ -126,7 +126,7 @@ import { networkCopy } from "@/composables/networkToGraph";
 import { initZoom, rescale } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
-import {createCluster,addNodeCluster} from "./composables/UseClusterNetwork";
+import {addNodeTocluster, createCluster,} from "./composables/UseClusterNetwork";
 import { DFSsourceDAG, DFSWithSources } from "@/composables/algoDFS";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 
@@ -138,7 +138,7 @@ import { ContextMenu } from "@metabohub/viz-context-menu";
 import { node } from "prop-types";
 import { ClusterNetwork } from "@/types/ClusterNetwork";
 import { SourceType } from "@/types/EnumArgs";
-import { addClusterFromSources, getPathSourcesToTargetNode,getLongPathDFS } from "@/composables/chooseSubgraph";
+import { addClusterFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/chooseSubgraph";
 import { RefSymbol } from "@vue/reactivity";
 import { BFSWithSources } from "@/composables/algoBFS";
 import { getSources } from "@/composables/rankAndSources";
@@ -343,6 +343,10 @@ await vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true
   }
 ).then(
   () => {
+    clusterNetwork= addMiniBranchToMainChain(clusterNetwork);
+  }
+).then(
+  () => {
     clusterNetwork = addBoldLinkMainChain(clusterNetwork);
   }
 ).then(
@@ -415,7 +419,7 @@ function addToCluster() {
     newCluster();
     numberCluster+=1;
   }
-  clusterNetwork.clusters[String(numberCluster-1)]=addNodeCluster(clusterNetwork.clusters[String(numberCluster-1)],menuProps.targetElement); 
+  clusterNetwork=addNodeTocluster(clusterNetwork,String(numberCluster-1),menuProps.targetElement); 
 }
 
 

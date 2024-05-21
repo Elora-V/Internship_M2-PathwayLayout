@@ -8,6 +8,7 @@ import { getSources } from "./rankAndSources";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { BFS } from "./algoBFS";
 import type {Cluster} from "@/types/Cluster";
+import { updateNodeMetadataCluster, addNodeTocluster } from './UseClusterNetwork';
 
 
 /**
@@ -58,14 +59,7 @@ export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Arr
             clusterNetwork.clusters[clusterID]=newCluster;
             // add metadata for node in cluster
             cluster.nodes.forEach(nodeID=>{
-                if (! ("metadata" in network.nodes[nodeID]) ){
-                    network.nodes[nodeID].metadata={};
-                }
-                if (!("clusters" in network.nodes[nodeID].metadata)){
-                    network.nodes[nodeID].metadata.clusters=[]
-                }
-               const clusters=network.nodes[nodeID].metadata.clusters as Array<string>;
-               clusters.push(clusterID);
+                updateNodeMetadataCluster(network, nodeID, clusterID);
             });
         }
     });
@@ -74,14 +68,42 @@ export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Arr
 }
 
 
-export function addMiniBranchToMainChain(clusterNetwork:ClusterNetwork){
+/**
+ * Adds mini branches to the main chain in the cluster network.
+ * A mini branch is a child of a node in main chain cluster that has no children.
+ * @param clusterNetwork - The cluster network to modify.
+ * @returns The modified cluster network.
+ */
+export function addMiniBranchToMainChain(clusterNetwork:ClusterNetwork):ClusterNetwork{
+    console.log('add mini branch to main chain');
+    const network=clusterNetwork.network.value;
+    const graph=NetworkToGDSGraph(network);  
+    // for each cluster :
     Object.entries(clusterNetwork.clusters).forEach(([clusterID,cluster]:[string,Cluster]) => {
+        const nodesToAdd:string[]=[];
+        // for each node of the cluster :
         cluster.nodes.forEach(node=>{
-
+            const children=graph.adjacent(node);
+            children.forEach(child=>{
+                // if child is sink : 
+                if (graph.outdegree(child)===0){
+                    // it's a mini branch, so add it to the list
+                    if (!nodesToAdd.includes(child)) {
+                        nodesToAdd.push(child);
+                    }
+                }
+            });
         });
-        
+        // add the nodes to the cluster
+        nodesToAdd.forEach(nodeID=>{
+            clusterNetwork = addNodeTocluster(clusterNetwork,clusterID,nodeID);  
+        });
     });
+    return clusterNetwork;
 }
+
+
+
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------
 // ---------------------------------------------- Method 1 of getCluster for main chains ---------------------------------------------------------
