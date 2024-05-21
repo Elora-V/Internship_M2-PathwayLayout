@@ -1,18 +1,11 @@
+import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
+
 export interface JSONGraphFormat {
     graph: {
         id: any;
         type: string;
         metadata: {
-            style: {
-                nodeStyles: {
-                    /*
-                    metabolite: {};
-                    reaction: {};
-                    reversible: {};
-                    reversibleVersion: {};
-                    */
-                };
-            };
+            style:GraphStyleProperties;
         };
         nodes: {
             [x: string]: {
