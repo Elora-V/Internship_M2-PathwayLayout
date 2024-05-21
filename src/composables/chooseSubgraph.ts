@@ -21,12 +21,12 @@ import { BFS } from "./algoBFS";
  * RANK_SOURCE_ALL : sources are node of rank 0, then topological sources, then all the other nodes
  * For this function, the advised choice is either RANK_ONLY, SOURCE_ONLY or RANK_SOURCE.
  * @param getClusters function that return the clusters to add
- * @param minsize minimum size of a cluster to be added
+ * @param minHeight minimum size of a cluster to be added
  * @returns the clusterNetwork with more cluster
  */
 export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Array<string> | SourceType,
-    getClusters:(network: Network, sources: Array<string>) => {[key:string]:Array<string>}=getPathSourcesToTargetNode,
-    minsize:number=4
+    getClusters:(network: Network, sources: Array<string>) => {[key:string]:{nodes:Array<string>, height:number}}=getPathSourcesToTargetNode,
+    minHeight:number=4
 ):ClusterNetwork{
 
     console.log('create cluster longest path');
@@ -41,13 +41,13 @@ export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Arr
     const newClusters=getClusters(network,sources as string[]);
 
     // add cluster if length > minsize, and add information of cluster for nodes
-    Object.entries(newClusters).forEach(([clusterID,nodesCluster]:[string,Array<string>])=>{
-        if (nodesCluster.length >= minsize){
+    Object.entries(newClusters).forEach(([clusterID,cluster]:[string,{nodes:Array<string>, height:number}])=>{
+        if (cluster.height >= minHeight){
             // create cluster and add it
-            const cluster= createCluster(clusterID, RankEnum.EMPTY, nodesCluster,[]);
-            clusterNetwork.clusters[clusterID]=cluster;
+            const newCluster= createCluster(clusterID, RankEnum.EMPTY, cluster.nodes,[]);
+            clusterNetwork.clusters[clusterID]=newCluster;
             // add metadata for node in cluster
-            nodesCluster.forEach(nodeID=>{
+            cluster.nodes.forEach(nodeID=>{
                 if (! ("metadata" in network.nodes[nodeID]) ){
                     network.nodes[nodeID].metadata={};
                 }
@@ -74,7 +74,7 @@ export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Arr
  * @param sources to use for DFS
  * @returns some node clusters with id
  */
-export function getLongPathDFS(network:Network,sources:string[]):{[key:string]:Array<string>}{ 
+export function getLongPathDFS(network:Network,sources:string[]):{[key:string]:{nodes:Array<string>, height:number}}{ 
     console.log('DFS long path');
     // create graph for library from network 
     const graph=NetworkToGDSGraph(network);  
@@ -100,11 +100,11 @@ export function getLongPathDFS(network:Network,sources:string[]):{[key:string]:A
  * 
  * @returns an object for the different path, the key is the source of the path
  */
-function longestPathFromDFS(graph:{[key:string]:Function},DFSreversed:Array<string>,sources:Array<string>):{[key:string]:Array<string>}{
+function longestPathFromDFS(graph:{[key:string]:Function},DFSreversed:Array<string>,sources:Array<string>):{[key:string]:{nodes:Array<string>, height:number}}{
 
     let dfs = Array.from(DFSreversed).reverse(); // the code has been done whith a backward reading of dfs
 
-    let longestPaths:{[key:string]:Array<string>}={};
+    let longestPaths:{[key:string]:{nodes:Array<string>, height:number}}={};
     let path:Array<string>;
     let source:string=undefined;
     let i=dfs.length-1; // index of node in dfs array
@@ -126,7 +126,7 @@ function longestPathFromDFS(graph:{[key:string]:Function},DFSreversed:Array<stri
 
             // define new source and add to path
             source = visitedNode;
-            longestPaths[source]=[source];
+            longestPaths[source]={nodes:[source],height:1};
             add=true;
             path=[source];
         
@@ -172,10 +172,10 @@ function nodeIsChildOf(graph:{[key:string]:Function},node:string, parentNode:str
  * @param path the path to check
  * @returns the new longest paths
  */
-function endPath(source:string, longestPaths:{[key:string]:Array<string>},path:Array<string>):{[key:string]:Array<string>}{
+function endPath(source:string, longestPaths:{[key:string]:{nodes:Array<string>, height:number}},path:Array<string>):{[key:string]:{nodes:Array<string>, height:number}}{
     if (source in longestPaths){
-        if(longestPaths[source].length < path.length){
-            longestPaths[source]=path.slice();
+        if(longestPaths[source].height < path.length){
+            longestPaths[source]={nodes:path.slice(),height:path.length};
         }
     }else{
         console.error("source key not in object")
@@ -195,11 +195,11 @@ function endPath(source:string, longestPaths:{[key:string]:Array<string>},path:A
  * @param sources to use for the paths
  * @returns some node clusters with id
  */
-export function getPathSourcesToTargetNode(network:Network, sources:string[]):{[key:string]:Array<string>}{
+export function getPathSourcesToTargetNode(network:Network, sources:string[]):{[key:string]:{nodes:Array<string>, height:number}}{
 
     console.log('DAG_Dijkstra');
 
-    let pathsFromSources:{[key:string]:Array<string>}={}
+    let pathsFromSources:{[key:string]:{nodes:Array<string>, height:number}}={};
 
     // for each source : do an independant dfs
     sources.forEach(source=>{
@@ -210,9 +210,9 @@ export function getPathSourcesToTargetNode(network:Network, sources:string[]):{[
         // get the farthest node from source (node with max distance)
         const targetNode=findMaxKey(distances);
         // get the parents that goes from source to target node 
-        const nodesBetweenSourceTarget=BFS(parents,targetNode);
+        const nodesBetweenSourceTarget=BFS(parents,targetNode.key);
         // merge with an existing path if node in common
-        pathsFromSources=mergeNewPath(source,nodesBetweenSourceTarget,pathsFromSources);
+        pathsFromSources=mergeNewPath(source,{nodes:nodesBetweenSourceTarget, height:targetNode.max},pathsFromSources);
     })
     return pathsFromSources;
 }
@@ -257,9 +257,9 @@ function DistanceFromSourceDAG(graph:{[key:string]:Function}, topologicalOrderFr
 /**
  * Find the key associated with the maximum value in the object.
  * @param obj The object containing key-value pairs.
- * @returns The key associated with the maximum value, or undefined if the object is empty.
+ * @returns The key associated with the maximum value (or undefined if the object is empty) and the max value.
  */
-function findMaxKey(obj: { [key: string]: number }): string | undefined {
+function findMaxKey(obj: { [key: string]: number }): {key:string|undefined,max:number} {
     let maxKey: string | undefined;
     let maxValue = -Infinity;
 
@@ -270,7 +270,7 @@ function findMaxKey(obj: { [key: string]: number }): string | undefined {
         }
     });
 
-    return maxKey;
+    return {key:maxKey,max:maxValue};
 }
 
 /**
@@ -279,27 +279,31 @@ function findMaxKey(obj: { [key: string]: number }): string | undefined {
  * @param source source node use to get the longest path from a source DAG
  * @param newPath path to add in the object with all paths
  * @param pathsFromSources object with all paths (array of node id with an path id)
+ * @param [merge=true] if true, merge the path with an existing one if a common node is found
  * @returns all paths including the new one
  */
-function mergeNewPath(source:string,newPath:string[],pathsFromSources:{[key:string]:string[]}):{[key:string]:string[]}{
+function mergeNewPath(source:string,newPath:{nodes:Array<string>, height:number},pathsFromSources:{[key:string]:{nodes:Array<string>, height:number}}, merge:boolean=true):{[key:string]:{nodes:Array<string>, height:number}}{
     const keys=Object.keys(pathsFromSources);
     let hasmerged=false;
-    keys.forEach(key=>{
-        const keyPath = pathsFromSources[key];
-        // Check for common nodes
-        const commonNodes = keyPath.find(node => newPath.includes(node));
-        if (commonNodes) {
-            // Merge paths
-            const mergedPath = Array.from(new Set(keyPath.concat(newPath)));
-            // Create new key
-            const newKey = `${key}--${source}`;
-            // Update pathsFromSources object
-            pathsFromSources[newKey] = mergedPath;
-            // Remove old key
-            delete pathsFromSources[key];
-            hasmerged=true;
-        }
-    });
+    if (merge) {
+        keys.forEach(key=>{
+            const pathNodes = pathsFromSources[key].nodes;
+            // Check for common nodes
+            const commonNodes = pathNodes.find(node => newPath.nodes.includes(node));
+            if (commonNodes) {
+                // Merge paths
+                const mergedPath = Array.from(new Set(pathNodes.concat(newPath.nodes)));
+                // Create new key
+                const newKey = `${key}--${source}`;
+                // Update pathsFromSources object
+                const newheight=newPath.height>pathsFromSources[key].height?newPath.height:pathsFromSources[key].height;
+                pathsFromSources[newKey] = {nodes:mergedPath,height:newheight};
+                // Remove old key
+                delete pathsFromSources[key];
+                hasmerged=true;
+            }
+        });
+    }
     // if no merge : added on it's own
     if (!hasmerged){
         pathsFromSources[source]=newPath;
