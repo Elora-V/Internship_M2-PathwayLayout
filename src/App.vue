@@ -302,30 +302,30 @@ function algoForce(){
 }
 
 
-async function clusterAlgorithm(algorithm:string) {
+async function clusterAlgorithm(algorithm:string):Promise<void> {
     console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
-      getOriginalNetwork().then(
-        ()=>{
-          if (algorithm === 'DFS') {
-            getCluster = getLongPathDFS;
-          } else if (algorithm === 'DAG_Dijkstra') {
-            getCluster = getPathSourcesToTargetNode;
-          }
-          allSteps(clusterNetwork,sourceTypePath).then(
-            ()=>{
-              rescale(svgProperties)
-            }
-          );
+
+      clusterNetwork=getOriginalNetwork();
+
+        if (algorithm === 'DFS') {
+          getCluster = getLongPathDFS;
+        } else if (algorithm === 'DAG_Dijkstra') {
+          getCluster = getPathSourcesToTargetNode;
         }
-      );
+        allSteps(clusterNetwork,sourceTypePath).then(
+          ()=>{
+            rescale(svgProperties)
+          }
+        );
+        
 }
 
-async function getOriginalNetwork():Promise<void>{
+function getOriginalNetwork():ClusterNetwork{
   console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
 
-  clusterNetwork={network:network,attributs:{},clusters:{}};
-  clusterNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
-  clusterNetwork.network.value=networkCopy(originalNetwork); 
+  clusterNetwork.clusters={};
+  network.value=networkCopy(originalNetwork); 
+  return clusterNetwork;
 }
 
 
