@@ -258,9 +258,9 @@ export function getPathSourcesToTargetNode(network:Network, sources:string[],mer
         const targetNodes=findMaxKeys(distances);
         // for each target node : (if several path wanted)
         if (pathType==PathType.ALL_LONGEST || pathType==PathType.ALL){
-            targetNodes.key.forEach(node => {
+            targetNodes.key.forEach(target => {
                 // get the parents that goes from source to target node 
-                const nodesBetweenSourceTarget=BFS(parents,node);
+                const nodesBetweenSourceTarget=BFS(parents,target);
                 // merge with an existing path if node in common
                 pathsFromSources=mergeNewPath(source,targetNodes.key,{nodes:nodesBetweenSourceTarget, height:targetNodes.max},pathsFromSources,merge);
             });
@@ -364,7 +364,7 @@ function mergeNewPath(source:string,targetNodes:string[],newPath:{nodes:Array<st
         keys.forEach(key=>{
             const pathNodes = pathsFromSources[key].nodes;
             // Check for common nodes, but target nodes
-            const commonNodes = pathNodes.find(node => newPath.nodes.includes(node) && !targetNodes.includes(node));
+            const commonNodes = pathNodes.find(node => newPath.nodes.includes(node));
             if (commonNodes) {
                 // Merge paths
                 const mergedPath = Array.from(new Set(pathNodes.concat(newPath.nodes)));
