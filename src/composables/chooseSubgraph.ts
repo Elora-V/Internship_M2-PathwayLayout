@@ -20,12 +20,13 @@ import { BFS } from "./algoBFS";
  * SOURCE_ALL : sources are topological sources, then all the others nodes
  * RANK_SOURCE_ALL : sources are node of rank 0, then topological sources, then all the other nodes
  * For this function, the advised choice is either RANK_ONLY, SOURCE_ONLY or RANK_SOURCE.
+ * @param merge if true, merge the path with an existing one if a common node is found, else common nodes in several clusters
  * @param getClusters function that return the clusters to add
  * @param minHeight minimum size of a cluster to be added
  * @returns the clusterNetwork with more cluster
  */
-export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Array<string> | SourceType,
-    getClusters:(network: Network, sources: Array<string>) => {[key:string]:{nodes:Array<string>, height:number}}=getPathSourcesToTargetNode,
+export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Array<string> | SourceType, merge:boolean=true,
+    getClusters:(network: Network, sources: Array<string>,merge?:boolean) => {[key:string]:{nodes:Array<string>, height:number}}=getPathSourcesToTargetNode,
     minHeight:number=4
 ):ClusterNetwork{
 
@@ -38,7 +39,7 @@ export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Arr
     }
 
     // get cluster of paths from sources
-    const newClusters=getClusters(network,sources as string[]);
+    const newClusters=getClusters(network,sources as string[],merge);
 
     // add cluster if length > minsize, and add information of cluster for nodes
     Object.entries(newClusters).forEach(([clusterID,cluster]:[string,{nodes:Array<string>, height:number}])=>{
@@ -193,9 +194,10 @@ function endPath(source:string, longestPaths:{[key:string]:{nodes:Array<string>,
  * If several sources have nodes in common in their longest path (from the DAG), then there are merged in one path.
  * @param network 
  * @param sources to use for the paths
+ * @param merge if true, merge the path with an existing one if a common node is found, else common nodes in several clusters
  * @returns some node clusters with id
  */
-export function getPathSourcesToTargetNode(network:Network, sources:string[]):{[key:string]:{nodes:Array<string>, height:number}}{
+export function getPathSourcesToTargetNode(network:Network, sources:string[],merge:boolean=true):{[key:string]:{nodes:Array<string>, height:number}}{
 
     console.log('DAG_Dijkstra');
 
@@ -212,7 +214,7 @@ export function getPathSourcesToTargetNode(network:Network, sources:string[]):{[
         // get the parents that goes from source to target node 
         const nodesBetweenSourceTarget=BFS(parents,targetNode.key);
         // merge with an existing path if node in common
-        pathsFromSources=mergeNewPath(source,{nodes:nodesBetweenSourceTarget, height:targetNode.max},pathsFromSources);
+        pathsFromSources=mergeNewPath(source,{nodes:nodesBetweenSourceTarget, height:targetNode.max},pathsFromSources,merge);
     })
     return pathsFromSources;
 }
