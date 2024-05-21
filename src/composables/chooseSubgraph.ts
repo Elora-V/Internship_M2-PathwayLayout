@@ -222,12 +222,23 @@ export function getPathSourcesToTargetNode(network:Network, sources:string[],mer
         // get max distance from source node for all nodes, and by which parent nodes the node had been accessed
         const {distances, parents}=DistanceFromSourceDAG(graph,dfs,pathType);
         // get the farthest node from source (node with max distance)
-        const targetNode=findMaxKey(distances);
-        // get the parents that goes from source to target node 
-        const nodesBetweenSourceTarget=BFS(parents,targetNode.key);
-        // merge with an existing path if node in common
-        pathsFromSources=mergeNewPath(source,{nodes:nodesBetweenSourceTarget, height:targetNode.max},pathsFromSources,merge);
-    })
+        const targetNodes=findMaxKeys(distances);
+        // for each target node : (if several path wanted)
+        if (pathType==PathType.ALL_LONGEST || pathType==PathType.ALL){
+            targetNodes.key.forEach(node => {
+                // get the parents that goes from source to target node 
+                const nodesBetweenSourceTarget=BFS(parents,node);
+                // merge with an existing path if node in common
+                pathsFromSources=mergeNewPath(source,{nodes:nodesBetweenSourceTarget, height:targetNodes.max},pathsFromSources,merge);
+            });
+        } else  if(pathType==PathType.LONGEST){ // if only one path wanted : take the first
+            // get the parents that goes from source to target node 
+            const nodesBetweenSourceTarget=BFS(parents,targetNodes[0]);
+            // merge with an existing path if node in common
+            pathsFromSources=mergeNewPath(source,{nodes:nodesBetweenSourceTarget, height:targetNodes.max},pathsFromSources,merge);
+        }
+            
+    });      
     return pathsFromSources;
 }
 
@@ -282,22 +293,25 @@ function DistanceFromSourceDAG(graph:{[key:string]:Function}, topologicalOrderFr
 }
 
 /**
- * Find the key associated with the maximum value in the object.
+ * Find the keys associated with the maximum value in the object.
  * @param obj The object containing key-value pairs.
- * @returns The key associated with the maximum value (or undefined if the object is empty) and the max value.
+ * @returns The keys associated with the maximum value (or undefined if the object is empty) and the max value.
  */
-function findMaxKey(obj: { [key: string]: number }): {key:string|undefined,max:number} {
-    let maxKey: string | undefined;
+function findMaxKeys(obj: { [key: string]: number }): {key:string[]|undefined,max:number} {
+    let maxKeys: string[] | undefined;
     let maxValue = -Infinity;
 
     Object.entries(obj).forEach(([key, value]) => {
         if (value > maxValue) {
             maxValue = value;
-            maxKey = key;
+            maxKeys = [key];
+        }
+        if (value == maxValue){
+            maxKeys.push(key);
         }
     });
 
-    return {key:maxKey,max:maxValue};
+    return {key:maxKeys,max:maxValue};
 }
 
 /**

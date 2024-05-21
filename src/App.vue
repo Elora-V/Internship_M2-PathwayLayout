@@ -2,57 +2,58 @@
   <button v-on:click="rescale(svgProperties)">
     Rescale
   </button>
-  <input type="file" accept=".json" label="File input" v-on:change="loadFile" class="margin"/>
+  <input type="file" accept=".json" label="File input" v-on:change="loadFile" class=" margin"/>
   <button v-on:click="newCluster()" class="margin">
      New_Cluster
   </button>
   
-  <button v-on:click="algoForce()" class="margin">
+  <button v-on:click="algoForce()" class="styled-button">
     ForceAlgo
   </button>
 
-  <button v-on:click="getOriginalNetwork()" class="margin">
+  <button v-on:click="getOriginalNetwork()" class="styled-button">
       originalLayout
     </button>
-  
 
-    <button v-on:click="clusterAlgorithm('DFS')" class="margin">
+
+    <button v-on:click="clusterAlgorithm('DFS')" class="styled-button">
       All_steps_with_DFS
     </button>
-    <button v-on:click="clusterAlgorithm('DAG_Dijkstra')">
+    <button v-on:click="clusterAlgorithm('DAG_Dijkstra')" class="styled-button bold">
       All_steps_with_DAG_Dijkstra
     </button>
- 
-    <button v-on:click="mergeChoice(true)" class="margin">
-      merge
-    </button>
 
-    <button v-on:click="mergeChoice(false)" class="margin">
-      No_merge
-    </button>
   
 
     <div>
-    <button @click="setPathType(PathType.LONGEST)" class="margin">
+    <button @click="setPathType(PathType.LONGEST)" class="styled-button">
       Longest
     </button>
-    <button @click="setPathType(PathType.ALL_LONGEST)" class="margin"> 
+    <button @click="setPathType(PathType.ALL_LONGEST)" class="styled-button"> 
       All Longest
     </button>
-    <button @click="setPathType(PathType.ALL)" class="margin">
+    <button @click="setPathType(PathType.ALL)" class="styled-button">
       All
+    </button>
+    <span class="bold margin">|</span>
+    <button v-on:click="mergeChoice(true)" class="styled-button">
+      merge
+    </button>
+
+    <button v-on:click="mergeChoice(false)" class="styled-button">
+      No_merge
     </button>
   </div>
 
 
   <div>
-  <button v-on:click="sourcesChoice('rank_only')" class="margin">
+  <button v-on:click="sourcesChoice('rank_only')" class="styled-button">
      Rank_only
   </button>
-  <button v-on:click="sourcesChoice('rank_source')" class="margin"> 
+  <button v-on:click="sourcesChoice('rank_source')" class="styled-button"> 
      Rank_source
   </button>
-  <button v-on:click="sourcesChoice('source_only')" class="margin">
+  <button v-on:click="sourcesChoice('source_only')" class="styled-button">
      Source_only
   </button>
 </div>
@@ -60,15 +61,15 @@
 
   <div>
  
-  <button v-on:click="ordering('default')" class="margin">
+  <button v-on:click="ordering('default')" class="styled-button">
      Ordering_default
   </button>
   
-  <button v-on:click="ordering('out')" class="margin">
+  <button v-on:click="ordering('out')" class="styled-button">
      Ordering_out
   </button>
  
-  <button v-on:click="ordering('in')" class="margin">
+  <button v-on:click="ordering('in')" class="styled-button">
      Ordering_in
   </button>
 </div>
@@ -373,5 +374,21 @@ function openContextMenu(Event: MouseEvent, nodeId: string) {
 @import "@metabohub/viz-context-menu/dist/style.css"; 
 .margin {
   margin: 10px; 
+}
+.bold{
+  font-weight: bold;
+}
+.styled-button {
+  background-color: #a1dcff; /* Green */
+  border: none;
+  color: black;
+  padding: 5px 5px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
 }
 </style>./composables/methode_to_try./composables/toNetwork./composables/convertToGraph./composables/networkToGraph./composables/graphToNetwork
