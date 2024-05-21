@@ -76,22 +76,25 @@ export function addBoldLinkMainChain(clusterNetwork:ClusterNetwork):ClusterNetwo
         if ( Object.keys(link.target).includes("metadata") && Object.keys(link.target.metadata).includes("clusters")){
             clusterTarget= link.target.metadata?.clusters ? link.target.metadata.clusters as string[] : [];
         }        
-        let sameClusters=true;
-        // if same number of cluster, and in a cluster: let's check if there are the same
-        if (clusterTarget.length===clusterSource.length && clusterSource.length!==0){
-            clusterTarget.sort;
-            clusterSource.sort;
-            for (let i = 0; i < clusterTarget.length; ++i) {
-                if (clusterTarget[i] !== clusterSource[i]){
-                    sameClusters=false;
-                }
-            }
-        }else{
-            // if not the same number of cluster : the two nodes can't be in the exact same clusters
-            sameClusters=false;
-        }
-  
-        if (sameClusters){
+        // let sameClusters=true;
+        // // if same number of cluster, and in a cluster: let's check if there are the same
+        // if (clusterTarget.length===clusterSource.length && clusterSource.length!==0){
+        //     clusterTarget.sort;
+        //     clusterSource.sort;
+        //     for (let i = 0; i < clusterTarget.length; ++i) {
+        //         if (clusterTarget[i] !== clusterSource[i]){
+        //             sameClusters=false;
+        //         }
+        //     }
+        // }else{
+        //     // if not the same number of cluster : the two nodes can't be in the exact same clusters
+        //     sameClusters=false;
+        // }
+
+        // Check if there is at least one common cluster
+        let commonCluster = clusterSource.some(cluster => clusterTarget.includes(cluster));
+
+        if (commonCluster){ 
             if(!link.classes){
                 link.classes=[];
             }
