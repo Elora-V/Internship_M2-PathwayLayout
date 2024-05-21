@@ -1,5 +1,5 @@
 import { RankEnum } from "@/types/Cluster";
-import { SourceType } from "@/types/EnumArgs";
+import { PathType, SourceType, pathType, pathType } from "@/types/EnumArgs";
 import { DFSWithSources, DFSsourceDAG } from "./algoDFS";
 import { NetworkToGDSGraph } from "./networkToGraph";
 import { ClusterNetwork } from "@/types/ClusterNetwork";
@@ -22,12 +22,19 @@ import { BFS } from "./algoBFS";
  * For this function, the advised choice is either RANK_ONLY, SOURCE_ONLY or RANK_SOURCE.
  * @param getClusters function that return the clusters to add
  * @param merge if true, merge the path with an existing one if a common node is found, else common nodes in several clusters
+ *  => not taken by all methods of getCluster
+ * @param pathType the type of path to target node wanted :
+ * LONGEST :  one of the longest path
+ * ALL_LONGEST : all the longest lenght
+ * ALL : all path
+ * => not taken by all methods of getCluster
  * @param minHeight minimum size of a cluster to be added
  * @returns the clusterNetwork with more cluster
  */
 export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Array<string> | SourceType, 
-    getClusters:(network: Network, sources: Array<string>,merge?:boolean) => {[key:string]:{nodes:Array<string>, height:number}}=getPathSourcesToTargetNode,
+    getClusters:(network: Network, sources: Array<string>,merge?:boolean,pathType?:PathType) => {[key:string]:{nodes:Array<string>, height:number}}=getPathSourcesToTargetNode,
     merge:boolean=true,
+    pathType:PathType=PathType.ALL_LONGEST,
     minHeight:number=4
 ):ClusterNetwork{
 
@@ -40,7 +47,7 @@ export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Arr
     }
 
     // get cluster of paths from sources
-    const newClusters=getClusters(network,sources as string[],merge);
+    const newClusters=getClusters(network,sources as string[],merge,pathType);
 
     // add cluster if length > minsize, and add information of cluster for nodes
     Object.entries(newClusters).forEach(([clusterID,cluster]:[string,{nodes:Array<string>, height:number}])=>{
@@ -196,9 +203,13 @@ function endPath(source:string, longestPaths:{[key:string]:{nodes:Array<string>,
  * @param network 
  * @param sources to use for the paths
  * @param merge if true, merge the path with an existing one if a common node is found, else common nodes in several clusters
+ * @param pathType the type of path to target node wanted :
+ * LONGEST :  one of the longest path
+ * ALL_LONGEST : all the longest lenght
+ * ALL : all path
  * @returns some node clusters with id
  */
-export function getPathSourcesToTargetNode(network:Network, sources:string[],merge:boolean=true):{[key:string]:{nodes:Array<string>, height:number}}{
+export function getPathSourcesToTargetNode(network:Network, sources:string[],merge:boolean=true,pathType:PathType=PathType.ALL_LONGEST):{[key:string]:{nodes:Array<string>, height:number}}{
 
     console.log('DAG_Dijkstra');
 
@@ -209,7 +220,7 @@ export function getPathSourcesToTargetNode(network:Network, sources:string[],mer
         // DFS to get a DAG from this source, and get topological sort
         const {dfs,graph}=DFSsourceDAG(network,[source]);
         // get max distance from source node for all nodes, and by which parent nodes the node had been accessed
-        const {distances, parents}=DistanceFromSourceDAG(graph,dfs);
+        const {distances, parents}=DistanceFromSourceDAG(graph,dfs,pathType);
         // get the farthest node from source (node with max distance)
         const targetNode=findMaxKey(distances);
         // get the parents that goes from source to target node 
@@ -224,9 +235,13 @@ export function getPathSourcesToTargetNode(network:Network, sources:string[],mer
  * Dijkstra like algorithm to get longest distance from source node for each node
  * @param graph object that contains function to get children of a node, and remove an edge
  * @param topologicalOrderFromSource a topological order of node from a source
+ * @param pathType the parent nodes include for a child node :
+ * LONGEST : add unique parent from one of the longest path
+ * ALL_LONGEST : add parents from path from the longest lenght
+ * ALL : add all parents
  * @returns maximal distance to the source and parents nodes for each nodes
  */
-function DistanceFromSourceDAG(graph:{[key:string]:Function}, topologicalOrderFromSource:string[]):{distances:{[key:string]:number}, parents:{[key:string]:string[]}} {
+function DistanceFromSourceDAG(graph:{[key:string]:Function}, topologicalOrderFromSource:string[],pathType:PathType=PathType.ALL_LONGEST):{distances:{[key:string]:number}, parents:{[key:string]:string[]}} {
 
     // the source is the first node in the topological order
     const source=topologicalOrderFromSource[0];
@@ -248,8 +263,17 @@ function DistanceFromSourceDAG(graph:{[key:string]:Function}, topologicalOrderFr
             if ( newDistance > childDistance) {
                 distanceFromSource[child] = newDistance;
 
-                // if the parent keeped is only the only for the longest path :
-                parentsFromSource[child]=[parent];
+                /// If only the parents from the longest path(s) are kept:
+                if (pathType==PathType.LONGEST || pathType==PathType.ALL_LONGEST ){
+                    parentsFromSource[child]=[parent];
+                }
+            }
+            // If all parent from longest path are wanted : (case of already maximum path found, so same distance)
+            if(pathType==PathType.ALL_LONGEST && newDistance === childDistance){
+                parentsFromSource[child].push(parent);
+            }
+            if(pathType==PathType.ALL){
+                parentsFromSource[child].push(parent);
             }
         })
     });

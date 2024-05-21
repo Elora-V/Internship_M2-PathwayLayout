@@ -23,14 +23,27 @@
       All_steps_with_DAG_Dijkstra
     </button>
  
-    <button v-on:click="mergeChoice('true')" class="margin">
+    <button v-on:click="mergeChoice(true)" class="margin">
       merge
     </button>
 
-    <button v-on:click="mergeChoice('false')" class="margin">
+    <button v-on:click="mergeChoice(false)" class="margin">
       No_merge
     </button>
   
+
+    <div>
+    <button @click="setPathType(PathType.LONGEST)" class="margin">
+      Longest
+    </button>
+    <button @click="setPathType(PathType.ALL_LONGEST)" class="margin"> 
+      All Longest
+    </button>
+    <button @click="setPathType(PathType.ALL)" class="margin">
+      All
+    </button>
+  </div>
+
 
   <div>
   <button v-on:click="sourcesChoice('rank_only')" class="margin">
@@ -95,6 +108,7 @@ import { countIsolatedNodes } from "./composables/countIsolatedNodes";
 
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
+import { PathType } from './types/EnumArgs';
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
   // Composables ----------
@@ -145,6 +159,7 @@ let sourceTypePath:SourceType=SourceType.RANK_SOURCE;
 let getCluster=getPathSourcesToTargetNode;
 let originalNetwork:Network;
 let merge:boolean=true;
+let pathType:PathType=PathType.ALL_LONGEST;
 
 // Functions --------------
 
@@ -217,7 +232,7 @@ function keydownHandler(event: KeyboardEvent) {
 }
 
 function rescaleAfterAction(){
-  console.log('Rescaling');
+  //console.log('Rescaling');
   rescale(svgProperties);
 }
 
@@ -225,7 +240,12 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
 
     let network=clusterNetwork.network.value;
 
-    console.log(sourceTypePath);
+    console.log('_____________________________________________');
+    console.log('Parameters :');
+    console.log("Source type : "+ sourceTypePath);
+    console.log("Merge ? " + String(merge));
+    console.log("Type path ? " + pathType);
+    console.log('---------------');
 
     await vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true).then(
       () => {
@@ -237,7 +257,7 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
       }
     ).then(
       () => {
-        clusterNetwork = addClusterFromSources(clusterNetwork, sourceTypePath,getCluster, merge);
+        clusterNetwork = addClusterFromSources(clusterNetwork, sourceTypePath,getCluster, merge,pathType);
       }
     ).then(
       () => {
@@ -248,7 +268,7 @@ async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType
         vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, false, rescaleAfterAction);
       }
     )
-    console.log('-------------------');
+    console.log('_____________________________________________');
 
 }
 
@@ -304,14 +324,12 @@ function sourcesChoice(sourcetype:string):void{
   clusterNetwork.clusters={}; // temporaire, je reset les clusters pour pas ajouter les nouveaux aux vieux
 }
 
-function mergeChoice(value) {
-    if (value === 'true') {
-        merge = true;
-    } else if (value === 'false') {
-        merge = false;
-    } else {
-        console.error('Invalid argument. Expected "true" or "false".');
-    }
+function mergeChoice(value:boolean) {
+    merge=value;
+}
+
+function setPathType(type:PathType) {
+    pathType = type;
 }
 
 function algoForce(){
