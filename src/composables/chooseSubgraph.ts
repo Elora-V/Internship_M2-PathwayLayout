@@ -262,13 +262,13 @@ export function getPathSourcesToTargetNode(network:Network, sources:string[],mer
                 // get the parents that goes from source to target node 
                 const nodesBetweenSourceTarget=BFS(parents,node);
                 // merge with an existing path if node in common
-                pathsFromSources=mergeNewPath(source,{nodes:nodesBetweenSourceTarget, height:targetNodes.max},pathsFromSources,merge);
+                pathsFromSources=mergeNewPath(source,targetNodes.key,{nodes:nodesBetweenSourceTarget, height:targetNodes.max},pathsFromSources,merge);
             });
         } else  if(pathType==PathType.LONGEST){ // if only one path wanted : take the first
             // get the parents that goes from source to target node 
             const nodesBetweenSourceTarget=BFS(parents,targetNodes[0]);
             // merge with an existing path if node in common
-            pathsFromSources=mergeNewPath(source,{nodes:nodesBetweenSourceTarget, height:targetNodes.max},pathsFromSources,merge);
+            pathsFromSources=mergeNewPath(source,targetNodes.key,{nodes:nodesBetweenSourceTarget, height:targetNodes.max},pathsFromSources,merge);
         }
             
     });      
@@ -351,19 +351,20 @@ function findMaxKeys(obj: { [key: string]: number }): {key:string[]|undefined,ma
  * Merge a new path in the object with all paths. If a common node is find between the new path and the other : the two paths are merged into one.
  * Else the path is added as a new one.
  * @param source source node use to get the longest path from a source DAG
+ * @param targetNodes target nodes of the path (from the source)
  * @param newPath path to add in the object with all paths
  * @param pathsFromSources object with all paths (array of node id with an path id)
  * @param [merge=true] if true, merge the path with an existing one if a common node is found
  * @returns all paths including the new one
  */
-function mergeNewPath(source:string,newPath:{nodes:Array<string>, height:number},pathsFromSources:{[key:string]:{nodes:Array<string>, height:number}}, merge:boolean=true):{[key:string]:{nodes:Array<string>, height:number}}{
+function mergeNewPath(source:string,targetNodes:string[],newPath:{nodes:Array<string>, height:number},pathsFromSources:{[key:string]:{nodes:Array<string>, height:number}}, merge:boolean=true):{[key:string]:{nodes:Array<string>, height:number}}{
     const keys=Object.keys(pathsFromSources);
     let hasmerged=false;
     if (merge) {
         keys.forEach(key=>{
             const pathNodes = pathsFromSources[key].nodes;
-            // Check for common nodes
-            const commonNodes = pathNodes.find(node => newPath.nodes.includes(node));
+            // Check for common nodes, but target nodes
+            const commonNodes = pathNodes.find(node => newPath.nodes.includes(node) && !targetNodes.includes(node));
             if (commonNodes) {
                 // Merge paths
                 const mergedPath = Array.from(new Set(pathNodes.concat(newPath.nodes)));
