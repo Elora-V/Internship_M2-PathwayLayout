@@ -35,14 +35,29 @@
     <button @click="setPathType(PathType.ALL)" class="styled-button">
       All
     </button>
+
+
     <span class="bold margin">|</span>
+
+
     <button v-on:click="mergeChoice(true)" class="styled-button">
       merge
     </button>
-
     <button v-on:click="mergeChoice(false)" class="styled-button">
       No_merge
     </button>
+
+
+    <span class="bold margin">|</span>
+
+
+    <button v-on:click="miniBranchChoice(true)" class="styled-button">
+    Minibranch
+  </button>
+  <button v-on:click="miniBranchChoice(false)" class="styled-button">
+    No_Minibranch
+  </button>
+
   </div>
 
 
@@ -167,8 +182,7 @@ let getCluster=getPathSourcesToTargetNode;
 let originalNetwork:Network;
 let merge:boolean=true;
 let pathType:PathType=PathType.ALL_LONGEST;
-
-
+let minibranch:boolean=true;
 
 
 
@@ -277,6 +291,10 @@ function setPathType(type:PathType) {
     pathType = type;
 }
 
+function miniBranchChoice(value: boolean) {
+  minibranch = value;
+}
+
 async function clusterAlgorithm(algorithm:string):Promise<void> {
     console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
 
@@ -318,7 +336,7 @@ function algoForce(){
 }
 
 // algorithm pipeline : pathway layout 
-async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType=SourceType.RANK_ONLY):Promise<void> {
+async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType=SourceType.RANK_SOURCE):Promise<void> {
 
 let network=clusterNetwork.network.value;
 
@@ -326,6 +344,7 @@ console.log('_____________________________________________');
 console.log('Parameters :');
 console.log("Source type : "+ sourceTypePath);
 console.log("Merge ? " + String(merge));
+console.log("Add Mini branch ? " + String(minibranch));
 console.log("Type path ? " + pathType);
 console.log('---------------');
 
@@ -343,7 +362,9 @@ await vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true
   }
 ).then(
   () => {
-    clusterNetwork= addMiniBranchToMainChain(clusterNetwork);
+    if(minibranch){
+      clusterNetwork= addMiniBranchToMainChain(clusterNetwork);
+    }
   }
 ).then(
   () => {
@@ -395,10 +416,14 @@ function keydownHandler(event: KeyboardEvent) {
     bfs.forEach(node=>{
       console.log(network.value.nodes[node].label);
     })
-   
-
+  }else if (event.key =="m"){
+    clusterNetwork= addMiniBranchToMainChain(clusterNetwork);
+  }else if (event.key =="l"){
+    clusterNetwork = addBoldLinkMainChain(clusterNetwork);
   }
 }
+
+
 
 
 

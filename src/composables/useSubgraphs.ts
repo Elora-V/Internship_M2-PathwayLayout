@@ -98,8 +98,12 @@ export function addBoldLinkMainChain(clusterNetwork:ClusterNetwork):ClusterNetwo
             if(!link.classes){
                 link.classes=[];
             }
-            if (!("mainChain" in link.classes)){
+            if (!(link.classes.includes("mainChain"))){
                 link.classes.push("mainChain");
+            }
+        }else{
+            if(link.classes){
+                link.classes = link.classes.filter((c) => c !== "mainChain");
             }
         }
     });
