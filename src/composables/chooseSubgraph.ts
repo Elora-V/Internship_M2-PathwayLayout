@@ -7,6 +7,7 @@ import { createCluster } from "./UseClusterNetwork";
 import { getSources } from "./rankAndSources";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { BFS } from "./algoBFS";
+import type {Cluster} from "@/types/Cluster";
 
 
 /**
@@ -70,6 +71,16 @@ export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Arr
     });
 
     return clusterNetwork;
+}
+
+
+export function addMiniBranchToMainChain(clusterNetwork:ClusterNetwork){
+    Object.entries(clusterNetwork.clusters).forEach(([clusterID,cluster]:[string,Cluster]) => {
+        cluster.nodes.forEach(node=>{
+
+        });
+        
+    });
 }
 
 // ----------------------------------------------------------------------------------------------------------------------------------------------

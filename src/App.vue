@@ -377,7 +377,7 @@ function keydownHandler(event: KeyboardEvent) {
   }else if (event.key =="r"){
     chooseReversibleReaction(network.value,SourceType.RANK_SOURCE_ALL,BFSWithSources);
   }else if (event.key =="p"){
-    clusterNetwork=addClusterFromSources(clusterNetwork,SourceType.RANK_ONLY,getCluster);
+    addClusterFromSources(clusterNetwork, sourceTypePath,getCluster, merge,pathType);
   } else if (event.key == "a"){
     allSteps(clusterNetwork,sourceTypePath);
   } else if (event.key == "f"){
