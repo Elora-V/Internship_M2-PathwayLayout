@@ -1,5 +1,5 @@
 import { RankEnum } from "@/types/Cluster";
-import { PathType, SourceType, pathType, pathType } from "@/types/EnumArgs";
+import { PathType, SourceType } from "@/types/EnumArgs";
 import { DFSWithSources, DFSsourceDAG } from "./algoDFS";
 import { NetworkToGDSGraph } from "./networkToGraph";
 import { ClusterNetwork } from "@/types/ClusterNetwork";
