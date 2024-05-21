@@ -1,4 +1,6 @@
 import { Cluster, RankEnum } from "@/types/Cluster";
+import { ClusterNetwork } from "@/types/ClusterNetwork";
+import { Network } from "@metabohub/viz-core/src/types/Network";
 
 
 /**
@@ -20,18 +22,6 @@ export function createCluster(name: string, rank: RankEnum = RankEnum.EMPTY, nod
     };
 }
 
-/**
- * Adds a node to the cluster if it doesn't already exist.
- * @param cluster The cluster to which the node will be added.
- * @param node The node to be added.
- * @returns The updated cluster.
- */
-export function addNodeCluster(cluster: Cluster, node: string): Cluster {
-    if (!cluster.nodes.includes(node)) {
-        cluster.nodes.push(node);
-    }
-    return cluster;
-}
 
 /**
  * Adds a class to the cluster if it doesn't already exist.
@@ -74,4 +64,49 @@ export function removeClassCluster(cluster: Cluster, className: string): Cluster
         }
     }
     return cluster;
+}
+
+
+/**
+ * Adds a node to a cluster in the cluster network, and update the metadata of the node (name of the cluster to wich it belongs)
+ * 
+ * @param clusterNetwork - The cluster network object.
+ * @param clusterID - The ID of the cluster.
+ * @param nodeID - The ID of the node to be added.
+ * @returns The updated cluster network object.
+ */
+export function addNodeTocluster(clusterNetwork:ClusterNetwork,clusterID:string,nodeID:string):ClusterNetwork{
+    const network=clusterNetwork.network.value;
+
+    if (clusterID in clusterNetwork.clusters){
+        // if node not already in cluster :
+        if (!clusterNetwork.clusters[clusterID].nodes.includes(nodeID)){
+            // add to cluster
+            clusterNetwork.clusters[clusterID].nodes.push(nodeID);
+            // update metadata of node
+            updateNodeMetadataCluster(network, nodeID, clusterID);
+        }
+    }else{
+        console.error("cluster not in clusterNetwork");
+    }
+    return clusterNetwork;
+}
+
+/**
+ * Updates the metadata of a node in the network by adding a cluster ID to its list of clusters.
+ * If the metadata does not exist, they will be created.
+ * 
+ * @param network - The network object.
+ * @param nodeID - The ID of the node to update.
+ * @param clusterID - The ID of the cluster to add.
+ */
+export function updateNodeMetadataCluster(network: Network, nodeID: string, clusterID: string){
+  if (! ("metadata" in network.nodes[nodeID]) ){
+    network.nodes[nodeID].metadata={};
+  }
+  if (!("clusters" in network.nodes[nodeID].metadata)){
+    network.nodes[nodeID].metadata.clusters=[]
+  }
+  const clusters=network.nodes[nodeID].metadata.clusters as Array<string>;
+  clusters.push(clusterID);
 }
