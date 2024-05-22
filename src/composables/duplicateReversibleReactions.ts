@@ -19,7 +19,8 @@ export async function duplicateReversibleReactions(network: Network,suffix:strin
 
   network.links.forEach((link) => {
     // if the link is reversible :  get the reaction node and duplicate
-    if (link.classes && link.classes.includes("reversible")) {
+    //if (link.classes && link.classes.includes("reversible")) {
+    if (link.source.metadata.reversible || link.target.metadata.reversible) {  
       ////// Duplication of the reaction node
       // get nodes class : we only want to duplicate class "reaction"
       let newReactionNode: Node;
@@ -73,7 +74,7 @@ export async function duplicateReversibleReactions(network: Network,suffix:strin
         });
     }
       
-    }
+   }
   });
 
   newLinks.forEach((link) => {

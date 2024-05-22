@@ -2,7 +2,7 @@
   <button v-on:click="rescale(svgProperties)">
     Rescale
   </button>
-  <input type="file" accept=".json" label="File input" v-on:change="loadFile" class=" margin"/>
+  <input type="file" accept=".json, .xml" label="File input" v-on:change="loadFile" class=" margin"/>
   <button v-on:click="newCluster()" class="margin">
      New_Cluster
   </button>
@@ -296,7 +296,7 @@ function miniBranchChoice(value: boolean) {
 }
 
 async function clusterAlgorithm(algorithm:string):Promise<void> {
-    console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
+    //console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
 
       clusterNetwork=getOriginalNetwork();
 
@@ -322,7 +322,7 @@ async function clusterAlgorithm(algorithm:string):Promise<void> {
 
 // no layout 
 function getOriginalNetwork():ClusterNetwork{
-  console.log(originalNetwork); ///// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
+  //console.log(originalNetwork); ///// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
 
   clusterNetwork.clusters={};
   network.value=networkCopy(originalNetwork); 
