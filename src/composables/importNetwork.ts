@@ -46,7 +46,6 @@ export function importNetworkFromFile(file: File, network: Ref<Network>, network
 		if (data.startsWith('<?xml')) {
 			// Convert XML to JSON
 			data = JSON.stringify(await sbml2json(data));
-			console.log(data);
 		}
 		const networkData = readJsonGraph(data);
 		networkStyle.value = networkData.networkStyle;

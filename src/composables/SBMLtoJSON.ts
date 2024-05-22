@@ -85,6 +85,14 @@ export async function sbml2json(sbmlString: string): Promise<JSONGraphFormat> {
                 const reactions = model.listOfReactions.reaction;
                 reactions.forEach((reaction: XMLReactions) => {
                     const reactionId = reaction.$.id;
+                    
+                    let classReversible :string;
+                    const isReversible=reaction.$.reversible;
+                    if (isReversible==="true"){
+                        classReversible = "reversible";
+                    }else{
+                        classReversible = "irreversible";
+                    }
 
                     // get the reactants and products for every reaction
                     const reactants: string[] = [];
@@ -112,7 +120,7 @@ export async function sbml2json(sbmlString: string): Promise<JSONGraphFormat> {
                     graph.graph.nodes[reactionId] = {
                         id: reactionId,
                         metadata: {
-                            classes: ['reaction'],
+                            classes: ['reaction',classReversible],
                             position: {
                                 x: getRandomInt(0, 100),
                                 y: getRandomInt(0, 100)

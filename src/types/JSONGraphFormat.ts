@@ -45,6 +45,7 @@ export interface XMLReactions {
     $: {
         id: string;
         name: string;
+        reversible:string;
     },
     listOfReactants: {
         speciesReference: any[]|{} 
