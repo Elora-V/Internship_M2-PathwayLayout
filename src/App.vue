@@ -240,7 +240,7 @@ function rescaleAfterAction(){
 onMounted(() => {
   svgProperties = initZoom();
   window.addEventListener('keydown', keydownHandler);
-  importNetworkFromURL('/pathways/Aminosugar_metabolism.json', network, networkStyle, callbackFunction); 
+  importNetworkFromURL('/pathways/Glycosylation.json', network, networkStyle, callbackFunction); 
   
 });
 function removeNode() {
@@ -296,7 +296,7 @@ function miniBranchChoice(value: boolean) {
 }
 
 async function clusterAlgorithm(algorithm:string):Promise<void> {
-    console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
+    //console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
 
       clusterNetwork=getOriginalNetwork();
 
@@ -322,7 +322,7 @@ async function clusterAlgorithm(algorithm:string):Promise<void> {
 
 // no layout 
 function getOriginalNetwork():ClusterNetwork{
-  console.log(originalNetwork); ///// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
+  //console.log(originalNetwork); ///// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
 
   clusterNetwork.clusters={};
   network.value=networkCopy(originalNetwork); 
