@@ -266,7 +266,7 @@ export function getPathSourcesToTargetNode(network:Network, sources:string[],mer
             });
         } else  if(pathType==PathType.LONGEST){ // if only one path wanted : take the first
             // get the parents that goes from source to target node 
-            const nodesBetweenSourceTarget=BFS(parents,targetNodes[0]);
+            const nodesBetweenSourceTarget=BFS(parents,targetNodes.key[0]);
             // merge with an existing path if node in common
             pathsFromSources=mergeNewPath(source,{nodes:nodesBetweenSourceTarget, height:targetNodes.max},pathsFromSources,merge);
         }
@@ -314,10 +314,14 @@ function DistanceFromSourceDAG(graph:{[key:string]:Function}, topologicalOrderFr
             }
             // If all parent from longest path are wanted : (case of already maximum path found, so same distance)
             if(pathType==PathType.ALL_LONGEST && newDistance === childDistance){
-                parentsFromSource[child].push(parent);
+                if (!parentsFromSource[child].includes(parent)) {
+                    parentsFromSource[child].push(parent);
+                }
             }
             if(pathType==PathType.ALL){
-                parentsFromSource[child].push(parent);
+                if (!parentsFromSource[child].includes(parent)) {
+                    parentsFromSource[child].push(parent);
+                }
             }
         })
     });
@@ -333,13 +337,12 @@ function DistanceFromSourceDAG(graph:{[key:string]:Function}, topologicalOrderFr
 function findMaxKeys(obj: { [key: string]: number }): {key:string[]|undefined,max:number} {
     let maxKeys: string[] | undefined;
     let maxValue = -Infinity;
-
     Object.entries(obj).forEach(([key, value]) => {
         if (value > maxValue) {
             maxValue = value;
             maxKeys = [key];
         }
-        if (value == maxValue){
+        else if (value == maxValue){
             maxKeys.push(key);
         }
     });
