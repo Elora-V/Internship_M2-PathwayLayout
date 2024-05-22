@@ -1,7 +1,7 @@
 import { Network } from '@metabohub/viz-core/src/types/Network';
 import  dagre  from 'dagrejs/dist/dagre.js';
 import { Graph } from "@viz-js/viz";
-import { addClusterViz } from './modifyVizGraph';
+import { addClusterViz } from './useSubgraphs';
 import { Cluster } from '@/types/Cluster';
 import * as GDS from 'graph-data-structure';
 
@@ -54,9 +54,14 @@ export function NetworkToViz(network: Network,clusters:{[key:string]:Cluster}={}
 
     // insert edge 
     network.links.forEach((link)=>{
+        let attributs:AttributesViz={};
+        if (link.metadata && Object.keys(link.metadata).includes("constraint")){
+            attributs.constraint=link.metadata["constraint"] as boolean;
+        }
         graphViz.edges.push({
             tail: link.source.id,
             head: link.target.id,
+            attributes:attributs
             });
     })
 
@@ -64,7 +69,6 @@ export function NetworkToViz(network: Network,clusters:{[key:string]:Cluster}={}
     Object.values(clusters).forEach((cluster) => {
         graphViz=addClusterViz(graphViz,cluster);
     });
-
     return graphViz;
 
 }
@@ -119,4 +123,31 @@ export function NetworkToAdjacentObject(network:Network):{[key : string]:string[
     return adjacence;
 }
 
+/**
+ * Return a copy of the network
+ * @param network 
+ * @returns a copy of the network
+ */
+export function networkCopy(network: Network): Network {
+    const newNetwork: Network = {
+        id: network.id,
+        label: network.label,
+        nodes: {},
+        links: []
+    };
+
+    Object.keys(network.nodes).forEach(key=>{  
+        newNetwork.nodes[key] = Object.assign({}, network.nodes[key]);   
+    })
+
+    network.links.forEach(item=>{
+        //get all info from links
+        const newlink=Object.assign({}, item);
+        // update the node to have a pointeur
+        newlink.source=newNetwork.nodes[item.source.id];
+        newlink.target=newNetwork.nodes[item.target.id];
+        newNetwork.links.push(newlink);
+    });
+    return newNetwork;
+}
 
