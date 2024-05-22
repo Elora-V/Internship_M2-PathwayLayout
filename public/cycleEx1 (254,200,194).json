@@ -1,0 +1,232 @@
+{
+    "graph": {
+        "id": "fromCytoscape",
+        "type": "metabolic",
+        "metadata": {
+            "style": {
+                "nodeStyles": {
+                    "metabolite": {
+                        "width": 25,
+                        "height": 25,
+                        "strokeWidth": 1,
+                        "shape": "circle"
+                    },
+                    "reaction": {
+                        "width": 15,
+                        "height": 15,
+                        "strokeWidth": 0.5,
+                        "shape": "rect",
+                        "fill": "grey"
+                    },
+                    "reversible": {
+                        "fill": "green",
+                        "shape": "inverseTriangle"
+                    },
+                    "reversibleVersion": {
+                        "fill": "red",
+                        "shape": "triangle"
+                    }
+                }
+            }
+        },
+        "nodes": { 
+            "259": {
+                "id": "259",
+                "metadata": {
+                    "classes": ["reaction", "reversible"],
+                    "position": {
+                        "x": 15,
+                        "y": 42
+                    }
+                },
+                "label": "259"
+            },
+            "254": {
+                "id": "254",
+                "metadata": {
+                    "position": {
+                        "x": 10,
+                        "y": 99
+                    }
+                },
+                "label": "254"
+            },
+            "214": {
+                "id": "214",
+                "metadata": {
+                    "position": {
+                        "x": 31,
+                        "y": 5
+                    }
+                },
+                "label": "214"
+            },
+            "209": {
+                "id": "209",
+                "metadata": {
+                    "position": {
+                        "x": 26,
+                        "y": 29
+                    }
+                },
+                "label": "209"
+            },
+            "204": {
+                "id": "204",
+                "metadata": {
+                    "classes": ["reaction"],
+                    "position": {
+                        "x": 25,
+                        "y": 62
+                    }
+                },
+                "label": "204"
+            },
+            "199": {
+                "id": "199",
+                "metadata": {
+                    "classes": ["reaction"],
+                    "position": {
+                        "x": 73,
+                        "y": 87
+                    }
+                },
+                "label": "199"
+            },
+            "190": {
+                "id": "190",
+                "metadata": {
+                    "position": {
+                        "x": 73,
+                        "y": 87
+                    }
+                },
+                "label": "190"
+            },
+            "200": {
+                "id": "200",
+                "metadata": {
+                    "position": {
+                        "x": 73,
+                        "y": 87
+                    }
+                },
+                "label": "200"
+            },
+            "633": {
+                "id": "633",
+                "metadata": {
+                    "position": {
+                        "x": 73,
+                        "y": 87
+                    }
+                },
+                "label": "633"
+            },
+            "194": {
+                "id": "194",
+                "metadata": {
+                    "position": {
+                        "x": 23,
+                        "y": 92
+                    }
+                },
+                "label": "194"
+            },
+            "184": {
+                "id": "r_184",
+                "metadata": {
+                    "classes": ["reaction"],
+                    "position": {
+                        "x": 35,
+                        "y": 100
+                    }
+                },
+                "label": "184"
+            },
+            "179": {
+                "id": "179",
+                "metadata": {
+                    "position": {
+                        "x": 3,
+                        "y": 99
+                    }
+                },
+                "label": "179"
+            }
+        },
+        "edges": [
+            {
+                "id": "184--254",
+                "source": "184",
+                "target": "254"
+            },
+            {
+                "id": "184--200",
+                "source": "184",
+                "target": "200"
+            },
+            {
+                "id": "184--194",
+                "source": "184",
+                "target": "194"
+            },
+
+            {
+                "id": "254--259",
+                "source": "254",
+                "target": "259",
+                "metadata": {"classes": ["reversible"]}
+            },
+            {
+                "id": "209--214",
+                "source": "209",
+                "target": "214"
+            },
+            {
+                "id": "204--209",
+                "source": "204",
+                "target": "209"
+            },
+            {
+                "id": "199--633",
+                "source": "199",
+                "target": "633"
+            },
+            {
+                "id": "633--204",
+                "source": "633",
+                "target": "204"
+            },
+            
+            {
+                "id": "204--190",
+                "source": "204",
+                "target": "190"
+            },
+            {
+                "id": "194--204",
+                "source": "194",
+                "target": "204"
+            },
+
+            {
+                "id": "200--199",
+                "source": "200",
+                "target": "199"
+            },
+            {
+                "id": "259--190",
+                "source": "259",
+                "target": "190",
+                "metadata": {"classes": ["reversible"]}
+            },
+            
+            {
+                "id": "179--184",
+                "source": "179",
+                "target": "184"
+            }
+        ]
+    }
+}
