@@ -136,7 +136,7 @@ export async function sbml2json(sbmlString: string): Promise<JSONGraphFormat> {
                             source: reactant,
                             target: reactionId,
                             metadata: {
-                                classes: ['irreversible']
+                                classes: [classReversible]
                             }
                         });
                     });
@@ -146,7 +146,7 @@ export async function sbml2json(sbmlString: string): Promise<JSONGraphFormat> {
                             source: reactionId,
                             target: product,
                             metadata: {
-                                classes: ['irreversible']
+                                classes: [classReversible]
                             }
                         });
                     });
