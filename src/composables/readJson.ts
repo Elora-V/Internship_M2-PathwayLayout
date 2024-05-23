@@ -98,12 +98,6 @@ export function readJsonGraph(jsonGraph: string): { network: Network, networkSty
 			node.metadata={};
 		}
 
-		if ("reactionReversibility" in n && n.reactionReversibility){
-			node.metadata["reversible"]=true;
-			node.classes.push("reversible");
-		}else{
-			node.metadata["reversible"]=false;
-		}
 		
 
 		network.nodes[node.id] = node;
@@ -120,12 +114,27 @@ export function readJsonGraph(jsonGraph: string): { network: Network, networkSty
 				classes = e.metadata.classes;
 			}
 		}
+
+		// modification :
+		if ( e.metadata.classes &&  e.metadata.classes.includes("reversible")){
+			if (source.classes.includes("reaction")){
+				source.metadata["reversible"]=true;
+				target.metadata["reversible"]=false;
+			}
+			else if (target.classes.includes("reaction")){
+				target.metadata["reversible"]=true;
+				source.metadata["reversible"]=false;
+			}
+		}else{
+			source.metadata["reversible"]=false;
+			target.metadata["reversible"]=false;
+		}
 		
 		return {
 			...e,
 			source: source,
 			target: target,
-			classes: classes
+			classes: classes 
 		}
 
 	});
