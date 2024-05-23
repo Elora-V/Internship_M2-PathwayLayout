@@ -126,6 +126,12 @@ export function readJsonGraph(jsonGraph: string): { network: Network, networkSty
 				source.metadata["reversible"]=false;
 			}
 		}else{
+			if(!Object.keys(source).includes("metadata")){
+				source.metadata={};
+			}
+			if(!Object.keys(target).includes("metadata")){
+				target.metadata={};
+			}
 			source.metadata["reversible"]=false;
 			target.metadata["reversible"]=false;
 		}
