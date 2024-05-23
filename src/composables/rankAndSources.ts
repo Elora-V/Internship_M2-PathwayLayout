@@ -122,3 +122,19 @@ function needSource(sourcetype:SourceType):boolean{
 function needAll(sourcetype:SourceType):boolean{
     return [SourceType.ALL,SourceType.SOURCE_ALL,SourceType.RANK_SOURCE_ALL].includes(sourcetype);
 }
+
+/**
+ * Concatenates two source arrays of strings and removes duplicates. The result is the first array, then the second (order is preserved).
+ * @param firstSources - The first array of strings.
+ * @param secondSources - The second array of strings.
+ * @returns A new array containing the unique elements from both input arrays.
+ */
+export function concatSources(firstSources: string[], secondSources: string[]): string[] {
+    const result = [...firstSources];
+    secondSources.forEach(item => {
+        if (!result.includes(item)) {
+            result.push(item);
+        }
+    });
+    return result;
+}

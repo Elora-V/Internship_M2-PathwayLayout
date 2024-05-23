@@ -6,6 +6,8 @@
   <button v-on:click="newCluster()" class="margin">
      New_Cluster
   </button>
+
+
   
   <button v-on:click="algoForce()" class="styled-button">
     ForceAlgo
@@ -70,6 +72,9 @@
   </button>
   <button v-on:click="sourcesChoice('source_only')" class="styled-button">
      Source_only
+  </button>
+  <button v-on:click="OnlyUserSources()" class="styled-button">
+     Only_user_Sources
   </button>
 </div>
 
@@ -156,7 +161,7 @@ import { SourceType } from "@/types/EnumArgs";
 import { addClusterFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/chooseSubgraph";
 import { RefSymbol } from "@vue/reactivity";
 import { BFSWithSources } from "@/composables/algoBFS";
-import { getSources } from "@/composables/rankAndSources";
+import { concatSources, getSources } from "@/composables/rankAndSources";
 import { addBoldLinkMainChain } from "@/composables/useSubgraphs";
 
 
@@ -172,7 +177,7 @@ const networkStyle = ref<GraphStyleProperties>({
   linkStyles: {}
 });
 let svgProperties = reactive({});
-const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNode},{label:'Duplicate', action:duplicateNode},{label:'AddToCluster', action:addToCluster}])
+const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNode},{label:'Duplicate', action:duplicateNode},{label:'AddToCluster', action:addToCluster},{label:'AddToSource', action:addToUserSource}])
 let undoFunction: any = reactive({});
 //let clusters : Array<Cluster> =reactive([])
 //let attributGraphViz : AttributesViz=reactive({});
@@ -183,7 +188,8 @@ let originalNetwork:Network;
 let merge:boolean=true;
 let pathType:PathType=PathType.ALL_LONGEST;
 let minibranch:boolean=true;
-
+let userSources:string[]=[];
+let onlyUserSources:boolean=false;
 
 
 
@@ -208,7 +214,7 @@ function loadFile(event: Event) {
 async function callbackFunction() {
 
   console.log('________New_graph__________');
-  clusterNetwork={network:network,attributs:{},clusters:{}};
+  clusterNetwork={network:network,attributs:{},clusters:{},userSources:[]};
   clusterNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
 
   await removeSideCompounds(network.value,"/sideCompounds.txt").then(
@@ -240,14 +246,17 @@ function rescaleAfterAction(){
 onMounted(() => {
   svgProperties = initZoom();
   window.addEventListener('keydown', keydownHandler);
-  importNetworkFromURL('/pathways/Aminosugar_metabolism.json', network, networkStyle, callbackFunction); 
+  importNetworkFromURL('/pathways/Glycolysis_gluconeogenesis.json', network, networkStyle, callbackFunction); 
   
 });
 function removeNode() {
   removeThisNode(menuProps.targetElement, network.value);
+  originalNetwork=networkCopy(network.value);
+
 }
 function duplicateNode() {
   duplicateThisNode(menuProps.targetElement, network.value, networkStyle.value);
+  originalNetwork=networkCopy(network.value);
 }
 
 function openContextMenu(Event: MouseEvent, nodeId: string) {
@@ -295,6 +304,10 @@ function miniBranchChoice(value: boolean) {
   minibranch = value;
 }
 
+function OnlyUserSources(){
+  onlyUserSources=!onlyUserSources;
+}
+
 async function clusterAlgorithm(algorithm:string):Promise<void> {
     //console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
 
@@ -311,6 +324,16 @@ async function clusterAlgorithm(algorithm:string):Promise<void> {
           }
         );
         
+}
+
+function getSourcesParam(network:Network,sourceType:SourceType):string[]{
+  let sources:string[]=[];
+    if(onlyUserSources){
+      sources=userSources;
+    }else{
+      sources = concatSources(userSources as string[],getSources(network,sourceType));
+    }
+    return sources;
 }
 
 
@@ -343,6 +366,7 @@ let network=clusterNetwork.network.value;
 console.log('_____________________________________________');
 console.log('Parameters :');
 console.log("Source type : "+ sourceTypePath);
+console.log('Only user sources ? ' + String(onlyUserSources));
 console.log("Merge ? " + String(merge));
 console.log("Add Mini branch ? " + String(minibranch));
 console.log("Type path ? " + pathType);
@@ -354,11 +378,13 @@ await vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true
   }
 ).then(
   () => {
-    chooseReversibleReaction(network, SourceType.RANK_SOURCE_ALL,BFSWithSources);
+    const sources=getSourcesParam(network,SourceType.RANK_SOURCE_ALL);
+    chooseReversibleReaction(network,sources,BFSWithSources);
   }
 ).then(
   () => {
-    clusterNetwork = addClusterFromSources(clusterNetwork, sourceTypePath,getCluster, merge,pathType);
+    const sources=getSourcesParam(network,sourceTypePath);
+    addClusterFromSources(clusterNetwork, sources,getCluster, merge,pathType);
   }
 ).then(
   () => {
@@ -400,9 +426,12 @@ function keydownHandler(event: KeyboardEvent) {
   } else if (event.key =="n"){
     console.log(network.value);
   }else if (event.key =="r"){
-    chooseReversibleReaction(network.value,SourceType.RANK_SOURCE_ALL,BFSWithSources);
+    const sources=getSourcesParam(network.value,SourceType.RANK_SOURCE_ALL);
+    chooseReversibleReaction(network.value,sources,BFSWithSources);
   }else if (event.key =="p"){
-    addClusterFromSources(clusterNetwork, sourceTypePath,getCluster, merge,pathType);
+    const sources=getSourcesParam(network.value,sourceTypePath);
+    addClusterFromSources(clusterNetwork, sources,getCluster, merge,pathType);
+    clusterNetwork = addBoldLinkMainChain(clusterNetwork);
   } else if (event.key == "a"){
     allSteps(clusterNetwork,sourceTypePath);
   } else if (event.key == "f"){
@@ -430,7 +459,7 @@ function keydownHandler(event: KeyboardEvent) {
 
 
 // ______________________________________________________________________________
-// ----------------------------------------------- Handmade clusters 
+// ----------------------------------------------- Handmade clusters et sources
 
 function newCluster(){
   const numberCluster=Object.keys(clusterNetwork.clusters).length;
@@ -445,6 +474,10 @@ function addToCluster() {
     numberCluster+=1;
   }
   clusterNetwork=addNodeTocluster(clusterNetwork,String(numberCluster-1),menuProps.targetElement); 
+}
+
+function addToUserSource() {
+  userSources.push(menuProps.targetElement); 
 }
 
 
