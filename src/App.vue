@@ -239,7 +239,7 @@ async function callbackFunction() {
     if (!("linkStyles" in networkStyle.value)){
       networkStyle.value.linkStyles={}
     }
-    networkStyle.value.linkStyles["mainChain"]={strokeWidth:3,stroke:"blue"};
+    networkStyle.value.linkStyles["mainChains"]={strokeWidth:3,stroke:"blue"};
 
 }
 
@@ -251,7 +251,7 @@ function rescaleAfterAction(){
 onMounted(() => {
   svgProperties = initZoom();
   window.addEventListener('keydown', keydownHandler);
-  importNetworkFromURL('/pathways/Glycolysis_gluconeogenesis.json', network, networkStyle, callbackFunction); 
+  importNetworkFromURL('/pathways/Alanine_and_aspartate_metabolism.json', network, networkStyle, callbackFunction); 
   
 });
 function removeNode() {
@@ -295,6 +295,8 @@ function sourcesChoice(sourcetype:string):void{
     sourceTypePath=SourceType.SOURCE_ONLY;
   }
   subgraphNetwork.mainChains={}; // temporaire, je reset les clusters pour pas ajouter les nouveaux aux vieux
+  subgraphNetwork.secondaryChains={};
+  subgraphNetwork.cycles={};
 }
 
 function mergeChoice(value:boolean) {

@@ -103,8 +103,8 @@ export function updateNodeMetadataSubgraph(network: Network, nodeID: string, sub
     network.nodes[nodeID].metadata={mainChain:[],secondaryChain:[],cycles:[]};
   }
   if (!(subgraphType in network.nodes[nodeID].metadata)){
-    network.nodes[nodeID].metadata.subgraphType=[];
+    network.nodes[nodeID].metadata[subgraphType]=[];
   }
-  const clusters=network.nodes[nodeID].metadata.subgraphType as Array<string>;
-  clusters.push(subgraphID);
+  const listSubgraph=network.nodes[nodeID].metadata[subgraphType] as Array<string>;
+  listSubgraph.push(subgraphID);
 }
