@@ -1,7 +1,7 @@
 import { Network } from '@metabohub/viz-core/src/types/Network';
 import  dagre  from 'dagrejs/dist/dagre.js';
 import { Graph } from "@viz-js/viz";
-import { addClusterViz } from './useSubgraphs';
+import { addClusterDot, addClusterViz } from './useSubgraphs';
 import { Cluster } from '@/types/Cluster';
 import * as GDS from 'graph-data-structure';
 
@@ -72,6 +72,48 @@ export function NetworkToViz(network: Network,clusters:{[key:string]:Cluster}={}
     return graphViz;
 
 }
+
+export function NetworkToDot(network: Network,clusters:{[key:string]:Cluster}={},graphAttributes={}): string{
+    // initialisation viz graph with graph attributs
+    let dotString="digraph G {\n graph "+customStringify(graphAttributes)+"\n";
+
+    // insert nodes
+    Object.values(network.nodes).forEach((node) => {
+        const vizAttributes= node.metadata["vizAttributs"] ? customStringify(node.metadata["vizAttributs"]) : "";
+        dotString+=`${node.id} `+vizAttributes+`;\n`;
+    });
+
+    // insert edges 
+    network.links.forEach((link)=>{
+        let attributs:AttributesViz={};
+        if (link.metadata && Object.keys(link.metadata).includes("constraint")){
+            attributs.constraint=link.metadata["constraint"] as boolean;
+        }
+        dotString+=`${link.source.id} -> ${link.target.id} `+customStringify(attributs)+`;\n`;
+    })
+
+    // insert subgraphs (with edges)
+    Object.values(clusters).forEach((cluster) => {
+        dotString+=addClusterDot(cluster);
+    });
+
+    return dotString+"}";
+
+}
+
+function customStringify(obj) {
+    if (Object.keys(obj).length === 0) {
+        return "";
+    }
+    let str = '[';
+    for (let key in obj) {
+        str += `${key}="${obj[key]}", `;
+    }
+    str = str.slice(0, -2); // remove trailing comma and space
+    str += ']';
+    return str;
+}
+
 
 
 /**

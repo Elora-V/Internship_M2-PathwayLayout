@@ -26,6 +26,23 @@ export function addClusterViz(vizGraph: Graph, cluster: Cluster): Graph {
 }
 
 
+export function addClusterDot(subgraph: Cluster,isCluster:boolean=true): string {
+
+    const prefix = isCluster?"cluster_":"";  
+
+    let clusterString = `subgraph ${prefix}${subgraph.name} {\n`;
+    // add rank
+    clusterString+=`{rank="${subgraph.rank}";`;
+
+    // add nodes
+    subgraph.nodes.forEach((node) => {
+        clusterString+=`${node};`;
+    });
+    return clusterString+"}\n}\n";
+  }
+  
+
+
 export function addNoConstraint(clusterNetwork:ClusterNetwork):ClusterNetwork{
   let network=clusterNetwork.network.value;
   network.links.forEach(link=>{

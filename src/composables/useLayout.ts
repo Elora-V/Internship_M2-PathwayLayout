@@ -1,7 +1,7 @@
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import dagre from 'dagrejs';
 import { Graph, instance } from "@viz-js/viz";
-import { NetworkToDagre, NetworkToViz } from './networkToGraph';
+import { NetworkToDagre, NetworkToDot, NetworkToViz } from './networkToGraph';
 import { changeNetworkFromDagre, changeNetworkFromViz, dagreToNetwork } from './graphToNetwork';
 import { JsonViz } from "@/types/JsonViz";
 import { Cluster } from "@/types/Cluster";

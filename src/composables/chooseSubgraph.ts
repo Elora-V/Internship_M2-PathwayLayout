@@ -371,7 +371,7 @@ function mergeNewPath(source:string,newPath:{nodes:Array<string>, height:number}
                 // Merge paths
                 const mergedPath = Array.from(new Set(pathNodes.concat(newPath.nodes)));
                 // Create new key
-                const newKey = `${key}--${source}`;
+                const newKey = `${key}__${source}`;
                 // Update pathsFromSources object
                 const newheight=newPath.height>pathsFromSources[key].height?newPath.height:pathsFromSources[key].height;
                 pathsFromSources[newKey] = {nodes:mergedPath,height:newheight};
