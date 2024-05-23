@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml fbc:required="false" groups:required="false" level="3" version="2" xmlns="http://www.sbml.org/sbml/level3/version2/core" xmlns:fbc="http://www.sbml.org/sbml/level3/version1/fbc/version2" xmlns:groups="http://www.sbml.org/sbml/level3/version1/groups/version1">
+  <model fbc:strict="true" id="_128bceb7_36b8_4227_b83a_11ca91c43b4f" metaid="_128bceb7_36b8_4227_b83a_11ca91c43b4f" name="history_test">
+    <fbc:listOfGeneProducts>
+      <fbc:geneProduct fbc:id="g1" fbc:label="g1" fbc:name="g1"/>
+    </fbc:listOfGeneProducts>
+    <groups:listOfGroups>
+      <groups:group groups:id="pp1" groups:kind="classification" groups:name="pp1">
+        <groups:listOfMembers>
+          <groups:member groups:idRef="r1"/>
+        </groups:listOfMembers>
+      </groups:group>
+    </groups:listOfGroups>
+    <listOfUnitDefinitions>
+      <unitDefinition id="mmol_per_gDW_per_hr" name="mmol_per_gDW_per_hr">
+        <listOfUnits>
+          <unit exponent="-1" kind="gram" multiplier="1" scale="0"/>
+          <unit exponent="1" kind="mole" multiplier="1" scale="-3"/>
+          <unit exponent="-1" kind="second" multiplier="0.00027778" scale="0"/>
+          <unit exponent="-1" kind="second" multiplier="0.00027777" scale="0"/>
+          <unit exponent="1" kind="mole" multiplier="1" scale="0"/>
+        </listOfUnits>
+      </unitDefinition>
+    </listOfUnitDefinitions>
+    <listOfCompartments>
+      <compartment constant="true" id="tutu" metaid="_97125884-20a5-4aa0-b78a-c3f1115fc57f" name="tutu" spatialDimensions="3"/>
+      <compartment constant="true" id="c" metaid="_265b6c07-ad95-4aa0-8064-81b050fb5d9d" name="c" spatialDimensions="3"/>
+    </listOfCompartments>
+    <listOfSpecies>
+      <species boundaryCondition="false" compartment="c" constant="false" fbc:charge="0" hasOnlySubstanceUnits="false" id="m1" initialAmount="1" metaid="f2b12325-eeb5-4dc0-a770-73f199951f8d" name="m1" sboTerm="SBO:0000240"/>
+    </listOfSpecies>
+    <listOfParameters>
+      <parameter constant="true" id="UPPER_BOUND_9999_0" units="mmol_per_gDW_per_hr" value="9999"/>
+      <parameter constant="true" id="LOWER_BOUND_0_0" units="mmol_per_gDW_per_hr" value="0"/>
+    </listOfParameters>
+    <listOfReactions>
+      <reaction fbc:lowerFluxBound="LOWER_BOUND_0_0" fbc:upperFluxBound="UPPER_BOUND_9999_0" id="erty" metaid="_6df8d47a-0216-4e17-beb3-8d3e3ec786a9" name="zerty" reversible="false">
+        <listOfReactants/>
+        <listOfProducts/>
+      </reaction>
+      <reaction fbc:lowerFluxBound="LOWER_BOUND_0_0" fbc:upperFluxBound="UPPER_BOUND_9999_0" id="r1" metaid="cd8efdf8-c38b-48df-9883-ad09c6748b6d" name="r1" reversible="false">
+        <annotation>
+          <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:bqbiol="http://biomodels.net/biology-qualifiers/">
+            <rdf:Description rdf:about="#cd8efdf8-c38b-48df-9883-ad09c6748b6d">
+              <bqbiol:is>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="https://identifiers.org/ec-code/1.1.1.1"/>
+                </rdf:Bag>
+              </bqbiol:is>
+              <bqbiol:isDescribedBy>
+                <rdf:Bag>
+                  <rdf:li rdf:resource="https://identifiers.org/pubmed/0"/>
+                </rdf:Bag>
+              </bqbiol:isDescribedBy>
+            </rdf:Description>
+          </rdf:RDF>
+        </annotation>
+        <fbc:geneProductAssociation>
+          <fbc:geneProductRef fbc:geneProduct="g1"/>
+        </fbc:geneProductAssociation>
+        <listOfReactants>
+          <speciesReference constant="true" species="m1" stoichiometry="1"/>
+        </listOfReactants>
+        <listOfProducts/>
+      </reaction>
+    </listOfReactions>
+  </model>
+</sbml>

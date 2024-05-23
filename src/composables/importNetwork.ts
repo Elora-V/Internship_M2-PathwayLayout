@@ -3,6 +3,7 @@ import type { Network } from "@metabohub/viz-core/src/types/Network";
 import type { GraphStyleProperties } from "@metabohub/viz-core/src//types/GraphStyleProperties";
 
 import { readJsonGraph } from "./readJson";
+import { sbml2json } from "./SBMLtoJSON";
 
 
 
@@ -15,8 +16,13 @@ import { readJsonGraph } from "./readJson";
  */
 export function importNetworkFromURL(url: string, network: Ref<Network>, networkStyle: Ref<GraphStyleProperties>, callbackFunction = () => {}): void {
 	setTimeout(async function() {
-		const json = await getContentFromURL(url);
-		const graphData = readJsonGraph(json);
+		let data:string = await getContentFromURL(url);
+		// Check if the data is XML
+		if (data.startsWith('<?xml')) {
+			// Convert XML to JSON
+			data = JSON.stringify(await sbml2json(data));
+		}
+		const graphData = readJsonGraph(data);
 		networkStyle.value = graphData.networkStyle;
 		loadNetwork(graphData.network, network).then(() => {
       callbackFunction();
@@ -35,8 +41,12 @@ export function importNetworkFromURL(url: string, network: Ref<Network>, network
 
 export function importNetworkFromFile(file: File, network: Ref<Network>, networkStyle: Ref<GraphStyleProperties>, callbackFunction = () => {}): void {
 	const reader = new FileReader();
-	reader.onload = function () {
+	reader.onload = async function () {
 		let data = reader.result as string;
+		if (data.startsWith('<?xml')) {
+			// Convert XML to JSON
+			data = JSON.stringify(await sbml2json(data));
+		}
 		const networkData = readJsonGraph(data);
 		networkStyle.value = networkData.networkStyle;
     loadNetwork(networkData.network, network).then(() => {

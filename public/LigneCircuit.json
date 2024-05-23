@@ -1,0 +1,625 @@
+{
+    "graph": {
+        "id": "_304c6dd3_22d0_47e4_bddf_1523ca53d90b",
+        "type": "metabolic",
+        "metadata": {
+            "style": {
+                "nodeStyles": {
+                    "metabolite": {
+                        "width": 25,
+                        "height": 25,
+                        "strokeWidth": 1,
+                        "shape": "circle"
+                    },
+                    "reaction": {
+                        "width": 15,
+                        "height": 15,
+                        "strokeWidth": 0.5,
+                        "shape": "rect",
+                        "fill": "grey"
+                    },
+                    "reversible": {
+                        "fill": "green",
+                        "shape": "inverseTriangle"
+                    },
+                    "reversibleVersion": {
+                        "fill": "red",
+                        "shape": "triangle"
+                    }
+                }
+            }
+        },
+        "nodes": {
+            "1": {
+                "id": "1",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "1"
+            },
+            "2": {
+                "id": "2",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "2"
+            },  
+            "3": {
+                "id": "3",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "3"
+            }, 
+            "4": {
+                "id": "4",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "4"
+            },
+            "5": {
+                "id": "5",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "5"
+            },
+            "6": {
+                "id": "6",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "6"
+            },
+            "7": {
+                "id": "7",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "7"
+            },
+            "8": {
+                "id": "8",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "8"
+            },
+            "9": {
+                "id": "9",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "9"
+            },
+            "10": {
+                "id": "10",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "10"
+            },
+            "11": {
+                "id": "11",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "11"
+            },
+            "12": {
+                "id": "12",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "12"
+            },
+            "13": {
+                "id": "13",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "13"
+            },
+            "14": {
+                "id": "14",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "14"
+            },
+            "15": {
+                "id": "15",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "15"
+            },
+            "16": {
+                "id": "16",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "16"
+            },
+            "17": {
+                "id": "17",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "17"
+            },  
+            "18": {
+                "id": "18",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "18"
+            },
+            "19": {
+                "id": "19",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "19"
+            },
+            "20": {
+                "id": "20",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "20"
+            },
+            "21": {
+                "id": "21",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "21"
+            },
+            "22": {
+                "id": "22",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "22"
+            },
+            "23": {
+                "id": "23",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "23"
+            },
+            "24": {
+                "id": "24",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "24"
+            },
+            "25": {
+                "id": "25",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "position": {
+                        "x": 48,
+                        "y": 33
+                    }
+                },
+                "label": "25"
+            }
+
+
+        },
+        "edges": [
+            {
+                "id": "1-2",
+                "source": "1",
+                "target": "2",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "2-3",
+                "source": "2",
+                "target": "3",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "3-4",
+                "source": "3",
+                "target": "4",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "4-5",
+                "source": "4",
+                "target": "5",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "5-6",
+                "source": "5",
+                "target": "6",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "6-7",
+                "source": "6",
+                "target": "7",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "7-8",
+                "source": "7",
+                "target": "8",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "8-9",
+                "source": "8",
+                "target": "9",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "9-10",
+                "source": "9",
+                "target": "10",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "10-11",
+                "source": "10",
+                "target": "11",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "11-12",
+                "source": "11",
+                "target": "12",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "12-13",
+                "source": "12",
+                "target": "13",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "13-14",
+                "source": "13",
+                "target": "14",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "14-15",
+                "source": "14",
+                "target": "15",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "11-16",
+                "source": "11",
+                "target": "16",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "16-17",
+                "source": "16",
+                "target": "17",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "17-18",
+                "source": "17",
+                "target": "18",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "18-19",
+                "source": "18",
+                "target": "19",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "19-20",
+                "source": "19",
+                "target": "20",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "20-21",
+                "source": "20",
+                "target": "21",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "21-22",
+                "source": "21",
+                "target": "22",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "22-23",
+                "source": "22",
+                "target": "23",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "23-24",
+                "source": "23",
+                "target": "24",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "24-25",
+                "source": "24",
+                "target": "25",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "25-7",
+                "source": "25",
+                "target": "7",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            },
+            {
+                "id": "15-24",
+                "source": "15",
+                "target": "24",
+                "metadata": {
+                    "classes": [
+                        "irreversible"
+                    ]
+                }
+            }
+
+        ]
+    }
+}

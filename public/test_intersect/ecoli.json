@@ -1,0 +1,5318 @@
+{
+        "graph": {
+            "edges": [
+                {
+                    "id": "M_pep_c--R_FRUpts2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_pep_c",
+                    "target": "R_FRUpts2"
+                },
+                {
+                    "id": "M_fru_e--R_FRUpts2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_fru_e",
+                    "target": "R_FRUpts2"
+                },
+                {
+                    "id": "R_FRUpts2--M_pyr_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_FRUpts2",
+                    "target": "M_pyr_c"
+                },
+                {
+                    "id": "R_FRUpts2--M_f6p_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_FRUpts2",
+                    "target": "M_f6p_c"
+                },
+                {
+                    "id": "M_pi_c--R_ATPS4r",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_pi_c",
+                    "target": "R_ATPS4r"
+                },
+                {
+                    "id": "M_h_e--R_ATPS4r",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_e",
+                    "target": "R_ATPS4r"
+                },
+                {
+                    "id": "M_adp_c--R_ATPS4r",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_adp_c",
+                    "target": "R_ATPS4r"
+                },
+                {
+                    "id": "R_ATPS4r--M_h2o_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ATPS4r",
+                    "target": "M_h2o_c"
+                },
+                {
+                    "id": "R_ATPS4r--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ATPS4r",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_ATPS4r--M_atp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ATPS4r",
+                    "target": "M_atp_c"
+                },
+                {
+                    "id": "M_nadp_c--R_ME2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nadp_c",
+                    "target": "R_ME2"
+                },
+                {
+                    "id": "M_mal__L_c--R_ME2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_mal__L_c",
+                    "target": "R_ME2"
+                },
+                {
+                    "id": "R_ME2--M_pyr_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ME2",
+                    "target": "M_pyr_c"
+                },
+                {
+                    "id": "R_ME2--M_nadph_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ME2",
+                    "target": "M_nadph_c"
+                },
+                {
+                    "id": "R_ME2--M_co2_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ME2",
+                    "target": "M_co2_c"
+                },
+                {
+                    "id": "M_nad_c--R_ME1",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nad_c",
+                    "target": "R_ME1"
+                },
+                {
+                    "id": "M_mal__L_c--R_ME1",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_mal__L_c",
+                    "target": "R_ME1"
+                },
+                {
+                    "id": "R_ME1--M_pyr_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ME1",
+                    "target": "M_pyr_c"
+                },
+                {
+                    "id": "R_ME1--M_nadh_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ME1",
+                    "target": "M_nadh_c"
+                },
+                {
+                    "id": "R_ME1--M_co2_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ME1",
+                    "target": "M_co2_c"
+                },
+                {
+                    "id": "M_coa_c--R_PFL",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_coa_c",
+                    "target": "R_PFL"
+                },
+                {
+                    "id": "M_pyr_c--R_PFL",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_pyr_c",
+                    "target": "R_PFL"
+                },
+                {
+                    "id": "R_PFL--M_accoa_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PFL",
+                    "target": "M_accoa_c"
+                },
+                {
+                    "id": "R_PFL--M_for_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PFL",
+                    "target": "M_for_c"
+                },
+                {
+                    "id": "M_q8h2_c--R_CYTBD",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_q8h2_c",
+                    "target": "R_CYTBD"
+                },
+                {
+                    "id": "M_o2_c--R_CYTBD",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_o2_c",
+                    "target": "R_CYTBD"
+                },
+                {
+                    "id": "M_h_c--R_CYTBD",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_c",
+                    "target": "R_CYTBD"
+                },
+                {
+                    "id": "R_CYTBD--M_h2o_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_CYTBD",
+                    "target": "M_h2o_c"
+                },
+                {
+                    "id": "R_CYTBD--M_h_e",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_CYTBD",
+                    "target": "M_h_e"
+                },
+                {
+                    "id": "R_CYTBD--M_q8_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_CYTBD",
+                    "target": "M_q8_c"
+                },
+                {
+                    "id": "M_atp_c--R_PFK",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_atp_c",
+                    "target": "R_PFK"
+                },
+                {
+                    "id": "M_f6p_c--R_PFK",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_f6p_c",
+                    "target": "R_PFK"
+                },
+                {
+                    "id": "R_PFK--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PFK",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_PFK--M_fdp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PFK",
+                    "target": "M_fdp_c"
+                },
+                {
+                    "id": "R_PFK--M_adp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PFK",
+                    "target": "M_adp_c"
+                },
+                {
+                    "id": "M_lac__D_e--R_D_LACt2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_lac__D_e",
+                    "target": "R_D_LACt2"
+                },
+                {
+                    "id": "M_h_e--R_D_LACt2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_e",
+                    "target": "R_D_LACt2"
+                },
+                {
+                    "id": "R_D_LACt2--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_D_LACt2",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_D_LACt2--M_lac__D_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_D_LACt2",
+                    "target": "M_lac__D_c"
+                },
+                {
+                    "id": "M_h2o_c--R_FBP",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h2o_c",
+                    "target": "R_FBP"
+                },
+                {
+                    "id": "M_fdp_c--R_FBP",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_fdp_c",
+                    "target": "R_FBP"
+                },
+                {
+                    "id": "R_FBP--M_pi_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_FBP",
+                    "target": "M_pi_c"
+                },
+                {
+                    "id": "R_FBP--M_f6p_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_FBP",
+                    "target": "M_f6p_c"
+                },
+                {
+                    "id": "R_ACONTa--M_h2o_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ACONTa",
+                    "target": "M_h2o_c"
+                },
+                {
+                    "id": "R_ACONTa--M_acon_C_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ACONTa",
+                    "target": "M_acon_C_c"
+                },
+                {
+                    "id": "M_nad_c--R_MDH",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nad_c",
+                    "target": "R_MDH"
+                },
+                {
+                    "id": "M_mal__L_c--R_MDH",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_mal__L_c",
+                    "target": "R_MDH"
+                },
+                {
+                    "id": "R_MDH--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_MDH",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_MDH--M_oaa_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_MDH",
+                    "target": "M_oaa_c"
+                },
+                {
+                    "id": "R_MDH--M_nadh_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_MDH",
+                    "target": "M_nadh_c"
+                },
+                {
+                    "id": "M_h2o_c--R_ACONTb",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h2o_c",
+                    "target": "R_ACONTb"
+                },
+                {
+                    "id": "M_acon_C_c--R_ACONTb",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_acon_C_c",
+                    "target": "R_ACONTb"
+                },
+                {
+                    "id": "M_succ_c--R_SUCOAS",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_succ_c",
+                    "target": "R_SUCOAS"
+                },
+                {
+                    "id": "M_coa_c--R_SUCOAS",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_coa_c",
+                    "target": "R_SUCOAS"
+                },
+                {
+                    "id": "M_atp_c--R_SUCOAS",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_atp_c",
+                    "target": "R_SUCOAS"
+                },
+                {
+                    "id": "R_SUCOAS--M_pi_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_SUCOAS",
+                    "target": "M_pi_c"
+                },
+                {
+                    "id": "R_SUCOAS--M_adp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_SUCOAS",
+                    "target": "M_adp_c"
+                },
+                {
+                    "id": "R_SUCOAS--M_succoa_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_SUCOAS",
+                    "target": "M_succoa_c"
+                },
+                {
+                    "id": "M_h_c--R_GLUSy",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_c",
+                    "target": "R_GLUSy"
+                },
+                {
+                    "id": "M_gln__L_c--R_GLUSy",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_gln__L_c",
+                    "target": "R_GLUSy"
+                },
+                {
+                    "id": "M_nadph_c--R_GLUSy",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nadph_c",
+                    "target": "R_GLUSy"
+                },
+                {
+                    "id": "M_akg_c--R_GLUSy",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_akg_c",
+                    "target": "R_GLUSy"
+                },
+                {
+                    "id": "R_GLUSy--M_nadp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLUSy",
+                    "target": "M_nadp_c"
+                },
+                {
+                    "id": "R_GLUSy--M_glu__L_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLUSy",
+                    "target": "M_glu__L_c"
+                },
+                {
+                    "id": "M_h_e--R_FUMt2_2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_e",
+                    "target": "R_FUMt2_2"
+                },
+                {
+                    "id": "M_fum_e--R_FUMt2_2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_fum_e",
+                    "target": "R_FUMt2_2"
+                },
+                {
+                    "id": "R_FUMt2_2--M_fum_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_FUMt2_2",
+                    "target": "M_fum_c"
+                },
+                {
+                    "id": "R_FUMt2_2--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_FUMt2_2",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "M_nad_c--R_NADTRHD",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nad_c",
+                    "target": "R_NADTRHD"
+                },
+                {
+                    "id": "M_nadph_c--R_NADTRHD",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nadph_c",
+                    "target": "R_NADTRHD"
+                },
+                {
+                    "id": "R_NADTRHD--M_nadp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_NADTRHD",
+                    "target": "M_nadp_c"
+                },
+                {
+                    "id": "R_NADTRHD--M_nadh_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_NADTRHD",
+                    "target": "M_nadh_c"
+                },
+                {
+                    "id": "M_nad_c--R_ALCD2x",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nad_c",
+                    "target": "R_ALCD2x"
+                },
+                {
+                    "id": "M_etoh_c--R_ALCD2x",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_etoh_c",
+                    "target": "R_ALCD2x"
+                },
+                {
+                    "id": "R_ALCD2x--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ALCD2x",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_ALCD2x--M_nadh_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ALCD2x",
+                    "target": "M_nadh_c"
+                },
+                {
+                    "id": "R_ALCD2x--M_acald_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ALCD2x",
+                    "target": "M_acald_c"
+                },
+                {
+                    "id": "M_h_e--R_SUCCt2_2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_e",
+                    "target": "R_SUCCt2_2"
+                },
+                {
+                    "id": "M_succ_e--R_SUCCt2_2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_succ_e",
+                    "target": "R_SUCCt2_2"
+                },
+                {
+                    "id": "R_SUCCt2_2--M_succ_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_SUCCt2_2",
+                    "target": "M_succ_c"
+                },
+                {
+                    "id": "R_SUCCt2_2--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_SUCCt2_2",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "M_g3p_c--R_TALA",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_g3p_c",
+                    "target": "R_TALA"
+                },
+                {
+                    "id": "M_s7p_c--R_TALA",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_s7p_c",
+                    "target": "R_TALA"
+                },
+                {
+                    "id": "R_TALA--M_e4p_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_TALA",
+                    "target": "M_e4p_c"
+                },
+                {
+                    "id": "R_TALA--M_f6p_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_TALA",
+                    "target": "M_f6p_c"
+                },
+                {
+                    "id": "M_h_e--R_FORt2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_e",
+                    "target": "R_FORt2"
+                },
+                {
+                    "id": "M_for_e--R_FORt2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_for_e",
+                    "target": "R_FORt2"
+                },
+                {
+                    "id": "R_FORt2--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_FORt2",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_FORt2--M_for_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_FORt2",
+                    "target": "M_for_c"
+                },
+                {
+                    "id": "M_h2o_c--R_MALS",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h2o_c",
+                    "target": "R_MALS"
+                },
+                {
+                    "id": "M_accoa_c--R_MALS",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_accoa_c",
+                    "target": "R_MALS"
+                },
+                {
+                    "id": "M_glx_c--R_MALS",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_glx_c",
+                    "target": "R_MALS"
+                },
+                {
+                    "id": "R_MALS--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_MALS",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_MALS--M_coa_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_MALS",
+                    "target": "M_coa_c"
+                },
+                {
+                    "id": "R_MALS--M_mal__L_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_MALS",
+                    "target": "M_mal__L_c"
+                },
+                {
+                    "id": "R_ICL--M_succ_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ICL",
+                    "target": "M_succ_c"
+                },
+                {
+                    "id": "R_ICL--M_glx_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ICL",
+                    "target": "M_glx_c"
+                },
+                {
+                    "id": "M_g3p_c--R_BIOMASS_Ecoli_core_w_GAM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_g3p_c",
+                    "target": "R_BIOMASS_Ecoli_core_w_GAM"
+                },
+                {
+                    "id": "M_nadph_c--R_BIOMASS_Ecoli_core_w_GAM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nadph_c",
+                    "target": "R_BIOMASS_Ecoli_core_w_GAM"
+                },
+                {
+                    "id": "M_3pg_c--R_BIOMASS_Ecoli_core_w_GAM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_3pg_c",
+                    "target": "R_BIOMASS_Ecoli_core_w_GAM"
+                },
+                {
+                    "id": "M_atp_c--R_BIOMASS_Ecoli_core_w_GAM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_atp_c",
+                    "target": "R_BIOMASS_Ecoli_core_w_GAM"
+                },
+                {
+                    "id": "M_gln__L_c--R_BIOMASS_Ecoli_core_w_GAM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_gln__L_c",
+                    "target": "R_BIOMASS_Ecoli_core_w_GAM"
+                },
+                {
+                    "id": "M_pyr_c--R_BIOMASS_Ecoli_core_w_GAM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_pyr_c",
+                    "target": "R_BIOMASS_Ecoli_core_w_GAM"
+                },
+                {
+                    "id": "M_glu__L_c--R_BIOMASS_Ecoli_core_w_GAM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_glu__L_c",
+                    "target": "R_BIOMASS_Ecoli_core_w_GAM"
+                },
+                {
+                    "id": "M_oaa_c--R_BIOMASS_Ecoli_core_w_GAM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_oaa_c",
+                    "target": "R_BIOMASS_Ecoli_core_w_GAM"
+                },
+                {
+                    "id": "M_accoa_c--R_BIOMASS_Ecoli_core_w_GAM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_accoa_c",
+                    "target": "R_BIOMASS_Ecoli_core_w_GAM"
+                },
+                {
+                    "id": "M_r5p_c--R_BIOMASS_Ecoli_core_w_GAM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_r5p_c",
+                    "target": "R_BIOMASS_Ecoli_core_w_GAM"
+                },
+                {
+                    "id": "M_nad_c--R_BIOMASS_Ecoli_core_w_GAM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nad_c",
+                    "target": "R_BIOMASS_Ecoli_core_w_GAM"
+                },
+                {
+                    "id": "M_pep_c--R_BIOMASS_Ecoli_core_w_GAM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_pep_c",
+                    "target": "R_BIOMASS_Ecoli_core_w_GAM"
+                },
+                {
+                    "id": "M_f6p_c--R_BIOMASS_Ecoli_core_w_GAM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_f6p_c",
+                    "target": "R_BIOMASS_Ecoli_core_w_GAM"
+                },
+                {
+                    "id": "M_h2o_c--R_BIOMASS_Ecoli_core_w_GAM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h2o_c",
+                    "target": "R_BIOMASS_Ecoli_core_w_GAM"
+                },
+                {
+                    "id": "M_e4p_c--R_BIOMASS_Ecoli_core_w_GAM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_e4p_c",
+                    "target": "R_BIOMASS_Ecoli_core_w_GAM"
+                },
+                {
+                    "id": "M_g6p_c--R_BIOMASS_Ecoli_core_w_GAM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_g6p_c",
+                    "target": "R_BIOMASS_Ecoli_core_w_GAM"
+                },
+                {
+                    "id": "R_BIOMASS_Ecoli_core_w_GAM--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_BIOMASS_Ecoli_core_w_GAM",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_BIOMASS_Ecoli_core_w_GAM--M_akg_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_BIOMASS_Ecoli_core_w_GAM",
+                    "target": "M_akg_c"
+                },
+                {
+                    "id": "R_BIOMASS_Ecoli_core_w_GAM--M_pi_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_BIOMASS_Ecoli_core_w_GAM",
+                    "target": "M_pi_c"
+                },
+                {
+                    "id": "R_BIOMASS_Ecoli_core_w_GAM--M_coa_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_BIOMASS_Ecoli_core_w_GAM",
+                    "target": "M_coa_c"
+                },
+                {
+                    "id": "R_BIOMASS_Ecoli_core_w_GAM--M_nadh_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_BIOMASS_Ecoli_core_w_GAM",
+                    "target": "M_nadh_c"
+                },
+                {
+                    "id": "R_BIOMASS_Ecoli_core_w_GAM--M_adp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_BIOMASS_Ecoli_core_w_GAM",
+                    "target": "M_adp_c"
+                },
+                {
+                    "id": "R_BIOMASS_Ecoli_core_w_GAM--M_nadp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_BIOMASS_Ecoli_core_w_GAM",
+                    "target": "M_nadp_c"
+                },
+                {
+                    "id": "M_e4p_c--R_TKT2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_e4p_c",
+                    "target": "R_TKT2"
+                },
+                {
+                    "id": "M_xu5p__D_c--R_TKT2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_xu5p__D_c",
+                    "target": "R_TKT2"
+                },
+                {
+                    "id": "R_TKT2--M_g3p_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_TKT2",
+                    "target": "M_g3p_c"
+                },
+                {
+                    "id": "R_TKT2--M_f6p_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_TKT2",
+                    "target": "M_f6p_c"
+                },
+                {
+                    "id": "M_r5p_c--R_TKT1",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_r5p_c",
+                    "target": "R_TKT1"
+                },
+                {
+                    "id": "M_xu5p__D_c--R_TKT1",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_xu5p__D_c",
+                    "target": "R_TKT1"
+                },
+                {
+                    "id": "R_TKT1--M_g3p_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_TKT1",
+                    "target": "M_g3p_c"
+                },
+                {
+                    "id": "R_TKT1--M_s7p_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_TKT1",
+                    "target": "M_s7p_c"
+                },
+                {
+                    "id": "M_atp_c--R_ACKr",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_atp_c",
+                    "target": "R_ACKr"
+                },
+                {
+                    "id": "M_ac_c--R_ACKr",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_ac_c",
+                    "target": "R_ACKr"
+                },
+                {
+                    "id": "R_ACKr--M_adp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ACKr",
+                    "target": "M_adp_c"
+                },
+                {
+                    "id": "R_ACKr--M_actp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ACKr",
+                    "target": "M_actp_c"
+                },
+                {
+                    "id": "M_atp_c--R_ADK1",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_atp_c",
+                    "target": "R_ADK1"
+                },
+                {
+                    "id": "M_amp_c--R_ADK1",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_amp_c",
+                    "target": "R_ADK1"
+                },
+                {
+                    "id": "M_nadp_c--R_ICDHyr",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nadp_c",
+                    "target": "R_ICDHyr"
+                },
+                {
+                    "id": "M_icit_c--R_ICDHyr",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_icit_c",
+                    "target": "R_ICDHyr"
+                },
+                {
+                    "id": "R_ICDHyr--M_nadph_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ICDHyr",
+                    "target": "M_nadph_c"
+                },
+                {
+                    "id": "R_ICDHyr--M_akg_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ICDHyr",
+                    "target": "M_akg_c"
+                },
+                {
+                    "id": "R_ICDHyr--M_co2_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ICDHyr",
+                    "target": "M_co2_c"
+                },
+                {
+                    "id": "M_h_e--R_MALt2_2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_e",
+                    "target": "R_MALt2_2"
+                },
+                {
+                    "id": "M_mal__L_e--R_MALt2_2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_mal__L_e",
+                    "target": "R_MALt2_2"
+                },
+                {
+                    "id": "R_MALt2_2--M_mal__L_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_MALt2_2",
+                    "target": "M_mal__L_c"
+                },
+                {
+                    "id": "R_MALt2_2--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_MALt2_2",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_FBA--M_g3p_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_FBA",
+                    "target": "M_g3p_c"
+                },
+                {
+                    "id": "R_FBA--M_dhap_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_FBA",
+                    "target": "M_dhap_c"
+                },
+                {
+                    "id": "M_nadh_c--R_NADH16",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nadh_c",
+                    "target": "R_NADH16"
+                },
+                {
+                    "id": "M_h_c--R_NADH16",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_c",
+                    "target": "R_NADH16"
+                },
+                {
+                    "id": "M_q8_c--R_NADH16",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_q8_c",
+                    "target": "R_NADH16"
+                },
+                {
+                    "id": "R_NADH16--M_nad_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_NADH16",
+                    "target": "M_nad_c"
+                },
+                {
+                    "id": "R_NADH16--M_h_e",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_NADH16",
+                    "target": "M_h_e"
+                },
+                {
+                    "id": "R_NADH16--M_q8h2_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_NADH16",
+                    "target": "M_q8h2_c"
+                },
+                {
+                    "id": "M_pep_c--R_GLCpts",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_pep_c",
+                    "target": "R_GLCpts"
+                },
+                {
+                    "id": "M_glc__D_e--R_GLCpts",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_glc__D_e",
+                    "target": "R_GLCpts"
+                },
+                {
+                    "id": "R_GLCpts--M_g6p_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLCpts",
+                    "target": "M_g6p_c"
+                },
+                {
+                    "id": "R_GLCpts--M_pyr_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLCpts",
+                    "target": "M_pyr_c"
+                },
+                {
+                    "id": "M_akg_e--R_AKGt2r",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_akg_e",
+                    "target": "R_AKGt2r"
+                },
+                {
+                    "id": "M_h_e--R_AKGt2r",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_e",
+                    "target": "R_AKGt2r"
+                },
+                {
+                    "id": "R_AKGt2r--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_AKGt2r",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_AKGt2r--M_akg_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_AKGt2r",
+                    "target": "M_akg_c"
+                },
+                {
+                    "id": "M_h2o_c--R_GLUN",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h2o_c",
+                    "target": "R_GLUN"
+                },
+                {
+                    "id": "M_gln__L_c--R_GLUN",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_gln__L_c",
+                    "target": "R_GLUN"
+                },
+                {
+                    "id": "R_GLUN--M_nh4_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLUN",
+                    "target": "M_nh4_c"
+                },
+                {
+                    "id": "R_GLUN--M_glu__L_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLUN",
+                    "target": "M_glu__L_c"
+                },
+                {
+                    "id": "M_nad_c--R_LDH_D",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nad_c",
+                    "target": "R_LDH_D"
+                },
+                {
+                    "id": "M_lac__D_c--R_LDH_D",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_lac__D_c",
+                    "target": "R_LDH_D"
+                },
+                {
+                    "id": "R_LDH_D--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_LDH_D",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_LDH_D--M_pyr_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_LDH_D",
+                    "target": "M_pyr_c"
+                },
+                {
+                    "id": "R_LDH_D--M_nadh_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_LDH_D",
+                    "target": "M_nadh_c"
+                },
+                {
+                    "id": "M_q8h2_c--R_FRD7",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_q8h2_c",
+                    "target": "R_FRD7"
+                },
+                {
+                    "id": "M_fum_c--R_FRD7",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_fum_c",
+                    "target": "R_FRD7"
+                },
+                {
+                    "id": "R_FRD7--M_succ_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_FRD7",
+                    "target": "M_succ_c"
+                },
+                {
+                    "id": "R_FRD7--M_q8_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_FRD7",
+                    "target": "M_q8_c"
+                },
+                {
+                    "id": "M_nad_c--R_PDH",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nad_c",
+                    "target": "R_PDH"
+                },
+                {
+                    "id": "M_pyr_c--R_PDH",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_pyr_c",
+                    "target": "R_PDH"
+                },
+                {
+                    "id": "M_coa_c--R_PDH",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_coa_c",
+                    "target": "R_PDH"
+                },
+                {
+                    "id": "R_PDH--M_nadh_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PDH",
+                    "target": "M_nadh_c"
+                },
+                {
+                    "id": "R_PDH--M_accoa_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PDH",
+                    "target": "M_accoa_c"
+                },
+                {
+                    "id": "R_PDH--M_co2_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PDH",
+                    "target": "M_co2_c"
+                },
+                {
+                    "id": "M_h2o_c--R_PPS",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h2o_c",
+                    "target": "R_PPS"
+                },
+                {
+                    "id": "M_pyr_c--R_PPS",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_pyr_c",
+                    "target": "R_PPS"
+                },
+                {
+                    "id": "M_atp_c--R_PPS",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_atp_c",
+                    "target": "R_PPS"
+                },
+                {
+                    "id": "R_PPS--M_pi_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PPS",
+                    "target": "M_pi_c"
+                },
+                {
+                    "id": "R_PPS--M_pep_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PPS",
+                    "target": "M_pep_c"
+                },
+                {
+                    "id": "R_PPS--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PPS",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_PPS--M_amp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PPS",
+                    "target": "M_amp_c"
+                },
+                {
+                    "id": "M_h2o_c--R_GLNabc",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h2o_c",
+                    "target": "R_GLNabc"
+                },
+                {
+                    "id": "M_gln__L_e--R_GLNabc",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_gln__L_e",
+                    "target": "R_GLNabc"
+                },
+                {
+                    "id": "M_atp_c--R_GLNabc",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_atp_c",
+                    "target": "R_GLNabc"
+                },
+                {
+                    "id": "R_GLNabc--M_pi_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLNabc",
+                    "target": "M_pi_c"
+                },
+                {
+                    "id": "R_GLNabc--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLNabc",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_GLNabc--M_gln__L_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLNabc",
+                    "target": "M_gln__L_c"
+                },
+                {
+                    "id": "R_GLNabc--M_adp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLNabc",
+                    "target": "M_adp_c"
+                },
+                {
+                    "id": "M_h_e--R_PIt2r",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_e",
+                    "target": "R_PIt2r"
+                },
+                {
+                    "id": "M_pi_e--R_PIt2r",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_pi_e",
+                    "target": "R_PIt2r"
+                },
+                {
+                    "id": "R_PIt2r--M_pi_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PIt2r",
+                    "target": "M_pi_c"
+                },
+                {
+                    "id": "R_PIt2r--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PIt2r",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "M_succ_c--R_SUCDi",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_succ_c",
+                    "target": "R_SUCDi"
+                },
+                {
+                    "id": "M_q8_c--R_SUCDi",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_q8_c",
+                    "target": "R_SUCDi"
+                },
+                {
+                    "id": "R_SUCDi--M_q8h2_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_SUCDi",
+                    "target": "M_q8h2_c"
+                },
+                {
+                    "id": "R_SUCDi--M_fum_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_SUCDi",
+                    "target": "M_fum_c"
+                },
+                {
+                    "id": "M_pi_c--R_GAPD",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_pi_c",
+                    "target": "R_GAPD"
+                },
+                {
+                    "id": "M_nad_c--R_GAPD",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nad_c",
+                    "target": "R_GAPD"
+                },
+                {
+                    "id": "M_g3p_c--R_GAPD",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_g3p_c",
+                    "target": "R_GAPD"
+                },
+                {
+                    "id": "R_GAPD--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GAPD",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_GAPD--M_nadh_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GAPD",
+                    "target": "M_nadh_c"
+                },
+                {
+                    "id": "R_GAPD--M_13dpg_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GAPD",
+                    "target": "M_13dpg_c"
+                },
+                {
+                    "id": "M_pyr_e--R_PYRt2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_pyr_e",
+                    "target": "R_PYRt2"
+                },
+                {
+                    "id": "M_h_e--R_PYRt2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_e",
+                    "target": "R_PYRt2"
+                },
+                {
+                    "id": "R_PYRt2--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PYRt2",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_PYRt2--M_pyr_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PYRt2",
+                    "target": "M_pyr_c"
+                },
+                {
+                    "id": "M_h_c--R_PYK",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_c",
+                    "target": "R_PYK"
+                },
+                {
+                    "id": "M_pep_c--R_PYK",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_pep_c",
+                    "target": "R_PYK"
+                },
+                {
+                    "id": "M_adp_c--R_PYK",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_adp_c",
+                    "target": "R_PYK"
+                },
+                {
+                    "id": "R_PYK--M_atp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PYK",
+                    "target": "M_atp_c"
+                },
+                {
+                    "id": "R_PYK--M_pyr_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PYK",
+                    "target": "M_pyr_c"
+                },
+                {
+                    "id": "M_h2o_c--R_CS",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h2o_c",
+                    "target": "R_CS"
+                },
+                {
+                    "id": "M_oaa_c--R_CS",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_oaa_c",
+                    "target": "R_CS"
+                },
+                {
+                    "id": "M_accoa_c--R_CS",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_accoa_c",
+                    "target": "R_CS"
+                },
+                {
+                    "id": "R_CS--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_CS",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_CS--M_cit_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_CS",
+                    "target": "M_cit_c"
+                },
+                {
+                    "id": "R_CS--M_coa_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_CS",
+                    "target": "M_coa_c"
+                },
+                {
+                    "id": "M_h2o_c--R_FUM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h2o_c",
+                    "target": "R_FUM"
+                },
+                {
+                    "id": "M_fum_c--R_FUM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_fum_c",
+                    "target": "R_FUM"
+                },
+                {
+                    "id": "M_nadp_c--R_THD2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nadp_c",
+                    "target": "R_THD2"
+                },
+                {
+                    "id": "M_nadh_c--R_THD2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nadh_c",
+                    "target": "R_THD2"
+                },
+                {
+                    "id": "M_h_e--R_THD2",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_e",
+                    "target": "R_THD2"
+                },
+                {
+                    "id": "R_THD2--M_nad_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_THD2",
+                    "target": "M_nad_c"
+                },
+                {
+                    "id": "R_THD2--M_nadph_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_THD2",
+                    "target": "M_nadph_c"
+                },
+                {
+                    "id": "R_THD2--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_THD2",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "M_nad_c--R_ACALD",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nad_c",
+                    "target": "R_ACALD"
+                },
+                {
+                    "id": "M_acald_c--R_ACALD",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_acald_c",
+                    "target": "R_ACALD"
+                },
+                {
+                    "id": "M_coa_c--R_ACALD",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_coa_c",
+                    "target": "R_ACALD"
+                },
+                {
+                    "id": "R_ACALD--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ACALD",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_ACALD--M_nadh_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ACALD",
+                    "target": "M_nadh_c"
+                },
+                {
+                    "id": "R_ACALD--M_accoa_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ACALD",
+                    "target": "M_accoa_c"
+                },
+                {
+                    "id": "M_h_e--R_ETOHt2r",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_e",
+                    "target": "R_ETOHt2r"
+                },
+                {
+                    "id": "M_etoh_e--R_ETOHt2r",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_etoh_e",
+                    "target": "R_ETOHt2r"
+                },
+                {
+                    "id": "R_ETOHt2r--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ETOHt2r",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_ETOHt2r--M_etoh_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ETOHt2r",
+                    "target": "M_etoh_c"
+                },
+                {
+                    "id": "M_nad_c--R_AKGDH",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nad_c",
+                    "target": "R_AKGDH"
+                },
+                {
+                    "id": "M_coa_c--R_AKGDH",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_coa_c",
+                    "target": "R_AKGDH"
+                },
+                {
+                    "id": "M_akg_c--R_AKGDH",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_akg_c",
+                    "target": "R_AKGDH"
+                },
+                {
+                    "id": "R_AKGDH--M_nadh_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_AKGDH",
+                    "target": "M_nadh_c"
+                },
+                {
+                    "id": "R_AKGDH--M_co2_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_AKGDH",
+                    "target": "M_co2_c"
+                },
+                {
+                    "id": "R_AKGDH--M_succoa_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_AKGDH",
+                    "target": "M_succoa_c"
+                },
+                {
+                    "id": "M_h2o_c--R_PGL",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h2o_c",
+                    "target": "R_PGL"
+                },
+                {
+                    "id": "M_6pgl_c--R_PGL",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_6pgl_c",
+                    "target": "R_PGL"
+                },
+                {
+                    "id": "R_PGL--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PGL",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_PGL--M_6pgc_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PGL",
+                    "target": "M_6pgc_c"
+                },
+                {
+                    "id": "M_atp_c--R_PGK",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_atp_c",
+                    "target": "R_PGK"
+                },
+                {
+                    "id": "M_3pg_c--R_PGK",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_3pg_c",
+                    "target": "R_PGK"
+                },
+                {
+                    "id": "R_PGK--M_13dpg_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PGK",
+                    "target": "M_13dpg_c"
+                },
+                {
+                    "id": "R_PGK--M_adp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PGK",
+                    "target": "M_adp_c"
+                },
+                {
+                    "id": "M_h_e--R_ACt2r",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_e",
+                    "target": "R_ACt2r"
+                },
+                {
+                    "id": "M_ac_e--R_ACt2r",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_ac_e",
+                    "target": "R_ACt2r"
+                },
+                {
+                    "id": "R_ACt2r--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ACt2r",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_ACt2r--M_ac_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ACt2r",
+                    "target": "M_ac_c"
+                },
+                {
+                    "id": "M_pi_c--R_PTAr",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_pi_c",
+                    "target": "R_PTAr"
+                },
+                {
+                    "id": "M_accoa_c--R_PTAr",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_accoa_c",
+                    "target": "R_PTAr"
+                },
+                {
+                    "id": "R_PTAr--M_coa_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PTAr",
+                    "target": "M_coa_c"
+                },
+                {
+                    "id": "R_PTAr--M_actp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PTAr",
+                    "target": "M_actp_c"
+                },
+                {
+                    "id": "M_succ_c--R_SUCCt3",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_succ_c",
+                    "target": "R_SUCCt3"
+                },
+                {
+                    "id": "M_h_e--R_SUCCt3",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_e",
+                    "target": "R_SUCCt3"
+                },
+                {
+                    "id": "R_SUCCt3--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_SUCCt3",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_SUCCt3--M_succ_e",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_SUCCt3",
+                    "target": "M_succ_e"
+                },
+                {
+                    "id": "R_ENO--M_h2o_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ENO",
+                    "target": "M_h2o_c"
+                },
+                {
+                    "id": "R_ENO--M_pep_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ENO",
+                    "target": "M_pep_c"
+                },
+                {
+                    "id": "M_atp_c--R_PPCK",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_atp_c",
+                    "target": "R_PPCK"
+                },
+                {
+                    "id": "M_oaa_c--R_PPCK",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_oaa_c",
+                    "target": "R_PPCK"
+                },
+                {
+                    "id": "R_PPCK--M_pep_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PPCK",
+                    "target": "M_pep_c"
+                },
+                {
+                    "id": "R_PPCK--M_co2_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PPCK",
+                    "target": "M_co2_c"
+                },
+                {
+                    "id": "R_PPCK--M_adp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PPCK",
+                    "target": "M_adp_c"
+                },
+                {
+                    "id": "M_h2o_c--R_PPC",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h2o_c",
+                    "target": "R_PPC"
+                },
+                {
+                    "id": "M_pep_c--R_PPC",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_pep_c",
+                    "target": "R_PPC"
+                },
+                {
+                    "id": "M_co2_c--R_PPC",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_co2_c",
+                    "target": "R_PPC"
+                },
+                {
+                    "id": "R_PPC--M_pi_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PPC",
+                    "target": "M_pi_c"
+                },
+                {
+                    "id": "R_PPC--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PPC",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_PPC--M_oaa_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_PPC",
+                    "target": "M_oaa_c"
+                },
+                {
+                    "id": "M_nadp_c--R_G6PDH2r",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nadp_c",
+                    "target": "R_G6PDH2r"
+                },
+                {
+                    "id": "M_g6p_c--R_G6PDH2r",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_g6p_c",
+                    "target": "R_G6PDH2r"
+                },
+                {
+                    "id": "R_G6PDH2r--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_G6PDH2r",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_G6PDH2r--M_6pgl_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_G6PDH2r",
+                    "target": "M_6pgl_c"
+                },
+                {
+                    "id": "R_G6PDH2r--M_nadph_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_G6PDH2r",
+                    "target": "M_nadph_c"
+                },
+                {
+                    "id": "M_h2o_c--R_ATPM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h2o_c",
+                    "target": "R_ATPM"
+                },
+                {
+                    "id": "M_atp_c--R_ATPM",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_atp_c",
+                    "target": "R_ATPM"
+                },
+                {
+                    "id": "R_ATPM--M_pi_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ATPM",
+                    "target": "M_pi_c"
+                },
+                {
+                    "id": "R_ATPM--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ATPM",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_ATPM--M_adp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_ATPM",
+                    "target": "M_adp_c"
+                },
+                {
+                    "id": "M_nh4_c--R_GLNS",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nh4_c",
+                    "target": "R_GLNS"
+                },
+                {
+                    "id": "M_atp_c--R_GLNS",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_atp_c",
+                    "target": "R_GLNS"
+                },
+                {
+                    "id": "M_glu__L_c--R_GLNS",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_glu__L_c",
+                    "target": "R_GLNS"
+                },
+                {
+                    "id": "R_GLNS--M_pi_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLNS",
+                    "target": "M_pi_c"
+                },
+                {
+                    "id": "R_GLNS--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLNS",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_GLNS--M_gln__L_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLNS",
+                    "target": "M_gln__L_c"
+                },
+                {
+                    "id": "R_GLNS--M_adp_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLNS",
+                    "target": "M_adp_c"
+                },
+                {
+                    "id": "M_glu__L_e--R_GLUt2r",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_glu__L_e",
+                    "target": "R_GLUt2r"
+                },
+                {
+                    "id": "M_h_e--R_GLUt2r",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h_e",
+                    "target": "R_GLUt2r"
+                },
+                {
+                    "id": "R_GLUt2r--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLUt2r",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_GLUt2r--M_glu__L_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLUt2r",
+                    "target": "M_glu__L_c"
+                },
+                {
+                    "id": "M_nadp_c--R_GLUDy",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nadp_c",
+                    "target": "R_GLUDy"
+                },
+                {
+                    "id": "M_h2o_c--R_GLUDy",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_h2o_c",
+                    "target": "R_GLUDy"
+                },
+                {
+                    "id": "M_glu__L_c--R_GLUDy",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_glu__L_c",
+                    "target": "R_GLUDy"
+                },
+                {
+                    "id": "R_GLUDy--M_h_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLUDy",
+                    "target": "M_h_c"
+                },
+                {
+                    "id": "R_GLUDy--M_nh4_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLUDy",
+                    "target": "M_nh4_c"
+                },
+                {
+                    "id": "R_GLUDy--M_nadph_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLUDy",
+                    "target": "M_nadph_c"
+                },
+                {
+                    "id": "R_GLUDy--M_akg_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GLUDy",
+                    "target": "M_akg_c"
+                },
+                {
+                    "id": "M_nadp_c--R_GND",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_nadp_c",
+                    "target": "R_GND"
+                },
+                {
+                    "id": "M_6pgc_c--R_GND",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "M_6pgc_c",
+                    "target": "R_GND"
+                },
+                {
+                    "id": "R_GND--M_nadph_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GND",
+                    "target": "M_nadph_c"
+                },
+                {
+                    "id": "R_GND--M_co2_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GND",
+                    "target": "M_co2_c"
+                },
+                {
+                    "id": "R_GND--M_ru5p__D_c",
+                    "metadata": {
+                        "classes": [
+                            "irreversible"
+                        ]
+                    },
+                    "source": "R_GND",
+                    "target": "M_ru5p__D_c"
+                }
+            ],
+            "id": "_fbcb8392_620a_49f6_9a1b_27bc97c02968",
+            "metadata": {
+                "style": {
+                    "nodeStyles": {
+                        "metabolite": {
+                            "height": 25,
+                            "shape": "circle",
+                            "strokeWidth": 1,
+                            "width": 25
+                        },
+                        "reaction": {
+                            "fill": "grey",
+                            "height": 15,
+                            "shape": "rect",
+                            "strokeWidth": 0.5,
+                            "width": 15
+                        },
+                        "reversible": {
+                            "fill": "green",
+                            "shape": "inverseTriangle"
+                        },
+                        "reversibleVersion": {
+                            "fill": "red",
+                            "shape": "triangle"
+                        }
+                    }
+                }
+            },
+            "nodes": {
+                "M_13dpg_c": {
+                    "id": "M_13dpg_c",
+                    "label": "3-Phospho-D-glyceroyl phosphate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 74,
+                            "y": 22
+                        }
+                    }
+                },
+                "M_2pg_c": {
+                    "id": "M_2pg_c",
+                    "label": "D-Glycerate 2-phosphate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 70,
+                            "y": 67
+                        }
+                    }
+                },
+                "M_3pg_c": {
+                    "id": "M_3pg_c",
+                    "label": "3-Phospho-D-glycerate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 8,
+                            "y": 44
+                        }
+                    }
+                },
+                "M_6pgc_c": {
+                    "id": "M_6pgc_c",
+                    "label": "6-Phospho-D-gluconate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 82,
+                            "y": 69
+                        }
+                    }
+                },
+                "M_6pgl_c": {
+                    "id": "M_6pgl_c",
+                    "label": "6-phospho-D-glucono-1,5-lactone",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 72,
+                            "y": 0
+                        }
+                    }
+                },
+                "M_ac_c": {
+                    "id": "M_ac_c",
+                    "label": "Acetate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 77,
+                            "y": 23
+                        }
+                    }
+                },
+                "M_ac_e": {
+                    "id": "M_ac_e",
+                    "label": "Acetate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 9,
+                            "y": 78
+                        }
+                    }
+                },
+                "M_acald_c": {
+                    "id": "M_acald_c",
+                    "label": "Acetaldehyde",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 51,
+                            "y": 94
+                        }
+                    }
+                },
+                "M_acald_e": {
+                    "id": "M_acald_e",
+                    "label": "Acetaldehyde",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 51,
+                            "y": 81
+                        }
+                    }
+                },
+                "M_accoa_c": {
+                    "id": "M_accoa_c",
+                    "label": "Acetyl-CoA",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 29,
+                            "y": 28
+                        }
+                    }
+                },
+                "M_acon_C_c": {
+                    "id": "M_acon_C_c",
+                    "label": "Cis-Aconitate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 81,
+                            "y": 4
+                        }
+                    }
+                },
+                "M_actp_c": {
+                    "id": "M_actp_c",
+                    "label": "Acetyl phosphate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 7,
+                            "y": 66
+                        }
+                    }
+                },
+                "M_adp_c": {
+                    "id": "M_adp_c",
+                    "label": "ADP C10H12N5O10P2",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 31,
+                            "y": 23
+                        }
+                    }
+                },
+                "M_akg_c": {
+                    "id": "M_akg_c",
+                    "label": "2-Oxoglutarate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 100,
+                            "y": 56
+                        }
+                    }
+                },
+                "M_akg_e": {
+                    "id": "M_akg_e",
+                    "label": "2-Oxoglutarate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 64,
+                            "y": 20
+                        }
+                    }
+                },
+                "M_amp_c": {
+                    "id": "M_amp_c",
+                    "label": "AMP C10H12N5O7P",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 92,
+                            "y": 72
+                        }
+                    }
+                },
+                "M_atp_c": {
+                    "id": "M_atp_c",
+                    "label": "ATP C10H12N5O13P3",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 28,
+                            "y": 43
+                        }
+                    }
+                },
+                "M_cit_c": {
+                    "id": "M_cit_c",
+                    "label": "Citrate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 10,
+                            "y": 99
+                        }
+                    }
+                },
+                "M_co2_c": {
+                    "id": "M_co2_c",
+                    "label": "CO2 CO2",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 26,
+                            "y": 59
+                        }
+                    }
+                },
+                "M_co2_e": {
+                    "id": "M_co2_e",
+                    "label": "CO2 CO2",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 79,
+                            "y": 40
+                        }
+                    }
+                },
+                "M_coa_c": {
+                    "id": "M_coa_c",
+                    "label": "Coenzyme A",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 10,
+                            "y": 1
+                        }
+                    }
+                },
+                "M_dhap_c": {
+                    "id": "M_dhap_c",
+                    "label": "Dihydroxyacetone phosphate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 57,
+                            "y": 91
+                        }
+                    }
+                },
+                "M_e4p_c": {
+                    "id": "M_e4p_c",
+                    "label": "D-Erythrose 4-phosphate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 73,
+                            "y": 30
+                        }
+                    }
+                },
+                "M_etoh_c": {
+                    "id": "M_etoh_c",
+                    "label": "Ethanol",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 14,
+                            "y": 65
+                        }
+                    }
+                },
+                "M_etoh_e": {
+                    "id": "M_etoh_e",
+                    "label": "Ethanol",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 100,
+                            "y": 68
+                        }
+                    }
+                },
+                "M_f6p_c": {
+                    "id": "M_f6p_c",
+                    "label": "D-Fructose 6-phosphate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 56,
+                            "y": 3
+                        }
+                    }
+                },
+                "M_fdp_c": {
+                    "id": "M_fdp_c",
+                    "label": "D-Fructose 1,6-bisphosphate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 95,
+                            "y": 40
+                        }
+                    }
+                },
+                "M_for_c": {
+                    "id": "M_for_c",
+                    "label": "Formate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 2,
+                            "y": 9
+                        }
+                    }
+                },
+                "M_for_e": {
+                    "id": "M_for_e",
+                    "label": "Formate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 7,
+                            "y": 21
+                        }
+                    }
+                },
+                "M_fru_e": {
+                    "id": "M_fru_e",
+                    "label": "D-Fructose",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 66,
+                            "y": 84
+                        }
+                    }
+                },
+                "M_fum_c": {
+                    "id": "M_fum_c",
+                    "label": "Fumarate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 38,
+                            "y": 62
+                        }
+                    }
+                },
+                "M_fum_e": {
+                    "id": "M_fum_e",
+                    "label": "Fumarate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 89,
+                            "y": 24
+                        }
+                    }
+                },
+                "M_g3p_c": {
+                    "id": "M_g3p_c",
+                    "label": "Glyceraldehyde 3-phosphate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 65,
+                            "y": 18
+                        }
+                    }
+                },
+                "M_g6p_c": {
+                    "id": "M_g6p_c",
+                    "label": "D-Glucose 6-phosphate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 16,
+                            "y": 20
+                        }
+                    }
+                },
+                "M_glc__D_e": {
+                    "id": "M_glc__D_e",
+                    "label": "D-Glucose",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 60,
+                            "y": 1
+                        }
+                    }
+                },
+                "M_gln__L_c": {
+                    "id": "M_gln__L_c",
+                    "label": "L-Glutamine",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 76,
+                            "y": 46
+                        }
+                    }
+                },
+                "M_gln__L_e": {
+                    "id": "M_gln__L_e",
+                    "label": "L-Glutamine",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 55,
+                            "y": 16
+                        }
+                    }
+                },
+                "M_glu__L_c": {
+                    "id": "M_glu__L_c",
+                    "label": "L-Glutamate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 36,
+                            "y": 23
+                        }
+                    }
+                },
+                "M_glu__L_e": {
+                    "id": "M_glu__L_e",
+                    "label": "L-Glutamate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 15,
+                            "y": 40
+                        }
+                    }
+                },
+                "M_glx_c": {
+                    "id": "M_glx_c",
+                    "label": "Glyoxylate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 38,
+                            "y": 92
+                        }
+                    }
+                },
+                "M_h2o_c": {
+                    "id": "M_h2o_c",
+                    "label": "H2O H2O",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 53,
+                            "y": 7
+                        }
+                    }
+                },
+                "M_h2o_e": {
+                    "id": "M_h2o_e",
+                    "label": "H2O H2O",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 79,
+                            "y": 6
+                        }
+                    }
+                },
+                "M_h_c": {
+                    "id": "M_h_c",
+                    "label": "H+",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 35,
+                            "y": 2
+                        }
+                    }
+                },
+                "M_h_e": {
+                    "id": "M_h_e",
+                    "label": "H+",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 65,
+                            "y": 1
+                        }
+                    }
+                },
+                "M_icit_c": {
+                    "id": "M_icit_c",
+                    "label": "Isocitrate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 5,
+                            "y": 22
+                        }
+                    }
+                },
+                "M_lac__D_c": {
+                    "id": "M_lac__D_c",
+                    "label": "D-Lactate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 54,
+                            "y": 27
+                        }
+                    }
+                },
+                "M_lac__D_e": {
+                    "id": "M_lac__D_e",
+                    "label": "D-Lactate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 34,
+                            "y": 92
+                        }
+                    }
+                },
+                "M_mal__L_c": {
+                    "id": "M_mal__L_c",
+                    "label": "L-Malate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 51,
+                            "y": 18
+                        }
+                    }
+                },
+                "M_mal__L_e": {
+                    "id": "M_mal__L_e",
+                    "label": "L-Malate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 7,
+                            "y": 91
+                        }
+                    }
+                },
+                "M_nad_c": {
+                    "id": "M_nad_c",
+                    "label": "Nicotinamide adenine dinucleotide",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 91,
+                            "y": 30
+                        }
+                    }
+                },
+                "M_nadh_c": {
+                    "id": "M_nadh_c",
+                    "label": "Nicotinamide adenine dinucleotide - reduced",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 24,
+                            "y": 38
+                        }
+                    }
+                },
+                "M_nadp_c": {
+                    "id": "M_nadp_c",
+                    "label": "Nicotinamide adenine dinucleotide phosphate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 37,
+                            "y": 49
+                        }
+                    }
+                },
+                "M_nadph_c": {
+                    "id": "M_nadph_c",
+                    "label": "Nicotinamide adenine dinucleotide phosphate - reduced",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 4,
+                            "y": 72
+                        }
+                    }
+                },
+                "M_nh4_c": {
+                    "id": "M_nh4_c",
+                    "label": "Ammonium",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 21,
+                            "y": 74
+                        }
+                    }
+                },
+                "M_nh4_e": {
+                    "id": "M_nh4_e",
+                    "label": "Ammonium",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 63,
+                            "y": 40
+                        }
+                    }
+                },
+                "M_o2_c": {
+                    "id": "M_o2_c",
+                    "label": "O2 O2",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 23,
+                            "y": 86
+                        }
+                    }
+                },
+                "M_o2_e": {
+                    "id": "M_o2_e",
+                    "label": "O2 O2",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 6,
+                            "y": 46
+                        }
+                    }
+                },
+                "M_oaa_c": {
+                    "id": "M_oaa_c",
+                    "label": "Oxaloacetate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 54,
+                            "y": 43
+                        }
+                    }
+                },
+                "M_pep_c": {
+                    "id": "M_pep_c",
+                    "label": "Phosphoenolpyruvate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 62,
+                            "y": 96
+                        }
+                    }
+                },
+                "M_pi_c": {
+                    "id": "M_pi_c",
+                    "label": "Phosphate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 57,
+                            "y": 12
+                        }
+                    }
+                },
+                "M_pi_e": {
+                    "id": "M_pi_e",
+                    "label": "Phosphate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 10,
+                            "y": 8
+                        }
+                    }
+                },
+                "M_pyr_c": {
+                    "id": "M_pyr_c",
+                    "label": "Pyruvate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 62,
+                            "y": 44
+                        }
+                    }
+                },
+                "M_pyr_e": {
+                    "id": "M_pyr_e",
+                    "label": "Pyruvate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 8,
+                            "y": 23
+                        }
+                    }
+                },
+                "M_q8_c": {
+                    "id": "M_q8_c",
+                    "label": "Ubiquinone-8",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 56,
+                            "y": 53
+                        }
+                    }
+                },
+                "M_q8h2_c": {
+                    "id": "M_q8h2_c",
+                    "label": "Ubiquinol-8",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 76,
+                            "y": 25
+                        }
+                    }
+                },
+                "M_r5p_c": {
+                    "id": "M_r5p_c",
+                    "label": "Alpha-D-Ribose 5-phosphate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 45,
+                            "y": 27
+                        }
+                    }
+                },
+                "M_ru5p__D_c": {
+                    "id": "M_ru5p__D_c",
+                    "label": "D-Ribulose 5-phosphate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 3,
+                            "y": 11
+                        }
+                    }
+                },
+                "M_s7p_c": {
+                    "id": "M_s7p_c",
+                    "label": "Sedoheptulose 7-phosphate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 85,
+                            "y": 83
+                        }
+                    }
+                },
+                "M_succ_c": {
+                    "id": "M_succ_c",
+                    "label": "Succinate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 28,
+                            "y": 19
+                        }
+                    }
+                },
+                "M_succ_e": {
+                    "id": "M_succ_e",
+                    "label": "Succinate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 44,
+                            "y": 38
+                        }
+                    }
+                },
+                "M_succoa_c": {
+                    "id": "M_succoa_c",
+                    "label": "Succinyl-CoA",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 99,
+                            "y": 78
+                        }
+                    }
+                },
+                "M_xu5p__D_c": {
+                    "id": "M_xu5p__D_c",
+                    "label": "D-Xylulose 5-phosphate",
+                    "metadata": {
+                        "classes": [
+                            "metabolite"
+                        ],
+                        "position": {
+                            "x": 67,
+                            "y": 25
+                        }
+                    }
+                },
+                "R_ACALD": {
+                    "id": "R_ACALD",
+                    "label": "Acetaldehyde dehydrogenase (acetylating)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 83,
+                            "y": 59
+                        }
+                    }
+                },
+                "R_ACALDt": {
+                    "id": "R_ACALDt",
+                    "label": "Acetaldehyde reversible transport",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 49,
+                            "y": 38
+                        }
+                    }
+                },
+                "R_ACKr": {
+                    "id": "R_ACKr",
+                    "label": "Acetate kinase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 48,
+                            "y": 66
+                        }
+                    }
+                },
+                "R_ACONTa": {
+                    "id": "R_ACONTa",
+                    "label": "Aconitase (half-reaction A, Citrate hydro-lyase)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 63,
+                            "y": 49
+                        }
+                    }
+                },
+                "R_ACONTb": {
+                    "id": "R_ACONTb",
+                    "label": "Aconitase (half-reaction B, Isocitrate hydro-lyase)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 83,
+                            "y": 87
+                        }
+                    }
+                },
+                "R_ACt2r": {
+                    "id": "R_ACt2r",
+                    "label": "Acetate reversible transport via proton symport",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 57,
+                            "y": 95
+                        }
+                    }
+                },
+                "R_ADK1": {
+                    "id": "R_ADK1",
+                    "label": "Adenylate kinase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 6,
+                            "y": 22
+                        }
+                    }
+                },
+                "R_AKGDH": {
+                    "id": "R_AKGDH",
+                    "label": "2-Oxogluterate dehydrogenase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 6,
+                            "y": 94
+                        }
+                    }
+                },
+                "R_AKGt2r": {
+                    "id": "R_AKGt2r",
+                    "label": "2 oxoglutarate reversible transport via symport",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 23,
+                            "y": 95
+                        }
+                    }
+                },
+                "R_ALCD2x": {
+                    "id": "R_ALCD2x",
+                    "label": "Alcohol dehydrogenase (ethanol)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 70,
+                            "y": 43
+                        }
+                    }
+                },
+                "R_ATPM": {
+                    "id": "R_ATPM",
+                    "label": "ATP maintenance requirement",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 9,
+                            "y": 1
+                        }
+                    }
+                },
+                "R_ATPS4r": {
+                    "id": "R_ATPS4r",
+                    "label": "ATP synthase (four protons for one ATP)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 62,
+                            "y": 99
+                        }
+                    }
+                },
+                "R_BIOMASS_Ecoli_core_w_GAM": {
+                    "id": "R_BIOMASS_Ecoli_core_w_GAM",
+                    "label": "Biomass Objective Function with GAM",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 96,
+                            "y": 35
+                        }
+                    }
+                },
+                "R_CO2t": {
+                    "id": "R_CO2t",
+                    "label": "CO2 transporter via diffusion",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 24,
+                            "y": 43
+                        }
+                    }
+                },
+                "R_CS": {
+                    "id": "R_CS",
+                    "label": "Citrate synthase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 26,
+                            "y": 89
+                        }
+                    }
+                },
+                "R_CYTBD": {
+                    "id": "R_CYTBD",
+                    "label": "Cytochrome oxidase bd (ubiquinol-8: 2 protons)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 27,
+                            "y": 48
+                        }
+                    }
+                },
+                "R_D_LACt2": {
+                    "id": "R_D_LACt2",
+                    "label": "D lactate transport via proton symport",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 62,
+                            "y": 24
+                        }
+                    }
+                },
+                "R_ENO": {
+                    "id": "R_ENO",
+                    "label": "Enolase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 62,
+                            "y": 65
+                        }
+                    }
+                },
+                "R_ETOHt2r": {
+                    "id": "R_ETOHt2r",
+                    "label": "Ethanol reversible transport via proton symport",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 5,
+                            "y": 15
+                        }
+                    }
+                },
+                "R_EX_ac_e": {
+                    "id": "R_EX_ac_e",
+                    "label": "Acetate exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 85,
+                            "y": 38
+                        }
+                    }
+                },
+                "R_EX_acald_e": {
+                    "id": "R_EX_acald_e",
+                    "label": "Acetaldehyde exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 87,
+                            "y": 40
+                        }
+                    }
+                },
+                "R_EX_akg_e": {
+                    "id": "R_EX_akg_e",
+                    "label": "2-Oxoglutarate exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 31,
+                            "y": 10
+                        }
+                    }
+                },
+                "R_EX_co2_e": {
+                    "id": "R_EX_co2_e",
+                    "label": "CO2 exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 44,
+                            "y": 43
+                        }
+                    }
+                },
+                "R_EX_etoh_e": {
+                    "id": "R_EX_etoh_e",
+                    "label": "Ethanol exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 37,
+                            "y": 59
+                        }
+                    }
+                },
+                "R_EX_for_e": {
+                    "id": "R_EX_for_e",
+                    "label": "Formate exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 38,
+                            "y": 93
+                        }
+                    }
+                },
+                "R_EX_fru_e": {
+                    "id": "R_EX_fru_e",
+                    "label": "D-Fructose exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 13,
+                            "y": 68
+                        }
+                    }
+                },
+                "R_EX_fum_e": {
+                    "id": "R_EX_fum_e",
+                    "label": "Fumarate exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 56,
+                            "y": 59
+                        }
+                    }
+                },
+                "R_EX_glc__D_e": {
+                    "id": "R_EX_glc__D_e",
+                    "label": "D-Glucose exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 42,
+                            "y": 4
+                        }
+                    }
+                },
+                "R_EX_gln__L_e": {
+                    "id": "R_EX_gln__L_e",
+                    "label": "L-Glutamine exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 15,
+                            "y": 5
+                        }
+                    }
+                },
+                "R_EX_glu__L_e": {
+                    "id": "R_EX_glu__L_e",
+                    "label": "L-Glutamate exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 53,
+                            "y": 35
+                        }
+                    }
+                },
+                "R_EX_h2o_e": {
+                    "id": "R_EX_h2o_e",
+                    "label": "H2O exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 56,
+                            "y": 92
+                        }
+                    }
+                },
+                "R_EX_h_e": {
+                    "id": "R_EX_h_e",
+                    "label": "H+ exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 67,
+                            "y": 98
+                        }
+                    }
+                },
+                "R_EX_lac__D_e": {
+                    "id": "R_EX_lac__D_e",
+                    "label": "D-lactate exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 95,
+                            "y": 34
+                        }
+                    }
+                },
+                "R_EX_mal__L_e": {
+                    "id": "R_EX_mal__L_e",
+                    "label": "L-Malate exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 29,
+                            "y": 62
+                        }
+                    }
+                },
+                "R_EX_nh4_e": {
+                    "id": "R_EX_nh4_e",
+                    "label": "Ammonia exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 20,
+                            "y": 61
+                        }
+                    }
+                },
+                "R_EX_o2_e": {
+                    "id": "R_EX_o2_e",
+                    "label": "O2 exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 71,
+                            "y": 59
+                        }
+                    }
+                },
+                "R_EX_pi_e": {
+                    "id": "R_EX_pi_e",
+                    "label": "Phosphate exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 31,
+                            "y": 57
+                        }
+                    }
+                },
+                "R_EX_pyr_e": {
+                    "id": "R_EX_pyr_e",
+                    "label": "Pyruvate exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 49,
+                            "y": 39
+                        }
+                    }
+                },
+                "R_EX_succ_e": {
+                    "id": "R_EX_succ_e",
+                    "label": "Succinate exchange",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 98,
+                            "y": 38
+                        }
+                    }
+                },
+                "R_FBA": {
+                    "id": "R_FBA",
+                    "label": "Fructose-bisphosphate aldolase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 63,
+                            "y": 65
+                        }
+                    }
+                },
+                "R_FBP": {
+                    "id": "R_FBP",
+                    "label": "Fructose-bisphosphatase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 8,
+                            "y": 15
+                        }
+                    }
+                },
+                "R_FORt": {
+                    "id": "R_FORt",
+                    "label": "Formate transport via diffusion",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 64,
+                            "y": 47
+                        }
+                    }
+                },
+                "R_FORt2": {
+                    "id": "R_FORt2",
+                    "label": "Formate transport in via proton symport",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 88,
+                            "y": 60
+                        }
+                    }
+                },
+                "R_FRD7": {
+                    "id": "R_FRD7",
+                    "label": "Fumarate reductase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 9,
+                            "y": 66
+                        }
+                    }
+                },
+                "R_FRUpts2": {
+                    "id": "R_FRUpts2",
+                    "label": "Fructose transport via PEP:Pyr PTS (f6p generating)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 56,
+                            "y": 13
+                        }
+                    }
+                },
+                "R_FUM": {
+                    "id": "R_FUM",
+                    "label": "Fumarase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 22,
+                            "y": 11
+                        }
+                    }
+                },
+                "R_FUMt2_2": {
+                    "id": "R_FUMt2_2",
+                    "label": "Fumarate transport via proton symport (2 H)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 50,
+                            "y": 91
+                        }
+                    }
+                },
+                "R_G6PDH2r": {
+                    "id": "R_G6PDH2r",
+                    "label": "Glucose 6-phosphate dehydrogenase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 93,
+                            "y": 20
+                        }
+                    }
+                },
+                "R_GAPD": {
+                    "id": "R_GAPD",
+                    "label": "Glyceraldehyde-3-phosphate dehydrogenase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 22,
+                            "y": 96
+                        }
+                    }
+                },
+                "R_GLCpts": {
+                    "id": "R_GLCpts",
+                    "label": "D-glucose transport via PEP:Pyr PTS",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 19,
+                            "y": 100
+                        }
+                    }
+                },
+                "R_GLNabc": {
+                    "id": "R_GLNabc",
+                    "label": "L-glutamine transport via ABC system",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 71,
+                            "y": 81
+                        }
+                    }
+                },
+                "R_GLNS": {
+                    "id": "R_GLNS",
+                    "label": "Glutamine synthetase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 94,
+                            "y": 55
+                        }
+                    }
+                },
+                "R_GLUDy": {
+                    "id": "R_GLUDy",
+                    "label": "Glutamate dehydrogenase (NADP)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 48,
+                            "y": 99
+                        }
+                    }
+                },
+                "R_GLUN": {
+                    "id": "R_GLUN",
+                    "label": "Glutaminase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 12,
+                            "y": 95
+                        }
+                    }
+                },
+                "R_GLUSy": {
+                    "id": "R_GLUSy",
+                    "label": "Glutamate synthase (NADPH)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 49,
+                            "y": 21
+                        }
+                    }
+                },
+                "R_GLUt2r": {
+                    "id": "R_GLUt2r",
+                    "label": "L glutamate transport via proton symport reversible",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 13,
+                            "y": 24
+                        }
+                    }
+                },
+                "R_GND": {
+                    "id": "R_GND",
+                    "label": "Phosphogluconate dehydrogenase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 62,
+                            "y": 5
+                        }
+                    }
+                },
+                "R_H2Ot": {
+                    "id": "R_H2Ot",
+                    "label": "H2O transport via diffusion",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 25,
+                            "y": 66
+                        }
+                    }
+                },
+                "R_ICDHyr": {
+                    "id": "R_ICDHyr",
+                    "label": "Isocitrate dehydrogenase (NADP)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 14,
+                            "y": 36
+                        }
+                    }
+                },
+                "R_ICL": {
+                    "id": "R_ICL",
+                    "label": "Isocitrate lyase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 63,
+                            "y": 14
+                        }
+                    }
+                },
+                "R_LDH_D": {
+                    "id": "R_LDH_D",
+                    "label": "D-lactate dehydrogenase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 82,
+                            "y": 43
+                        }
+                    }
+                },
+                "R_MALS": {
+                    "id": "R_MALS",
+                    "label": "Malate synthase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 23,
+                            "y": 13
+                        }
+                    }
+                },
+                "R_MALt2_2": {
+                    "id": "R_MALt2_2",
+                    "label": "Malate transport via proton symport (2 H)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 46,
+                            "y": 37
+                        }
+                    }
+                },
+                "R_MDH": {
+                    "id": "R_MDH",
+                    "label": "Malate dehydrogenase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 78,
+                            "y": 74
+                        }
+                    }
+                },
+                "R_ME1": {
+                    "id": "R_ME1",
+                    "label": "Malic enzyme (NAD)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 91,
+                            "y": 42
+                        }
+                    }
+                },
+                "R_ME2": {
+                    "id": "R_ME2",
+                    "label": "Malic enzyme (NADP)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 18,
+                            "y": 80
+                        }
+                    }
+                },
+                "R_NADH16": {
+                    "id": "R_NADH16",
+                    "label": "NADH dehydrogenase (ubiquinone-8 & 3 protons)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 76,
+                            "y": 96
+                        }
+                    }
+                },
+                "R_NADTRHD": {
+                    "id": "R_NADTRHD",
+                    "label": "NAD transhydrogenase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 24,
+                            "y": 24
+                        }
+                    }
+                },
+                "R_NH4t": {
+                    "id": "R_NH4t",
+                    "label": "Ammonia reversible transport",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 53,
+                            "y": 65
+                        }
+                    }
+                },
+                "R_O2t": {
+                    "id": "R_O2t",
+                    "label": "O2 transport diffusion ",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 15,
+                            "y": 90
+                        }
+                    }
+                },
+                "R_PDH": {
+                    "id": "R_PDH",
+                    "label": "Pyruvate dehydrogenase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 19,
+                            "y": 31
+                        }
+                    }
+                },
+                "R_PFK": {
+                    "id": "R_PFK",
+                    "label": "Phosphofructokinase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 61,
+                            "y": 96
+                        }
+                    }
+                },
+                "R_PFL": {
+                    "id": "R_PFL",
+                    "label": "Pyruvate formate lyase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 85,
+                            "y": 2
+                        }
+                    }
+                },
+                "R_PGI": {
+                    "id": "R_PGI",
+                    "label": "Glucose-6-phosphate isomerase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 1,
+                            "y": 88
+                        }
+                    }
+                },
+                "R_PGK": {
+                    "id": "R_PGK",
+                    "label": "Phosphoglycerate kinase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 66,
+                            "y": 20
+                        }
+                    }
+                },
+                "R_PGL": {
+                    "id": "R_PGL",
+                    "label": "6-phosphogluconolactonase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 64,
+                            "y": 59
+                        }
+                    }
+                },
+                "R_PGM": {
+                    "id": "R_PGM",
+                    "label": "Phosphoglycerate mutase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 59,
+                            "y": 47
+                        }
+                    }
+                },
+                "R_PIt2r": {
+                    "id": "R_PIt2r",
+                    "label": "Phosphate reversible transport via symport",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 47,
+                            "y": 33
+                        }
+                    }
+                },
+                "R_PPC": {
+                    "id": "R_PPC",
+                    "label": "Phosphoenolpyruvate carboxylase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 77,
+                            "y": 57
+                        }
+                    }
+                },
+                "R_PPCK": {
+                    "id": "R_PPCK",
+                    "label": "Phosphoenolpyruvate carboxykinase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 54,
+                            "y": 43
+                        }
+                    }
+                },
+                "R_PPS": {
+                    "id": "R_PPS",
+                    "label": "Phosphoenolpyruvate synthase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 76,
+                            "y": 8
+                        }
+                    }
+                },
+                "R_PTAr": {
+                    "id": "R_PTAr",
+                    "label": "Phosphotransacetylase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 58,
+                            "y": 17
+                        }
+                    }
+                },
+                "R_PYK": {
+                    "id": "R_PYK",
+                    "label": "Pyruvate kinase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 94,
+                            "y": 26
+                        }
+                    }
+                },
+                "R_PYRt2": {
+                    "id": "R_PYRt2",
+                    "label": "Pyruvate transport in via proton symport",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 56,
+                            "y": 38
+                        }
+                    }
+                },
+                "R_RPE": {
+                    "id": "R_RPE",
+                    "label": "Ribulose 5-phosphate 3-epimerase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 25,
+                            "y": 4
+                        }
+                    }
+                },
+                "R_RPI": {
+                    "id": "R_RPI",
+                    "label": "Ribose-5-phosphate isomerase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 15,
+                            "y": 65
+                        }
+                    }
+                },
+                "R_SUCCt2_2": {
+                    "id": "R_SUCCt2_2",
+                    "label": "Succinate transport via proton symport (2 H)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 100,
+                            "y": 92
+                        }
+                    }
+                },
+                "R_SUCCt3": {
+                    "id": "R_SUCCt3",
+                    "label": "Succinate transport out via proton antiport",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 67,
+                            "y": 88
+                        }
+                    }
+                },
+                "R_SUCDi": {
+                    "id": "R_SUCDi",
+                    "label": "Succinate dehydrogenase (irreversible)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 10,
+                            "y": 46
+                        }
+                    }
+                },
+                "R_SUCOAS": {
+                    "id": "R_SUCOAS",
+                    "label": "Succinyl-CoA synthetase (ADP-forming)",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 92,
+                            "y": 6
+                        }
+                    }
+                },
+                "R_TALA": {
+                    "id": "R_TALA",
+                    "label": "Transaldolase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 37,
+                            "y": 39
+                        }
+                    }
+                },
+                "R_THD2": {
+                    "id": "R_THD2",
+                    "label": "NAD(P) transhydrogenase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 31,
+                            "y": 5
+                        }
+                    }
+                },
+                "R_TKT1": {
+                    "id": "R_TKT1",
+                    "label": "Transketolase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 52,
+                            "y": 4
+                        }
+                    }
+                },
+                "R_TKT2": {
+                    "id": "R_TKT2",
+                    "label": "Transketolase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 40,
+                            "y": 29
+                        }
+                    }
+                },
+                "R_TPI": {
+                    "id": "R_TPI",
+                    "label": "Triose-phosphate isomerase",
+                    "metadata": {
+                        "classes": [
+                            "reaction"
+                        ],
+                        "position": {
+                            "x": 22,
+                            "y": 14
+                        }
+                    }
+                }
+            },
+            "type": "metabolic"
+        }
+    }

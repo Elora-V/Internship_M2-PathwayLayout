@@ -4,7 +4,7 @@ import { NetworkToGDSGraph, NetworkToSerialized } from './networkToGraph';
 import { Serialized} from 'graph-data-structure';
 import Graph from "graph-data-structure";
 import { SourceType } from '@/types/EnumArgs';
-import { customDFS } from './customDFS';
+import { getSources } from './rankAndSources';
 
 /**
  * Take a network and sources, return the dfs result (that is an array of string of node ID)
@@ -21,6 +21,8 @@ import { customDFS } from './customDFS';
  */
 export function DFSWithSources(network:Network, sources:Array<string>|SourceType):Array<string>{
 
+    console.log('DFS');
+
     // create graph for library from network
     const graph=NetworkToGDSGraph(network);
 
@@ -32,89 +34,95 @@ export function DFSWithSources(network:Network, sources:Array<string>|SourceType
         sources_list = getSources(network, sources);
     }
 
-    // apply DFS
-    return graph.depthFirstSearch(sources_list);
+    // apply DFS (reverse order because DFS is a backward reading)
+    const dfs= graph.depthFirstSearch(sources_list);
+    return dfs.reverse();
 
 }
 
+
+
 /**
- * Get a list of nodes to use as input for DFS (as sources) for example
+ * Do a DFS from a source and remove the last edge of cycle to get a "source DAG". 
  * @param network 
- * @param typeSource type of sources to get, with a certain order if several types
- * RANK_ONLY : sources are nodes of rank 0
- * SOURCE_ONLY : sources are topological sources of the network (nul indegree)
- * RANK_SOURCE : sources are node of rank 0, then source nodes
- * ALL : sources are all nodes
- * SOURCE_ALL : sources are topological sources, then all the others nodes
- * RANK_SOURCE_ALL : sources are node of rank 0, then topological sources, then all the other nodes
- * @returns the id of the sources
+ * @param sources to use as staring node for DFS
+ * @returns the reverse dfs order (topological sort) and a graph object without the cycles accessible from the sources 
  */
-export function getSources(network:Network, typeSource:SourceType):Array<string>{
+export function DFSsourceDAG(network:Network, sources:Array<string>):{dfs:Array<string>, graph:{[key:string]:Function} } {
+    let DFS=createGraphForDFS(network);
 
-    // if all nodes as source
-    if (typeSource==SourceType.ALL){
-        return Object.keys(network.nodes);
+    sources.forEach(sourceID =>{
+        const sourceIndex=DFS.nodesID.indexOf(sourceID);
+        // if the source exist in the network and it's not already visited : dfs from this source
+        if (sourceIndex!==-1 && !DFS.visited[sourceIndex]){
+            DFS=nodeDagDFS(DFS,sourceIndex,[]);           
+        }
+    });
+
+    return { dfs:DFS.dfsOrder.reverse(),graph:DFS.GDSgraph };
+}
+
+/**
+ * Initialize a dfs object from the network
+ * @param network 
+ * @returns initialized DFS object
+ */
+function createGraphForDFS(network:Network):DFS{
+    const nbNode=Object.keys(network.nodes).length;
+    const graphGDS=NetworkToGDSGraph(network);
+    return  {
+        dfsOrder: [], 
+        GDSgraph: graphGDS,
+        nodesID:graphGDS.nodes(),
+        visited:Array.from({ length: nbNode }, () => false),
     }
+}
 
-    const sources_rank=[];
-    const sources_source=[];
-    const sources_all=[];
+/**
+ * DFS from a node
+ * @param DFS dfs object with visited nodes, adjacent information ...
+ * @param nodeIndex of the node ro process
+ * @param currentPath the dfs path from the source to this node
+ * @returns the DFS object with visited nodes, adjacent information ...
+ */
+function nodeDagDFS(DFS:DFS,nodeIndex:number,currentPath:number[]):DFS{
 
-    // get object for data-graph-structure if indegree information needed (when source nodes needed)
-    let graph:{[key:string]:Function};
-    if(needSource(typeSource)){
-        graph=NetworkToGDSGraph(network);
-    }
+    // mark the node as visited
+    DFS.visited[nodeIndex] = true;
 
-    // adding node depending on sourcetype : Order is important !! 
-    // always rank, then source, then all
-    Object.values(network.nodes).forEach(node =>{      
-        if(needRank(typeSource) && hasRank0(node)){
-            sources_rank.push(node.id);
-        } else if (needSource(typeSource) && graph.indegree(node.id)===0){
-            sources_source.push(node.id);
-        } else if (needAll(typeSource)) {
-            sources_all.push(node.id);
-        }       
+    // add node to current path (copy of path, else pointer)
+    const path=Array.from(currentPath);
+    path.push(nodeIndex)
+
+    // loop through the children of the node
+    DFS.GDSgraph.adjacent(DFS.nodesID[nodeIndex]).forEach(childID => {
+
+        // get the index of the child
+        const childIndex = DFS.nodesID.indexOf(childID);
+        if(childIndex!==-1){
+
+            // if the child node had never been visited : the edge is an tree edge
+            if (!DFS.visited[childIndex]){
+
+                // dfs through the child node
+                DFS=nodeDagDFS(DFS,childIndex,path);
+
+            } else { // if the child node had already been visited
+                // and that the node is in the current path : there is a cycle
+                if(path.includes(childIndex)){
+                    const parentID=DFS.nodesID[nodeIndex];
+                    DFS.GDSgraph.removeEdge(parentID,childID)
+                }
+                
+            }
+        }
     });
     
-    return sources_rank.concat(sources_source, sources_all);
-
+    // add the node to the dfs order
+    DFS.dfsOrder.push(DFS.nodesID[nodeIndex]); 
+    
+    return DFS;
 }
+    
 
-/**
- * Node has rank 0 in metadata ?
- * @param node Node
- * @returns boolean
- */
-function hasRank0(node:Node):boolean{
-    return (node.metadata && Object.keys(node.metadata).includes("rank") && node.metadata.rank===0);
-}
-
-/**
- * Depending on the sourcetype, does the information of rank is needed ?
- * @param sourcetype 
- * @returns boolean
- */
-function needRank(sourcetype:SourceType):boolean{
-    return [SourceType.RANK_ONLY,SourceType.RANK_SOURCE,SourceType.RANK_SOURCE_ALL].includes(sourcetype);
-}
-
-/**
- * Depending on the sourcetype, does the information of topological source is needed ?
- * @param sourcetype 
- * @returns boolean
- */
-function needSource(sourcetype:SourceType):boolean{
-    return [SourceType.SOURCE_ONLY,SourceType.SOURCE_ALL,SourceType.RANK_SOURCE,SourceType.RANK_SOURCE_ALL].includes(sourcetype);
-}
-
-/**
- * Depending on the sourcetype, does all the nodes are needed ?
- * @param sourcetype 
- * @returns boolean
- */
-function needAll(sourcetype:SourceType):boolean{
-    return [SourceType.ALL,SourceType.SOURCE_ALL,SourceType.RANK_SOURCE_ALL].includes(sourcetype);
-}
 

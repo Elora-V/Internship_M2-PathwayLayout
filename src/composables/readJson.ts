@@ -69,7 +69,7 @@ export function readJsonGraph(jsonGraph: string): { network: Network, networkSty
 			node.label = id;
 		}
 		else {
-			node.label = n.label;
+			node.label = n.label;//.label;
 		}
 
 		if (n.metadata && n.metadata.position && n.metadata.position.x) {
@@ -88,11 +88,17 @@ export function readJsonGraph(jsonGraph: string): { network: Network, networkSty
 
 		if (n.metadata && n.metadata.classes) {
 			node.classes = n.metadata.classes;
+		}else{
+			node.classes=[];
 		}
 
 		if (n.metadata) {
 			node.metadata = n.metadata;
+		}else{
+			node.metadata={};
 		}
+
+		
 
 		network.nodes[node.id] = node;
 
@@ -108,12 +114,33 @@ export function readJsonGraph(jsonGraph: string): { network: Network, networkSty
 				classes = e.metadata.classes;
 			}
 		}
+
+		// modification :
+		if ( e.metadata && e.metadata.classes &&  e.metadata.classes.includes("reversible")){
+			if (source.classes.includes("reaction")){
+				source.metadata["reversible"]=true;
+				target.metadata["reversible"]=false;
+			}
+			else if (target.classes.includes("reaction")){
+				target.metadata["reversible"]=true;
+				source.metadata["reversible"]=false;
+			}
+		}else{
+			if(!Object.keys(source).includes("metadata")){
+				source.metadata={};
+			}
+			if(!Object.keys(target).includes("metadata")){
+				target.metadata={};
+			}
+			source.metadata["reversible"]=false;
+			target.metadata["reversible"]=false;
+		}
 		
 		return {
 			...e,
 			source: source,
 			target: target,
-			classes: classes
+			classes: classes 
 		}
 
 	});
@@ -158,7 +185,6 @@ function readJsonMetExploreViz(jsonGraph: string, network: Network, networkStyle
 				x: 0,
 				y: 0
 			};
-	
 			node.id = n.dbIdentifier as string;
 	
 			if (!n.name) {
@@ -176,10 +202,21 @@ function readJsonMetExploreViz(jsonGraph: string, network: Network, networkStyle
 			if (n.y) {
 				node.y = n.y as number;
 			}
-	
+			
 			if (n.biologicalType) {
 				node.classes = [n.biologicalType as string];
+			}else{
+				node.classes=[];
 			}
+
+			node.metadata={};
+			if ("reactionReversibility" in n && n.reactionReversibility){
+				node.metadata["reversible"]=true;
+				node.classes.push("reversible");
+			}else{
+				node.metadata["reversible"]=false;
+			}
+
 	
 			network.nodes[node.id] = node;
 		}
@@ -234,7 +271,7 @@ function readJsonMetExploreViz(jsonGraph: string, network: Network, networkStyle
 
 
 /**
- * Take some information about a link and 
+ * Take some information about a link and add classes to link
  * @param link the d3 link with the reversible information
  * @param network the network that need change
  * @param source the source node from the network

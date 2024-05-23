@@ -1,11 +1,16 @@
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { Network } from "@metabohub/viz-core/src/types/Network";
+import { createSubgraph } from "./UseSubgraphNetwork";
+import { TypeSubgraph } from "@/types/Subgraph";
 
 
 export function addCycleToSubgraphNetwork(subNetwork:SubgraphNetwork):SubgraphNetwork{
     const nodes=Object.keys(subNetwork.network.value.nodes);
     const graph=graphForJohnson(subNetwork.network.value,nodes);
-    subNetwork.cycles=JohnsonAlgorithm(graph,nodes);
+    const cycles=JohnsonAlgorithm(graph,nodes);
+    Object.entries(cycles).forEach(([name, nodes])=>{
+        subNetwork.cycles[name]=createSubgraph(name,nodes,[],TypeSubgraph.CYCLE);
+    });
     return subNetwork;
 }
 
@@ -16,7 +21,7 @@ export function graphForJohnson(network:Network, list_nodes:string[]):number[][]
         const sourceIndex=list_nodes.indexOf(link.source.id);
         const targetIndex=list_nodes.indexOf(link.target.id);
         graph[sourceIndex].push(targetIndex);
-        graph[targetIndex].push(sourceIndex); // all links considered as reversible (like an undirected graph)
+        //graph[targetIndex].push(sourceIndex); // all links considered as reversible (like an undirected graph)
     });
     return graph;
 }

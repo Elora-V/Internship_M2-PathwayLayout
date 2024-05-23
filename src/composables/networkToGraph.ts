@@ -1,8 +1,8 @@
 import { Network } from '@metabohub/viz-core/src/types/Network';
 import  dagre  from 'dagrejs/dist/dagre.js';
 import { Graph } from "@viz-js/viz";
-import { addClusterViz } from './modifyVizGraph';
-import { Cluster } from '@/types/Cluster';
+import { addClusterViz } from './useSubgraphs';
+import { Subgraph } from '@/types/Subgraph';
 import * as GDS from 'graph-data-structure';
 
 
@@ -43,7 +43,7 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
  * @param clusters clusters for viz
  * @returns {Graph} Return graph object for viz
  */
-export function NetworkToViz(network: Network,clusters:{[key:string]:Cluster}={},graphAttributes={}): Graph{
+export function NetworkToViz(network: Network,clusters:{[key:string]:Subgraph}={},graphAttributes={}): Graph{
     // initialisation viz graph
     let graphViz: Graph ={
         graphAttributes: graphAttributes,
@@ -54,9 +54,14 @@ export function NetworkToViz(network: Network,clusters:{[key:string]:Cluster}={}
 
     // insert edge 
     network.links.forEach((link)=>{
+        let attributs:AttributesViz={};
+        if (link.metadata && Object.keys(link.metadata).includes("constraint")){
+            attributs.constraint=link.metadata["constraint"] as boolean;
+        }
         graphViz.edges.push({
             tail: link.source.id,
             head: link.target.id,
+            attributes:attributs
             });
     })
 
@@ -64,7 +69,6 @@ export function NetworkToViz(network: Network,clusters:{[key:string]:Cluster}={}
     Object.values(clusters).forEach((cluster) => {
         graphViz=addClusterViz(graphViz,cluster);
     });
-
     return graphViz;
 
 }
@@ -98,4 +102,52 @@ export function NetworkToGDSGraph(network: Network):{[key:string]:Function}{
     return graph;
 }
 
+
+/**
+ * Convert a network into an adjacency object.
+ * @param network The network to convert.
+ * @returns An adjacency object representing the network : an object with nodes as key, and children of node as values
+ */
+export function NetworkToAdjacentObject(network:Network):{[key : string]:string[]}{
+    const adjacence:{[key : string]:string[]}={};
+    Object.keys(network.nodes).forEach(node=>{
+        if (!(node in Object.keys(adjacence))){
+            adjacence[node]=[];
+        }
+    })
+    network.links.forEach(link=>{
+        const source=link.source.id;
+        const target=link.target.id;
+        adjacence[source].push(target);
+    });
+    return adjacence;
+}
+
+/**
+ * Return a copy of the network
+ * @param network 
+ * @returns a copy of the network
+ */
+export function networkCopy(network: Network): Network {
+    const newNetwork: Network = {
+        id: network.id,
+        label: network.label,
+        nodes: {},
+        links: []
+    };
+
+    Object.keys(network.nodes).forEach(key=>{  
+        newNetwork.nodes[key] = Object.assign({}, network.nodes[key]);   
+    })
+
+    network.links.forEach(item=>{
+        //get all info from links
+        const newlink=Object.assign({}, item);
+        // update the node to have a pointeur
+        newlink.source=newNetwork.nodes[item.source.id];
+        newlink.target=newNetwork.nodes[item.target.id];
+        newNetwork.links.push(newlink);
+    });
+    return newNetwork;
+}
 

@@ -1,17 +1,17 @@
 import { Network } from "@metabohub/viz-core/src/types/Network";
-import { Cluster } from "./Cluster";
+import { Subgraph } from "./Subgraph";
 import { Ref } from "vue";
 
 export interface SubgraphNetwork {
 	network: Ref<Network>;
 	attributs?: AttributesViz;
 	mainChains: {
-		[key: string]: Cluster
+		[key: string]: Subgraph
 	}
-	secondaryChain?:{
-		[key: string]: string[]
+	secondaryChains?:{
+		[key: string]: Subgraph
 	}
 	cycles?:{
-		[key:string]:string[]
+		[key:string]:Subgraph
 	}
 }

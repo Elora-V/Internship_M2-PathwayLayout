@@ -6,3 +6,9 @@ export enum SourceType {
     RANK_SOURCE_ALL="rank_source_all",
     ALL = "all",
 }
+
+export enum PathType {
+    LONGEST='longest',
+    ALL_LONGEST='all_longest',
+    ALL='all'
+}
