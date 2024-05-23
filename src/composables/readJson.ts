@@ -116,7 +116,7 @@ export function readJsonGraph(jsonGraph: string): { network: Network, networkSty
 		}
 
 		// modification :
-		if ( e.metadata.classes &&  e.metadata.classes.includes("reversible")){
+		if ( e.metadata && e.metadata.classes &&  e.metadata.classes.includes("reversible")){
 			if (source.classes.includes("reaction")){
 				source.metadata["reversible"]=true;
 				target.metadata["reversible"]=false;
