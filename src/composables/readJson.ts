@@ -69,7 +69,7 @@ export function readJsonGraph(jsonGraph: string): { network: Network, networkSty
 			node.label = id;
 		}
 		else {
-			node.label = n.label;//.label;
+			node.label = n.id;//.label;
 		}
 
 		if (n.metadata && n.metadata.position && n.metadata.position.x) {

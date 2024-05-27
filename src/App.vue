@@ -149,7 +149,7 @@ import { networkCopy } from "@/composables/networkToGraph";
 import { initZoom, rescale } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
-import { JohnsonAlgorithm, addCycleToSubgraphNetwork, graphForJohnson } from "@/composables/findCycle";
+import { JohnsonAlgorithm, addCycleToSubgraphNetwork, addDirectedCycleToSubgraphNetwork, graphForJohnson } from "@/composables/findCycle";
 import { countIntersection } from "./composables/countIntersections";
 import { countIsolatedNodes } from "./composables/countIsolatedNodes";
 import { DFSsourceDAG, DFSWithSources } from "@/composables/algoDFS";
@@ -428,10 +428,10 @@ function keydownHandler(event: KeyboardEvent) {
     vizLayout(network.value, subgraphNetwork.mainChains ,subgraphNetwork.attributs ,true,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
-  } else if (event.key =="c"){
-    console.log(subgraphNetwork);
   } else if (event.key =="n"){
-    console.log(network.value);
+    console.log(subgraphNetwork);
+  } else if (event.key =="c"){
+    addDirectedCycleToSubgraphNetwork(subgraphNetwork);
   }else if (event.key =="r"){
     const sources=getSourcesParam(network.value,SourceType.RANK_SOURCE_ALL);
     chooseReversibleReaction(network.value,sources,BFSWithSources);

@@ -13,10 +13,20 @@ import { Network } from "@metabohub/viz-core/src/types/Network";
 export function createSubgraph(name: string, nodes: Array<string> = [], classes: Array<string> = [],type:TypeSubgraph=TypeSubgraph.MAIN_CHAIN): Subgraph {
     return {
         name,
-        nodes,
         classes,
+        nodes,
         type 
     };
+}
+
+export function addNewSubgraph(subgraphNetwork:SubgraphNetwork,subgraph:Subgraph,type:TypeSubgraph=TypeSubgraph.MAIN_CHAIN): SubgraphNetwork {
+    if (!subgraphNetwork[type]) subgraphNetwork[type]={};
+    subgraphNetwork[type][subgraph.name]=subgraph;
+    subgraph.nodes.forEach(node=>{
+       updateNodeMetadataSubgraph(subgraphNetwork.network.value, node, subgraph.name, type);
+    })
+    return subgraphNetwork;
+    
 }
 
 
