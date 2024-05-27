@@ -18,10 +18,10 @@
     </button>
 
 
-    <button v-on:click="clusterAlgorithm('DFS')" class="styled-button">
+    <button v-on:click="subgraphAlgorithm('DFS')" class="styled-button">
       All_steps_with_DFS
     </button>
-    <button v-on:click="clusterAlgorithm('DAG_Dijkstra')" class="styled-button bold">
+    <button v-on:click="subgraphAlgorithm('DAG_Dijkstra')" class="styled-button bold">
       All_steps_with_DAG_Dijkstra
     </button>
 
@@ -128,12 +128,15 @@
  */// Import -----------------
   // Utils ----------------
 import { ref, reactive, onMounted } from "vue";
-import { countIntersection } from "./composables/countIntersections";
-import { countIsolatedNodes } from "./composables/countIsolatedNodes";
+//import { RefSymbol } from "@vue/reactivity";
 
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
+import { SourceType } from "@/types/EnumArgs";
+import { Subgraph, TypeSubgraph } from "@/types/Subgraph";
+import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { PathType } from './types/EnumArgs';
+
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
   // Composables ----------
@@ -146,9 +149,17 @@ import { networkCopy } from "@/composables/networkToGraph";
 import { initZoom, rescale } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
-import {addNodeTocluster, createCluster,} from "./composables/UseClusterNetwork";
+import { JohnsonAlgorithm, addCycleToSubgraphNetwork, addDirectedCycleToSubgraphNetwork, graphForJohnson } from "@/composables/findCycle";
+import { countIntersection } from "./composables/countIntersections";
+import { countIsolatedNodes } from "./composables/countIsolatedNodes";
 import { DFSsourceDAG, DFSWithSources } from "@/composables/algoDFS";
 import { createStaticForceLayout } from "@metabohub/viz-core";
+import { BFSWithSources } from "@/composables/algoBFS";
+import { concatSources, getSources } from "@/composables/rankAndSources";
+import { addBoldLinkMainChain } from "@/composables/useSubgraphs";
+import { addMainChainFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/chooseSubgraph";
+
+
 
 // import { addMappingStyleOnNode } from "./composables/UseStyleManager";
 // import { createUndoFunction } from "./composables/UseUndo";
@@ -156,13 +167,7 @@ import { createStaticForceLayout } from "@metabohub/viz-core";
 import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
 import { node } from "prop-types";
-import { ClusterNetwork } from "@/types/ClusterNetwork";
-import { SourceType } from "@/types/EnumArgs";
-import { addClusterFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/chooseSubgraph";
-import { RefSymbol } from "@vue/reactivity";
-import { BFSWithSources } from "@/composables/algoBFS";
-import { concatSources, getSources } from "@/composables/rankAndSources";
-import { addBoldLinkMainChain } from "@/composables/useSubgraphs";
+import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetwork";
 
 
 
@@ -181,9 +186,9 @@ const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNod
 let undoFunction: any = reactive({});
 //let clusters : Array<Cluster> =reactive([])
 //let attributGraphViz : AttributesViz=reactive({});
-let clusterNetwork:ClusterNetwork;
+let subgraphNetwork:SubgraphNetwork;
 let sourceTypePath:SourceType=SourceType.RANK_SOURCE;
-let getCluster=getPathSourcesToTargetNode;
+let getSubgraph=getPathSourcesToTargetNode;
 let originalNetwork:Network;
 let merge:boolean=true;
 let pathType:PathType=PathType.ALL_LONGEST;
@@ -214,8 +219,8 @@ function loadFile(event: Event) {
 async function callbackFunction() {
 
   console.log('________New_graph__________');
-  clusterNetwork={network:network,attributs:{},clusters:{},userSources:[]};
-  clusterNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
+  subgraphNetwork={network:network,attributs:{},mainChains:{}};
+  subgraphNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
 
   await removeSideCompounds(network.value,"/sideCompounds.txt").then(
     ()=>{
@@ -234,7 +239,7 @@ async function callbackFunction() {
     if (!("linkStyles" in networkStyle.value)){
       networkStyle.value.linkStyles={}
     }
-    networkStyle.value.linkStyles["mainChain"]={strokeWidth:3,stroke:"blue"};
+    networkStyle.value.linkStyles["mainChains"]={strokeWidth:3,stroke:"blue"};
 
 }
 
@@ -246,7 +251,7 @@ function rescaleAfterAction(){
 onMounted(() => {
   svgProperties = initZoom();
   window.addEventListener('keydown', keydownHandler);
-  importNetworkFromURL('/pathways/Glycolysis_gluconeogenesis.json', network, networkStyle, callbackFunction); 
+  importNetworkFromURL('/pathways/Alanine_and_aspartate_metabolism.json', network, networkStyle, callbackFunction); 
   
 });
 function removeNode() {
@@ -269,13 +274,13 @@ function openContextMenu(Event: MouseEvent, nodeId: string) {
 
 
 function ordering(value:string="default"){
-  if (!clusterNetwork.attributs){
-    clusterNetwork.attributs={};
+  if (!subgraphNetwork.attributs){
+    subgraphNetwork.attributs={};
   }
-  if (value == "default" && "ordering" in clusterNetwork.attributs){
-    delete clusterNetwork.attributs.ordering;
+  if (value == "default" && "ordering" in subgraphNetwork.attributs){
+    delete subgraphNetwork.attributs.ordering;
   } else if (value == "in" || value == "out"){
-    clusterNetwork.attributs.ordering=value;
+    subgraphNetwork.attributs.ordering=value;
   }
 }
 
@@ -289,7 +294,9 @@ function sourcesChoice(sourcetype:string):void{
   else if (sourcetype==SourceType.SOURCE_ONLY){
     sourceTypePath=SourceType.SOURCE_ONLY;
   }
-  clusterNetwork.clusters={}; // temporaire, je reset les clusters pour pas ajouter les nouveaux aux vieux
+  subgraphNetwork.mainChains={}; // temporaire, je reset les clusters pour pas ajouter les nouveaux aux vieux
+  subgraphNetwork.secondaryChains={};
+  subgraphNetwork.cycles={};
 }
 
 function mergeChoice(value:boolean) {
@@ -308,17 +315,17 @@ function OnlyUserSources(){
   onlyUserSources=!onlyUserSources;
 }
 
-async function clusterAlgorithm(algorithm:string):Promise<void> {
+async function subgraphAlgorithm(algorithm:string):Promise<void> {
     //console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
 
-      clusterNetwork=getOriginalNetwork();
+      subgraphNetwork=getOriginalNetwork();
 
         if (algorithm === 'DFS') {
-          getCluster = getLongPathDFS;
+          getSubgraph = getLongPathDFS;
         } else if (algorithm === 'DAG_Dijkstra') {
-          getCluster = getPathSourcesToTargetNode;
+          getSubgraph = getPathSourcesToTargetNode;
         }
-        allSteps(clusterNetwork,sourceTypePath).then(
+        allSteps(subgraphNetwork,sourceTypePath).then(
           ()=>{
             rescale(svgProperties)
           }
@@ -344,12 +351,12 @@ function getSourcesParam(network:Network,sourceType:SourceType):string[]{
 // ----------------------------------------------- Layouts
 
 // no layout 
-function getOriginalNetwork():ClusterNetwork{
+function getOriginalNetwork():SubgraphNetwork{
   //console.log(originalNetwork); ///// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
 
-  clusterNetwork.clusters={};
+  subgraphNetwork.mainChains={};
   network.value=networkCopy(originalNetwork); 
-  return clusterNetwork;
+  return subgraphNetwork;
 }
 
 // force algorithm : force layout
@@ -359,9 +366,9 @@ function algoForce(){
 }
 
 // algorithm pipeline : pathway layout 
-async function allSteps(clusterNetwork: ClusterNetwork,sourceTypePath:SourceType=SourceType.RANK_SOURCE):Promise<void> {
+async function allSteps(subgraphNetwork: SubgraphNetwork,sourceTypePath:SourceType=SourceType.RANK_SOURCE):Promise<void> {
 
-let network=clusterNetwork.network.value;
+let network=subgraphNetwork.network.value;
 
 console.log('_____________________________________________');
 console.log('Parameters :');
@@ -372,7 +379,7 @@ console.log("Add Mini branch ? " + String(minibranch));
 console.log("Type path ? " + pathType);
 console.log('---------------');
 
-await vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true).then(
+await vizLayout(network, subgraphNetwork.mainChains, subgraphNetwork.attributs, true).then(
   () => {
     duplicateReversibleReactions(network);
   }
@@ -384,21 +391,21 @@ await vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, true
 ).then(
   () => {
     const sources=getSourcesParam(network,sourceTypePath);
-    addClusterFromSources(clusterNetwork, sources,getCluster, merge,pathType);
+    addMainChainFromSources(subgraphNetwork, sources,getSubgraph, merge,pathType);
   }
 ).then(
   () => {
     if(minibranch){
-      clusterNetwork= addMiniBranchToMainChain(clusterNetwork);
+      subgraphNetwork= addMiniBranchToMainChain(subgraphNetwork);
     }
   }
 ).then(
   () => {
-    clusterNetwork = addBoldLinkMainChain(clusterNetwork);
+    subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
   }
 ).then(
   () => {
-    vizLayout(network, clusterNetwork.clusters, clusterNetwork.attributs, false, rescaleAfterAction);
+    vizLayout(network, subgraphNetwork.mainChains, subgraphNetwork.attributs, false, rescaleAfterAction);
   }
 )
 console.log('_____________________________________________');
@@ -418,22 +425,22 @@ function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
     dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
-    vizLayout(network.value, clusterNetwork.clusters ,clusterNetwork.attributs ,true,rescaleAfterAction);
+    vizLayout(network.value, subgraphNetwork.mainChains ,subgraphNetwork.attributs ,true,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
-  } else if (event.key =="c"){
-    console.log(clusterNetwork);
   } else if (event.key =="n"){
-    console.log(network.value);
+    console.log(subgraphNetwork);
+  } else if (event.key =="c"){
+    addDirectedCycleToSubgraphNetwork(subgraphNetwork);
   }else if (event.key =="r"){
     const sources=getSourcesParam(network.value,SourceType.RANK_SOURCE_ALL);
     chooseReversibleReaction(network.value,sources,BFSWithSources);
   }else if (event.key =="p"){
     const sources=getSourcesParam(network.value,sourceTypePath);
-    addClusterFromSources(clusterNetwork, sources,getCluster, merge,pathType);
-    clusterNetwork = addBoldLinkMainChain(clusterNetwork);
+    addMainChainFromSources(subgraphNetwork, sources,getSubgraph, merge,pathType);
+    subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
   } else if (event.key == "a"){
-    allSteps(clusterNetwork,sourceTypePath);
+    allSteps(subgraphNetwork,sourceTypePath);
   } else if (event.key == "f"){
     const sources=getSources(network.value,SourceType.RANK_ONLY);
     const {dfs,graph}=DFSsourceDAG(network.value,sources);
@@ -446,9 +453,9 @@ function keydownHandler(event: KeyboardEvent) {
       console.log(network.value.nodes[node].label);
     })
   }else if (event.key =="m"){
-    clusterNetwork= addMiniBranchToMainChain(clusterNetwork);
+    subgraphNetwork= addMiniBranchToMainChain(subgraphNetwork);
   }else if (event.key =="l"){
-    clusterNetwork = addBoldLinkMainChain(clusterNetwork);
+    subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
   }
 }
 
@@ -462,18 +469,18 @@ function keydownHandler(event: KeyboardEvent) {
 // ----------------------------------------------- Handmade clusters et sources
 
 function newCluster(){
-  const numberCluster=Object.keys(clusterNetwork.clusters).length;
-  const cluster= createCluster(String(numberCluster));
-  clusterNetwork.clusters[cluster.name]=cluster;
+  const numberCluster=Object.keys(subgraphNetwork.mainChains).length;
+  const cluster= createSubgraph(String(numberCluster));
+  subgraphNetwork.mainChains[cluster.name]=cluster;
 }
 
 function addToCluster() {
-  let numberCluster=Object.keys(clusterNetwork.clusters).length;
+  let numberCluster=Object.keys(subgraphNetwork.mainChains).length;
   if (numberCluster === 0){
     newCluster();
     numberCluster+=1;
   }
-  clusterNetwork=addNodeTocluster(clusterNetwork,String(numberCluster-1),menuProps.targetElement); 
+  subgraphNetwork=addNodeToSubgraph(subgraphNetwork,String(numberCluster-1),menuProps.targetElement,TypeSubgraph.MAIN_CHAIN); 
 }
 
 function addToUserSource() {
