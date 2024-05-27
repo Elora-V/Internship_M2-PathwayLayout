@@ -168,19 +168,21 @@ export async function chooseReversibleReaction(
  * @param network The network containing nodes and reactions.
  * @param nodeOrder The order of nodes to consider for keeping the first reversible node.
  */
-function keepFirstReversibleNode(network,nodeOrder:string[]){
+export function keepFirstReversibleNode(network,nodeOrder:string[]){
   const reactionToRemove:Array<string>=[];
 
   for(let i=0;i<nodeOrder.length;i++){
     const nodeID=nodeOrder[i];
     // if there is a reversible version of the current node:
     if(network.nodes[nodeID].metadata && network.nodes[nodeID].metadata.reversibleVersion){
-      const reversibleNodeID=network.nodes[nodeID].metadata.reversibleVersion;
+      const reversibleNodeID=network.nodes[nodeID].metadata.reversibleVersion as string;
       // add the reversible reaction to the list of nodes to remove
-      reactionToRemove.push(String(reversibleNodeID));
+      reactionToRemove.push(reversibleNodeID);
       // remove metadata information about reversible node for current node and its reversible version
       delete network.nodes[nodeID].metadata.reversibleVersion;
-      delete network.nodes[String(reversibleNodeID)].metadata.reversibleVersion;
+      if(reversibleNodeID in network.nodes && network.nodes[reversibleNodeID].metadata && "reversibleVersion" in network.nodes[reversibleNodeID].metadata){ 
+        delete network.nodes[reversibleNodeID].metadata.reversibleVersion;
+      }
     }
   }
 

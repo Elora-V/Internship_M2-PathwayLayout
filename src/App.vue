@@ -251,7 +251,7 @@ function rescaleAfterAction(){
 onMounted(() => {
   svgProperties = initZoom();
   window.addEventListener('keydown', keydownHandler);
-  importNetworkFromURL('/pathways/Alanine_and_aspartate_metabolism.json', network, networkStyle, callbackFunction); 
+  importNetworkFromURL('/pathways/Citric_acid_cycle.json', network, networkStyle, callbackFunction); 
   
 });
 function removeNode() {
@@ -382,6 +382,10 @@ console.log('---------------');
 await vizLayout(network, subgraphNetwork.mainChains, subgraphNetwork.attributs, true).then(
   () => {
     duplicateReversibleReactions(network);
+  }
+).then(
+  () => {
+    addDirectedCycleToSubgraphNetwork(subgraphNetwork);
   }
 ).then(
   () => {
