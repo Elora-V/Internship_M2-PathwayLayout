@@ -4,20 +4,29 @@ import { addNewSubgraph, createSubgraph } from "./UseSubgraphNetwork";
 import { TypeSubgraph } from "@/types/Subgraph";
 
 
-export function addDirectedCycleToSubgraphNetwork(subNetwork:SubgraphNetwork):SubgraphNetwork{
-    const onlyDirectedCycle=false;
-    const nodes=Object.keys(subNetwork.network.value.nodes);
-    const graph=graphForJohnson(subNetwork.network.value,nodes,onlyDirectedCycle);
-    const cycles=JohnsonAlgorithm(graph,nodes,"All",onlyDirectedCycle,subNetwork.network.value);
+export function addDirectedCycleToSubgraphNetwork(SubgraphNetwork:SubgraphNetwork,minsize:number=4):SubgraphNetwork{
+    
+    const cycles =getJohnsonCycles(SubgraphNetwork,true,minsize);
+    // adding cycles to subgraph network
     Object.entries(cycles).forEach(([name, nodes])=>{
         const cycle=createSubgraph(name,nodes,[],TypeSubgraph.CYCLE);
-        subNetwork=addNewSubgraph(subNetwork,cycle,TypeSubgraph.CYCLE);
+        SubgraphNetwork=addNewSubgraph(SubgraphNetwork,cycle,TypeSubgraph.CYCLE);
     });
-    return subNetwork;
+
+    return SubgraphNetwork;
 }
 
+function getJohnsonCycles(subNetwork:SubgraphNetwork,onlyDirectedCycle:boolean=true,minsize:number=4):{[key:string]:string[]} {
+        // get graph structure for johnson algorithm
+        const nodes=Object.keys(subNetwork.network.value.nodes);
+        const graph=graphForJohnson(subNetwork.network.value,nodes,onlyDirectedCycle);
+        // apply johnson algorithm : get cycle
+         return JohnsonAlgorithm(graph,nodes,"All",onlyDirectedCycle,minsize,subNetwork.network.value);
+}    
 
-export function graphForJohnson(network:Network, list_nodes:string[], onlyDirectedCycle:boolean=true):number[][]{
+
+
+function graphForJohnson(network:Network, list_nodes:string[], onlyDirectedCycle:boolean=true):number[][]{
     let graph: number[][] = Array.from({ length: list_nodes.length }, () => []);
     network.links.forEach(link=>{
         const sourceIndex=list_nodes.indexOf(link.source.id);
@@ -31,7 +40,7 @@ export function graphForJohnson(network:Network, list_nodes:string[], onlyDirect
 }
 
 
-export function JohnsonAlgorithm(graph: number[][], list_nodes:string[],flag: "Single" | "All"="All",onlyDirectedCycle:boolean=true,network?:Network): {[key:string]:string[]} {
+export function JohnsonAlgorithm(graph: number[][], list_nodes:string[],flag: "Single" | "All"="All",onlyDirectedCycle:boolean=true,minsize:number=4,network?:Network): {[key:string]:string[]} {
     const nVertices: number = graph.length;
     let nbcycle:number=0;
     let start: number = 0;
@@ -97,7 +106,7 @@ export function JohnsonAlgorithm(graph: number[][], list_nodes:string[],flag: "S
 
 
                 // If the cycle length is more than 3, add it to the result
-                if (cycle.length > 3) {
+                if (cycle.length >= minsize) {
                     const cycleID:string[]=[];
                     stack.slice(0, stackTop).forEach(nodeIndex=>{
                         cycleID.push(list_nodes[nodeIndex]);
