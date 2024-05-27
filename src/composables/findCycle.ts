@@ -2,18 +2,53 @@ import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { addNewSubgraph, createSubgraph } from "./UseSubgraphNetwork";
 import { TypeSubgraph } from "@/types/Subgraph";
+import { keepFirstReversibleNode } from "./duplicateReversibleReactions";
 
 
-export function addDirectedCycleToSubgraphNetwork(SubgraphNetwork:SubgraphNetwork,minsize:number=4):SubgraphNetwork{
+export function addDirectedCycleToSubgraphNetwork(subgraphNetwork:SubgraphNetwork,minsize:number=4):SubgraphNetwork{
+
+    if (!subgraphNetwork.cycles){
+        subgraphNetwork.cycles={};
+    }
     
-    const cycles =getJohnsonCycles(SubgraphNetwork,true,minsize);
-    // adding cycles to subgraph network
-    Object.entries(cycles).forEach(([name, nodes])=>{
-        const cycle=createSubgraph(name,nodes,[],TypeSubgraph.CYCLE);
-        SubgraphNetwork=addNewSubgraph(SubgraphNetwork,cycle,TypeSubgraph.CYCLE);
+    // get cycles
+    const cycles =getJohnsonCycles(subgraphNetwork,true,minsize);
+    // sort result depending on size : longest cycles first
+    const sortedCycles = Object.entries(cycles).sort((a, b) => b[1].length - a[1].length); // [1] to get the value of object (not key)
+
+    // adding cycles to subgraph network, and choose appropriate direction for reversible reactions
+    sortedCycles.forEach(cycle=>{// cycle[0] is the name/id, cycle[1] is the list of nodes
+        // check if all nodes of cycle still exists (needed because of removal of reversible nodes)
+        let existingCycle=true;
+        let i=0;
+        while (existingCycle && i< cycle[1].length){
+            if (!(cycle[1][i] in subgraphNetwork.network.value.nodes)){
+                existingCycle=false;
+            }
+            i++;
+        } 
+        
+        if (existingCycle){
+            // remove reversible version of node in cycle, to only keep the one in the direction of cycle
+            keepFirstReversibleNode(subgraphNetwork.network.value,cycle[1]);
+
+            // has common nodes with a cycle in clusterNetwork ?
+            let hasCommonNode = false;
+            let networkCycles = Object.values(subgraphNetwork.cycles);
+            let i = 0;
+            while (!hasCommonNode && i < networkCycles.length) {
+                hasCommonNode = cycle[1].some(node => networkCycles[i].nodes.includes(node));
+                i++;
+            }
+            if(!hasCommonNode){ // if new cycle independant of the one already keeped : add it 
+                
+                const subgraph=createSubgraph(cycle[0],cycle[1],[],TypeSubgraph.CYCLE);
+                subgraphNetwork=addNewSubgraph(subgraphNetwork,subgraph,TypeSubgraph.CYCLE);
+            }           
+        }
     });
 
-    return SubgraphNetwork;
+    return subgraphNetwork;
 }
 
 function getJohnsonCycles(subNetwork:SubgraphNetwork,onlyDirectedCycle:boolean=true,minsize:number=4):{[key:string]:string[]} {
