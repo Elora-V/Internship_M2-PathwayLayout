@@ -179,6 +179,7 @@ import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
 import { node } from "prop-types";
 import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetwork";
+import { drawAllCycles } from "@/composables/drawCycle";
 
 
 
@@ -427,8 +428,14 @@ await vizLayout(subgraphNetwork, true).then(
     subgraphNetwork=addRedLinkcycle(subgraphNetwork);
   }
 ).then(
+  async () => {
+    await vizLayout(subgraphNetwork, false, rescaleAfterAction);
+  }
+).then(
   () => {
-    vizLayout(subgraphNetwork, false, rescaleAfterAction);
+    if (cycle){
+      drawAllCycles(subgraphNetwork);
+    }
   }
 )
 console.log('_____________________________________________');
