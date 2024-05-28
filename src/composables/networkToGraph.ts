@@ -1,9 +1,10 @@
 import { Network } from '@metabohub/viz-core/src/types/Network';
 import  dagre  from 'dagrejs/dist/dagre.js';
 import { Graph } from "@viz-js/viz";
-import { addClusterViz } from './useSubgraphs';
+import { addMainChainClusterViz } from './useSubgraphs';
 import { Subgraph } from '@/types/Subgraph';
 import * as GDS from 'graph-data-structure';
+import { SubgraphNetwork } from '@/types/SubgraphNetwork';
 
 
 /** 
@@ -43,17 +44,17 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
  * @param clusters clusters for viz
  * @returns {Graph} Return graph object for viz
  */
-export function NetworkToViz(network: Network,clusters:{[key:string]:Subgraph}={},graphAttributes={}): Graph{
+export function NetworkToViz(subgraphNetwork:SubgraphNetwork): Graph{
     // initialisation viz graph
     let graphViz: Graph ={
-        graphAttributes: graphAttributes,
+        graphAttributes: subgraphNetwork.attributs,
         directed: true,
         edges: [],
         subgraphs:[]
     }
 
     // insert edge 
-    network.links.forEach((link)=>{
+    subgraphNetwork.network.value.links.forEach((link)=>{
         let attributs:AttributesViz={};
         if (link.metadata && Object.keys(link.metadata).includes("constraint")){
             attributs.constraint=link.metadata["constraint"] as boolean;
@@ -66,8 +67,8 @@ export function NetworkToViz(network: Network,clusters:{[key:string]:Subgraph}={
     })
 
     // insert subgraphs (with edges)
-    Object.values(clusters).forEach((cluster) => {
-        graphViz=addClusterViz(graphViz,cluster);
+    Object.keys(subgraphNetwork.mainChains).forEach((nameMainChain) => {
+        graphViz=addMainChainClusterViz(graphViz,nameMainChain,subgraphNetwork);
     });
     return graphViz;
 

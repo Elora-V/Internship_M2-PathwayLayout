@@ -5,6 +5,7 @@ import { NetworkToDagre, NetworkToViz } from './networkToGraph';
 import { changeNetworkFromDagre, changeNetworkFromViz, dagreToNetwork } from './graphToNetwork';
 import { JsonViz } from "@/types/JsonViz";
 import { Subgraph } from "@/types/Subgraph";
+import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 
 /** 
  * Take a network object and change the (x,y) position of the node with dagre lib
@@ -35,12 +36,12 @@ export function dagreLayout(network: Network,graphAttributes={},callbackFunction
  * @param assignRank indicates if rank and order need to be infered after layout is applied
  * @param [callbackFunction=() => {}] function to do after the layout is done
  */
-export async function vizLayout(network: Network,mainChains:{[key:string]:Subgraph}={}, graphAttributes={},assignRank:boolean=false, callbackFunction = () => {}): Promise<void> {
+export async function vizLayout(subgraphNetwork:SubgraphNetwork,assignRank:boolean=false, callbackFunction = () => {}): Promise<void> {
     console.log('Viz');
     await instance().then(viz => {
-        const graphViz=NetworkToViz(network,mainChains,graphAttributes);
+        const graphViz=NetworkToViz(subgraphNetwork);
         const json=viz.renderJSON(graphViz) as JsonViz;
-        changeNetworkFromViz(json,network,assignRank).then(() => {
+        changeNetworkFromViz(json,subgraphNetwork.network.value,assignRank).then(() => {
             callbackFunction();
         });
     });

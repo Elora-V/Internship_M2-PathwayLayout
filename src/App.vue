@@ -160,7 +160,7 @@ import { networkCopy } from "@/composables/networkToGraph";
 import { initZoom, rescale } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
-import { JohnsonAlgorithm, addCycleToSubgraphNetwork, addDirectedCycleToSubgraphNetwork, graphForJohnson } from "@/composables/findCycle";
+import { JohnsonAlgorithm, addDirectedCycleToSubgraphNetwork } from "@/composables/findCycle";
 import { countIntersection } from "./composables/countIntersections";
 import { countIsolatedNodes } from "./composables/countIsolatedNodes";
 import { DFSsourceDAG, DFSWithSources } from "@/composables/algoDFS";
@@ -394,7 +394,7 @@ console.log("Type path ? " + pathType);
 console.log('Cycle ? ' + String(cycle));
 console.log('---------------');
 
-await vizLayout(network, subgraphNetwork.mainChains, subgraphNetwork.attributs, true).then(
+await vizLayout(subgraphNetwork, true).then(
   () => {
     duplicateReversibleReactions(network);
   }
@@ -426,7 +426,7 @@ await vizLayout(network, subgraphNetwork.mainChains, subgraphNetwork.attributs, 
   }
 ).then(
   () => {
-    vizLayout(network, subgraphNetwork.mainChains, subgraphNetwork.attributs, false, rescaleAfterAction);
+    vizLayout(subgraphNetwork, false, rescaleAfterAction);
   }
 )
 console.log('_____________________________________________');
@@ -446,7 +446,7 @@ function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
     dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
-    vizLayout(network.value, subgraphNetwork.mainChains ,subgraphNetwork.attributs ,true,rescaleAfterAction);
+    vizLayout(subgraphNetwork ,true,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
   } else if (event.key =="n"){
@@ -491,7 +491,7 @@ function keydownHandler(event: KeyboardEvent) {
 
 function newCluster(){
   const numberCluster=Object.keys(subgraphNetwork.mainChains).length;
-  const cluster= createSubgraph(String(numberCluster));
+  const cluster= createSubgraph(String(numberCluster),[],[],TypeSubgraph.MAIN_CHAIN);
   subgraphNetwork.mainChains[cluster.name]=cluster;
 }
 
