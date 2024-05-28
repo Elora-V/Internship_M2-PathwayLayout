@@ -119,11 +119,11 @@ export function addBoldLinkMainChain(subgraphNetwork:SubgraphNetwork):SubgraphNe
         let cycleSource: string[] = [];
         let cycleTarget: string[] = [];
         if ( Object.keys(link.source).includes("metadata") && Object.keys(link.source.metadata).includes(TypeSubgraph.CYCLE)){
-            cycleSource= link.source.metadata?.mainChains ? link.source.metadata.mainChains as string[] : [];
+            cycleSource= link.source.metadata?.cycles ? link.source.metadata.cycles as string[] : [];
         }
   
         if ( Object.keys(link.target).includes("metadata") && Object.keys(link.target.metadata).includes(TypeSubgraph.CYCLE)){
-            cycleTarget= link.target.metadata?.mainChains ? link.target.metadata.mainChains as string[] : [];
+            cycleTarget= link.target.metadata?.cycles ? link.target.metadata.cycles as string[] : [];
         }        
 
         // Check if there is at least one common cluster
