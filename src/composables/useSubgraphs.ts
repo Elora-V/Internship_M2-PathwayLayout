@@ -35,7 +35,9 @@ export function addClusterDot(subgraph: Subgraph,isCluster:boolean=true): string
 
     let clusterString = `subgraph ${prefix}${subgraph.name} {\n`;
     // add rank
-    clusterString+=`{rank="${subgraph.rank}";`;
+    if ("rank" in subgraph){
+        clusterString+=`{rank="${subgraph.rank}";`;
+    }
 
     // add nodes
     subgraph.nodes.forEach((node) => {
@@ -133,7 +135,7 @@ export function addBoldLinkMainChain(subgraphNetwork:SubgraphNetwork):SubgraphNe
   }
 
 
-  
+
   export function addRedLinkcycle(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
     let network=subgraphNetwork.network.value;
     network.links.forEach(link=>{

@@ -7,6 +7,7 @@ import { addClusterDot } from './useSubgraphs';
 import * as GDS from 'graph-data-structure';
 import { SubgraphNetwork } from '@/types/SubgraphNetwork';
 import { h } from 'vue';
+import { Link } from '@metabohub/viz-core/src/types/Link';
 
 
 /** 
@@ -60,11 +61,9 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
     // Object.keys(subgraphNetwork.network.value.nodes).forEach((node) => { 
     //     graphViz.nodes.push({name:node});
     // });
-
     
     // insert edge (but with cycle metanode) 
     subgraphNetwork.network.value.links.forEach((link)=>{
-
 
         // attributs
         let attributs:AttributesViz={};
@@ -79,38 +78,15 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
         // if cycle handling
         if (cycle){
             let inCycle:string;
-            // source in cycle ?
-            if(link.source.metadata && Object.keys(link.source.metadata).includes(TypeSubgraph.CYCLE)){
-                const cyclesOfSource=link.source.metadata[TypeSubgraph.CYCLE];
-                if(Object.keys(cyclesOfSource).length>1){
-                    console.error("A node can't be in multiple cycle");
-                }else if (Object.keys(cyclesOfSource).length==1){
-                    tail=cyclesOfSource[0]; // tail is the cycle
-                    inCycle=tail;
-                }          
-            }
-            // target in cycle ?
-            if(link.target.metadata && Object.keys(link.target.metadata).includes(TypeSubgraph.CYCLE)){
-                const cyclesOfTarget=link.target.metadata[TypeSubgraph.CYCLE];
-                if(Object.keys(cyclesOfTarget).length>1){
-                    console.error("A node can't be in multiple cycle");
-                }else if (Object.keys(cyclesOfTarget).length==1){
-                    head=cyclesOfTarget[0]; // head is the cycle
-                    inCycle=head;
-                }          
-            }
-
-            if(inCycle !== undefined){
-                // const cycleLength=subgraphNetwork.cycles[inCycle].nodes.length;
-                // const diameterCycle=cycleLength*radiusFactor*2;
-                // const sizeMetanode=1;//diameterCycle/500;
-                graphViz.nodes.push({name:inCycle});//attributes:{height:sizeMetanode,width:sizeMetanode}
-            }
-    
+            // get new tail and head if in cycle metanode
+            const newLink=cycleMetanodeLink(link);
+            inCycle=newLink.inCycle;
+            tail=newLink.tail;
+            head=newLink.head;
         }
         
         // add edge        
-        if (tail!=head){
+        if (tail!==head){
             graphViz.edges.push({
                 tail: tail,
                 head: head,
@@ -124,36 +100,105 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
         graphViz=addMainChainClusterViz(graphViz,nameMainChain,subgraphNetwork);
     });
 
+    // insert cycle metanode
+    if (cycle && subgraphNetwork.cycles){
+        Object.keys(subgraphNetwork.cycles).forEach((cycle) => {
+            // const cycleLength=subgraphNetwork.cycles[cycle].nodes.length;
+            // const diameterCycle=cycleLength*radiusFactor*2;
+            // const sizeMetanode=1;//diameterCycle/500;
+            graphViz.nodes.push({name:cycle});//attributes:{height:sizeMetanode,width:sizeMetanode}
+        });
+    }
+
     return graphViz;
 
 }
 
-export function NetworkToDot(network: Network,clusters:{[key:string]:Subgraph}={},graphAttributes={}): string{
-    // initialisation viz graph with graph attributs
-    let dotString="digraph G {\n graph "+customStringify(graphAttributes)+"\n";
+export function NetworkToDot(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,radiusFactor:number=15): string{
 
-    // insert nodes
+    const network=subgraphNetwork.network.value;
+    // initialisation viz graph with graph attributs
+    let dotString="digraph G {\n graph "+customStringify(subgraphNetwork.attributs)+"\n";
+
+    // insert nodes if special viz attributs
     Object.values(network.nodes).forEach((node) => {
-        const vizAttributes= node.metadata["vizAttributs"] ? customStringify(node.metadata["vizAttributs"]) : "";
-        dotString+=`${node.id} `+vizAttributes+`;\n`;
+        if(node.metadata["vizAttributs"]){
+            const vizAttributes= customStringify(node.metadata["vizAttributs"]);
+            dotString+=`${node.id} `+vizAttributes+`;\n`;
+        }
     });
+
+    // insert cycle metanode
+    if (cycle && subgraphNetwork.cycles){
+        Object.keys(subgraphNetwork.cycles).forEach((cycle) => {
+            const size = Math.floor(subgraphNetwork.cycles[cycle].nodes.length*radiusFactor*2/80); // test
+            dotString+=`${cycle} [width=${size}, height=${size}]; \n`;
+        });
+    }
+
 
     // insert edges 
     network.links.forEach((link)=>{
+        // link attributs
         let attributs:AttributesViz={};
         if (link.metadata && Object.keys(link.metadata).includes("constraint")){
             attributs.constraint=link.metadata["constraint"] as boolean;
         }
-        dotString+=`${link.source.id} -> ${link.target.id} `+customStringify(attributs)+`;\n`;
-    })
+        // head and tail
+        let tail:string=link.source.id;
+        let head:string=link.target.id;
 
-    // insert subgraphs (with edges)
-    Object.values(clusters).forEach((cluster) => {
-        dotString+=addClusterDot(cluster);
+        // if cycle handling
+        if (cycle){
+            let inCycle:string;
+            // get new tail and head if in cycle metanode
+            const newLink=cycleMetanodeLink(link);
+            inCycle=newLink.inCycle;
+            tail=newLink.tail;
+            head=newLink.head; 
+        }
+        if (tail!==head){
+            dotString+=`${tail} -> ${head} `+customStringify(attributs)+`;\n`;
+        }
     });
 
+    // insert subgraphs (with edges)
+    Object.values(subgraphNetwork.mainChains).forEach((nameMainChain) => {
+        dotString+=addClusterDot(nameMainChain);
+    });
+
+      
     return dotString+"}";
 
+}
+
+function cycleMetanodeLink(link:Link):{inCycle:string,tail:string,head:string}{
+    
+    let inCycle:string;
+    let tail:string=link.source.id;
+    let head:string=link.target.id;
+
+     // source in cycle ?
+     if(link.source.metadata && Object.keys(link.source.metadata).includes(TypeSubgraph.CYCLE)){
+        const cyclesOfSource=link.source.metadata[TypeSubgraph.CYCLE];
+        if(Object.keys(cyclesOfSource).length>1){
+            console.error("A node can't be in multiple cycle");
+        }else if (Object.keys(cyclesOfSource).length==1){
+            tail=cyclesOfSource[0]; // tail is the cycle
+            inCycle=tail;
+        }          
+    }
+    // target in cycle ?
+    if(link.target.metadata && Object.keys(link.target.metadata).includes(TypeSubgraph.CYCLE)){
+        const cyclesOfTarget=link.target.metadata[TypeSubgraph.CYCLE];
+        if(Object.keys(cyclesOfTarget).length>1){
+            console.error("A node can't be in multiple cycle");
+        }else if (Object.keys(cyclesOfTarget).length==1){
+            head=cyclesOfTarget[0]; // head is the cycle
+            inCycle=head;
+        }          
+    }
+    return {inCycle:inCycle,tail:tail,head:head}
 }
 
 function customStringify(obj) {
