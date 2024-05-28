@@ -29,6 +29,24 @@ export function addMainChainClusterViz(vizGraph: Graph, nameMainChain: string, s
 }
 
 
+export function addClusterDot(subgraph: Subgraph,isCluster:boolean=true): string {
+
+    const prefix = isCluster?"cluster_":"";  
+
+    let clusterString = `subgraph ${prefix}${subgraph.name} {\n`;
+    // add rank
+    clusterString+=`{rank="${subgraph.rank}";`;
+
+    // add nodes
+    subgraph.nodes.forEach((node) => {
+        clusterString+=`${node};`;
+    });
+    return clusterString+"}\n}\n";
+  }
+  
+
+
+
 // export function addNoConstraint(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
 //   let network=subgraphNetwork.network.value;
 //   network.links.forEach(link=>{
@@ -113,6 +131,9 @@ export function addBoldLinkMainChain(subgraphNetwork:SubgraphNetwork):SubgraphNe
   
     return subgraphNetwork;
   }
+
+
+  
   export function addRedLinkcycle(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
     let network=subgraphNetwork.network.value;
     network.links.forEach(link=>{
