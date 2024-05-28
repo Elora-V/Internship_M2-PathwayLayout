@@ -53,11 +53,12 @@ export function addMainChainFromSources(subgraphNetwork:SubgraphNetwork, sources
     Object.entries(newMainChains).forEach(([mainChainID,mainChain]:[string,{nodes:Array<string>, height:number}])=>{
         if (mainChain.height >= minHeight){
             // create subgraph and add it
-            const newMainChain= createSubgraph(mainChainID, mainChain.nodes,[],TypeSubgraph.MAIN_CHAIN);
-            subgraphNetwork.mainChains[mainChainID]=newMainChain;
+            const newMainChainId="mainChain__"+mainChainID;
+            const newMainChain= createSubgraph(newMainChainId, mainChain.nodes,[],TypeSubgraph.MAIN_CHAIN);
+            subgraphNetwork.mainChains[newMainChainId]=newMainChain;
             // add metadata for node in cluster
             mainChain.nodes.forEach(nodeID=>{
-                updateNodeMetadataSubgraph(network, nodeID, mainChainID);
+                updateNodeMetadataSubgraph(network, nodeID, newMainChainId);
             });
         }
     });
