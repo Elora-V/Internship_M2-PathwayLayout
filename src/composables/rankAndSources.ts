@@ -41,8 +41,10 @@ export function assignRankOrder(network: Network, unique_y: Array<number>):void 
                 node.metadata.order = order;
             } else {
                 console.error("Le rang n'est pas un nombre");
-                node.metadata.order = -1;
+                node.metadata.order = undefined;
             }
+        }else{
+            node.metadata.order = undefined;
         }
     });
 }
