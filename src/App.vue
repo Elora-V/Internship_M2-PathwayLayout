@@ -167,7 +167,7 @@ import { DFSsourceDAG, DFSWithSources } from "@/composables/algoDFS";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 import { BFSWithSources } from "@/composables/algoBFS";
 import { concatSources, getSources } from "@/composables/rankAndSources";
-import { addBoldLinkMainChain } from "@/composables/useSubgraphs";
+import { addBoldLinkMainChain, addRedLinkcycle } from "@/composables/useSubgraphs";
 import { addMainChainFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/chooseSubgraph";
 
 
@@ -250,6 +250,7 @@ async function callbackFunction() {
       networkStyle.value.linkStyles={}
     }
     networkStyle.value.linkStyles["mainChains"]={strokeWidth:3,stroke:"blue"};
+    networkStyle.value.linkStyles["cycles"]={stroke:"red"};
 
 }
 
@@ -423,6 +424,7 @@ await vizLayout(subgraphNetwork, true).then(
 ).then(
   () => {
     subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
+    subgraphNetwork=addRedLinkcycle(subgraphNetwork);
   }
 ).then(
   () => {

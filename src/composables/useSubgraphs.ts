@@ -113,4 +113,36 @@ export function addBoldLinkMainChain(subgraphNetwork:SubgraphNetwork):SubgraphNe
   
     return subgraphNetwork;
   }
+  export function addRedLinkcycle(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
+    let network=subgraphNetwork.network.value;
+    network.links.forEach(link=>{
+        let cycleSource: string[] = [];
+        let cycleTarget: string[] = [];
+        if ( Object.keys(link.source).includes("metadata") && Object.keys(link.source.metadata).includes(TypeSubgraph.CYCLE)){
+            cycleSource= link.source.metadata?.mainChains ? link.source.metadata.mainChains as string[] : [];
+        }
+  
+        if ( Object.keys(link.target).includes("metadata") && Object.keys(link.target.metadata).includes(TypeSubgraph.CYCLE)){
+            cycleTarget= link.target.metadata?.mainChains ? link.target.metadata.mainChains as string[] : [];
+        }        
+
+        // Check if there is at least one common cluster
+        let commonCycle = cycleSource.some(cycle => cycleTarget.includes(cycle));
+
+        if (commonCycle){ 
+            if(!link.classes){
+                link.classes=[];
+            }
+            if (!(link.classes.includes(TypeSubgraph.CYCLE))){
+                link.classes.push(TypeSubgraph.CYCLE);
+            }
+        }else{
+            if(link.classes){
+                link.classes = link.classes.filter((c) => c !== TypeSubgraph.CYCLE);
+            }
+        }
+    });
+  
+    return subgraphNetwork;
+  }
   
