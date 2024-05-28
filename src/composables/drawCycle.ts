@@ -7,7 +7,7 @@ export function drawAllCycles(subgraphNetwork:SubgraphNetwork):void {
     });
 }
 
-function drawCycle(subgraphNetwork:SubgraphNetwork,cycleToDraw:string|string[],direction :"clockwise"| "counter-clockwise"="clockwise",radius:number|undefined=undefined):void {
+function drawCycle(subgraphNetwork:SubgraphNetwork,cycleToDraw:string|string[],direction :"clockwise"| "counter-clockwise"="clockwise",radius:number|undefined=undefined,radiusFactor:number=15):void {
     
     let cycle:string[]=[];
     if (typeof cycleToDraw == 'string' && cycleToDraw in subgraphNetwork.cycles){
@@ -74,7 +74,7 @@ function drawCycle(subgraphNetwork:SubgraphNetwork,cycleToDraw:string|string[],d
         centroidY = centroidY / cycle.length;
 
         if (radius === undefined){
-            radius = cycle.length*15;
+            radius = cycle.length*radiusFactor;
         }
 
         // var shiftedNodesList = [].concat(nodesList);

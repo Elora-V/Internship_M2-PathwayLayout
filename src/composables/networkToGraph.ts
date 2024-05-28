@@ -2,9 +2,10 @@ import { Network } from '@metabohub/viz-core/src/types/Network';
 import  dagre  from 'dagrejs/dist/dagre.js';
 import { Graph } from "@viz-js/viz";
 import { addMainChainClusterViz } from './useSubgraphs';
-import { Subgraph } from '@/types/Subgraph';
+import { Subgraph, TypeSubgraph } from '@/types/Subgraph';
 import * as GDS from 'graph-data-structure';
 import { SubgraphNetwork } from '@/types/SubgraphNetwork';
+import { h } from 'vue';
 
 
 /** 
@@ -44,32 +45,84 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
  * @param clusters clusters for viz
  * @returns {Graph} Return graph object for viz
  */
-export function NetworkToViz(subgraphNetwork:SubgraphNetwork): Graph{
+export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,radiusFactor:number=15): Graph{
     // initialisation viz graph
     let graphViz: Graph ={
         graphAttributes: subgraphNetwork.attributs,
         directed: true,
         edges: [],
+        nodes: [],
         subgraphs:[]
     }
 
-    // insert edge 
+    // insert nodes
+    // Object.keys(subgraphNetwork.network.value.nodes).forEach((node) => { 
+    //     graphViz.nodes.push({name:node});
+    // });
+
+    
+    // insert edge (but with cycle metanode) 
     subgraphNetwork.network.value.links.forEach((link)=>{
+
+
+        // attributs
         let attributs:AttributesViz={};
         if (link.metadata && Object.keys(link.metadata).includes("constraint")){
             attributs.constraint=link.metadata["constraint"] as boolean;
         }
-        graphViz.edges.push({
-            tail: link.source.id,
-            head: link.target.id,
-            attributes:attributs
+
+        // head and tail
+        let tail:string=link.source.id;
+        let head:string=link.target.id;
+
+        // if cycle handling
+        if (cycle){
+            let inCycle:string;
+            // source in cycle ?
+            if(link.source.metadata && Object.keys(link.source.metadata).includes(TypeSubgraph.CYCLE)){
+                const cyclesOfSource=link.source.metadata[TypeSubgraph.CYCLE];
+                if(Object.keys(cyclesOfSource).length>1){
+                    console.error("A node can't be in multiple cycle");
+                }else if (Object.keys(cyclesOfSource).length==1){
+                    tail=cyclesOfSource[0]; // tail is the cycle
+                    inCycle=tail;
+                }          
+            }
+            // target in cycle ?
+            if(link.target.metadata && Object.keys(link.target.metadata).includes(TypeSubgraph.CYCLE)){
+                const cyclesOfTarget=link.target.metadata[TypeSubgraph.CYCLE];
+                if(Object.keys(cyclesOfTarget).length>1){
+                    console.error("A node can't be in multiple cycle");
+                }else if (Object.keys(cyclesOfTarget).length==1){
+                    head=cyclesOfTarget[0]; // head is the cycle
+                    inCycle=head;
+                }          
+            }
+
+            if(inCycle !== undefined){
+                // const cycleLength=subgraphNetwork.cycles[inCycle].nodes.length;
+                // const diameterCycle=cycleLength*radiusFactor*2;
+                // const sizeMetanode=1;//diameterCycle/500;
+                graphViz.nodes.push({name:inCycle});//attributes:{height:sizeMetanode,width:sizeMetanode}
+            }
+    
+        }
+        
+        // add edge        
+        if (tail!=head){
+            graphViz.edges.push({
+                tail: tail,
+                head: head,
+                attributes:attributs
             });
+        }
     })
 
-    // insert subgraphs (with edges)
+    // insert mainChain subgraphs (with edges)
     Object.keys(subgraphNetwork.mainChains).forEach((nameMainChain) => {
         graphViz=addMainChainClusterViz(graphViz,nameMainChain,subgraphNetwork);
     });
+
     return graphViz;
 
 }
