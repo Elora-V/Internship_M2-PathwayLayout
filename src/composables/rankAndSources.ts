@@ -18,9 +18,13 @@ export function assignRankOrder(network: Network, unique_y: Array<number>):void 
     const xNodeByRank: number[][] = Array.from({ length: unique_y.length }, () => []);
     Object.values(network.nodes).forEach((node) => {
         const rank = unique_y.indexOf(node.y);
-        node.metadata = node.metadata || {}; 
-        node.metadata.rank = rank;
-        xNodeByRank[rank].push(node.x);
+        if(rank >-1){
+            node.metadata = node.metadata || {}; 
+            node.metadata.rank = rank;
+            xNodeByRank[rank].push(node.x);
+        }else{
+            node.metadata.rank = undefined;
+        }
     });
 
     // sort the y by rank
@@ -30,13 +34,15 @@ export function assignRankOrder(network: Network, unique_y: Array<number>):void 
 
     // get the order for each node 
     Object.values(network.nodes).forEach((node) => {
-        const rank = node.metadata.rank;
-        if (typeof rank === 'number') {
-            const order = xNodeByRank[rank].indexOf(node.x);
-            node.metadata.order = order;
-        } else {
-            console.error("Le rang n'est pas un nombre");
-            node.metadata.order = -1;
+        if (node.metadata && Object.keys(node.metadata).includes("rank") && node.metadata.rank !== undefined){
+            const rank = node.metadata.rank;
+            if (typeof rank === 'number') {
+                const order = xNodeByRank[rank].indexOf(node.x);
+                node.metadata.order = order;
+            } else {
+                console.error("Le rang n'est pas un nombre");
+                node.metadata.order = -1;
+            }
         }
     });
 }
