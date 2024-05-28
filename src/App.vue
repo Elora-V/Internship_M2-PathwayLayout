@@ -49,6 +49,17 @@
       No_merge
     </button>
 
+    <span class="bold margin">|</span>
+
+
+    <button v-on:click="Cycle(true)" class="styled-button">
+      cycle
+    </button>
+    <button v-on:click="Cycle(false)" class="styled-button">
+      No_cycle
+    </button>
+
+
 
     <span class="bold margin">|</span>
 
@@ -195,8 +206,7 @@ let pathType:PathType=PathType.ALL_LONGEST;
 let minibranch:boolean=true;
 let userSources:string[]=[];
 let onlyUserSources:boolean=false;
-
-
+let cycle:boolean=true;
 
 
 
@@ -303,6 +313,10 @@ function mergeChoice(value:boolean) {
     merge=value;
 }
 
+function Cycle(value:boolean) {
+    cycle=value;
+}
+
 function setPathType(type:PathType) {
     pathType = type;
 }
@@ -377,6 +391,7 @@ console.log('Only user sources ? ' + String(onlyUserSources));
 console.log("Merge ? " + String(merge));
 console.log("Add Mini branch ? " + String(minibranch));
 console.log("Type path ? " + pathType);
+console.log('Cycle ? ' + String(cycle));
 console.log('---------------');
 
 await vizLayout(network, subgraphNetwork.mainChains, subgraphNetwork.attributs, true).then(
@@ -385,7 +400,9 @@ await vizLayout(network, subgraphNetwork.mainChains, subgraphNetwork.attributs, 
   }
 ).then(
   () => {
-    addDirectedCycleToSubgraphNetwork(subgraphNetwork);
+    if (cycle){
+      addDirectedCycleToSubgraphNetwork(subgraphNetwork,5);
+    }
   }
 ).then(
   () => {
