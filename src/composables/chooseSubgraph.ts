@@ -1,19 +1,17 @@
-import { RankEnum } from "@/types/Cluster";
 import { PathType, SourceType } from "@/types/EnumArgs";
 import { DFSWithSources, DFSsourceDAG } from "./algoDFS";
 import { NetworkToGDSGraph } from "./networkToGraph";
-import { ClusterNetwork } from "@/types/ClusterNetwork";
-import { createCluster } from "./UseClusterNetwork";
+import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { getSources } from "./rankAndSources";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { BFS } from "./algoBFS";
-import type {Cluster} from "@/types/Cluster";
-import { updateNodeMetadataCluster, addNodeTocluster } from './UseClusterNetwork';
+import {TypeSubgraph, type Subgraph} from "@/types/Subgraph";
+import { addNodeToSubgraph, createSubgraph, updateNodeMetadataSubgraph } from './UseSubgraphNetwork';
 
 
 /**
  * Add clusters (in ClusterNetwork object) taht are at least of a minimum size. A method is given in the parameters to get the clusters
- * @param clusterNetwork an object with the network and object for clusters
+ * @param subgraphNetwork an object with the network and object for clusters
  * @param sources array of node ID or a type of method to get sources automatically
  * RANK_ONLY : sources are nodes of rank 0
  * SOURCE_ONLY : sources are topological sources of the network (nul indegree)
@@ -22,7 +20,7 @@ import { updateNodeMetadataCluster, addNodeTocluster } from './UseClusterNetwork
  * SOURCE_ALL : sources are topological sources, then all the others nodes
  * RANK_SOURCE_ALL : sources are node of rank 0, then topological sources, then all the other nodes
  * For this function, the advised choice is either RANK_ONLY, SOURCE_ONLY or RANK_SOURCE.
- * @param getClusters function that return the clusters to add
+ * @param getMainChains function that return the clusters to add
  * @param merge if true, merge the path with an existing one if a common node is found, else common nodes in several clusters
  *  => not taken by all methods of getCluster
  * @param pathType the type of path to target node wanted :
@@ -33,56 +31,56 @@ import { updateNodeMetadataCluster, addNodeTocluster } from './UseClusterNetwork
  * @param minHeight minimum size of a cluster to be added
  * @returns the clusterNetwork with more cluster
  */
-export function addClusterFromSources(clusterNetwork:ClusterNetwork, sources:Array<string> | SourceType, 
-    getClusters:(network: Network, sources: Array<string>,merge?:boolean,pathType?:PathType) => {[key:string]:{nodes:Array<string>, height:number}}=getPathSourcesToTargetNode,
+export function addMainChainFromSources(subgraphNetwork:SubgraphNetwork, sources:Array<string> | SourceType, 
+    getMainChains:(network: Network, sources: Array<string>,merge?:boolean,pathType?:PathType) => {[key:string]:{nodes:Array<string>, height:number}}=getPathSourcesToTargetNode,
     merge:boolean=true,
     pathType:PathType=PathType.ALL_LONGEST,
     minHeight:number=4
-):ClusterNetwork{
+):SubgraphNetwork{
 
-    console.log('create cluster longest path');
-    const network=clusterNetwork.network.value;
+    console.log('create main chain from longest path');
+    const network=subgraphNetwork.network.value;
     
     // get sources
     if (!Array.isArray(sources)){
         sources=getSources(network,sources);
     }
 
-    // get cluster of paths from sources
-    const newClusters=getClusters(network,sources as string[],merge,pathType);
+    // get main chains of paths from sources
+    const newMainChains=getMainChains(network,sources as string[],merge,pathType);
 
-    // add cluster if length > minsize, and add information of cluster for nodes
-    Object.entries(newClusters).forEach(([clusterID,cluster]:[string,{nodes:Array<string>, height:number}])=>{
-        if (cluster.height >= minHeight){
-            // create cluster and add it
-            const newCluster= createCluster(clusterID, RankEnum.EMPTY, cluster.nodes,[]);
-            clusterNetwork.clusters[clusterID]=newCluster;
+    // add main chains if length > minsize, and update metadata for nodes
+    Object.entries(newMainChains).forEach(([mainChainID,mainChain]:[string,{nodes:Array<string>, height:number}])=>{
+        if (mainChain.height >= minHeight){
+            // create subgraph and add it
+            const newMainChain= createSubgraph(mainChainID, mainChain.nodes,[],TypeSubgraph.MAIN_CHAIN);
+            subgraphNetwork.mainChains[mainChainID]=newMainChain;
             // add metadata for node in cluster
-            cluster.nodes.forEach(nodeID=>{
-                updateNodeMetadataCluster(network, nodeID, clusterID);
+            mainChain.nodes.forEach(nodeID=>{
+                updateNodeMetadataSubgraph(network, nodeID, mainChainID);
             });
         }
     });
 
-    return clusterNetwork;
+    return subgraphNetwork;
 }
 
 
 /**
  * Adds mini branches to the main chain in the cluster network.
  * A mini branch is a child of a node in main chain cluster that has no children.
- * @param clusterNetwork - The cluster network to modify.
+ * @param subgraphNetwork - The cluster network to modify.
  * @returns The modified cluster network.
  */
-export function addMiniBranchToMainChain(clusterNetwork:ClusterNetwork):ClusterNetwork{
+export function addMiniBranchToMainChain(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
     console.log('add mini branch to main chain');
-    const network=clusterNetwork.network.value;
+    const network=subgraphNetwork.network.value;
     const graph=NetworkToGDSGraph(network);  
-    // for each cluster :
-    Object.entries(clusterNetwork.clusters).forEach(([clusterID,cluster]:[string,Cluster]) => {
+    // for each main chain :
+    Object.entries(subgraphNetwork.mainChains).forEach(([mainChainID,mainChain]:[string,Subgraph]) => {
         const nodesToAdd:string[]=[];
-        // for each node of the cluster :
-        cluster.nodes.forEach(node=>{
+        // for each node of the main chain :
+        mainChain.nodes.forEach(node=>{
             const children=graph.adjacent(node);
             children.forEach(child=>{
                 // if child is sink : 
@@ -96,10 +94,10 @@ export function addMiniBranchToMainChain(clusterNetwork:ClusterNetwork):ClusterN
         });
         // add the nodes to the cluster
         nodesToAdd.forEach(nodeID=>{
-            clusterNetwork = addNodeTocluster(clusterNetwork,clusterID,nodeID);  
+            subgraphNetwork = addNodeToSubgraph(subgraphNetwork,mainChainID,nodeID,TypeSubgraph.MAIN_CHAIN);  
         });
     });
-    return clusterNetwork;
+    return subgraphNetwork;
 }
 
 

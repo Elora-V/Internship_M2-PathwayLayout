@@ -2,7 +2,7 @@ import { Network } from '@metabohub/viz-core/src/types/Network';
 import  dagre  from 'dagrejs/dist/dagre.js';
 import { Graph } from "@viz-js/viz";
 import { addClusterDot, addClusterViz } from './useSubgraphs';
-import { Cluster } from '@/types/Cluster';
+import { Subgraph } from '@/types/Subgraph';
 import * as GDS from 'graph-data-structure';
 
 
@@ -43,7 +43,7 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
  * @param clusters clusters for viz
  * @returns {Graph} Return graph object for viz
  */
-export function NetworkToViz(network: Network,clusters:{[key:string]:Cluster}={},graphAttributes={}): Graph{
+export function NetworkToViz(network: Network,clusters:{[key:string]:Subgraph}={},graphAttributes={}): Graph{
     // initialisation viz graph
     let graphViz: Graph ={
         graphAttributes: graphAttributes,
@@ -73,7 +73,7 @@ export function NetworkToViz(network: Network,clusters:{[key:string]:Cluster}={}
 
 }
 
-export function NetworkToDot(network: Network,clusters:{[key:string]:Cluster}={},graphAttributes={}): string{
+export function NetworkToDot(network: Network,clusters:{[key:string]:Subgraph}={},graphAttributes={}): string{
     // initialisation viz graph with graph attributs
     let dotString="digraph G {\n graph "+customStringify(graphAttributes)+"\n";
 

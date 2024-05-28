@@ -4,7 +4,7 @@ import { Graph, instance } from "@viz-js/viz";
 import { NetworkToDagre, NetworkToDot, NetworkToViz } from './networkToGraph';
 import { changeNetworkFromDagre, changeNetworkFromViz, dagreToNetwork } from './graphToNetwork';
 import { JsonViz } from "@/types/JsonViz";
-import { Cluster } from "@/types/Cluster";
+import { Subgraph } from "@/types/Subgraph";
 
 /** 
  * Take a network object and change the (x,y) position of the node with dagre lib
@@ -30,15 +30,15 @@ export function dagreLayout(network: Network,graphAttributes={},callbackFunction
 /** 
  * Take a network object and change the (x,y) position of the node with viz lib
  * @param {Network}  Network object
- * @param clusters clusters for viz (type version for quick search)
+ * @param mainChains clusters for viz (type version for quick search)
  * @param graphAttributes for viz dot layout (see https://graphviz.org/docs/layouts/dot/)
  * @param assignRank indicates if rank and order need to be infered after layout is applied
  * @param [callbackFunction=() => {}] function to do after the layout is done
  */
-export async function vizLayout(network: Network,clusters:{[key:string]:Cluster}={}, graphAttributes={},assignRank:boolean=false, callbackFunction = () => {}): Promise<void> {
+export async function vizLayout(network: Network,mainChains:{[key:string]:Subgraph}={}, graphAttributes={},assignRank:boolean=false, callbackFunction = () => {}): Promise<void> {
     console.log('Viz');
     await instance().then(viz => {
-        const graphViz=NetworkToViz(network,clusters,graphAttributes);
+        const graphViz=NetworkToViz(network,mainChains,graphAttributes);
         const json=viz.renderJSON(graphViz) as JsonViz;
         changeNetworkFromViz(json,network,assignRank).then(() => {
             callbackFunction();

@@ -69,7 +69,7 @@ export function readJsonGraph(jsonGraph: string): { network: Network, networkSty
 			node.label = id;
 		}
 		else {
-			node.label = n.label;//.label;
+			node.label = n.id;//.label;
 		}
 
 		if (n.metadata && n.metadata.position && n.metadata.position.x) {
@@ -116,7 +116,7 @@ export function readJsonGraph(jsonGraph: string): { network: Network, networkSty
 		}
 
 		// modification :
-		if ( e.metadata.classes &&  e.metadata.classes.includes("reversible")){
+		if ( e.metadata && e.metadata.classes &&  e.metadata.classes.includes("reversible")){
 			if (source.classes.includes("reaction")){
 				source.metadata["reversible"]=true;
 				target.metadata["reversible"]=false;
@@ -126,6 +126,12 @@ export function readJsonGraph(jsonGraph: string): { network: Network, networkSty
 				source.metadata["reversible"]=false;
 			}
 		}else{
+			if(!Object.keys(source).includes("metadata")){
+				source.metadata={};
+			}
+			if(!Object.keys(target).includes("metadata")){
+				target.metadata={};
+			}
 			source.metadata["reversible"]=false;
 			target.metadata["reversible"]=false;
 		}
