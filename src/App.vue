@@ -162,7 +162,9 @@ function keydownHandler(event: KeyboardEvent) {
 
   }
 }
-
+/**
+ * rescale the network
+ */
 function rescaleAfterAction(){
   console.log('Rescaling');
   rescale(svgProperties);
