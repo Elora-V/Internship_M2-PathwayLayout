@@ -143,7 +143,6 @@ export function getLongPathDFS(network:Network,sources:string[]):{[key:string]:{
  * @returns an object for the different path, the key is the source of the path
  */
 function longestPathFromDFS(graph:{[key:string]:Function},DFSreversed:Array<string>,sources:Array<string>):{[key:string]:{nodes:Array<string>, height:number}}{
-
     let dfs = Array.from(DFSreversed).reverse(); // the code has been done whith a backward reading of dfs
 
     let longestPaths:{[key:string]:{nodes:Array<string>, height:number}}={};

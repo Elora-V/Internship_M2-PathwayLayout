@@ -207,7 +207,7 @@ let pathType:PathType=PathType.ALL_LONGEST;
 let minibranch:boolean=true;
 let userSources:string[]=[];
 let onlyUserSources:boolean=false;
-let cycle:boolean=true;
+let cycle:boolean=false;
 
 
 
