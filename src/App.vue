@@ -233,6 +233,7 @@ function ordering(value:string="default"){
   }
 }
 
+
 function sourcesChoice(sourcetype:string):void{
   if (sourcetype==SourceType.RANK_ONLY){
     sourceTypePath=SourceType.RANK_ONLY;
