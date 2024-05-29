@@ -451,7 +451,7 @@
                         "dbIdentifier": "R_MDHm",
                         "ec": "1.1.1.37",
                         "id": "6459595",
-                        "reactionReversibility": true,
+                        "reactionReversibility": false,
                         "biologicalType": "reaction",
                         "selected": false,
                         "locked": true,
@@ -683,7 +683,7 @@
                         "dbIdentifier": "R_SUCOAS1m",
                         "ec": "6.2.1.4",
                         "id": "6456910",
-                        "reactionReversibility": true,
+                        "reactionReversibility": false,
                         "biologicalType": "reaction",
                         "selected": true,
                         "locked": true,
@@ -3437,9 +3437,9 @@
                         "reversible": "false"
                     },
                     {
-                        "id": "7234676 -- 6456910",
-                        "source": 34,
-                        "target": 20,
+                        "id": "6456910 -- 7234676",
+                        "source": 20,
+                        "target": 34,
                         "interaction": "in",
                         "reversible": "false"
                     },
@@ -3633,9 +3633,9 @@
                         "reversible": "false"
                     },
                     {
-                        "id": "6456910 -- 7235741",
-                        "source": 20,
-                        "target": 44,
+                        "id": "7235741 -- 6456910",
+                        "source": 44,
+                        "target": 20,
                         "interaction": "out",
                         "reversible": "false"
                     },
@@ -3892,9 +3892,9 @@
                         "reversible": false
                     },
                     {
-                        "id": "7235295-6456910-6456910",
-                        "source": 70,
-                        "target": 20,
+                        "id": "6456910-6456910-7235295",
+                        "source": 20,
+                        "target": 70,
                         "interaction": "in",
                         "reversible": true
                     },
@@ -3991,8 +3991,8 @@
                     },
                     {
                         "id": "6456910-7234401-6456910",
-                        "source": 20,
-                        "target": 84,
+                        "source": 84,
+                        "target": 20,
                         "interaction": "out",
                         "reversible": true
                     },
@@ -4033,15 +4033,15 @@
                     },
                     {
                         "id": "6456910-7235390-6456910",
-                        "source": 20,
-                        "target": 90,
+                        "source": 90,
+                        "target": 20,
                         "interaction": "out",
                         "reversible": true
                     },
                     {
-                        "id": "7234351-6456910-6456910",
-                        "source": 91,
-                        "target": 20,
+                        "id": "6456910-6456910-7234351",
+                        "source": 20,
+                        "target": 91,
                         "interaction": "in",
                         "reversible": true
                     },
