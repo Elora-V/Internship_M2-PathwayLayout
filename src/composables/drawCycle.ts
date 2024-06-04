@@ -98,12 +98,15 @@ function drawCycle(subgraphNetwork:SubgraphNetwork,cycleToDraw:string|string[],d
             shiftedCycle.reverse();
         }
 
+        console.log(shiftedCycle);
+
         for(let i=0; i<cycle.length; i++){
             const nodeI = network.nodes[shiftedCycle[i]];
             //var transform = revNodesList[i].attr("transform");
             //var transformList = transform.split(/(translate\([\d.,\-\s]*\))/);
-            const x = centroidX + radius * Math.cos(2 * Math.PI * i / cycle.length);
-            const y = centroidY + radius * Math.sin(2 * Math.PI * i / cycle.length);
+            const x = centroidX + radius * Math.cos(2 * Math.PI * i / cycle.length - Math.PI/2); // original : 2 * Math.PI * i / cycle.length
+            // I shift by pi/2 so that the begining of cycle is up
+            const y = centroidY + radius * Math.sin(2 * Math.PI * i / cycle.length - Math.PI/2);
             //var translate = "translate(" + x + "," + y + ")";
             //revNodesList[i].attr("transform", transformList[0] + translate + transformList[2]);
             nodeI.x = x;
