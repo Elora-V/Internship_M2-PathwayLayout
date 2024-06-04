@@ -53,7 +53,7 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
         graphAttributes: subgraphNetwork.attributs,
         directed: true,
         edges: [],
-        nodes: [],
+        //nodes: [],
         subgraphs:[]
     }
 
@@ -74,6 +74,7 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
         // head and tail
         let tail:string=link.source.id;
         let head:string=link.target.id;
+        attributs.minlen=1;
 
         // if cycle handling
         if (cycle){
@@ -83,6 +84,10 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
             inCycle=newLink.inCycle;
             tail=newLink.tail;
             head=newLink.head;
+            if (inCycle){
+                attributs.minlen=3; // test number
+            }
+            
         }
         
         // add edge        
@@ -101,14 +106,14 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
     });
 
     // insert cycle metanode
-    if (cycle && subgraphNetwork.cycles){
-        Object.keys(subgraphNetwork.cycles).forEach((cycle) => {
-            // const cycleLength=subgraphNetwork.cycles[cycle].nodes.length;
-            // const diameterCycle=cycleLength*radiusFactor*2;
-            // const sizeMetanode=1;//diameterCycle/500;
-            graphViz.nodes.push({name:cycle});//attributes:{height:sizeMetanode,width:sizeMetanode}
-        });
-    }
+    // if (cycle && subgraphNetwork.cycles){
+    //     Object.keys(subgraphNetwork.cycles).forEach((cycle) => {
+    //         // const cycleLength=subgraphNetwork.cycles[cycle].nodes.length;
+    //         // const diameterCycle=cycleLength*radiusFactor*2;
+    //         // const sizeMetanode=1;//diameterCycle/500;
+    //         graphViz.nodes.push({name:cycle});//attributes:{height:sizeMetanode,width:sizeMetanode}
+    //     });
+    // }
 
     return graphViz;
 

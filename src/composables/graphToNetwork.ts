@@ -4,6 +4,7 @@ import type { Node } from "@metabohub/viz-core/src/types/Node";
 import  dagre  from 'dagrejs/dist/dagre.js';
 import { type } from 'os';
 import { assignRankOrder } from './rankAndSources';
+import { SubgraphNetwork } from '@/types/SubgraphNetwork';
 
 
 
@@ -42,29 +43,61 @@ export async function changeNetworkFromDagre(graph: dagre.graphlib.Graph,network
  * @param {Network} Network object (value of pointer)
  * @param assignRank boolean that indicates if rank and order need to be infered and assigned to nodes
  */
-export async function changeNetworkFromViz(json: JsonViz, network: Network, assignRank:boolean=false): Promise<void> {
-
+export async function changeNetworkFromViz(json: JsonViz, subgraphNetwork: SubgraphNetwork, assignRank:boolean=false): Promise<SubgraphNetwork> {
+    const network=subgraphNetwork.network.value;
     const unique_y:Array<number> =[];
+    console.log(json["objects"]);
     json["objects"].forEach((node) => {
+       
         const nodeId = node.name;
-        if (nodeId in network.nodes){
-            if ('pos' in node) {
+
+        // if node is a 'classic' node
+        if (nodeId in network.nodes && 'pos' in node){
                 const pos = node.pos.split(',');
                 const x = parseFloat(pos[0]);
                 const y = parseFloat(pos[1]);
+                //console.log(nodeId+'  '+String(x)+'  '+String(y));
+
                 network.nodes[nodeId].x = x;
                 network.nodes[nodeId].y = y;
+                //console.log(network.nodes[nodeId]);
                 if( !unique_y.includes(y)){
                     unique_y.push(y);
                 }
+
+        }else if (subgraphNetwork.cycles && nodeId in subgraphNetwork.cycles && 'pos' in node){
+
+            //if node is a cycle metanode
+            const pos = node.pos.split(',');
+            const x = parseFloat(pos[0]);
+            const y = parseFloat(pos[1]);
+            if (!subgraphNetwork.cycles[nodeId].metadata){
+                subgraphNetwork.cycles[nodeId].metadata={};
             }
+            subgraphNetwork.cycles[nodeId].metadata["x"]=x;
+            subgraphNetwork.cycles[nodeId].metadata["y"]=y;
+            
         }
     });
-    
+
+        // for test to see as a single node:
+        if (subgraphNetwork.cycles){
+            Object.keys(subgraphNetwork.cycles).forEach(cycle=>{
+                subgraphNetwork.cycles[cycle].nodes.forEach( cycleNode=>{
+                    //console.log(network.nodes[cycleNode]);
+                   network.nodes[cycleNode].x=subgraphNetwork.cycles[cycle].metadata["x"] as number;
+                   network.nodes[cycleNode].y=subgraphNetwork.cycles[cycle].metadata["y"] as number;
+               });
+            })
+            
+        }
+                
+
     if(assignRank){
         assignRankOrder(network,unique_y); // the information of rank isn't in the result, unlike dagre 
     }
 
+    return subgraphNetwork;
 }
 
 

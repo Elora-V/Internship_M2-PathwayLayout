@@ -207,7 +207,7 @@ let pathType:PathType=PathType.ALL_LONGEST;
 let minibranch:boolean=true;
 let userSources:string[]=[];
 let onlyUserSources:boolean=false;
-let cycle:boolean=false;
+let cycle:boolean=true;
 
 
 
@@ -434,7 +434,7 @@ await vizLayout(subgraphNetwork, true).then(
 ).then(
   () => {
     if (cycle){
-      drawAllCycles(subgraphNetwork);
+      //drawAllCycles(subgraphNetwork);
     }
   }
 )

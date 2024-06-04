@@ -38,12 +38,12 @@ export function dagreLayout(network: Network,graphAttributes={},callbackFunction
  */
 export async function vizLayout(subgraphNetwork:SubgraphNetwork,assignRank:boolean=false, callbackFunction = () => {}): Promise<void> {
     console.log('Viz');
-    await instance().then(viz => {
-        const graphViz=NetworkToDot(subgraphNetwork);
-        //console.log(graphViz);
+    await instance().then( async viz => {
+        const graphViz=NetworkToViz(subgraphNetwork);
+        console.log(graphViz);
         const json=viz.renderJSON(graphViz) as JsonViz;
-        changeNetworkFromViz(json,subgraphNetwork.network.value,assignRank).then(() => {
-            callbackFunction();
-        });
+        subgraphNetwork= await changeNetworkFromViz(json,subgraphNetwork,assignRank);
+        callbackFunction();
+        
     });
 }
