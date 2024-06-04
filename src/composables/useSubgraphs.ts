@@ -6,28 +6,57 @@ import { Graph } from "@viz-js/viz";
  * 
  */
 export function addMainChainClusterViz(vizGraph: Graph, nameMainChain: string, subgraphNetwork:SubgraphNetwork): Graph {
-  // get values from cluster and change nodes format : new cluster format (for viz)
-  let { name, nodes ,associatedSubgraphs} = subgraphNetwork.mainChains[nameMainChain];
-  const clusterViz: SubgraphViz = {
-    name: name.startsWith("cluster_") ? name : "cluster_" + name,
-    nodes: nodes?.map((name: string) => ({ name:name })) || []
-  };
-  //add node of children subgraph           !!!!!BEWARE : only one level of children!!!!
-    if (associatedSubgraphs){
-        associatedSubgraphs.forEach(subgraph => {
-            let nodeToAdd =subgraphNetwork[subgraph.type][subgraph.name].nodes.map((name: string) => ({ name:name }));
-            clusterViz.nodes.push(...nodeToAdd);       
-        });
+
+    // get values from cluster and change nodes format : new cluster format (for viz)
+    let { name, nodes ,associatedSubgraphs} = subgraphNetwork.mainChains[nameMainChain];
+    nodes=changeCycleMetanodes(subgraphNetwork,nodes);
+
+    // change format 
+    const clusterViz: SubgraphViz = {
+        name: name.startsWith("cluster_") ? name : "cluster_" + name,
+        nodes: nodes?.map((name: string) => ({ name:name })) || []
+    };
+
+    //add node of children subgraph           !!!!!BEWARE : only one level of children!!!!
+        if (associatedSubgraphs){
+            associatedSubgraphs.forEach(subgraph => {
+                let nodeToAdd =subgraphNetwork[subgraph.type][subgraph.name].nodes;
+                nodeToAdd=changeCycleMetanodes(subgraphNetwork,nodeToAdd);
+                clusterViz.nodes.push(...nodeToAdd.map((name: string) => ({ name:name })));   // add and change format    
+            });
+        }
+    
+
+    // push cluster for viz
+    if (!Object.keys(vizGraph).includes("subgraphs")) {
+        vizGraph.subgraphs = [];
     }
-  // push cluster for viz
-  if (!Object.keys(vizGraph).includes("subgraphs")) {
-    vizGraph.subgraphs = [];
-  }
-  vizGraph.subgraphs.push(clusterViz);
+    vizGraph.subgraphs.push(clusterViz);
 
-  return vizGraph;
+    return vizGraph;
+    }
+
+function changeCycleMetanodes(subgraphNetwork:SubgraphNetwork,listNodeBefore:string[]):string[]{
+    const network=subgraphNetwork.network.value;
+    const listNodeAfter:string[]=[];
+    // for each nodes :
+    listNodeBefore.forEach(node =>{
+        // if node  is in cycle metanode :
+        let cycle:string;
+        if (network.nodes[node].metadata && network.nodes[node].metadata[TypeSubgraph.CYCLE]){
+            cycle = network.nodes[node].metadata[TypeSubgraph.CYCLE][0];
+        }
+        if(cycle && !(listNodeAfter.includes(cycle))){
+            // push node cycle
+            listNodeAfter.push(cycle);
+        } 
+        if (!cycle){
+            listNodeAfter.push(node);
+        }
+    })
+
+    return listNodeAfter;
 }
-
 
 export function addClusterDot(subgraph: Subgraph,isCluster:boolean=true): string {
 
