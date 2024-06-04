@@ -10,8 +10,16 @@ export function drawAllCycles(subgraphNetwork:SubgraphNetwork):void {
 function drawCycle(subgraphNetwork:SubgraphNetwork,cycleToDraw:string|string[],direction :"clockwise"| "counter-clockwise"="clockwise",radius:number|undefined=undefined,radiusFactor:number=15):void {
     
     let cycle:string[]=[];
+
+    let centroidX :number;
+    let centroidY :number;
+
     if (typeof cycleToDraw == 'string' && cycleToDraw in subgraphNetwork.cycles){
         cycle=subgraphNetwork.cycles[cycleToDraw].nodes;
+        if (subgraphNetwork.cycles[cycleToDraw].metadata && subgraphNetwork.cycles[cycleToDraw].metadata["x"] && subgraphNetwork.cycles[cycleToDraw].metadata["y"]){
+            centroidX=subgraphNetwork.cycles[cycleToDraw].metadata["x"] as number;
+            centroidY=subgraphNetwork.cycles[cycleToDraw].metadata["y"] as number; 
+        }
     }else if (Array.isArray(cycleToDraw)){
         cycle=cycleToDraw;
     }else{  
@@ -56,22 +64,22 @@ function drawCycle(subgraphNetwork:SubgraphNetwork,cycleToDraw:string|string[],d
         // var direction = (directionTotal < 0) ? "clockwise" : "counter-clockwise";
 
         // Compute the centroid of the points that are part of the cycle
-        var centroidX = 0;
-        var centroidY = 0;
-
-        cycle.forEach(node=> {
-            if (!("x" in network.nodes[node])){
-                network.nodes[node].x=0;
-            }
-            if (!("y" in network.nodes[node])){
-                network.nodes[node].y=0;
-            }
-            centroidX += network.nodes[node].x;
-            centroidY += network.nodes[node].y;
-        });
         
-        centroidX = centroidX / cycle.length;
-        centroidY = centroidY / cycle.length;
+        if (centroidX ==undefined && centroidY ==undefined){
+            cycle.forEach(node=> {
+                if (!("x" in network.nodes[node])){
+                    network.nodes[node].x=0;
+                }
+                if (!("y" in network.nodes[node])){
+                    network.nodes[node].y=0;
+                }
+                centroidX += network.nodes[node].x;
+                centroidY += network.nodes[node].y;
+            });
+            
+            centroidX = centroidX / cycle.length;
+            centroidY = centroidY / cycle.length;
+        }
 
         if (radius === undefined){
             radius = cycle.length*radiusFactor;
