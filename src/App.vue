@@ -403,7 +403,7 @@ await vizLayout(subgraphNetwork, true).then(
 ).then(
   () => {
     if (cycle){
-      addDirectedCycleToSubgraphNetwork(subgraphNetwork,5);
+      addDirectedCycleToSubgraphNetwork(subgraphNetwork,3);
     }
   }
 ).then(
@@ -434,7 +434,7 @@ await vizLayout(subgraphNetwork, true).then(
 ).then(
   () => {
     if (cycle){
-      //drawAllCycles(subgraphNetwork);
+      drawAllCycles(subgraphNetwork);
     }
   }
 )

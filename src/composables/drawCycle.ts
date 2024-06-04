@@ -91,7 +91,8 @@ function drawCycle(subgraphNetwork:SubgraphNetwork,cycleToDraw:string|string[],d
         // var revNodesList = (direction === "counter-clockwise") ? [].concat(shiftedNodesList).reverse() : shiftedNodesList;
 
         // Shift cycle 
-        const topIndex = 0; // first node of list is the top (to change if needed)
+        const topIndex = findTopCycleNode(subgraphNetwork,cycle); // first node of list is the top 
+
         const cycleCopy= cycle.slice();
         const shiftedCycle = cycleCopy.splice(topIndex).concat(cycleCopy);
         if(direction ==="counter-clockwise"){ 
@@ -116,4 +117,34 @@ function drawCycle(subgraphNetwork:SubgraphNetwork,cycleToDraw:string|string[],d
         console.error("cycle nodes not in network");
     }
 
+}
+
+
+function findTopCycleNode(subgraphNetwork: SubgraphNetwork, cycleNodes:string[]):number{
+
+    let minY:number=Infinity; // min Y as y-axis as in matrix, not as usual (infinity at the bottom, -inf at the top)
+    let cycleNodeLinkedMinY:number=0; // node, in cycle, linked with the highest node (min y)
+    const network=subgraphNetwork.network.value;
+
+    for(let i=0;i<cycleNodes.length;i++){
+
+        const node=cycleNodes[i];
+        // get neighbors of node that aren't in the cycle
+        const nodeNeighbors = network.links
+            .filter(link => link.source.id === node || link.target.id === node) // get link linked with node
+            .map(link => link.source.id === node ? link.target.id : link.source.id) // get the other node 
+            .filter(id => !cycleNodes.includes(id)); // no node from this cycle
+            
+
+        nodeNeighbors.forEach(neighbor=>{
+            if(network.nodes[neighbor] && network.nodes[neighbor].y){
+                if(network.nodes[neighbor].y<minY){
+                    minY=network.nodes[neighbor].y;
+                    cycleNodeLinkedMinY=i;
+                }
+            }
+        });
+    }
+    
+    return cycleNodeLinkedMinY;
 }

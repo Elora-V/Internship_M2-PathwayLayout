@@ -85,7 +85,8 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
             tail=newLink.tail;
             head=newLink.head;
             if (inCycle){
-                attributs.minlen=3; // test number
+                const lengthToCentroid=Math.round(subgraphNetwork.cycles[inCycle].nodes.length/4)+1; // to test
+                attributs.minlen=lengthToCentroid;
             }
             
         }
