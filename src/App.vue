@@ -434,7 +434,7 @@ await vizLayout(subgraphNetwork, true).then(
 ).then(
   () => {
     if (cycle){
-      drawAllCycles(subgraphNetwork);
+      //drawAllCycles(subgraphNetwork);
     }
   }
 )

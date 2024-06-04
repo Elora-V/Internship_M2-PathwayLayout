@@ -81,16 +81,16 @@ export async function changeNetworkFromViz(json: JsonViz, subgraphNetwork: Subgr
     });
 
         // for test to see as a single node:
-        if (subgraphNetwork.cycles){
-            Object.keys(subgraphNetwork.cycles).forEach(cycle=>{
-                subgraphNetwork.cycles[cycle].nodes.forEach( cycleNode=>{
-                    //console.log(network.nodes[cycleNode]);
-                   network.nodes[cycleNode].x=subgraphNetwork.cycles[cycle].metadata["x"] as number;
-                   network.nodes[cycleNode].y=subgraphNetwork.cycles[cycle].metadata["y"] as number;
-               });
-            })
+        // if (subgraphNetwork.cycles){
+        //     Object.keys(subgraphNetwork.cycles).forEach(cycle=>{
+        //         subgraphNetwork.cycles[cycle].nodes.forEach( cycleNode=>{
+        //             //console.log(network.nodes[cycleNode]);
+        //            network.nodes[cycleNode].x=subgraphNetwork.cycles[cycle].metadata["x"] as number;
+        //            network.nodes[cycleNode].y=subgraphNetwork.cycles[cycle].metadata["y"] as number;
+        //        });
+        //     })
             
-        }
+        // }
                 
 
     if(assignRank){

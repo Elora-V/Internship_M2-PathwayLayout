@@ -76,29 +76,30 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
         let head:string=link.target.id;
         attributs.minlen=1;
 
-        // if cycle handling
-        if (cycle){
-            let inCycle:string;
-            // get new tail and head if in cycle metanode
-            const newLink=cycleMetanodeLink(link);
+        let inCycle:string;
+        // get new tail and head if in cycle metanode
+        const newLinks=cycleMetanodeLink(link,subgraphNetwork);
+        newLinks.forEach(newLink=>{
             inCycle=newLink.inCycle;
             tail=newLink.tail;
             head=newLink.head;
+
             if (inCycle){
                 const lengthToCentroid=Math.round(subgraphNetwork.cycles[inCycle].nodes.length/4)+1; // to test
-                attributs.minlen=lengthToCentroid;
+                //attributs.minlen=lengthToCentroid;
             }
-            
-        }
+
+            // add edge if not already in graphviz   
+            if (tail!==head &&  !graphViz.edges.some(edge => edge.tail === tail && edge.head === head)){
+                graphViz.edges.push({
+                    tail: tail,
+                    head: head,
+                    attributes:attributs
+                });
+            }
+
+        });
         
-        // add edge        
-        if (tail!==head){
-            graphViz.edges.push({
-                tail: tail,
-                head: head,
-                attributes:attributs
-            });
-        }
     })
 
     // insert mainChain subgraphs (with edges)
@@ -153,19 +154,24 @@ export function NetworkToDot(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
         // head and tail
         let tail:string=link.source.id;
         let head:string=link.target.id;
+        let inCycle:string;
+        
+         // get new tail and head if in cycle metanode
+        const newLinks=cycleMetanodeLink(link,subgraphNetwork);
+            newLinks.forEach(newLink=>{
+                inCycle=newLink.inCycle;
+                tail=newLink.tail;
+                head=newLink.head;
 
-        // if cycle handling
-        if (cycle){
-            let inCycle:string;
-            // get new tail and head if in cycle metanode
-            const newLink=cycleMetanodeLink(link);
-            inCycle=newLink.inCycle;
-            tail=newLink.tail;
-            head=newLink.head; 
-        }
-        if (tail!==head){
-            dotString+=`${tail} -> ${head} `+customStringify(attributs)+`;\n`;
-        }
+                if (inCycle){
+                    const lengthToCentroid=Math.round(subgraphNetwork.cycles[inCycle].nodes.length/4)+1; // to test
+                    attributs.minlen=lengthToCentroid;
+                }
+                if (tail!==head){
+                    dotString+=`${tail} -> ${head} `+customStringify(attributs)+`;\n`; // to change bcs several time the same link between cycle
+                }
+            });
+
     });
 
     // insert subgraphs (with edges)
@@ -178,33 +184,61 @@ export function NetworkToDot(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
 
 }
 
-function cycleMetanodeLink(link:Link):{inCycle:string,tail:string,head:string}{
+function cycleMetanodeLink(link:Link, subgraphNetwork:SubgraphNetwork):Array<{inCycle:string,tail:string,head:string}>{
     
     let inCycle:string;
     let tail:string=link.source.id;
     let head:string=link.target.id;
+    let cyclesOfSource:string[];
+    let cyclesOfTarget:string[];
+    let newLink:{inCycle:string,tail:string,head:string};
+
+    const newLinks:Array<{inCycle:string,tail:string,head:string}>=[];
 
      // source in cycle ?
      if(link.source.metadata && Object.keys(link.source.metadata).includes(TypeSubgraph.CYCLE)){
-        const cyclesOfSource=link.source.metadata[TypeSubgraph.CYCLE];
-        if(Object.keys(cyclesOfSource).length>1){
-            console.error("A node can't be in multiple cycle");
-        }else if (Object.keys(cyclesOfSource).length==1){
-            tail=cyclesOfSource[0]; // tail is the cycle
-            inCycle=tail;
-        }          
+        cyclesOfSource=link.source.metadata[TypeSubgraph.CYCLE] as string[];  
+        cyclesOfSource.forEach(cycle=>{
+            // if cycle is a 'child' of another cycle : no new metanode, it is considered as the parent cycle metanode
+            if (subgraphNetwork.cycles[cycle].forSubgraph && subgraphNetwork.cycles[cycle].forSubgraph.type==TypeSubgraph.CYCLE ){
+
+                // change cycle to have parent metanode if not already there
+               
+            }
+        })
+
     }
     // target in cycle ?
     if(link.target.metadata && Object.keys(link.target.metadata).includes(TypeSubgraph.CYCLE)){
-        const cyclesOfTarget=link.target.metadata[TypeSubgraph.CYCLE];
-        if(Object.keys(cyclesOfTarget).length>1){
-            console.error("A node can't be in multiple cycle");
-        }else if (Object.keys(cyclesOfTarget).length==1){
-            head=cyclesOfTarget[0]; // head is the cycle
-            inCycle=head;
-        }          
+        cyclesOfTarget=link.target.metadata[TypeSubgraph.CYCLE] as string[];         
     }
-    return {inCycle:inCycle,tail:tail,head:head}
+
+    // for link that goes from a cycle
+    if (cyclesOfSource){
+        cyclesOfSource.forEach(cycleSource=>{
+            if (cyclesOfTarget){ // to a cycle
+                cyclesOfTarget.forEach(cycleTarget =>{
+                    if (cycleSource!==cycleTarget){
+                        newLink={inCycle:cycleSource,tail:cycleSource,head:cycleTarget}; // incycle is only the name of one of the cycle
+                        newLinks.push(newLink);
+                    }
+                });
+            }else{ // to a classic node
+                newLink={inCycle:cycleSource,tail:cycleSource,head:head};
+                newLinks.push(newLink);
+            }
+        });
+    } else if (cyclesOfTarget){  // for link that goes to a cycle, from a classic node
+        cyclesOfTarget.forEach(cycleTarget=>{
+            newLink={inCycle:cycleTarget,tail:tail,head:cycleTarget};
+            newLinks.push(newLink);
+        });
+    } else { // classic node to classic node
+        newLink={inCycle:undefined,tail:tail,head:head};
+        newLinks.push(newLink);
+    }
+
+    return newLinks;
 }
 
 function customStringify(obj) {
