@@ -124,11 +124,45 @@ function drawCycle(subgraphNetwork:SubgraphNetwork,cycleToDrawID:string,radius:n
             // drawing :
             cycleNodesCoordinates(cycleToDrawID,shiftedCycle,centroidX,centroidY,radius,subgraphNetwork,shiftAngle);
              
+        } else { // several node in common
+
+            // if child of another cycle
+            if (subgraphNetwork.cycles[cycleToDrawID].forSubgraph && subgraphNetwork.cycles[cycleToDrawID].forSubgraph.type===TypeSubgraph.CYCLE){
+
+                const fixedInterval=getUnfixedIntervals(cycle,subgraphNetwork);
+                console.log('fixed interval : '+fixedInterval);
+
+            }
         }
     }
 
 }
 
+function getUnfixedIntervals(nodes:string[],subgraphNetwork:SubgraphNetwork) {
+    let intervals:number[][] = [];
+    let start = null;
+    const network=subgraphNetwork.network.value;
+    nodes.forEach((nodeID,i) => {
+        const node=network.nodes[nodeID];
+        if (node.metadata && !node.metadata.fixedInCycle) {
+            if (start === null) {
+                start = i;
+            }
+        } else {
+            if (start !== null) {
+                intervals.push([start, i - 1]);
+                start = null;
+            }
+        }
+    });
+
+    // Handle case where the last node is fixed
+    if (start !== null) {
+        intervals.push([start, nodes.length - 1]);
+    }
+
+    return intervals;
+}
 
 function findTopCycleNode(subgraphNetwork: SubgraphNetwork, cycleNodes:string[]):number{
 
