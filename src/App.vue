@@ -49,6 +49,17 @@
       No_merge
     </button>
 
+    <span class="bold margin">|</span>
+
+
+    <button v-on:click="Cycle(true)" class="styled-button">
+      cycle
+    </button>
+    <button v-on:click="Cycle(false)" class="styled-button">
+      No_cycle
+    </button>
+
+
 
     <span class="bold margin">|</span>
 
@@ -149,14 +160,14 @@ import { networkCopy } from "@/composables/networkToGraph";
 import { initZoom, rescale } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
-import { JohnsonAlgorithm, addCycleToSubgraphNetwork, addDirectedCycleToSubgraphNetwork, graphForJohnson } from "@/composables/findCycle";
+import { JohnsonAlgorithm, addDirectedCycleToSubgraphNetwork } from "@/composables/findCycle";
 import { countIntersection } from "./composables/countIntersections";
 import { countIsolatedNodes } from "./composables/countIsolatedNodes";
 import { DFSsourceDAG, DFSWithSources } from "@/composables/algoDFS";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 import { BFSWithSources } from "@/composables/algoBFS";
 import { concatSources, getSources } from "@/composables/rankAndSources";
-import { addBoldLinkMainChain } from "@/composables/useSubgraphs";
+import { addBoldLinkMainChain, addRedLinkcycle } from "@/composables/useSubgraphs";
 import { addMainChainFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/chooseSubgraph";
 
 
@@ -168,6 +179,7 @@ import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
 import { node } from "prop-types";
 import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetwork";
+import { drawAllCycles } from "@/composables/drawCycle";
 
 
 
@@ -195,8 +207,7 @@ let pathType:PathType=PathType.ALL_LONGEST;
 let minibranch:boolean=true;
 let userSources:string[]=[];
 let onlyUserSources:boolean=false;
-
-
+let cycle:boolean=true;
 
 
 
@@ -240,6 +251,7 @@ async function callbackFunction() {
       networkStyle.value.linkStyles={}
     }
     networkStyle.value.linkStyles["mainChains"]={strokeWidth:3,stroke:"blue"};
+    networkStyle.value.linkStyles["cycles"]={stroke:"red"};
 
 }
 
@@ -301,6 +313,10 @@ function sourcesChoice(sourcetype:string):void{
 
 function mergeChoice(value:boolean) {
     merge=value;
+}
+
+function Cycle(value:boolean) {
+    cycle=value;
 }
 
 function setPathType(type:PathType) {
@@ -377,15 +393,18 @@ console.log('Only user sources ? ' + String(onlyUserSources));
 console.log("Merge ? " + String(merge));
 console.log("Add Mini branch ? " + String(minibranch));
 console.log("Type path ? " + pathType);
+console.log('Cycle ? ' + String(cycle));
 console.log('---------------');
 
-await vizLayout(network, subgraphNetwork.mainChains, subgraphNetwork.attributs, true).then(
+await vizLayout(subgraphNetwork, true).then(
   () => {
     duplicateReversibleReactions(network);
   }
 ).then(
   () => {
-    addDirectedCycleToSubgraphNetwork(subgraphNetwork);
+    if (cycle){
+      addDirectedCycleToSubgraphNetwork(subgraphNetwork,3);
+    }
   }
 ).then(
   () => {
@@ -406,10 +425,17 @@ await vizLayout(network, subgraphNetwork.mainChains, subgraphNetwork.attributs, 
 ).then(
   () => {
     subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
+    subgraphNetwork=addRedLinkcycle(subgraphNetwork);
+  }
+).then(
+  async () => {
+    await vizLayout(subgraphNetwork, false, rescaleAfterAction);
   }
 ).then(
   () => {
-    vizLayout(network, subgraphNetwork.mainChains, subgraphNetwork.attributs, false, rescaleAfterAction);
+    if (cycle){
+      //drawAllCycles(subgraphNetwork);
+    }
   }
 )
 console.log('_____________________________________________');
@@ -429,7 +455,7 @@ function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
     dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
-    vizLayout(network.value, subgraphNetwork.mainChains ,subgraphNetwork.attributs ,true,rescaleAfterAction);
+    vizLayout(subgraphNetwork ,true,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
   } else if (event.key =="n"){
@@ -474,7 +500,7 @@ function keydownHandler(event: KeyboardEvent) {
 
 function newCluster(){
   const numberCluster=Object.keys(subgraphNetwork.mainChains).length;
-  const cluster= createSubgraph(String(numberCluster));
+  const cluster= createSubgraph(String(numberCluster),[],[],TypeSubgraph.MAIN_CHAIN);
   subgraphNetwork.mainChains[cluster.name]=cluster;
 }
 

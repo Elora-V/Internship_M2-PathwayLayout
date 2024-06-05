@@ -1,0 +1,4092 @@
+{
+    "versionMetExploreViz": "3.3.15",
+    "linkStyle": {
+        "size": 25,
+        "lineWidth": 2,
+        "markerWidth": 5,
+        "markerHeight": 5,
+        "markerInColor": "red",
+        "markerOutColor": "green",
+        "markerStrokeColor": "#000000",
+        "markerStrokeWidth": "0.7",
+        "opacity": 1,
+        "strokeColor": "#000000",
+        "fontColor": "#000000",
+        "fontSize": 10,
+        "fontWeight": 500,
+        "labelOpacity": 1,
+        "curvePath": false
+    },
+    "reactionStyle": {
+        "backgroundColor": "#FFFFFF",
+        "height": 7,
+        "width": 7,
+        "rx": 0,
+        "ry": 0,
+        "opacity": 1,
+        "strokeColor": "#000000",
+        "strokeWidth": 1,
+        "fontColor": "#000000",
+        "fontSize": 10,
+        "fontWeight": 500,
+        "labelOpacity": 1,
+        "label": "name",
+        "useAlias": false
+    },
+    "biosource": {
+        "id": 4311,
+        "name": "Homo sapiens (Strain: Global) (Source: Publication, Version: Recon2.2)",
+        "version": "2.40.10"
+    },
+    "generalStyle": {
+        "websiteName": "MetExplore",
+        "maxReactionThreshold": 500,
+        "displayLabelsForOpt": false,
+        "displayLinksForOpt": false,
+        "displayConvexhulls": false,
+        "displayPathwaysOnLinks": true,
+        "displayCompartmentsOnLinks": false,
+        "displayCaption": false,
+        "eventForNodeInfo": true,
+        "loadButtonHidden": false,
+        "windowsAlertDisable": false
+    },
+    "metaboliteStyle": {
+        "backgroundColor": "#FFFFFF",
+        "height": 14,
+        "width": 14,
+        "rx": 7,
+        "ry": 7,
+        "opacity": 1,
+        "strokeColor": "#000000",
+        "strokeWidth": 1,
+        "fontColor": "#000000",
+        "fontSize": "15px",
+        "fontWeight": 500,
+        "labelOpacity": 1,
+        "label": "name",
+        "useAlias": false
+    },
+    "comparedPanels": [],
+    "linkedByTypeOfMetabolite": false,
+    "mappings": [],
+    "sessions": {
+        "viz": {
+            "id": "viz",
+            "animated": false,
+            "d3Data": {
+                "id": "viz",
+                "pathways": [
+                    {
+                        "name": "Citric acid cycle",
+                        "identifier": "Citric acid cycle",
+                        "id": "Citricacidcycle",
+                        "color": "#C2FF00",
+                        "hidden": "",
+                        "collapsed": false
+                    },
+                    {
+                        "name": "Glycolysis/gluconeogenesis",
+                        "identifier": "Glycolysis/gluconeogenesis",
+                        "id": "Glycolysis/gluconeogenesis",
+                        "color": "#980100",
+                        "hidden": "",
+                        "collapsed": false
+                    }
+                ],
+                "nodes": [
+                    {
+                        "name": "2-oxoglutarate dehydrogenase",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "R_AKGDm",
+                        "ec": "2.3.1.61",
+                        "id": "6462537",
+                        "reactionReversibility": false,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 729.7281185318767,
+                        "y": 835.6047265643789
+                    },
+                    {
+                        "name": "Aconitate hydratase",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "R_ACONTm",
+                        "ec": "4.2.1.3",
+                        "id": "6456236",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 729.7281185318767,
+                        "y": 1061.878896544074
+                    },
+                    {
+                        "name": "citrate synthase",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "R_CSm",
+                        "ec": "4.1.3.7",
+                        "id": "6458318",
+                        "reactionReversibility": false,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 616.5910335420291,
+                        "y": 1108.7418115542264
+                    },
+                    {
+                        "name": "enolase",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "R_ENO",
+                        "ec": "4.2.1.11",
+                        "id": "6461329",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 274.7373864439067,
+                        "y": 544.1664270288924
+                    },
+                    {
+                        "name": "fructose-bisphosphatase",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "R_FBP",
+                        "ec": "3.1.3.11",
+                        "id": "6460533",
+                        "reactionReversibility": false,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 439.3000531992402,
+                        "y": 14.277353805170968
+                    },
+                    {
+                        "name": "fructose-bisphosphate aldolase",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "R_FBA",
+                        "ec": "4.1.2.13",
+                        "id": "6460500",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 463.47597871801895,
+                        "y": 145.6146558141363
+                    },
+                    {
+                        "name": "fumarase, mitochondrial",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "R_FUMm",
+                        "ec": "4.2.1.2",
+                        "id": "6460710",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 456.5910335420291,
+                        "y": 948.7418115542265
+                    },
+                    {
+                        "name": "glucose-6-phosphate isomerase",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "R_PGI",
+                        "ec": "5.3.1.9",
+                        "id": "6456069",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 482.8646946443948,
+                        "y": -83.83954071754547
+                    },
+                    {
+                        "name": "glyceraldehyde-3-phosphate dehydrogenase",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "R_GAPD",
+                        "ec": "1.2.1.12",
+                        "id": "6462878",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 331.4664070701008,
+                        "y": 220.67025915102965
+                    },
+                    {
+                        "name": "hexokinase (D-glucose:ATP)",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "R_HEX1",
+                        "ec": "NA",
+                        "id": "6462474",
+                        "reactionReversibility": false,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 544.5825010899695,
+                        "y": -196.025217392184
+                    },
+                    {
+                        "name": "Isocitrate dehydrogenase (NAD+)",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "R_ICDHxm",
+                        "ec": "1.1.1.41",
+                        "id": "6459150",
+                        "reactionReversibility": false,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 776.5910335420291,
+                        "y": 948.7418115542265
+                    },
+                    {
+                        "name": "L-lactate dehydrogenase",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "R_LDH_L",
+                        "ec": "1.1.1.27",
+                        "id": "6460853",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 214.8637445220266,
+                        "y": 783.2201968328293
+                    },
+                    {
+                        "name": "malate dehydrogenase, mitochondrial",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "R_MDHm",
+                        "ec": "1.1.1.37",
+                        "id": "6459595",
+                        "reactionReversibility": false,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 503.4539485521815,
+                        "y": 1061.878896544074
+                    },
+                    {
+                        "name": "phosphofructokinase",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "R_PFK",
+                        "ec": "NA",
+                        "id": "6456096",
+                        "reactionReversibility": false,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 532.0478882550414,
+                        "y": 12.418089897882389
+                    },
+                    {
+                        "name": "phosphoglucomutase",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "R_PGMT",
+                        "ec": "5.4.2.2",
+                        "id": "6457614",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 482.22885108950993,
+                        "y": -203.00925457074956
+                    },
+                    {
+                        "name": "phosphoglycerate kinase",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "R_PGK",
+                        "ec": "NA",
+                        "id": "6456070",
+                        "reactionReversibility": false,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 298.4832876414872,
+                        "y": 355.71128862622146
+                    },
+                    {
+                        "name": "phosphoglycerate mutase",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "R_PGM",
+                        "ec": "5.4.2.1",
+                        "id": "6456072",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 282.0847041793065,
+                        "y": 459.92578666038514
+                    },
+                    {
+                        "name": "pyruvate dehydrogenase",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "R_PDHm",
+                        "ec": "2.3.1.12",
+                        "id": "6459079",
+                        "reactionReversibility": false,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 381.56522516537086,
+                        "y": 903.2371135525403
+                    },
+                    {
+                        "name": "pyruvate kinase",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "R_PYK",
+                        "ec": "NA",
+                        "id": "6455913",
+                        "reactionReversibility": false,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 274.3886044661242,
+                        "y": 682.629894334624
+                    },
+                    {
+                        "name": "succinate dehydrogenase",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "R_SUCD1m",
+                        "ec": "1.3.99.1",
+                        "id": "6457499",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 503.4539485521815,
+                        "y": 835.6047265643789
+                    },
+                    {
+                        "name": "Succinate--CoA ligase (GDP-forming)",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "R_SUCOAS1m",
+                        "ec": "6.2.1.4",
+                        "id": "6456910",
+                        "reactionReversibility": false,
+                        "biologicalType": "reaction",
+                        "selected": true,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 600.587012646993,
+                        "y": 884.2358129111343,
+                        "px": null,
+                        "py": null
+                    },
+                    {
+                        "name": "triose-phosphate isomerase",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "R_TPI",
+                        "ec": "5.3.1.1",
+                        "id": "6458098",
+                        "reactionReversibility": true,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "10px",
+                            "fontBold": "10",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 418.66107401704323,
+                        "y": 186.51183702273022
+                    },
+                    {
+                        "name": "2-phosphonato-D-glycerate(3-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_2pg_c",
+                        "id": "7231167",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 273.9372973735501,
+                        "y": 495.326133129984
+                    },
+                    {
+                        "name": "isocitrate(3-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_icit_m",
+                        "id": "7231425",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 764.411758743835,
+                        "y": 1009.9711607326409
+                    },
+                    {
+                        "name": "D-glucopyranose 6-phosphate(2-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_g6p_c",
+                        "id": "7231750",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 481.8793392864919,
+                        "y": -144.53296142549033
+                    },
+                    {
+                        "name": "3-phosphonato-D-glycerate(3-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_3pg_c",
+                        "id": "7231962",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 285.2489640974261,
+                        "y": 432.78490151081394
+                    },
+                    {
+                        "name": "glycerone phosphate(2-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_dhap_c",
+                        "id": "7232005",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 528.1529724656232,
+                        "y": 186.47479046128274
+                    },
+                    {
+                        "name": "(S)-malate(2-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_mal_L_m",
+                        "id": "7232420",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 468.7703083402232,
+                        "y": 1009.9711607326409
+                    },
+                    {
+                        "name": "pyruvate",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis",
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_pyr_m",
+                        "id": "7232982",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 345.36438898373024,
+                        "y": 880.742949482851
+                    },
+                    {
+                        "name": "phosphoenolpyruvate",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_pep_c",
+                        "id": "7233321",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 277.19834791114226,
+                        "y": 592.4027574368689
+                    },
+                    {
+                        "name": "D-fructose 6-phosphate(2-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_f6p_c",
+                        "id": "7233945",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 484.83457998871614,
+                        "y": -38.06278810081773
+                    },
+                    {
+                        "name": "citrate(3-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_cit_m",
+                        "id": "7234326",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 677.8203827204435,
+                        "y": 1096.5625367560324
+                    },
+                    {
+                        "name": "oxaloacetate(2-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle",
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_oaa_m",
+                        "id": "7234467",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 565.0752463753334,
+                        "y": 1094.74112562322
+                    },
+                    {
+                        "name": "(S)-lactate",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_lac_L_c",
+                        "id": "7234587",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 93.07766455868119,
+                        "y": 783.2201968328293
+                    },
+                    {
+                        "name": "succinate(2-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_succ_m",
+                        "id": "7234676",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 555.3616843636146,
+                        "y": 800.9210863524206
+                    },
+                    {
+                        "name": "acetyl-CoA(4-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle",
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_accoa_m",
+                        "id": "7234804",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 345.36438898373024,
+                        "y": 1121.4592584784093
+                    },
+                    {
+                        "name": "2-oxoglutarate(2-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_akg_m",
+                        "id": "7234958",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": true,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 758.6811679235225,
+                        "y": 885.7486073953432,
+                        "px": null,
+                        "py": null
+                    },
+                    {
+                        "name": "fumarate(2-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_fum_m",
+                        "id": "7235549",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 468.7703083402232,
+                        "y": 887.5124623758121
+                    },
+                    {
+                        "name": "glyceraldehyde 3-phosphate(2-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_g3p_c",
+                        "id": "7235638",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 349.8288142908377,
+                        "y": 184.84774106640788
+                    },
+                    {
+                        "name": "D-glucopyranose",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_glc_D_c",
+                        "id": "7235648",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 600.0574097011036,
+                        "y": -261.89147372050854
+                    },
+                    {
+                        "name": "keto-D-fructose 1,6-bisphosphate",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_fdp_c",
+                        "id": "7235943",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 475.4833703283242,
+                        "y": 67.95501288553685
+                    },
+                    {
+                        "name": "3-phosphonato-D-glyceroyl phosphate(4-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_13dpg_c",
+                        "id": "7236102",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 313.3603148804149,
+                        "y": 270.0566314369738
+                    },
+                    {
+                        "name": "alpha-D-glucose 1-phosphate(2-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_g1p_c",
+                        "id": "7236824",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 481.66389967554625,
+                        "y": -267.909219557453
+                    },
+                    {
+                        "name": "pyruvate",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_pyr_c",
+                        "id": "7233017",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 273.6134785263766,
+                        "y": 783.2201968328293
+                    },
+                    {
+                        "name": "succinyl-CoA(5-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_succoa_m",
+                        "id": "7235741",
+                        "isSideCompound": false,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 677.8203827204435,
+                        "y": 800.9210863524206
+                    },
+                    {
+                        "name": "Citric acid cycle",
+                        "label": "Citric acid cycle",
+                        "alias": "",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "Citric acid cycle",
+                        "id": "0",
+                        "reactionReversibility": false,
+                        "biologicalType": "pathway",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": false,
+                        "hidden": true,
+                        "labelVisible": true
+                    },
+                    {
+                        "name": "Glycolysis/gluconeogenesis",
+                        "label": "Glycolysis/gluconeogenesis",
+                        "alias": "",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "Glycolysis/gluconeogenesis",
+                        "id": "1",
+                        "reactionReversibility": false,
+                        "biologicalType": "pathway",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": false,
+                        "hidden": true,
+                        "labelVisible": true
+                    },
+                    {
+                        "name": "ATP(4-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_atp_c",
+                        "identifier": "7232245",
+                        "id": "7232245-6462474",
+                        "identifier": "7232245",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 604.2430001527318,
+                        "y": -193.5385403346852
+                    },
+                    {
+                        "name": "ATP(4-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_atp_c",
+                        "identifier": "7232245",
+                        "id": "7232245-6456096",
+                        "identifier": "7232245",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 569.0477145819879,
+                        "y": 13.036747468408695
+                    },
+                    {
+                        "name": "ATP(4-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_atp_c",
+                        "identifier": "7232245",
+                        "id": "7232245-6456070",
+                        "identifier": "7232245",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 327.5541223250817,
+                        "y": 381.95885767435595
+                    },
+                    {
+                        "name": "ATP(4-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_atp_c",
+                        "identifier": "7232245",
+                        "id": "7232245-6455913",
+                        "identifier": "7232245",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 197.56066227550383,
+                        "y": 661.8341532446868
+                    },
+                    {
+                        "name": "ADP(3-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_adp_c",
+                        "identifier": "7232374",
+                        "id": "7232374-6455913",
+                        "identifier": "7232374",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 185.81304074309773,
+                        "y": 689.4077270723376
+                    },
+                    {
+                        "name": "ADP(3-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_adp_c",
+                        "identifier": "7232374",
+                        "id": "7232374-6462474",
+                        "identifier": "7232374",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 579.18036172681,
+                        "y": -224.20307790457957
+                    },
+                    {
+                        "name": "ADP(3-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_adp_c",
+                        "identifier": "7232374",
+                        "id": "7232374-6456096",
+                        "identifier": "7232374",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 561.5859939636678,
+                        "y": 42.07870509538114
+                    },
+                    {
+                        "name": "ADP(3-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_adp_c",
+                        "identifier": "7232374",
+                        "id": "7232374-6456070",
+                        "identifier": "7232374",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 338.6024515323786,
+                        "y": 331.27738908804514
+                    },
+                    {
+                        "name": "NAD(1-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_nad_c",
+                        "identifier": "7232631",
+                        "id": "7232631-6462878",
+                        "identifier": "7232631",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 298.31255684434456,
+                        "y": 215.04317312690364
+                    },
+                    {
+                        "name": "NAD(1-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_nad_c",
+                        "identifier": "7232631",
+                        "id": "7232631-6460853",
+                        "identifier": "7232631",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 174.4232052172318,
+                        "y": 800.8765072939954
+                    },
+                    {
+                        "name": "NAD(1-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_nad_m",
+                        "identifier": "7232645",
+                        "id": "7232645-6462537",
+                        "identifier": "7232645",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 727.3898494146447,
+                        "y": 792.993200097475
+                    },
+                    {
+                        "name": "NAD(1-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_nad_m",
+                        "identifier": "7232645",
+                        "id": "7232645-6459595",
+                        "identifier": "7232645",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 467.27402815305805,
+                        "y": 1055.449816912545
+                    },
+                    {
+                        "name": "NAD(1-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_nad_m",
+                        "identifier": "7232645",
+                        "id": "7232645-6459150",
+                        "identifier": "7232645",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 810.0067216301557,
+                        "y": 918.5457721196146
+                    },
+                    {
+                        "name": "NAD(1-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_nad_m",
+                        "identifier": "7232645",
+                        "id": "7232645-6459079",
+                        "identifier": "7232645",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 311.0212634486989,
+                        "y": 996.6671517182137
+                    },
+                    {
+                        "name": "FAD",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_fad_m",
+                        "identifier": "7232968",
+                        "id": "7232968-6457499",
+                        "identifier": "7232968",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 499.2246485825319,
+                        "y": 797.7225451927096
+                    },
+                    {
+                        "name": "water",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_h2o_m",
+                        "identifier": "7233938",
+                        "id": "7233938-6460710",
+                        "identifier": "7233938",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 421.3038840849531,
+                        "y": 960.5716956487655
+                    },
+                    {
+                        "name": "water",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_h2o_m",
+                        "identifier": "7233938",
+                        "id": "7233938-6458318",
+                        "identifier": "7233938",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 600.0576341114617,
+                        "y": 1140.9030028838206
+                    },
+                    {
+                        "name": "water",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_h2o_c",
+                        "identifier": "7233954",
+                        "id": "7233954-6460533",
+                        "identifier": "7233954",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 406.8825385017253,
+                        "y": -9.83479357689581
+                    },
+                    {
+                        "name": "water",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_h2o_c",
+                        "identifier": "7233954",
+                        "id": "7233954-6461329",
+                        "identifier": "7233954",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 306.8357185756649,
+                        "y": 516.5333137294987
+                    },
+                    {
+                        "name": "hydrogenphosphate",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_pi_c",
+                        "identifier": "7234421",
+                        "id": "7234421-6462878",
+                        "identifier": "7234421",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 362.4009374307091,
+                        "y": 215.78201665745613
+                    },
+                    {
+                        "name": "hydrogenphosphate",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_pi_c",
+                        "identifier": "7234421",
+                        "id": "7234421-6460533",
+                        "identifier": "7234421",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 399.9470991324782,
+                        "y": 19.349538345052114
+                    },
+                    {
+                        "name": "coenzyme A(4-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_coa_m",
+                        "identifier": "7235295",
+                        "id": "7235295-6462537",
+                        "identifier": "7235295",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 757.2018899949379,
+                        "y": 792.9905701043413
+                    },
+                    {
+                        "name": "coenzyme A(4-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_coa_m",
+                        "identifier": "7235295",
+                        "id": "7235295-6459079",
+                        "identifier": "7235295",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 347.2367191126526,
+                        "y": 1047.3702475107968
+                    },
+                    {
+                        "name": "coenzyme A(4-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_coa_m",
+                        "identifier": "7235295",
+                        "id": "7235295-6456910",
+                        "identifier": "7235295",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 581.627729706386,
+                        "y": 770.643664892969
+                    },
+                    {
+                        "name": "coenzyme A(4-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_coa_m",
+                        "identifier": "7235295",
+                        "id": "7235295-6458318",
+                        "identifier": "7235295",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 628.9763926134643,
+                        "y": 1148.8045609320418
+                    },
+                    {
+                        "name": "proton",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_h_c",
+                        "identifier": "7237022",
+                        "id": "7237022-6455913",
+                        "identifier": "7237022",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 208.89721301028138,
+                        "y": 722.7397800127706
+                    },
+                    {
+                        "name": "proton",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_h_c",
+                        "identifier": "7237022",
+                        "id": "7237022-6462878",
+                        "identifier": "7237022",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 314.16690620304945,
+                        "y": 189.94141243551996
+                    },
+                    {
+                        "name": "proton",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_h_c",
+                        "identifier": "7237022",
+                        "id": "7237022-6462474",
+                        "identifier": "7237022",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 596.28006034036,
+                        "y": -213.56595913123357
+                    },
+                    {
+                        "name": "proton",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_h_c",
+                        "identifier": "7237022",
+                        "id": "7237022-6460853",
+                        "identifier": "7237022",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 218.56682858354344,
+                        "y": 826.2415642935802
+                    },
+                    {
+                        "name": "proton",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_h_c",
+                        "identifier": "7237022",
+                        "id": "7237022-6456096",
+                        "identifier": "7237022",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 531.8957524898908,
+                        "y": 46.213259170215295
+                    },
+                    {
+                        "name": "NADH(2-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_nadh_m",
+                        "identifier": "7233240",
+                        "id": "7233240-6462537",
+                        "identifier": "7233240",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 766.5077260366196,
+                        "y": 837.5251664202896
+                    },
+                    {
+                        "name": "NADH(2-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_nadh_m",
+                        "identifier": "7233240",
+                        "id": "7233240-6459595",
+                        "identifier": "7233240",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 468.7032597255364,
+                        "y": 1085.4035693399276
+                    },
+                    {
+                        "name": "NADH(2-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_nadh_m",
+                        "identifier": "7233240",
+                        "id": "7233240-6459150",
+                        "identifier": "7233240",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": true,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 814.4407735699835,
+                        "y": 984.5513089549281,
+                        "px": null,
+                        "py": null
+                    },
+                    {
+                        "name": "NADH(2-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_nadh_m",
+                        "identifier": "7233240",
+                        "id": "7233240-6459079",
+                        "identifier": "7233240",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 299.97078744259744,
+                        "y": 1024.4905605642136
+                    },
+                    {
+                        "name": "NADH(2-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_nadh_c",
+                        "identifier": "7233249",
+                        "id": "7233249-6462878",
+                        "identifier": "7233249",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 351.42359337357317,
+                        "y": 245.95485748940064
+                    },
+                    {
+                        "name": "NADH(2-)",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_nadh_c",
+                        "identifier": "7233249",
+                        "id": "7233249-6460853",
+                        "identifier": "7233249",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 188.61552348153347,
+                        "y": 827.2434539955008
+                    },
+                    {
+                        "name": "FADH2(2-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_fadh2_m",
+                        "identifier": "7234218",
+                        "id": "7234218-6457499",
+                        "identifier": "7234218",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 472.8249833635929,
+                        "y": 816.3524906835764
+                    },
+                    {
+                        "name": "hydrogenphosphate",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_pi_m",
+                        "identifier": "7234401",
+                        "id": "7234401-6456910",
+                        "identifier": "7234401",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 615.3144336742182,
+                        "y": 751.8989108638378
+                    },
+                    {
+                        "name": "carbon dioxide",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_co2_m",
+                        "identifier": "7236730",
+                        "id": "7236730-6462537",
+                        "identifier": "7236730",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 780.8397801257447,
+                        "y": 811.2780173506543
+                    },
+                    {
+                        "name": "carbon dioxide",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_co2_m",
+                        "identifier": "7236730",
+                        "id": "7236730-6459150",
+                        "identifier": "7236730",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": true,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 815.3699341307214,
+                        "y": 1027.4507529523075,
+                        "px": null,
+                        "py": null
+                    },
+                    {
+                        "name": "carbon dioxide",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Glycolysis/gluconeogenesis"
+                        ],
+                        "dbIdentifier": "M_co2_m",
+                        "identifier": "7236730",
+                        "id": "7236730-6459079",
+                        "identifier": "7236730",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 317.33439749893154,
+                        "y": 1048.8976224065177
+                    },
+                    {
+                        "name": "proton",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_h_m",
+                        "identifier": "7236989",
+                        "id": "7236989-6459595",
+                        "identifier": "7236989",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 496.5934811426354,
+                        "y": 1096.4383445927444
+                    },
+                    {
+                        "name": "proton",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_h_m",
+                        "identifier": "7236989",
+                        "id": "7236989-6458318",
+                        "identifier": "7236989",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 650.232029574398,
+                        "y": 1127.6612975948844
+                    },
+                    {
+                        "name": "GDP(3-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_gdp_m",
+                        "identifier": "7235390",
+                        "id": "7235390-6456910",
+                        "identifier": "7235390",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 587.2104374470706,
+                        "y": 741.3084255606245
+                    },
+                    {
+                        "name": "GTP(4-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_gtp_m",
+                        "identifier": "7234351",
+                        "id": "7234351-6456910",
+                        "identifier": "7234351",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 610.3337486412344,
+                        "y": 722.3141821872975
+                    },
+                    {
+                        "name": "acetoacetate",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Transport"
+                        ],
+                        "dbIdentifier": "acetoacetate_m",
+                        "identifier": "9000000",
+                        "id": "9000000",
+                        "identifier": "9000000",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 610.3337486412344,
+                        "y": 722.3141821872975
+                    },
+                    {
+                        "name": "acetoacetate",
+                        "compartment": "cytoplasm",
+                        "pathways": [
+                            "Transport"
+                        ],
+                        "dbIdentifier": "acetoacetate_c",
+                        "identifier": "9000001",
+                        "id": "9000001",
+                        "identifier": "9000001",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 610.3337486412344,
+                        "y": 722.3141821872975
+                    },
+                    {
+                        "name": "active transport",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Transport"
+                        ],
+                        "dbIdentifier": "transport",
+                        "id": "9000002",
+                        "isSideCompound": false,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": true,
+                        "duplicated": false,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 14,
+                        "svgHeight": 14,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        }
+                    },
+                    {
+                        "name": "hydrogencarbonate ion",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_hco3_m",
+                        "identifier": "9000003",
+                        "id": "9000003",
+                        "identifier": "9000003",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 317.33439749893154,
+                        "y": 1048.8976224065177
+                    },
+                    {
+                        "name": "r9",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "r9",
+                        "identifier": "9000004",
+                        "id": "9000004",
+                        "identifier": "9000004",
+                        "isSideCompound": false,
+                        "biologicalType": "reaction",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 317.33439749893154,
+                        "y": 1048.8976224065177
+                    },
+                    {
+                        "name": "ADP(3-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_adp_m",
+                        "identifier": "9000004",
+                        "id": "9000004",
+                        "identifier": "9000004",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 185.81304074309773,
+                        "y": 689.4077270723376
+                    },
+                    {
+                        "name": "ATP(4-)",
+                        "compartment": "mitochondrion",
+                        "pathways": [
+                            "Citric acid cycle"
+                        ],
+                        "dbIdentifier": "M_atp_m",
+                        "identifier": "9000005",
+                        "id": "9000005",
+                        "identifier": "9000005",
+                        "isSideCompound": true,
+                        "biologicalType": "metabolite",
+                        "selected": false,
+                        "locked": false,
+                        "duplicated": true,
+                        "hidden": false,
+                        "labelVisible": true,
+                        "svg": "undefined",
+                        "svgWidth": 7,
+                        "svgHeight": 7,
+                        "labelFont": {
+                            "font": "\"Open Sans\", \"Helvetica Neue\", helvetica, arial, verdana, sans-serif",
+                            "fontSize": "15px",
+                            "fontBold": "500",
+                            "fontItalic": "normal",
+                            "fontUnderline": "none",
+                            "fontOpacity": null,
+                            "fontX": null,
+                            "fontY": null,
+                            "fontTransform": null
+                        },
+                        "x": 185.81304074309773,
+                        "y": 689.4077270723376
+                    }
+                ],
+                
+                "links": [
+                    {
+                        "id": "7231167 -- 6456072",
+                        "source": 22,
+                        "target": 16,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "M_pyr_c -- transport",
+                        "source": 43,
+                        "target": 94,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "acetotate_c -- transport",
+                        "source": 93,
+                        "target": 94,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "transport -- acetotate_m",
+                        "source": 94,
+                        "target": 92,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "transport -- M_pyr_m",
+                        "source": 94,
+                        "target": 28,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "M_pyr_m -- r9",
+                        "source": 28,
+                        "target": 96,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "r9 -- oxaloacetate",
+                        "source": 96,
+                        "target": 32,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "M_hco3_m -- r9",
+                        "source": 95,
+                        "target": 96,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "ATP -- r9",
+                        "source": 98,
+                        "target": 96,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "r9 -- ADP",
+                        "source": 96,
+                        "target": 97,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    
+                    {
+                        "id": "7231167 -- 6461329",
+                        "source": 22,
+                        "target": 3,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7231425 -- 6459150",
+                        "source": 23,
+                        "target": 10,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7231750 -- 6456069",
+                        "source": 24,
+                        "target": 7,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6456070 -- 7231962",
+                        "source": 15,
+                        "target": 25,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7232005 -- 6458098",
+                        "source": 26,
+                        "target": 21,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7232420 -- 6459595",
+                        "source": 27,
+                        "target": 12,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7232982 -- 6459079",
+                        "source": 28,
+                        "target": 17,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7233321 -- 6455913",
+                        "source": 29,
+                        "target": 18,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7233945 -- 6456096",
+                        "source": 30,
+                        "target": 13,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7234326 -- 6456236",
+                        "source": 31,
+                        "target": 1,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7234467 -- 6458318",
+                        "source": 32,
+                        "target": 2,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7234587 -- 6460853",
+                        "source": 33,
+                        "target": 11,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6456910 -- 7234676",
+                        "source": 20,
+                        "target": 34,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7234676 -- 6457499",
+                        "source": 34,
+                        "target": 19,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7234804 -- 6458318",
+                        "source": 35,
+                        "target": 2,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7234958 -- 6462537",
+                        "source": 36,
+                        "target": 0,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7235549 -- 6460710",
+                        "source": 37,
+                        "target": 6,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7235638 -- 6462878",
+                        "source": 38,
+                        "target": 8,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7235648 -- 6462474",
+                        "source": 39,
+                        "target": 9,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7235943 -- 6460500",
+                        "source": 40,
+                        "target": 5,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7235943 -- 6460533",
+                        "source": 40,
+                        "target": 4,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7236824 -- 6457614",
+                        "source": 42,
+                        "target": 14,
+                        "interaction": "in",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6456236 -- 7231425",
+                        "source": 1,
+                        "target": 23,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6457614 -- 7231750",
+                        "source": 14,
+                        "target": 24,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6462474 -- 7231750",
+                        "source": 9,
+                        "target": 24,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6456072 -- 7231962",
+                        "source": 16,
+                        "target": 25,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6460500 -- 7232005",
+                        "source": 5,
+                        "target": 26,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6460710 -- 7232420",
+                        "source": 6,
+                        "target": 27,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6455913 -- 7233017",
+                        "source": 18,
+                        "target": 43,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6460853 -- 7233017",
+                        "source": 11,
+                        "target": 43,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6461329 -- 7233321",
+                        "source": 3,
+                        "target": 29,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6456069 -- 7233945",
+                        "source": 7,
+                        "target": 30,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6460533 -- 7233945",
+                        "source": 4,
+                        "target": 30,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6458318 -- 7234326",
+                        "source": 2,
+                        "target": 31,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6459595 -- 7234467",
+                        "source": 12,
+                        "target": 32,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6459079 -- 7234804",
+                        "source": 17,
+                        "target": 35,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6459150 -- 7234958",
+                        "source": 10,
+                        "target": 36,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6457499 -- 7235549",
+                        "source": 19,
+                        "target": 37,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6458098 -- 7235638",
+                        "source": 21,
+                        "target": 38,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6460500 -- 7235638",
+                        "source": 5,
+                        "target": 38,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7235741 -- 6456910",
+                        "source": 44,
+                        "target": 20,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6462537 -- 7235741",
+                        "source": 0,
+                        "target": 44,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6456096 -- 7235943",
+                        "source": 13,
+                        "target": 40,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "7236102 -- 6456070",
+                        "source": 41,
+                        "target": 15,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "6462878 -- 7236102",
+                        "source": 8,
+                        "target": 41,
+                        "interaction": "out",
+                        "reversible": "false"
+                    },
+                    {
+                        "id": "M_pyr_m-0",
+                        "source": 28,
+                        "target": 45,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "M_oaa_m-0",
+                        "source": 32,
+                        "target": 45,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "M_accoa_m-0",
+                        "source": 35,
+                        "target": 45,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "M_pyr_m-1",
+                        "source": 28,
+                        "target": 46,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "M_oaa_m-1",
+                        "source": 32,
+                        "target": 46,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "M_accoa_m-1",
+                        "source": 35,
+                        "target": 46,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "0-1",
+                        "source": 45,
+                        "target": 46,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "1-0",
+                        "source": 46,
+                        "target": 45,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "0-1",
+                        "source": 45,
+                        "target": 46,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "7232245-6462474-6462474",
+                        "source": 47,
+                        "target": 9,
+                        "interaction": "in",
+                        "reversible": false
+                    },
+                    {
+                        "id": "7232245-6456096-6456096",
+                        "source": 48,
+                        "target": 13,
+                        "interaction": "in",
+                        "reversible": false
+                    },
+                    {
+                        "id": "6456070-6456070-7232245",
+                        "source": 15,
+                        "target": 49,
+                        "interaction": "in",
+                        "reversible": true
+                    },
+                    {
+                        "id": "6455913-7232245-6455913",
+                        "source": 18,
+                        "target": 50,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "7232374-6455913-6455913",
+                        "source": 51,
+                        "target": 18,
+                        "interaction": "in",
+                        "reversible": false
+                    },
+                    {
+                        "id": "6462474-7232374-6462474",
+                        "source": 9,
+                        "target": 52,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "6456096-7232374-6456096",
+                        "source": 13,
+                        "target": 53,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "6456070-7232374-6456070",
+                        "source": 54,
+                        "target": 15,
+                        "interaction": "out",
+                        "reversible": true
+                    },
+                    {
+                        "id": "7232631-6462878-6462878",
+                        "source": 55,
+                        "target": 8,
+                        "interaction": "in",
+                        "reversible": true
+                    },
+                    {
+                        "id": "7232631-6460853-6460853",
+                        "source": 56,
+                        "target": 11,
+                        "interaction": "in",
+                        "reversible": true
+                    },
+                    {
+                        "id": "7232645-6462537-6462537",
+                        "source": 57,
+                        "target": 0,
+                        "interaction": "in",
+                        "reversible": false
+                    },
+                    {
+                        "id": "7232645-6459595-6459595",
+                        "source": 58,
+                        "target": 12,
+                        "interaction": "in",
+                        "reversible": true
+                    },
+                    {
+                        "id": "7232645-6459150-6459150",
+                        "source": 59,
+                        "target": 10,
+                        "interaction": "in",
+                        "reversible": false
+                    },
+                    {
+                        "id": "7232645-6459079-6459079",
+                        "source": 60,
+                        "target": 17,
+                        "interaction": "in",
+                        "reversible": false
+                    },
+                    {
+                        "id": "7232968-6457499-6457499",
+                        "source": 61,
+                        "target": 19,
+                        "interaction": "in",
+                        "reversible": true
+                    },
+                    {
+                        "id": "7233938-6460710-6460710",
+                        "source": 62,
+                        "target": 6,
+                        "interaction": "in",
+                        "reversible": true
+                    },
+                    {
+                        "id": "7233938-6458318-6458318",
+                        "source": 63,
+                        "target": 2,
+                        "interaction": "in",
+                        "reversible": false
+                    },
+                    {
+                        "id": "7233954-6460533-6460533",
+                        "source": 64,
+                        "target": 4,
+                        "interaction": "in",
+                        "reversible": false
+                    },
+                    {
+                        "id": "6461329-7233954-6461329",
+                        "source": 3,
+                        "target": 65,
+                        "interaction": "out",
+                        "reversible": true
+                    },
+                    {
+                        "id": "7234421-6462878-6462878",
+                        "source": 66,
+                        "target": 8,
+                        "interaction": "in",
+                        "reversible": true
+                    },
+                    {
+                        "id": "6460533-7234421-6460533",
+                        "source": 4,
+                        "target": 67,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "7235295-6462537-6462537",
+                        "source": 68,
+                        "target": 0,
+                        "interaction": "in",
+                        "reversible": false
+                    },
+                    {
+                        "id": "7235295-6459079-6459079",
+                        "source": 69,
+                        "target": 17,
+                        "interaction": "in",
+                        "reversible": false
+                    },
+                    {
+                        "id": "6456910-6456910-7235295",
+                        "source": 20,
+                        "target": 70,
+                        "interaction": "in",
+                        "reversible": true
+                    },
+                    {
+                        "id": "6458318-7235295-6458318",
+                        "source": 2,
+                        "target": 71,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "7237022-6455913-6455913",
+                        "source": 72,
+                        "target": 18,
+                        "interaction": "in",
+                        "reversible": false
+                    },
+                    {
+                        "id": "6462878-7237022-6462878",
+                        "source": 8,
+                        "target": 73,
+                        "interaction": "out",
+                        "reversible": true
+                    },
+                    {
+                        "id": "6462474-7237022-6462474",
+                        "source": 9,
+                        "target": 74,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "6460853-7237022-6460853",
+                        "source": 11,
+                        "target": 75,
+                        "interaction": "out",
+                        "reversible": true
+                    },
+                    {
+                        "id": "6456096-7237022-6456096",
+                        "source": 13,
+                        "target": 76,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "6462537-7233240-6462537",
+                        "source": 0,
+                        "target": 77,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "6459595-7233240-6459595",
+                        "source": 12,
+                        "target": 78,
+                        "interaction": "out",
+                        "reversible": true
+                    },
+                    {
+                        "id": "6459150-7233240-6459150",
+                        "source": 10,
+                        "target": 79,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "6459079-7233240-6459079",
+                        "source": 17,
+                        "target": 80,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "6462878-7233249-6462878",
+                        "source": 8,
+                        "target": 81,
+                        "interaction": "out",
+                        "reversible": true
+                    },
+                    {
+                        "id": "6460853-7233249-6460853",
+                        "source": 11,
+                        "target": 82,
+                        "interaction": "out",
+                        "reversible": true
+                    },
+                    {
+                        "id": "6457499-7234218-6457499",
+                        "source": 19,
+                        "target": 83,
+                        "interaction": "out",
+                        "reversible": true
+                    },
+                    {
+                        "id": "6456910-7234401-6456910",
+                        "source": 84,
+                        "target": 20,
+                        "interaction": "out",
+                        "reversible": true
+                    },
+                    {
+                        "id": "6462537-7236730-6462537",
+                        "source": 0,
+                        "target": 85,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "6459150-7236730-6459150",
+                        "source": 10,
+                        "target": 86,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "6459079-7236730-6459079",
+                        "source": 17,
+                        "target": 87,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "6459595-7236989-6459595",
+                        "source": 12,
+                        "target": 88,
+                        "interaction": "out",
+                        "reversible": true
+                    },
+                    {
+                        "id": "6458318-7236989-6458318",
+                        "source": 2,
+                        "target": 89,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "6456910-7235390-6456910",
+                        "source": 90,
+                        "target": 20,
+                        "interaction": "out",
+                        "reversible": true
+                    },
+                    {
+                        "id": "6456910-6456910-7234351",
+                        "source": 20,
+                        "target": 91,
+                        "interaction": "in",
+                        "reversible": true
+                    },
+                    {
+                        "id": "1-0",
+                        "source": 46,
+                        "target": 45,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "0-1",
+                        "source": 45,
+                        "target": 46,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "1-0",
+                        "source": 46,
+                        "target": 45,
+                        "interaction": "out",
+                        "reversible": false
+                    },
+                    {
+                        "id": "0-1",
+                        "source": 45,
+                        "target": 46,
+                        "interaction": "out",
+                        "reversible": false
+                    }
+                ]
+            },
+            "linked": false,
+            "active": true,
+            "duplicatedNodes": [],
+            "selectedNodes": [
+                "7234958",
+                "6460339",
+                "7233240-6459150",
+                "7236730-6459150",
+                "6456910",
+                "6455698"
+            ],
+            "resizable": false
+        }
+    }
+}

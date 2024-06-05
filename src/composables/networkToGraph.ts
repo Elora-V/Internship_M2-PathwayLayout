@@ -1,9 +1,13 @@
 import { Network } from '@metabohub/viz-core/src/types/Network';
 import  dagre  from 'dagrejs/dist/dagre.js';
 import { Graph } from "@viz-js/viz";
-import { addClusterViz } from './useSubgraphs';
-import { Subgraph } from '@/types/Subgraph';
+import { addMainChainClusterViz } from './useSubgraphs';
+import { Subgraph, TypeSubgraph } from '@/types/Subgraph';
+import { addClusterDot } from './useSubgraphs';
 import * as GDS from 'graph-data-structure';
+import { SubgraphNetwork } from '@/types/SubgraphNetwork';
+import { h } from 'vue';
+import { Link } from '@metabohub/viz-core/src/types/Link';
 
 
 /** 
@@ -43,35 +47,226 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
  * @param clusters clusters for viz
  * @returns {Graph} Return graph object for viz
  */
-export function NetworkToViz(network: Network,clusters:{[key:string]:Subgraph}={},graphAttributes={}): Graph{
+export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,radiusFactor:number=15): Graph{
     // initialisation viz graph
     let graphViz: Graph ={
-        graphAttributes: graphAttributes,
+        graphAttributes: subgraphNetwork.attributs,
         directed: true,
         edges: [],
+        //nodes: [],
         subgraphs:[]
     }
 
-    // insert edge 
-    network.links.forEach((link)=>{
+    // insert nodes
+    // Object.keys(subgraphNetwork.network.value.nodes).forEach((node) => { 
+    //     graphViz.nodes.push({name:node});
+    // });
+    
+    // insert edge (but with cycle metanode) 
+    subgraphNetwork.network.value.links.forEach((link)=>{
+
+        // attributs
         let attributs:AttributesViz={};
         if (link.metadata && Object.keys(link.metadata).includes("constraint")){
             attributs.constraint=link.metadata["constraint"] as boolean;
         }
-        graphViz.edges.push({
-            tail: link.source.id,
-            head: link.target.id,
-            attributes:attributs
-            });
+
+        // head and tail
+        let tail:string=link.source.id;
+        let head:string=link.target.id;
+        let inCycle:string;
+        //attributs.minlen=1;
+       
+        // get new tail and head if in cycle metanode
+        const newLinks=cycleMetanodeLink(link,subgraphNetwork);
+        newLinks.forEach(newLink=>{
+            inCycle=newLink.inCycle;
+            tail=newLink.tail;
+            head=newLink.head;
+
+            if (inCycle){
+                const lengthToCentroid=Math.round(subgraphNetwork.cycles[inCycle].nodes.length/4)+1; // to test
+                //attributs.minlen=lengthToCentroid;
+            }
+
+            // add edge (tail and head) if not already in graphviz   
+            if (tail!==head &&  !graphViz.edges.some(edge => edge.tail === tail && edge.head === head)){
+                graphViz.edges.push({
+                    tail: tail,
+                    head: head,
+                    attributes:attributs
+                });
+            }
+
+        });
+        
     })
 
-    // insert subgraphs (with edges)
-    Object.values(clusters).forEach((cluster) => {
-        graphViz=addClusterViz(graphViz,cluster);
+    // insert mainChain subgraphs (with edges)
+    Object.keys(subgraphNetwork.mainChains).forEach((nameMainChain) => {
+        graphViz=addMainChainClusterViz(graphViz,nameMainChain,subgraphNetwork);
     });
+
+    // insert cycle metanode
+    // if (cycle && subgraphNetwork.cycles){
+    //     Object.keys(subgraphNetwork.cycles).forEach((cycle) => {
+    //         // const cycleLength=subgraphNetwork.cycles[cycle].nodes.length;
+    //         // const diameterCycle=cycleLength*radiusFactor*2;
+    //         // const sizeMetanode=1;//diameterCycle/500;
+    //         graphViz.nodes.push({name:cycle});//attributes:{height:sizeMetanode,width:sizeMetanode}
+    //     });
+    // }
+
     return graphViz;
 
 }
+
+export function NetworkToDot(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,radiusFactor:number=15): string{
+
+    const network=subgraphNetwork.network.value;
+    // initialisation viz graph with graph attributs
+    let dotString="digraph G {\n graph "+customStringify(subgraphNetwork.attributs)+"\n";
+
+    // insert nodes if special viz attributs
+    Object.values(network.nodes).forEach((node) => {
+        if(node.metadata["vizAttributs"]){
+            const vizAttributes= customStringify(node.metadata["vizAttributs"]);
+            dotString+=`${node.id} `+vizAttributes+`;\n`;
+        }
+    });
+
+    // insert cycle metanode
+    if (cycle && subgraphNetwork.cycles){
+        Object.keys(subgraphNetwork.cycles).forEach((cycle) => {
+            const size = Math.floor(subgraphNetwork.cycles[cycle].nodes.length*radiusFactor*2/80); // test
+            dotString+=`${cycle} [width=${size}, height=${size}]; \n`;
+        });
+    }
+
+
+    // insert edges 
+    network.links.forEach((link)=>{
+        // link attributs
+        let attributs:AttributesViz={};
+        if (link.metadata && Object.keys(link.metadata).includes("constraint")){
+            attributs.constraint=link.metadata["constraint"] as boolean;
+        }
+        // head and tail
+        let tail:string=link.source.id;
+        let head:string=link.target.id;
+        let inCycle:string;
+        
+         // get new tail and head if in cycle metanode
+        const newLinks=cycleMetanodeLink(link,subgraphNetwork);
+            newLinks.forEach(newLink=>{
+                inCycle=newLink.inCycle;
+                tail=newLink.tail;
+                head=newLink.head;
+
+                if (inCycle){
+                    const lengthToCentroid=Math.round(subgraphNetwork.cycles[inCycle].nodes.length/4)+1; // to test
+                    attributs.minlen=lengthToCentroid;
+                }
+                if (tail!==head){
+                    dotString+=`${tail} -> ${head} `+customStringify(attributs)+`;\n`; // to change bcs several time the same link between cycle
+                }
+            });
+
+    });
+
+    // insert subgraphs (with edges)
+    Object.values(subgraphNetwork.mainChains).forEach((nameMainChain) => {
+        dotString+=addClusterDot(nameMainChain);
+    });
+
+      
+    return dotString+"}";
+
+}
+
+function cycleMetanodeLink(link:Link, subgraphNetwork:SubgraphNetwork):Array<{inCycle:string,tail:string,head:string}>{
+    
+    let inCycle:string;
+    let tail:string=link.source.id;
+    let head:string=link.target.id;
+    let cyclesOfSource:string[];
+    let cyclesOfTarget:string[];
+    let newLink:{inCycle:string,tail:string,head:string};
+
+    const newLinks:Array<{inCycle:string,tail:string,head:string}>=[];
+
+     // source in cycle ?
+     if(link.source.metadata && Object.keys(link.source.metadata).includes(TypeSubgraph.CYCLE)){
+        cyclesOfSource=link.source.metadata[TypeSubgraph.CYCLE] as string[];  
+        cyclesOfSource=listOfCycles(cyclesOfSource,subgraphNetwork);
+    }
+    // target in cycle ?
+    if(link.target.metadata && Object.keys(link.target.metadata).includes(TypeSubgraph.CYCLE)){
+        cyclesOfTarget=link.target.metadata[TypeSubgraph.CYCLE] as string[];  
+        cyclesOfTarget=listOfCycles(cyclesOfTarget,subgraphNetwork);       
+    }
+
+    // for link that goes from a cycle
+    if (cyclesOfSource){
+        cyclesOfSource.forEach(cycleSource=>{
+            if (cyclesOfTarget){ // to a cycle
+                cyclesOfTarget.forEach(cycleTarget =>{
+                    if (cycleSource!==cycleTarget){ // but not the same cycle
+                        newLink={inCycle:cycleSource,tail:cycleSource,head:cycleTarget}; // incycle is only the name of one of the cycle  // TO CHANGE ? (biggest cycle ?)
+                        newLinks.push(newLink);
+                    }
+                });
+            }else{ // to a classic node
+                newLink={inCycle:cycleSource,tail:cycleSource,head:head};
+                newLinks.push(newLink);
+            }
+        });
+    } else if (cyclesOfTarget){  // for link that goes to a cycle, from a classic node
+        cyclesOfTarget.forEach(cycleTarget=>{
+            newLink={inCycle:cycleTarget,tail:tail,head:cycleTarget};
+            newLinks.push(newLink);
+        });
+    } else { // classic node to classic node
+        newLink={inCycle:undefined,tail:tail,head:head};
+        newLinks.push(newLink);
+    }
+
+    return newLinks;
+}
+
+export function inBiggerCycle(cycleName:string,subgraphNetwork:SubgraphNetwork):string{
+    if (subgraphNetwork.cycles[cycleName].forSubgraph && subgraphNetwork.cycles[cycleName].forSubgraph.type==TypeSubgraph.CYCLE){
+            return subgraphNetwork.cycles[cycleName].forSubgraph.name;
+    }else{ 
+        return cycleName;
+    }
+}
+
+function listOfCycles(cycleList:string[],subgraphNetwork:SubgraphNetwork):string[]{
+    const newCyclesList=[];
+    cycleList.forEach(cycle=>{
+        // if cycle is a 'child' of another cycle : no new metanode, it is considered as the parent cycle metanode (else it is the cycle)
+        const biggerCycle=inBiggerCycle(cycle,subgraphNetwork); 
+        if (!newCyclesList.includes(biggerCycle)){
+            newCyclesList.push(biggerCycle);
+        }
+    });
+    return newCyclesList;
+}
+
+function customStringify(obj) {
+    if (Object.keys(obj).length === 0) {
+        return "";
+    }
+    let str = '[';
+    for (let key in obj) {
+        str += `${key}="${obj[key]}", `;
+    }
+    str = str.slice(0, -2); // remove trailing comma and space
+    str += ']';
+    return str;
+}
+
 
 
 /**

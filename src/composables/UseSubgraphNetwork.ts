@@ -10,25 +10,52 @@ import { Network } from "@metabohub/viz-core/src/types/Network";
  * @param classes The array of classes associated with the subgraph (defaults to an empty array).
  * @returns The newly created subgraph.
  */
-export function createSubgraph(name: string, nodes: Array<string> = [], classes: Array<string> = [],type:TypeSubgraph=TypeSubgraph.MAIN_CHAIN): Subgraph {
+export function createSubgraph(name: string, nodes: Array<string>, classes: Array<string>, type: TypeSubgraph = TypeSubgraph.MAIN_CHAIN, forSubgraph?: {name:string,type:TypeSubgraph}, associatedSubgraphs?:Array<{name:string,type:TypeSubgraph}>): Subgraph {
     return {
         name,
         classes,
         nodes,
-        type 
+        type,
+        forSubgraph,
+        associatedSubgraphs
     };
 }
 
 export function addNewSubgraph(subgraphNetwork:SubgraphNetwork,subgraph:Subgraph,type:TypeSubgraph=TypeSubgraph.MAIN_CHAIN): SubgraphNetwork {
     if (!subgraphNetwork[type]) subgraphNetwork[type]={};
-    subgraphNetwork[type][subgraph.name]=subgraph;
-    subgraph.nodes.forEach(node=>{
-       updateNodeMetadataSubgraph(subgraphNetwork.network.value, node, subgraph.name, type);
-    })
+    if(!(subgraph.name in subgraphNetwork[type])){
+        // adding subgraph to subgraphNetwork
+        subgraphNetwork[type][subgraph.name]=subgraph;
+        // node matadata update
+        subgraph.nodes.forEach(node=>{
+            updateNodeMetadataSubgraph(subgraphNetwork.network.value, node, subgraph.name, type);
+        });
+        // if subgraph associated with another subgraph : add to associatedSubgraphs of the "parent" subgraph
+        if (subgraph.forSubgraph){
+          subgraphNetwork=updateParentSubgraphOf(subgraphNetwork,subgraph);
+        }
+    }else{
+        console.error("subgraph already in subgraphNetwork : "+subgraph.name);
+    }
     return subgraphNetwork;
     
 }
 
+export function updateParentSubgraphOf(subgraphNetwork:SubgraphNetwork,subgraph:Subgraph):SubgraphNetwork{
+    if (subgraph.forSubgraph){
+        const nameParent=subgraph.forSubgraph.name;
+        const typeParent=subgraph.forSubgraph.type;
+        if (nameParent in subgraphNetwork[typeParent]){
+            if (!subgraphNetwork[typeParent][nameParent].associatedSubgraphs){
+                subgraphNetwork[typeParent][nameParent].associatedSubgraphs=[];
+            }
+            subgraphNetwork[typeParent][nameParent].associatedSubgraphs.push({name:subgraph.name,type:subgraph.type});
+        }else{
+            console.error("parent subgraph not in subgraphNetwork");
+        }
+    }
+    return subgraphNetwork;
+}
 
 /**
  * Adds a class to the cluster if it doesn't already exist.

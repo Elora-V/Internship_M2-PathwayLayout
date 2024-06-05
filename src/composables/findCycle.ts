@@ -6,7 +6,7 @@ import { keepFirstReversibleNode } from "./duplicateReversibleReactions";
 
 
 export function addDirectedCycleToSubgraphNetwork(subgraphNetwork:SubgraphNetwork,minsize:number=4):SubgraphNetwork{
-
+    console.log('add cycle');
     if (!subgraphNetwork.cycles){
         subgraphNetwork.cycles={};
     }
@@ -32,19 +32,41 @@ export function addDirectedCycleToSubgraphNetwork(subgraphNetwork:SubgraphNetwor
             // remove reversible version of node in cycle, to only keep the one in the direction of cycle
             keepFirstReversibleNode(subgraphNetwork.network.value,cycle[1]);
 
-            // has common nodes with a cycle in clusterNetwork ?
-            let hasCommonNode = false;
+            // has common nodes with a cycle in subgraphNetwork ?
             let networkCycles = Object.values(subgraphNetwork.cycles);
             let i = 0;
-            while (!hasCommonNode && i < networkCycles.length) {
-                hasCommonNode = cycle[1].some(node => networkCycles[i].nodes.includes(node));
+            let commonNodes = [];
+            while (i < networkCycles.length) {
+                commonNodes = cycle[1].filter(node => networkCycles[i].nodes.includes(node));
+                if (commonNodes.length > 0) {
+                    break;
+                }
                 i++;
             }
-            if(!hasCommonNode){ // if new cycle independant of the one already keeped : add it 
-                
-                const subgraph=createSubgraph(cycle[0],cycle[1],[],TypeSubgraph.CYCLE);
-                subgraphNetwork=addNewSubgraph(subgraphNetwork,subgraph,TypeSubgraph.CYCLE);
-            }           
+            
+            const subgraph=createSubgraph(cycle[0],cycle[1],[],TypeSubgraph.CYCLE);
+            subgraphNetwork=addNewSubgraph(subgraphNetwork,subgraph,TypeSubgraph.CYCLE);
+
+            // if combined cycle (with cycle i) : that is, if there are more than one common nodes
+            if (commonNodes.length > 1) {  
+               const sizeCycle=cycle[1].length;
+               const sizeCommonCycle= networkCycles[i].nodes.length;
+               // add information of 'parent' (bigger cycle) and 'child' (smaller cycle) cycle 
+               if (sizeCycle<=sizeCommonCycle){ // if sorting worked : it is always the case
+                    subgraphNetwork.cycles[cycle[0]].forSubgraph={name:networkCycles[i].name,type:TypeSubgraph.CYCLE};
+                    if(! subgraphNetwork.cycles[networkCycles[i].name].associatedSubgraphs){
+                        subgraphNetwork.cycles[networkCycles[i].name].associatedSubgraphs=[];
+                    }
+                    subgraphNetwork.cycles[networkCycles[i].name].associatedSubgraphs.push({name:cycle[0],type:TypeSubgraph.CYCLE});
+                }else{
+                    subgraphNetwork.cycles[networkCycles[i].name].forSubgraph={name:cycle[0],type:TypeSubgraph.CYCLE};
+                    if(! subgraphNetwork.cycles[cycle[0]].associatedSubgraphs){
+                        subgraphNetwork.cycles[cycle[0]].associatedSubgraphs=[];
+                    }
+                    subgraphNetwork.cycles[cycle[0]].associatedSubgraphs.push({name:networkCycles[i].name,type:TypeSubgraph.CYCLE});
+                }
+            }
+                      
         }
     });
 

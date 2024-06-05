@@ -6,7 +6,7 @@ import { getSources } from "./rankAndSources";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { BFS } from "./algoBFS";
 import {TypeSubgraph, type Subgraph} from "@/types/Subgraph";
-import { addNodeToSubgraph, createSubgraph, updateNodeMetadataSubgraph } from './UseSubgraphNetwork';
+import { addNewSubgraph, addNodeToSubgraph, createSubgraph, updateNodeMetadataSubgraph } from './UseSubgraphNetwork';
 
 
 /**
@@ -53,11 +53,12 @@ export function addMainChainFromSources(subgraphNetwork:SubgraphNetwork, sources
     Object.entries(newMainChains).forEach(([mainChainID,mainChain]:[string,{nodes:Array<string>, height:number}])=>{
         if (mainChain.height >= minHeight){
             // create subgraph and add it
-            const newMainChain= createSubgraph(mainChainID, mainChain.nodes,[],TypeSubgraph.MAIN_CHAIN);
-            subgraphNetwork.mainChains[mainChainID]=newMainChain;
+            const newMainChainId="mainChain__"+mainChainID;
+            const newMainChain= createSubgraph(newMainChainId, mainChain.nodes,[],TypeSubgraph.MAIN_CHAIN);
+            subgraphNetwork.mainChains[newMainChainId]=newMainChain;
             // add metadata for node in cluster
             mainChain.nodes.forEach(nodeID=>{
-                updateNodeMetadataSubgraph(network, nodeID, mainChainID);
+                updateNodeMetadataSubgraph(network, nodeID, newMainChainId);
             });
         }
     });
@@ -85,17 +86,18 @@ export function addMiniBranchToMainChain(subgraphNetwork:SubgraphNetwork):Subgra
             children.forEach(child=>{
                 // if child is sink : 
                 if (graph.outdegree(child)===0){
-                    // it's a mini branch, so add it to the list
-                    if (!nodesToAdd.includes(child)) {
+                    // it's a mini branch, so add it to the list (if not already in the main chain or in the list of nodes to add)
+                    if (!nodesToAdd.includes(child) && !mainChain.nodes.includes(child)) {
                         nodesToAdd.push(child);
                     }
                 }
             });
         });
-        // add the nodes to the cluster
-        nodesToAdd.forEach(nodeID=>{
-            subgraphNetwork = addNodeToSubgraph(subgraphNetwork,mainChainID,nodeID,TypeSubgraph.MAIN_CHAIN);  
-        });
+        // add the nodes to a subgraph associated with the main chain
+        if (nodesToAdd.length>0){
+            const subgraph=createSubgraph("minibranch_"+mainChainID,nodesToAdd,[],TypeSubgraph.SECONDARY_CHAIN,{name:mainChainID,type:TypeSubgraph.MAIN_CHAIN});
+            subgraphNetwork=addNewSubgraph(subgraphNetwork,subgraph,TypeSubgraph.SECONDARY_CHAIN);
+        }
     });
     return subgraphNetwork;
 }
@@ -141,7 +143,6 @@ export function getLongPathDFS(network:Network,sources:string[]):{[key:string]:{
  * @returns an object for the different path, the key is the source of the path
  */
 function longestPathFromDFS(graph:{[key:string]:Function},DFSreversed:Array<string>,sources:Array<string>):{[key:string]:{nodes:Array<string>, height:number}}{
-
     let dfs = Array.from(DFSreversed).reverse(); // the code has been done whith a backward reading of dfs
 
     let longestPaths:{[key:string]:{nodes:Array<string>, height:number}}={};
@@ -260,7 +261,8 @@ export function getPathSourcesToTargetNode(network:Network, sources:string[],mer
                 // get the parents that goes from source to target node 
                 const nodesBetweenSourceTarget=BFS(parents,target);
                 // merge with an existing path if node in common
-                pathsFromSources=mergeNewPath(source,{nodes:nodesBetweenSourceTarget, height:targetNodes.max},pathsFromSources,merge);
+                // height is the max distance +1 
+                pathsFromSources=mergeNewPath(source,{nodes:nodesBetweenSourceTarget, height:targetNodes.max+1},pathsFromSources,merge);
             });
         } else  if(pathType==PathType.LONGEST){ // if only one path wanted : take the first
             // get the parents that goes from source to target node 
@@ -369,7 +371,7 @@ function mergeNewPath(source:string,newPath:{nodes:Array<string>, height:number}
                 // Merge paths
                 const mergedPath = Array.from(new Set(pathNodes.concat(newPath.nodes)));
                 // Create new key
-                const newKey = `${key}--${source}`;
+                const newKey = `${key}__${source}`;
                 // Update pathsFromSources object
                 const newheight=newPath.height>pathsFromSources[key].height?newPath.height:pathsFromSources[key].height;
                 pathsFromSources[newKey] = {nodes:mergedPath,height:newheight};
