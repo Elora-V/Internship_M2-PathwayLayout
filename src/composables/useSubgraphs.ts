@@ -72,7 +72,10 @@ export function addClusterDot(subgraph: Subgraph,isCluster:boolean=true): string
     subgraph.nodes.forEach((node) => {
         clusterString+=`${node};`;
     });
-    return clusterString+"}\n}\n";
+    if ("rank" in subgraph){
+        clusterString+=`}\n`;
+    }
+    return clusterString+"}\n";
   }
   
 
