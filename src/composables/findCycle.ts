@@ -47,8 +47,8 @@ export function addDirectedCycleToSubgraphNetwork(subgraphNetwork:SubgraphNetwor
             const subgraph=createSubgraph(cycle[0],cycle[1],[],TypeSubgraph.CYCLE);
             subgraphNetwork=addNewSubgraph(subgraphNetwork,subgraph,TypeSubgraph.CYCLE);
 
-            // if combined cycle (with cycle i)
-            if (commonNodes.length >= 1) {  
+            // if combined cycle (with cycle i) : that is, if there are more than one common nodes
+            if (commonNodes.length > 1) {  
                const sizeCycle=cycle[1].length;
                const sizeCommonCycle= networkCycles[i].nodes.length;
                // add information of 'parent' (bigger cycle) and 'child' (smaller cycle) cycle 

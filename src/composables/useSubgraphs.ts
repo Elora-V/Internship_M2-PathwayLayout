@@ -1,6 +1,7 @@
 import { Subgraph, TypeSubgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { Graph } from "@viz-js/viz";
+import { inBiggerCycle } from "./networkToGraph";
 
 /**
  * 
@@ -44,7 +45,8 @@ function changeCycleMetanodes(subgraphNetwork:SubgraphNetwork,listNodeBefore:str
         // if node  is in cycle metanode :
         let cycle:string;
         if (network.nodes[node].metadata && network.nodes[node].metadata[TypeSubgraph.CYCLE]){
-            cycle = network.nodes[node].metadata[TypeSubgraph.CYCLE][0];
+            cycle = network.nodes[node].metadata[TypeSubgraph.CYCLE][0]; // the first one should be the biggest
+            cycle=inBiggerCycle(cycle,subgraphNetwork)
         }
         if(cycle && !(listNodeAfter.includes(cycle))){
             // push node cycle

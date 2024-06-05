@@ -74,9 +74,9 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
         // head and tail
         let tail:string=link.source.id;
         let head:string=link.target.id;
-        attributs.minlen=1;
-
         let inCycle:string;
+        //attributs.minlen=1;
+       
         // get new tail and head if in cycle metanode
         const newLinks=cycleMetanodeLink(link,subgraphNetwork);
         newLinks.forEach(newLink=>{
@@ -89,7 +89,7 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
                 //attributs.minlen=lengthToCentroid;
             }
 
-            // add edge if not already in graphviz   
+            // add edge (tail and head) if not already in graphviz   
             if (tail!==head &&  !graphViz.edges.some(edge => edge.tail === tail && edge.head === head)){
                 graphViz.edges.push({
                     tail: tail,
@@ -198,19 +198,12 @@ function cycleMetanodeLink(link:Link, subgraphNetwork:SubgraphNetwork):Array<{in
      // source in cycle ?
      if(link.source.metadata && Object.keys(link.source.metadata).includes(TypeSubgraph.CYCLE)){
         cyclesOfSource=link.source.metadata[TypeSubgraph.CYCLE] as string[];  
-        cyclesOfSource.forEach(cycle=>{
-            // if cycle is a 'child' of another cycle : no new metanode, it is considered as the parent cycle metanode
-            if (subgraphNetwork.cycles[cycle].forSubgraph && subgraphNetwork.cycles[cycle].forSubgraph.type==TypeSubgraph.CYCLE ){
-
-                // change cycle to have parent metanode if not already there
-               
-            }
-        })
-
+        cyclesOfSource=listOfCycles(cyclesOfSource,subgraphNetwork);
     }
     // target in cycle ?
     if(link.target.metadata && Object.keys(link.target.metadata).includes(TypeSubgraph.CYCLE)){
-        cyclesOfTarget=link.target.metadata[TypeSubgraph.CYCLE] as string[];         
+        cyclesOfTarget=link.target.metadata[TypeSubgraph.CYCLE] as string[];  
+        cyclesOfTarget=listOfCycles(cyclesOfTarget,subgraphNetwork);       
     }
 
     // for link that goes from a cycle
@@ -218,8 +211,8 @@ function cycleMetanodeLink(link:Link, subgraphNetwork:SubgraphNetwork):Array<{in
         cyclesOfSource.forEach(cycleSource=>{
             if (cyclesOfTarget){ // to a cycle
                 cyclesOfTarget.forEach(cycleTarget =>{
-                    if (cycleSource!==cycleTarget){
-                        newLink={inCycle:cycleSource,tail:cycleSource,head:cycleTarget}; // incycle is only the name of one of the cycle
+                    if (cycleSource!==cycleTarget){ // but not the same cycle
+                        newLink={inCycle:cycleSource,tail:cycleSource,head:cycleTarget}; // incycle is only the name of one of the cycle  // TO CHANGE ? (biggest cycle ?)
                         newLinks.push(newLink);
                     }
                 });
@@ -239,6 +232,26 @@ function cycleMetanodeLink(link:Link, subgraphNetwork:SubgraphNetwork):Array<{in
     }
 
     return newLinks;
+}
+
+export function inBiggerCycle(cycleName:string,subgraphNetwork:SubgraphNetwork):string{
+    if (subgraphNetwork.cycles[cycleName].forSubgraph && subgraphNetwork.cycles[cycleName].forSubgraph.type==TypeSubgraph.CYCLE){
+            return subgraphNetwork.cycles[cycleName].forSubgraph.name;
+    }else{ 
+        return cycleName;
+    }
+}
+
+function listOfCycles(cycleList:string[],subgraphNetwork:SubgraphNetwork):string[]{
+    const newCyclesList=[];
+    cycleList.forEach(cycle=>{
+        // if cycle is a 'child' of another cycle : no new metanode, it is considered as the parent cycle metanode (else it is the cycle)
+        const biggerCycle=inBiggerCycle(cycle,subgraphNetwork); 
+        if (!newCyclesList.includes(biggerCycle)){
+            newCyclesList.push(biggerCycle);
+        }
+    });
+    return newCyclesList;
 }
 
 function customStringify(obj) {
