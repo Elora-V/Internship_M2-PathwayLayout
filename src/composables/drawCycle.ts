@@ -43,6 +43,10 @@ function drawCycle(subgraphNetwork:SubgraphNetwork,cycleToDrawID:string,radius:n
     let cycle:string[]=[];
     let centroidX :number;
     let centroidY :number;
+    if (!subgraphNetwork.cycles[cycleToDrawID].metadata)  subgraphNetwork.cycles[cycleToDrawID].metadata={};
+    subgraphNetwork.cycles[cycleToDrawID].metadata["radius"]=undefined;
+    subgraphNetwork.cycles[cycleToDrawID].metadata["centroid"]={x:undefined,y:undefined};
+    
 
     if (cycleToDrawID in subgraphNetwork.cycles){
         cycle=subgraphNetwork.cycles[cycleToDrawID].nodes;
@@ -65,7 +69,7 @@ function drawCycle(subgraphNetwork:SubgraphNetwork,cycleToDrawID:string,radius:n
 
     if (cycleExist && cycle.length>0){
 
-        if (nodesFixed.length===0){ // if independant cycle
+        if (nodesFixed.length===0){ // if independant cycle ----------------------------------------------------------------------------------
 
             // radius
             if (radius === undefined){
@@ -94,7 +98,7 @@ function drawCycle(subgraphNetwork:SubgraphNetwork,cycleToDrawID:string,radius:n
             // Give position to each node
             cycleNodesCoordinates(cycleToDrawID,shiftedCycle,centroidX,centroidY,radius,subgraphNetwork,-Math.PI/2);
 
-        } else if (nodesFixed.length===1){
+        } else if (nodesFixed.length===1){ // if cycle linked to another cycle by one node ----------------------------------------------------------------------------------
             const nodeFixed=network.nodes[nodesFixed[0]];
 
              // first node is the one fixed :
@@ -124,15 +128,49 @@ function drawCycle(subgraphNetwork:SubgraphNetwork,cycleToDrawID:string,radius:n
             // drawing :
             cycleNodesCoordinates(cycleToDrawID,shiftedCycle,centroidX,centroidY,radius,subgraphNetwork,shiftAngle);
              
-        } else { // several node in common
+        } else { // several node in common with other cycle(s) ----------------------------------------------------------------------------------
+
+            const unfixedInterval=getUnfixedIntervals(cycle,subgraphNetwork);
+            unfixedInterval.forEach(interval=>{
+
+                const startNode=cycle[(interval[0]-1+ cycle.length) % cycle.length];
+                const endNode=cycle[(interval[1]+1+ cycle.length) % cycle.length];
+                lineNodesCoordinates(network.nodes[startNode],network.nodes[endNode],cycle.slice(interval[0],interval[1]+1),subgraphNetwork);
+
+            });
+
 
             // if child of another cycle
-            if (subgraphNetwork.cycles[cycleToDrawID].forSubgraph && subgraphNetwork.cycles[cycleToDrawID].forSubgraph.type===TypeSubgraph.CYCLE){
+            // if (subgraphNetwork.cycles[cycleToDrawID].forSubgraph && subgraphNetwork.cycles[cycleToDrawID].forSubgraph.type===TypeSubgraph.CYCLE){
+            //     // not to place :
+            //     const unfixedInterval=getUnfixedIntervals(cycle,subgraphNetwork);
 
-                const fixedInterval=getUnfixedIntervals(cycle,subgraphNetwork);
-                console.log('fixed interval : '+fixedInterval);
+            //     if(unfixedInterval.length==1){
+            //         // nodes in parent but not child 
+            //         const parent=subgraphNetwork.cycles[cycleToDrawID].forSubgraph;
+            //         const parentCycle=subgraphNetwork.cycles[parent.name].nodes;
+            //         const nodesOnlyInParent = parentCycle.filter(node => !cycle.includes(node));
+                    
+            //         const unfixedNodes=cycle.slice(unfixedInterval[0][0],unfixedInterval[0][1]+1);
 
-            }
+            //         //centroid
+            //         const centroid=centroidFromNodes(nodesOnlyInParent,subgraphNetwork);
+            //         const centroidX=centroid.x;
+            //         const centroidY=centroid.y;
+            //         subgraphNetwork.cycles[cycleToDrawID].metadata.centroid={x:centroidX,y:centroidY}; // but centroid for just unfixed node, not all cycle
+
+            //         // radius
+            //         const nodeAfterUnfixedZone=cycle[(unfixedInterval[0][1]+1 + cycle.length) % cycle.length]; // node before first interval of unfixed node (modulo cycle size)
+            //         const radius=euclideanDistance({x:network.nodes[nodeAfterUnfixedZone].x,y:network.nodes[nodeAfterUnfixedZone].y},{x:centroidX,y:centroidY});
+            //         subgraphNetwork.cycles[cycleToDrawID].metadata.radius=radius; // but radius for just unfixed node, not all cycle
+                  
+            //         // reverse order as start by the end of unfixed zone (to have clockwise way)
+            //         const unfixedNodesReverse=unfixedNodes.slice().reverse();
+
+            //         //cycleNodesCoordinates(cycleToDrawID,unfixedNodesReverse,centroidX,centroidY,radius,subgraphNetwork);
+            //     }
+
+            //}
         }
     }
 
@@ -193,8 +231,35 @@ function findTopCycleNode(subgraphNetwork: SubgraphNetwork, cycleNodes:string[])
     return cycleNodeLinkedMinY;
 }
 
+function lineNodesCoordinates(start: {x: number, y: number}, end: {x: number, y: number}, nodes: string[],subgraphNetwork:SubgraphNetwork):void {
+    const network=subgraphNetwork.network.value;
+    // Calculate direction vector
+    let dx = end.x - start.x;
+    let dy = end.y - start.y;
 
-function cycleNodesCoordinates(cycleName:string,cycle:string[],centroidX:number,centroidY:number,radius:number,subgraphNetwork:SubgraphNetwork,shiftAngle:number=-Math.PI/2){
+    // Calculate distance between start and end
+    let distance = Math.sqrt(dx * dx + dy * dy);
+
+    // Normalize direction vector to get unit vector
+    let ux = dx / distance;
+    let uy = dy / distance;
+
+    // Calculate distance between each node
+    let nodeDistance = distance / (nodes.length + 1);
+
+    // Place nodes
+    nodes.forEach((node, i) => {
+        let d = nodeDistance * (i + 1);
+        const x= start.x + ux * d;
+        const y = start.y + uy * d;
+        network.nodes[node].x = x;
+        network.nodes[node].y = y;
+    });
+
+}
+
+
+function cycleNodesCoordinates(cycleName:string,cycle:string[],centroidX:number,centroidY:number,radius:number,subgraphNetwork:SubgraphNetwork,shiftAngle:number=-Math.PI/2):void{
     const network=subgraphNetwork.network.value;
     cycle.forEach((node, i) => {
         const nodeI = network.nodes[node];
@@ -230,6 +295,27 @@ function centroidFromNodes(nodesList:string[],subgraphNetwork:SubgraphNetwork):{
     }
     return {x:0,y:0};
 }
+
+function euclideanDistance(point1: {x: number, y: number}, point2: {x: number, y: number}): number {
+    let dx = point2.x - point1.x;
+    let dy = point2.y - point1.y;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
+// function totalIntervals(startArc: {x: number, y: number}, endArc: {x: number, y: number}, centroidArc: {x: number, y: number}, nodesInArc: number): number {
+//     // Calculate distances
+//     let a = euclideanDistance(startArc, endArc);
+//     let b = euclideanDistance(startArc, centroidArc);
+//     let c = euclideanDistance(endArc, centroidArc);
+
+//     // Calculate angle of arc using law of cosines
+//     let angle = Math.acos((b*b + c*c - a*a) / (2 * b * c));
+
+//     // Calculate total intervals in full circle
+//     let totalIntervals = Math.round(2 * Math.PI / angle) * nodesInArc;
+
+//     return totalIntervals;
+// }
 
 function centroidOneFixedCycleNode(subgraphNetwork:SubgraphNetwork,nodeFixedID:string,radius:number):{x:number,y:number}{
     const nodeFixed=subgraphNetwork.network.value.nodes[nodeFixedID];
