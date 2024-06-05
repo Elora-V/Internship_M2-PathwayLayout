@@ -116,6 +116,7 @@ function drawCycle(subgraphNetwork:SubgraphNetwork,cycleToDrawID:string,radius:n
             const centroidX = centroidFixedCycle["x"] + d * Math.cos(fixedAngle);
             const centroidY = centroidFixedCycle["y"] + d * Math.sin(fixedAngle);
             subgraphNetwork.cycles[cycleToDrawID].metadata.centroid={x:centroidX,y:centroidY};
+            
 
             // shift of start angle (default:pi/2) : angle of fixed node in the new cycle (with centroid calculted before)
             const shiftAngle = Math.atan2(nodeFixed.y - centroidY, nodeFixed.x - centroidX);
@@ -194,4 +195,15 @@ function centroidFromNodes(nodesList:string[],subgraphNetwork:SubgraphNetwork):{
         return {x:centroid.x/nodesList.length,y:centroid.y/nodesList.length};
     }
     return {x:0,y:0};
+}
+
+function centroidOneFixedCycleNode(subgraphNetwork:SubgraphNetwork,nodeFixedID:string,radius:number):{x:number,y:number}{
+    const nodeFixed=subgraphNetwork.network.value.nodes[nodeFixedID];
+    const radiusFixedCycle=subgraphNetwork.cycles[nodeFixed.metadata.fixedCycle as string].metadata.radius as number;
+    const centroidFixedCycle=subgraphNetwork.cycles[nodeFixed.metadata.fixedCycle as string].metadata.centroid;
+    const fixedAngle = Math.atan2(nodeFixed.y - centroidFixedCycle["y"], nodeFixed.x - centroidFixedCycle["x"]);
+    const d = radius + radiusFixedCycle; 
+    const centroidX = centroidFixedCycle["x"] + d * Math.cos(fixedAngle);
+    const centroidY = centroidFixedCycle["y"] + d * Math.sin(fixedAngle);
+    return {x:centroidX,y:centroidY}
 }
