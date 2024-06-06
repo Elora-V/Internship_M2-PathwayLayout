@@ -6,8 +6,8 @@ import { group } from "console";
 export function drawAllCycles(subgraphNetwork:SubgraphNetwork):void {
     const network = subgraphNetwork.network.value;
     const cycles = Object.values(subgraphNetwork.cycles);
-    let allGroupCycle:string[][]=[];
-    let groupCycle:string[]=[];
+    //let allGroupCycle:string[][]=[];
+    //let groupCycle:string[]=[];
 
     // Find the largest cycle that does not have a forSubgraph of type cycle : the first one to draw -------------------
     const parentCycles = cycles.filter(cycle => !cycle.forSubgraph || cycle.forSubgraph.type !== TypeSubgraph.CYCLE);
@@ -17,7 +17,7 @@ export function drawAllCycles(subgraphNetwork:SubgraphNetwork):void {
     }
     parentCycles.sort((a, b) => b.nodes.length - a.nodes.length);
     const largestParentCycle = parentCycles[0]; // get largest cycle
-    groupCycle.push(largestParentCycle.name); // add it to the current group of cycle
+    //groupCycle.push(largestParentCycle.name); // add it to the current group of cycle
     drawCycle(subgraphNetwork, largestParentCycle.name); // drawing largest cycle
 
 
@@ -27,9 +27,9 @@ export function drawAllCycles(subgraphNetwork:SubgraphNetwork):void {
     const remainingCycles = cycles.filter(cycle => cycle.name !== largestParentCycle.name);
 
     // If group of connected cycle is drawn : push other nodes
-    const updateGroupCycle=pushFromGroupCycles(remainingCycles,groupCycle,allGroupCycle,subgraphNetwork);
-    allGroupCycle=updateGroupCycle.allGroupCycle;
-    groupCycle=updateGroupCycle.groupCycle;
+    //const updateGroupCycle=pushFromGroupCycles(remainingCycles,groupCycle,allGroupCycle,subgraphNetwork);
+    //allGroupCycle=updateGroupCycle.allGroupCycle;
+    //groupCycle=updateGroupCycle.groupCycle;
    
 
     // Draw the remaining cycles, starting with the one with the most fixed nodes (and if equal number : the largest one)
@@ -42,13 +42,13 @@ export function drawAllCycles(subgraphNetwork:SubgraphNetwork):void {
 
         const cycleToDraw = remainingCycles[0]; // the cycle with the most fixed nodes
         drawCycle(subgraphNetwork, cycleToDraw.name); // draw the cycle
-        groupCycle.push(cycleToDraw.name); // add it to the current group of cycle
+        //groupCycle.push(cycleToDraw.name); // add it to the current group of cycle
         remainingCycles.shift(); // remove it from the list of cycle to draw
 
         // If group of connected cycle is drawn : push other nodes
-        const updateGroupCycle=pushFromGroupCycles(remainingCycles,groupCycle,allGroupCycle,subgraphNetwork);
-        allGroupCycle=updateGroupCycle.allGroupCycle;
-        groupCycle=updateGroupCycle.groupCycle;
+        // const updateGroupCycle=pushFromGroupCycles(remainingCycles,groupCycle,allGroupCycle,subgraphNetwork);
+        // allGroupCycle=updateGroupCycle.allGroupCycle;
+        // groupCycle=updateGroupCycle.groupCycle;
 
     }
 }
@@ -337,147 +337,151 @@ function isRemainingCycleIndepOfDrawing(remainingCycles:Subgraph[], subgraphNetw
 }
 
 
-function pushFromGroupCycles(remainingCycles:Subgraph[],groupCycleForPush:string[],allGroupCyclePushed:string[][], subgraphNetwork:SubgraphNetwork): {allGroupCycle:string[][],groupCycle:string[]}{
-    const groupCycleIsDraw=isRemainingCycleIndepOfDrawing(remainingCycles, subgraphNetwork);
-    if (groupCycleIsDraw){
-        console.log('independant of the cycles drawn');
-        console.log(groupCycleForPush); 
-        pushFromIndepGroupCycles(subgraphNetwork,groupCycleForPush,allGroupCyclePushed);
-        allGroupCyclePushed.push(groupCycleForPush);
-        groupCycleForPush=[];
-    }
-    return {allGroupCycle:allGroupCyclePushed,groupCycle:groupCycleForPush};
-}
+// function pushFromGroupCycles(remainingCycles:Subgraph[],groupCycleForPush:string[],allGroupCyclePushed:string[][], subgraphNetwork:SubgraphNetwork): {allGroupCycle:string[][],groupCycle:string[]}{
+//     const groupCycleIsDraw=isRemainingCycleIndepOfDrawing(remainingCycles, subgraphNetwork);
+//     if (groupCycleIsDraw){
+//         console.log('independant of the cycles drawn');
+//         console.log(groupCycleForPush); 
+//         pushFromIndepGroupCycles(subgraphNetwork,groupCycleForPush,allGroupCyclePushed);
+//         allGroupCyclePushed.push(groupCycleForPush);
+//         groupCycleForPush=[];
+//     }
+//     return {allGroupCycle:allGroupCyclePushed,groupCycle:groupCycleForPush};
+// }
 
-function pushFromIndepGroupCycles(subgraphNetwork:SubgraphNetwork, groupCyclesID:string[],allGroupCycleDrawn:string[][]):void{
+// function pushFromIndepGroupCycles(subgraphNetwork:SubgraphNetwork, groupCyclesID:string[],allGroupCycleDrawn:string[][]):void{
 
-    console.log('--------------------------------------------------------------------');
-    // nodes in the group of cycle that won't move (others nodes will be pushed deprending on their positions)
-    const nodesCycles = groupCyclesID
-    .filter(cycleID => cycleID in subgraphNetwork.cycles) // Check if cycleID exists
-    .flatMap(cycleID => subgraphNetwork.cycles[cycleID].nodes) // get all nodes from all cycles
-    .reduce((unique, item) => unique.includes(item) ? unique : [...unique, item], []); // remove duplicates
+//     console.log('--------------------------------------------------------------------');
+//     // nodes in the group of cycle that won't move (others nodes will be pushed deprending on their positions)
+//     const nodesCycles = groupCyclesID
+//     .filter(cycleID => cycleID in subgraphNetwork.cycles) // Check if cycleID exists
+//     .flatMap(cycleID => subgraphNetwork.cycles[cycleID].nodes) // get all nodes from all cycles
+//     .reduce((unique, item) => unique.includes(item) ? unique : [...unique, item], []); // remove duplicates
 
-    // centroid of the group
-    const centroid = centroidFromNodes(nodesCycles,subgraphNetwork);
+//     // centroid of the group
+//     const centroid = centroidFromNodes(nodesCycles,subgraphNetwork);
 
-    const radius=subgraphNetwork.cycles[groupCyclesID[0]].metadata.radius as number; // TO CHANGE when several nodes 
+//     const radius=subgraphNetwork.cycles[groupCyclesID[0]].metadata.radius as number; // TO CHANGE when several nodes 
 
-    // get list of nodes to push : all but the cycle with its shortcut
-    // and group of cycle already draw considered as a node
-    const network = subgraphNetwork.network.value;
-    const nodesNetwork = Object.keys(network.nodes).filter(node => !nodesCycles.includes(node));
-    const nodesGroupCycleDrawn=allGroupCycleDrawn.flatMap(groupCycle=>groupCycle)
-        .flatMap(cycleID=>subgraphNetwork.cycles[cycleID].nodes) // get all nodes from all cycles
-        .reduce((unique, item) => unique.includes(item) ? unique : [...unique, item], []); // remove duplicates
-    const nodesNotInDrawCycle=nodesNetwork.filter(node => !nodesGroupCycleDrawn.includes(node)); 
-    let nodeToPush=nodesNotInDrawCycle.filter(node => !nodesGroupCycleDrawn.includes(node)); 
-    allGroupCycleDrawn.forEach(groupCycle=>{
-        nodeToPush.push(groupCycle[0]); // metanode of cycle group 
-    });
+//     // get list of nodes to push : all but the cycle with its shortcut
+//     // and group of cycle already draw considered as a node
+//     const network = subgraphNetwork.network.value;
+//     const nodesNetwork = Object.keys(network.nodes).filter(node => !nodesCycles.includes(node));
+//     const nodesGroupCycleDrawn=allGroupCycleDrawn.flatMap(groupCycle=>groupCycle)
+//         .flatMap(cycleID=>subgraphNetwork.cycles[cycleID].nodes) // get all nodes from all cycles
+//         .reduce((unique, item) => unique.includes(item) ? unique : [...unique, item], []); // remove duplicates
+//     const nodesNotInDrawCycle=nodesNetwork.filter(node => !nodesGroupCycleDrawn.includes(node)); 
+//     let nodeToPush=nodesNotInDrawCycle.filter(node => !nodesGroupCycleDrawn.includes(node)); 
+//     allGroupCycleDrawn.forEach(groupCycle=>{
+//         nodeToPush.push(groupCycle[0]); // metanode of cycle group 
+//     });
     
     
-    // Need to push ?
+//     // Need to push ?
 
-    const needPush=nodesInsideMetanode(groupCyclesID,nodesNetwork,subgraphNetwork);
-    console.log(needPush);
+//     const needPush=nodesInsideMetanode(groupCyclesID,nodesNetwork,subgraphNetwork);
+//     console.log(needPush);
 
-    // push nodes
-    // nodeToPush.forEach(nodeID =>{
-    //     if (nodeID in subgraphNetwork.cycles){ // if in a cycle
-    //         // get connected cycle group 
-    //         const fullGroupCycle=allGroupCycleDrawn.filter(groupCycle=> groupCycle.includes(nodeID))[0];
-    //         const nodesAsMetanode=fullGroupCycle.flatMap(cycleID=>subgraphNetwork.cycles[cycleID].nodes)
-    //             .reduce((unique, item) => unique.includes(item) ? unique : [...unique, item], []); // remove duplicates
-    //         const metanodeCentroid=centroidFromNodes(nodesAsMetanode,subgraphNetwork);
+//     // push nodes
 
-    //         console.log('moving '+String(nodesAsMetanode));
-    //         const distanceCentroidToMetanode=euclideanDistance(centroid,metanodeCentroid);
-    //         const distanceToMoveCentroid=(distanceCentroidToMetanode/radius+1)*radius;
-    //         pushMetanode(nodesAsMetanode,centroid,distanceToMoveCentroid,subgraphNetwork);
-
-
-    //     }else if (nodeID in network.nodes){ // if classic node
-
-    //         console.log('moving '+nodeID);
-    //         const distanceCentroidToNode=euclideanDistance(centroid,network.nodes[nodeID]);
-    //         const distanceToMove=(distanceCentroidToNode/radius+1)*radius;
-    //         pushMetanode([nodeID],centroid,distanceToMove,subgraphNetwork);
-
-    //     }
-
-    // });
-    
-}
-
-function pushMetanode(metanode:string[],centroidToPushfrom:{x:number,y:number},radius:number=1,subgraphNetwork:SubgraphNetwork):void{
-    const network = subgraphNetwork.network.value;
-    if (metanode.length===0){
-        const node=network.nodes[metanode[0]];
-        let dx = node.x - centroidToPushfrom.x;
-        let dy = node.y - centroidToPushfrom.y;
-        let angle = Math.atan2(dy, dx);
-        node.x = centroidToPushfrom.x + radius * Math.cos(angle);
-        node.y = centroidToPushfrom.y + radius * Math.sin(angle);
-    }else{
-        const centroidMetanode=centroidFromNodes(metanode,subgraphNetwork);
-        let dx = centroidMetanode.x - centroidToPushfrom.x;
-        let dy = centroidMetanode.y - centroidToPushfrom.y;
-        let angle = Math.atan2(dy, dx);
-        const newCentroid={x : centroidToPushfrom.x + radius * Math.cos(angle),
-                            y : centroidToPushfrom.y + radius * Math.sin(angle)};
-        dx = newCentroid.x - centroidMetanode.x;
-        dy = newCentroid.y - centroidMetanode.y;
-        metanode.forEach(nodeID=>{
-            const node=network.nodes[nodeID];
-            node.x += dx;
-            node.y += dy;
-        });
-    } 
-}
-
-function nodesInsideMetanode(groupCyclesID:string[],nodeToCheck:string[],subgraphNetwork:SubgraphNetwork):boolean{
-
-
-    const cycles=groupCyclesID.filter(cycleID => cycleID in subgraphNetwork.cycles && subgraphNetwork.cycles[cycleID].metadata 
-        && "radius" in subgraphNetwork.cycles[cycleID].metadata && subgraphNetwork.cycles[cycleID].metadata.radius !== undefined
-        && "centroid" in subgraphNetwork.cycles[cycleID].metadata &&  subgraphNetwork.cycles[cycleID].metadata.centroid 
-        && subgraphNetwork.cycles[cycleID].metadata.centroid["x"] !== undefined
-        && typeof subgraphNetwork.cycles[cycleID].metadata.centroid["y"] !== undefined
-    ) 
-    
-    let i=0;
-    let flag=true;
-    while (flag && i<cycles.length){
-        flag=!nodesInsideCircle(cycles[i],nodeToCheck,subgraphNetwork);
-        i++;
-    }
-    return !flag;
-}
-
-function nodesInsideCircle(cycleID:string,nodeToCheck:string[],subgraphNetwork:SubgraphNetwork):boolean{
-    const centroid=subgraphNetwork.cycles[cycleID].metadata.centroid as {x:number,y:number};
-    const radius=subgraphNetwork.cycles[cycleID].metadata.radius as number;
-
-
-    let i=-1;
-    let flag=true;
-    while (flag && i<nodeToCheck.length){
-        i++;
-        if( nodeToCheck[i] && Object.keys(subgraphNetwork.network.value.nodes).includes(nodeToCheck[i]) ){
+//     if (needPush){
+//         nodeToPush.forEach(nodeID =>{
             
-            const node=subgraphNetwork.network.value.nodes[nodeToCheck[i]];
-            const distance=euclideanDistance(node,centroid);
-            if (distance<=radius){
-                flag=false;
-            }
+//             if (nodeID in subgraphNetwork.cycles){ // if in a cycle
+//                 // get connected cycle group 
+//                 const fullGroupCycle=allGroupCycleDrawn.filter(groupCycle=> groupCycle.includes(nodeID))[0];
+//                 const nodesAsMetanode=fullGroupCycle.flatMap(cycleID=>subgraphNetwork.cycles[cycleID].nodes)
+//                     .reduce((unique, item) => unique.includes(item) ? unique : [...unique, item], []); // remove duplicates
+//                 const metanodeCentroid=centroidFromNodes(nodesAsMetanode,subgraphNetwork);
+
+//                 const distanceCentroidToMetanode=euclideanDistance(centroid,metanodeCentroid);
+//                 const distanceToMoveCentroid=(distanceCentroidToMetanode/radius+1)*radius;
+//                 pushMetanode(nodesAsMetanode,centroid,distanceToMoveCentroid,subgraphNetwork);
+
+
+//             }else if (nodeID in network.nodes){ // if classic node
+
+//                 const distanceCentroidToNode=euclideanDistance(centroid,network.nodes[nodeID]);
+//                 const distanceToMove=(distanceCentroidToNode/radius+1)*radius;
+//                 pushMetanode([nodeID],centroid,distanceToMove,subgraphNetwork);
+
+//             }
+
+//         });
+//     }
+    
+// }
+
+// function pushMetanode(metanode:string[],centroidToPushfrom:{x:number,y:number},radius:number=1,subgraphNetwork:SubgraphNetwork):void{
+//     const network = subgraphNetwork.network.value;
+//     if (metanode.length===1){
+//         const node=network.nodes[metanode[0]];
+//         let dx = node.x - centroidToPushfrom.x;
+//         let dy = node.y - centroidToPushfrom.y;
+//         let angle = Math.atan2(dy, dx);
+//         node.x = centroidToPushfrom.x + radius * Math.cos(angle);
+//         node.y = centroidToPushfrom.y + radius * Math.sin(angle);
+//     }else{
+
+//         // MARCHE PAS
+
+//         // const centroidMetanode=centroidFromNodes(metanode,subgraphNetwork);
+//         // let dx = centroidMetanode.x - centroidToPushfrom.x;
+//         // let dy = centroidMetanode.y - centroidToPushfrom.y;
+//         // let angle = Math.atan2(dy, dx);
+//         // const newCentroid={x : centroidToPushfrom.x + radius * Math.cos(angle),
+//         //                     y : centroidToPushfrom.y + radius * Math.sin(angle)};
+
+//         // metanode.forEach(nodeID=>{
+//         //     const node=network.nodes[nodeID];
+//         //     node.x += newCentroid.x - centroidMetanode.x;
+//         //     node.y += newCentroid.y - centroidMetanode.y;
+//         // });
+//     } 
+// }
+
+// function nodesInsideMetanode(groupCyclesID:string[],nodeToCheck:string[],subgraphNetwork:SubgraphNetwork):boolean{
+
+
+//     const cycles=groupCyclesID.filter(cycleID => cycleID in subgraphNetwork.cycles && subgraphNetwork.cycles[cycleID].metadata 
+//         && "radius" in subgraphNetwork.cycles[cycleID].metadata && subgraphNetwork.cycles[cycleID].metadata.radius !== undefined
+//         && "centroid" in subgraphNetwork.cycles[cycleID].metadata &&  subgraphNetwork.cycles[cycleID].metadata.centroid 
+//         && subgraphNetwork.cycles[cycleID].metadata.centroid["x"] !== undefined
+//         && typeof subgraphNetwork.cycles[cycleID].metadata.centroid["y"] !== undefined
+//     ) 
+    
+//     let i=0;
+//     let flag=true;
+//     while (flag && i<cycles.length){
+//         flag=!nodesInsideCircle(cycles[i],nodeToCheck,subgraphNetwork);
+//         i++;
+//     }
+//     return !flag;
+// }
+
+// function nodesInsideCircle(cycleID:string,nodeToCheck:string[],subgraphNetwork:SubgraphNetwork):boolean{
+//     const centroid=subgraphNetwork.cycles[cycleID].metadata.centroid as {x:number,y:number};
+//     const radius=subgraphNetwork.cycles[cycleID].metadata.radius as number;
+
+
+//     let i=-1;
+//     let flag=true;
+//     while (flag && i<nodeToCheck.length){
+//         i++;
+//         if( nodeToCheck[i] && Object.keys(subgraphNetwork.network.value.nodes).includes(nodeToCheck[i]) ){
             
-        }else{
-            //console.log('node '+nodeToCheck[i]+' not in network'); // PROBLEM !!!
-        }
+//             const node=subgraphNetwork.network.value.nodes[nodeToCheck[i]];
+//             const distance=euclideanDistance(node,centroid);
+//             if (distance<=radius){
+//                 flag=false;
+//             }
+            
+//         }else{
+//             //console.log('node '+nodeToCheck[i]+' not in network'); // PROBLEM !!!
+//         }
         
         
-    }
-    return !flag;
-}
+//     }
+//     return !flag;
+// }
 
