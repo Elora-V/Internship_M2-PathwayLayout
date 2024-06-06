@@ -1,38 +1,38 @@
 import { Subgraph, TypeSubgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
+import { group } from "console";
 
 
 export function drawAllCycles(subgraphNetwork:SubgraphNetwork):void {
     const network = subgraphNetwork.network.value;
     const cycles = Object.values(subgraphNetwork.cycles);
+    let allGroupCycle:string[][]=[];
     let groupCycle:string[]=[];
 
-    // Find the largest cycle that does not have a forSubgraph of type cycle : the first one to draw
+    // Find the largest cycle that does not have a forSubgraph of type cycle : the first one to draw -------------------
     const parentCycles = cycles.filter(cycle => !cycle.forSubgraph || cycle.forSubgraph.type !== TypeSubgraph.CYCLE);
     if (parentCycles.length === 0) {
         console.error("No cycle found without a forSubgraph of type cycle");
         return;
     }
     parentCycles.sort((a, b) => b.nodes.length - a.nodes.length);
-    const largestParentCycle = parentCycles[0];
-    groupCycle.push(largestParentCycle.name);
-    drawCycle(subgraphNetwork, largestParentCycle.name);
+    const largestParentCycle = parentCycles[0]; // get largest cycle
+    groupCycle.push(largestParentCycle.name); // add it to the current group of cycle
+    drawCycle(subgraphNetwork, largestParentCycle.name); // drawing largest cycle
 
 
-    // Drawing the others :
+    // Drawing the others : --------------------------------------------------------------------------------------------
+
     // Remove the drawn cycle from the list
     const remainingCycles = cycles.filter(cycle => cycle.name !== largestParentCycle.name);
 
-    // Check if remaining cycle are independant of the drawn cycles
-    let groupCycleIsDraw=isRemainingCycleIndepOfDrawing(remainingCycles, subgraphNetwork);
-    if (groupCycleIsDraw){
-        console.log('independant of the cycles drawn');
-        console.log(groupCycle); 
-        groupCycle=[];
-    }
+    // If group of connected cycle is drawn : push other nodes
+    const updateGroupCycle=pushFromGroupCycles(remainingCycles,groupCycle,allGroupCycle,subgraphNetwork);
+    allGroupCycle=updateGroupCycle.allGroupCycle;
+    groupCycle=updateGroupCycle.groupCycle;
    
 
-    // Draw the remaining cycles, starting with the one with the most fixed nodes
+    // Draw the remaining cycles, starting with the one with the most fixed nodes (and if equal number : the largest one)
     while (remainingCycles.length > 0) {
         remainingCycles.sort((a, b) => {
             const fixedNodesA = a.nodes.filter(node => network.nodes[node].metadata && network.nodes[node].metadata.fixedInCycle).length;
@@ -41,17 +41,14 @@ export function drawAllCycles(subgraphNetwork:SubgraphNetwork):void {
         });
 
         const cycleToDraw = remainingCycles[0]; // the cycle with the most fixed nodes
-        drawCycle(subgraphNetwork, cycleToDraw.name);
-        groupCycle.push(cycleToDraw.name);
+        drawCycle(subgraphNetwork, cycleToDraw.name); // draw the cycle
+        groupCycle.push(cycleToDraw.name); // add it to the current group of cycle
+        remainingCycles.shift(); // remove it from the list of cycle to draw
 
-        // Check if remaining cycle are independant of the drawn cycles
-        remainingCycles.shift();
-        groupCycleIsDraw=isRemainingCycleIndepOfDrawing(remainingCycles, subgraphNetwork);
-        if (groupCycleIsDraw){
-            console.log('independant of the cycles drawn');
-            console.log(groupCycle);
-            groupCycle=[];
-        }
+        // If group of connected cycle is drawn : push other nodes
+        const updateGroupCycle=pushFromGroupCycles(remainingCycles,groupCycle,allGroupCycle,subgraphNetwork);
+        allGroupCycle=updateGroupCycle.allGroupCycle;
+        groupCycle=updateGroupCycle.groupCycle;
 
     }
 }
@@ -339,35 +336,63 @@ function isRemainingCycleIndepOfDrawing(remainingCycles:Subgraph[], subgraphNetw
     }
 }
 
-function pushFromCycle(subgraphNetwork:SubgraphNetwork, cycleID:string):void{
 
-    const network = subgraphNetwork.network.value;
-    const nodesNetwork = Object.keys(network.nodes);
-
-    // get cycle centroid and radius
-    if (cycleID in subgraphNetwork.cycles && subgraphNetwork.cycles[cycleID].metadata && subgraphNetwork.cycles[cycleID].metadata.centroid){
-        const centroid = subgraphNetwork.cycles[cycleID].metadata.centroid;
-        const radius = subgraphNetwork.cycles[cycleID].metadata.radius;
+function pushFromGroupCycles(remainingCycles:Subgraph[],groupCycleForPush:string[],allGroupCyclePushed:string[][], subgraphNetwork:SubgraphNetwork): {allGroupCycle:string[][],groupCycle:string[]}{
+    const groupCycleIsDraw=isRemainingCycleIndepOfDrawing(remainingCycles, subgraphNetwork);
+    if (groupCycleIsDraw){
+        console.log('independant of the cycles drawn');
+        console.log(groupCycleForPush); 
+        pushFromIndepGroupCycles(subgraphNetwork,groupCycleForPush,allGroupCyclePushed);
+        allGroupCyclePushed.push(groupCycleForPush);
+        groupCycleForPush=[];
     }
+    return {allGroupCycle:allGroupCyclePushed,groupCycle:groupCycleForPush};
+}
 
-    // get list of nodes to move : all but the cycle with its shortcut
-    const nodesCycle = subgraphNetwork.cycles[cycleID].nodes;
-    console.log(nodesCycle);
-        // shortcuts nodes :
-    const associatedSubgraph=subgraphNetwork.cycles[cycleID].associatedSubgraphs; 
-    const associatedSubgraphCycle = associatedSubgraph
-        .filter(subgraph => subgraph.type === TypeSubgraph.CYCLE)
-        .map(cycleSubgraph => cycleSubgraph.name);
-    associatedSubgraphCycle.forEach(subgraphID => {
-        subgraphNetwork.cycles[subgraphID].nodes.forEach(node => {
-            if (!nodesCycle.includes(node)) {
-                nodesCycle.push(node);
-            }
-        });
+function pushFromIndepGroupCycles(subgraphNetwork:SubgraphNetwork, groupCyclesID:string[],allGroupCycleDrawn:string[][]):void{
+
+    console.log('--------------------------------------------------------------------');
+    // nodes in the group of cycle that won't move (others nodes will be pushed deprending on their positions)
+    const nodesCycles = groupCyclesID
+    .filter(cycleID => cycleID in subgraphNetwork.cycles) // Check if cycleID exists
+    .flatMap(cycleID => subgraphNetwork.cycles[cycleID].nodes) // get all nodes from all cycles
+    .reduce((unique, item) => unique.includes(item) ? unique : [...unique, item], []); // remove duplicates
+
+    // get list of nodes to push : all but the cycle with its shortcut
+    // and group of cycle already draw considered as a node
+    const network = subgraphNetwork.network.value;
+    const nodesNetwork = Object.keys(network.nodes).filter(node => !nodesCycles.includes(node));
+    const nodesGroupCycleDrawn=allGroupCycleDrawn.flatMap(groupCycle=>groupCycle)
+        .flatMap(cycleID=>subgraphNetwork.cycles[cycleID].nodes) // get all nodes from all cycles
+        .reduce((unique, item) => unique.includes(item) ? unique : [...unique, item], []); // remove duplicates
+    const nodesNotInDrawCycle=nodesNetwork.filter(node => !nodesGroupCycleDrawn.includes(node)); 
+    let nodeToPush=nodesNetwork.filter(node => !nodesGroupCycleDrawn.includes(node)); 
+    allGroupCycleDrawn.forEach(groupCycle=>{
+        nodeToPush.push(groupCycle[0]); // metanode of cycle group 
     });
-    const nodeToPush = nodesNetwork.filter(node => !nodesCycle.includes(node)); // all nodes but the cycle (and it shortcuts)
-    console.log(nodeToPush);
-    // // push nodes
+    
+
+    // push nodes
+    nodeToPush.forEach(nodeID =>{
+        if (nodeID in subgraphNetwork.cycles){ // if in a cycle
+            // get connected cycle group 
+            const fullGroupCycle=allGroupCycleDrawn.filter(groupCycle=> groupCycle.includes(nodeID))[0];
+            const nodesAsMetanode=fullGroupCycle.flatMap(cycleID=>subgraphNetwork.cycles[cycleID].nodes)
+                .reduce((unique, item) => unique.includes(item) ? unique : [...unique, item], []); // remove duplicates
+
+            console.log('moving '+String(nodesAsMetanode));
+
+
+        }else if (nodeID in network.nodes){ // if classic node
+
+            console.log('moving '+nodeID);
+
+        }
+
+    });
+    
+
+
     // nodeToPush.forEach(nodeID => {
     //     const node=network.nodes[nodeID];
     //     // calculate angle
