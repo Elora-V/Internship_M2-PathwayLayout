@@ -64,7 +64,7 @@ function drawCycle(subgraphNetwork:SubgraphNetwork,cycleToDrawID:string,radius:n
     let centroidY :number;
     if (!subgraphNetwork.cycles[cycleToDrawID].metadata)  subgraphNetwork.cycles[cycleToDrawID].metadata={};
     subgraphNetwork.cycles[cycleToDrawID].metadata["radius"]=undefined;
-    subgraphNetwork.cycles[cycleToDrawID].metadata["centroid"]={x:undefined,y:undefined};
+    subgraphNetwork.cycles[cycleToDrawID].metadata["centroid"]=undefined;
     
 
     if (cycleToDrawID in subgraphNetwork.cycles){
@@ -371,37 +371,42 @@ function pushFromIndepGroupCycles(subgraphNetwork:SubgraphNetwork, groupCyclesID
         .flatMap(cycleID=>subgraphNetwork.cycles[cycleID].nodes) // get all nodes from all cycles
         .reduce((unique, item) => unique.includes(item) ? unique : [...unique, item], []); // remove duplicates
     const nodesNotInDrawCycle=nodesNetwork.filter(node => !nodesGroupCycleDrawn.includes(node)); 
-    let nodeToPush=nodesNetwork.filter(node => !nodesGroupCycleDrawn.includes(node)); 
+    let nodeToPush=nodesNotInDrawCycle.filter(node => !nodesGroupCycleDrawn.includes(node)); 
     allGroupCycleDrawn.forEach(groupCycle=>{
         nodeToPush.push(groupCycle[0]); // metanode of cycle group 
     });
     
+    
+    // Need to push ?
+
+    const needPush=nodesInsideMetanode(groupCyclesID,nodesNetwork,subgraphNetwork);
+    console.log(needPush);
 
     // push nodes
-    nodeToPush.forEach(nodeID =>{
-        if (nodeID in subgraphNetwork.cycles){ // if in a cycle
-            // get connected cycle group 
-            const fullGroupCycle=allGroupCycleDrawn.filter(groupCycle=> groupCycle.includes(nodeID))[0];
-            const nodesAsMetanode=fullGroupCycle.flatMap(cycleID=>subgraphNetwork.cycles[cycleID].nodes)
-                .reduce((unique, item) => unique.includes(item) ? unique : [...unique, item], []); // remove duplicates
-            const metanodeCentroid=centroidFromNodes(nodesAsMetanode,subgraphNetwork);
+    // nodeToPush.forEach(nodeID =>{
+    //     if (nodeID in subgraphNetwork.cycles){ // if in a cycle
+    //         // get connected cycle group 
+    //         const fullGroupCycle=allGroupCycleDrawn.filter(groupCycle=> groupCycle.includes(nodeID))[0];
+    //         const nodesAsMetanode=fullGroupCycle.flatMap(cycleID=>subgraphNetwork.cycles[cycleID].nodes)
+    //             .reduce((unique, item) => unique.includes(item) ? unique : [...unique, item], []); // remove duplicates
+    //         const metanodeCentroid=centroidFromNodes(nodesAsMetanode,subgraphNetwork);
 
-            console.log('moving '+String(nodesAsMetanode));
-            const distanceCentroidToMetanode=euclideanDistance(centroid,metanodeCentroid);
-            const distanceToMoveCentroid=(distanceCentroidToMetanode/radius+1)*radius;
-            pushMetanode(nodesAsMetanode,centroid,distanceToMoveCentroid,subgraphNetwork);
+    //         console.log('moving '+String(nodesAsMetanode));
+    //         const distanceCentroidToMetanode=euclideanDistance(centroid,metanodeCentroid);
+    //         const distanceToMoveCentroid=(distanceCentroidToMetanode/radius+1)*radius;
+    //         pushMetanode(nodesAsMetanode,centroid,distanceToMoveCentroid,subgraphNetwork);
 
 
-        }else if (nodeID in network.nodes){ // if classic node
+    //     }else if (nodeID in network.nodes){ // if classic node
 
-            console.log('moving '+nodeID);
-            const distanceCentroidToNode=euclideanDistance(centroid,network.nodes[nodeID]);
-            const distanceToMove=(distanceCentroidToNode/radius+1)*radius;
-            pushMetanode([nodeID],centroid,distanceToMove,subgraphNetwork);
+    //         console.log('moving '+nodeID);
+    //         const distanceCentroidToNode=euclideanDistance(centroid,network.nodes[nodeID]);
+    //         const distanceToMove=(distanceCentroidToNode/radius+1)*radius;
+    //         pushMetanode([nodeID],centroid,distanceToMove,subgraphNetwork);
 
-        }
+    //     }
 
-    });
+    // });
     
 }
 
@@ -428,6 +433,51 @@ function pushMetanode(metanode:string[],centroidToPushfrom:{x:number,y:number},r
             node.x += dx;
             node.y += dy;
         });
-    }
-    
+    } 
 }
+
+function nodesInsideMetanode(groupCyclesID:string[],nodeToCheck:string[],subgraphNetwork:SubgraphNetwork):boolean{
+
+
+    const cycles=groupCyclesID.filter(cycleID => cycleID in subgraphNetwork.cycles && subgraphNetwork.cycles[cycleID].metadata 
+        && "radius" in subgraphNetwork.cycles[cycleID].metadata && subgraphNetwork.cycles[cycleID].metadata.radius !== undefined
+        && "centroid" in subgraphNetwork.cycles[cycleID].metadata &&  subgraphNetwork.cycles[cycleID].metadata.centroid 
+        && subgraphNetwork.cycles[cycleID].metadata.centroid["x"] !== undefined
+        && typeof subgraphNetwork.cycles[cycleID].metadata.centroid["y"] !== undefined
+    ) 
+    
+    let i=0;
+    let flag=true;
+    while (flag && i<cycles.length){
+        flag=!nodesInsideCircle(cycles[i],nodeToCheck,subgraphNetwork);
+        i++;
+    }
+    return !flag;
+}
+
+function nodesInsideCircle(cycleID:string,nodeToCheck:string[],subgraphNetwork:SubgraphNetwork):boolean{
+    const centroid=subgraphNetwork.cycles[cycleID].metadata.centroid as {x:number,y:number};
+    const radius=subgraphNetwork.cycles[cycleID].metadata.radius as number;
+
+
+    let i=-1;
+    let flag=true;
+    while (flag && i<nodeToCheck.length){
+        i++;
+        if( nodeToCheck[i] && Object.keys(subgraphNetwork.network.value.nodes).includes(nodeToCheck[i]) ){
+            
+            const node=subgraphNetwork.network.value.nodes[nodeToCheck[i]];
+            const distance=euclideanDistance(node,centroid);
+            if (distance<=radius){
+                flag=false;
+            }
+            
+        }else{
+            //console.log('node '+nodeToCheck[i]+' not in network'); // PROBLEM !!!
+        }
+        
+        
+    }
+    return !flag;
+}
+
