@@ -358,6 +358,9 @@ function pushFromIndepGroupCycles(subgraphNetwork:SubgraphNetwork, groupCyclesID
     .flatMap(cycleID => subgraphNetwork.cycles[cycleID].nodes) // get all nodes from all cycles
     .reduce((unique, item) => unique.includes(item) ? unique : [...unique, item], []); // remove duplicates
 
+    // centroid of the group
+    const centroid = centroidFromNodes(nodesCycles,subgraphNetwork);
+
     // get list of nodes to push : all but the cycle with its shortcut
     // and group of cycle already draw considered as a node
     const network = subgraphNetwork.network.value;
@@ -381,11 +384,13 @@ function pushFromIndepGroupCycles(subgraphNetwork:SubgraphNetwork, groupCyclesID
                 .reduce((unique, item) => unique.includes(item) ? unique : [...unique, item], []); // remove duplicates
 
             console.log('moving '+String(nodesAsMetanode));
+            pushMetanode(nodesAsMetanode,centroid,500,subgraphNetwork);
 
 
         }else if (nodeID in network.nodes){ // if classic node
 
             console.log('moving '+nodeID);
+            pushMetanode([nodeID],centroid,500,subgraphNetwork);
 
         }
 
@@ -407,4 +412,18 @@ function pushFromIndepGroupCycles(subgraphNetwork:SubgraphNetwork, groupCyclesID
 
 
 
+}
+
+function pushMetanode(metanode:string[],centroidToPushfrom:{x:number,y:number},radius:number=1,subgraphNetwork:SubgraphNetwork):void{
+    const network = subgraphNetwork.network.value;
+    
+    metanode.forEach(nodeID=>{
+        const node=network.nodes[nodeID];
+        let dx = node.x - centroidToPushfrom.x;
+        let dy = node.y - centroidToPushfrom.y;
+        let angle = Math.atan2(dy, dx);
+        node.x = centroidToPushfrom.x + radius * Math.cos(angle);
+        node.y = centroidToPushfrom.y + radius * Math.sin(angle);
+    });
+    
 }
