@@ -361,6 +361,8 @@ function pushFromIndepGroupCycles(subgraphNetwork:SubgraphNetwork, groupCyclesID
     // centroid of the group
     const centroid = centroidFromNodes(nodesCycles,subgraphNetwork);
 
+    const radius=subgraphNetwork.cycles[groupCyclesID[0]].metadata.radius as number; // TO CHANGE when several nodes 
+
     // get list of nodes to push : all but the cycle with its shortcut
     // and group of cycle already draw considered as a node
     const network = subgraphNetwork.network.value;
@@ -382,48 +384,50 @@ function pushFromIndepGroupCycles(subgraphNetwork:SubgraphNetwork, groupCyclesID
             const fullGroupCycle=allGroupCycleDrawn.filter(groupCycle=> groupCycle.includes(nodeID))[0];
             const nodesAsMetanode=fullGroupCycle.flatMap(cycleID=>subgraphNetwork.cycles[cycleID].nodes)
                 .reduce((unique, item) => unique.includes(item) ? unique : [...unique, item], []); // remove duplicates
+            const metanodeCentroid=centroidFromNodes(nodesAsMetanode,subgraphNetwork);
 
             console.log('moving '+String(nodesAsMetanode));
-            pushMetanode(nodesAsMetanode,centroid,500,subgraphNetwork);
+            const distanceCentroidToMetanode=euclideanDistance(centroid,metanodeCentroid);
+            const distanceToMoveCentroid=(distanceCentroidToMetanode/radius+1)*radius;
+            pushMetanode(nodesAsMetanode,centroid,distanceToMoveCentroid,subgraphNetwork);
 
 
         }else if (nodeID in network.nodes){ // if classic node
 
             console.log('moving '+nodeID);
-            pushMetanode([nodeID],centroid,500,subgraphNetwork);
+            const distanceCentroidToNode=euclideanDistance(centroid,network.nodes[nodeID]);
+            const distanceToMove=(distanceCentroidToNode/radius+1)*radius;
+            pushMetanode([nodeID],centroid,distanceToMove,subgraphNetwork);
 
         }
 
     });
     
-
-
-    // nodeToPush.forEach(nodeID => {
-    //     const node=network.nodes[nodeID];
-    //     // calculate angle
-    //     let dx = node.x - centroid.x;
-    //     let dy = node.y - centroid.y;
-    //     let angle = Math.atan2(dy, dx);
-
-    //     // calculate new position
-    //     node.x = centroid.x + radius * Math.cos(angle);
-    //     node.y = centroid.y + radius * Math.sin(angle);
-    // });
-
-
-
 }
 
 function pushMetanode(metanode:string[],centroidToPushfrom:{x:number,y:number},radius:number=1,subgraphNetwork:SubgraphNetwork):void{
     const network = subgraphNetwork.network.value;
-    
-    metanode.forEach(nodeID=>{
-        const node=network.nodes[nodeID];
+    if (metanode.length===0){
+        const node=network.nodes[metanode[0]];
         let dx = node.x - centroidToPushfrom.x;
         let dy = node.y - centroidToPushfrom.y;
         let angle = Math.atan2(dy, dx);
         node.x = centroidToPushfrom.x + radius * Math.cos(angle);
         node.y = centroidToPushfrom.y + radius * Math.sin(angle);
-    });
+    }else{
+        const centroidMetanode=centroidFromNodes(metanode,subgraphNetwork);
+        let dx = centroidMetanode.x - centroidToPushfrom.x;
+        let dy = centroidMetanode.y - centroidToPushfrom.y;
+        let angle = Math.atan2(dy, dx);
+        const newCentroid={x : centroidToPushfrom.x + radius * Math.cos(angle),
+                            y : centroidToPushfrom.y + radius * Math.sin(angle)};
+        dx = newCentroid.x - centroidMetanode.x;
+        dy = newCentroid.y - centroidMetanode.y;
+        metanode.forEach(nodeID=>{
+            const node=network.nodes[nodeID];
+            node.x += dx;
+            node.y += dy;
+        });
+    }
     
 }
