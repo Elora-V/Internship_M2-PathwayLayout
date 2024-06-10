@@ -179,7 +179,7 @@ import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
 import { node } from "prop-types";
 import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetwork";
-import { coordinateAllCycles, drawAllCycles } from "@/composables/drawCycle";
+import { coordinateAllCycles, drawAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
 
 
 
@@ -445,6 +445,13 @@ await vizLayout(subgraphNetwork, true).then(
     // Sugiyama with cycle metanodes 
     if (cycle){
       await vizLayout(subgraphNetwork, false,rescaleAfterAction);
+    }
+  }
+).then(
+  () => {
+    // Sugiyama with cycle metanodes 
+    if (cycle){
+      drawAllCyclesGroup(subgraphNetwork);
     }
   }
 ).then(

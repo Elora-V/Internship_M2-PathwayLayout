@@ -498,9 +498,10 @@ function updateGroupCycles(remainingCycles:Subgraph[], subgraphNetwork:SubgraphN
         if(subgraphNetwork.cyclesGroup[groupCycleName].metadata){
             const listCoord = Object.values(subgraphNetwork.cyclesGroup[groupCycleName].metadata)
                             .filter(item => item["x"] !== undefined && item["y"] !== undefined);
-            const {width,height}=rectangleSize(listCoord as {x:number,y:number}[]);
+            const {width,height,center}=rectangleSize(listCoord as {x:number,y:number}[]);
             subgraphNetwork.cyclesGroup[groupCycleName].width=width;
             subgraphNetwork.cyclesGroup[groupCycleName].height=height;
+            subgraphNetwork.cyclesGroup[groupCycleName].originCoordinates=center;
         }
         // change group
         group+=1;
@@ -508,10 +509,46 @@ function updateGroupCycles(remainingCycles:Subgraph[], subgraphNetwork:SubgraphN
     return {subgraphNetwork:subgraphNetwork,group:group};
 }
 
-function rectangleSize(listCoordinates:{x:number,y:number}[]):{width:number,height:number}{
+function rectangleSize(listCoordinates:{x:number,y:number}[]):{width:number,height:number,center:{x:number,y:number}}{
     const xCoordinates=listCoordinates.map(coord=>coord.x);
     const yCoordinates=listCoordinates.map(coord=>coord.y);
-    return {width:Math.max(...xCoordinates)-Math.min(...xCoordinates),height:Math.max(...yCoordinates)-Math.min(...yCoordinates)};
+    const minX = Math.min(...xCoordinates);
+    const maxX = Math.max(...xCoordinates);
+    const minY = Math.min(...yCoordinates);
+    const maxY = Math.max(...yCoordinates);
+    return {
+        width: maxX - minX,
+        height: maxY - minY,
+        center: {
+            x: (minX + maxX) / 2,
+            y: (minY + maxY) / 2
+        }
+    };
+}
+
+export function drawAllCyclesGroup(subgraphNetwork:SubgraphNetwork) {
+
+    console.log('drawing cycles group');
+    if (TypeSubgraph.CYCLEGROUP in subgraphNetwork){
+        const cycleGroups = Object.keys(subgraphNetwork.cyclesGroup);
+        cycleGroups.forEach(cycleGroup => {
+            drawCycleGroup(cycleGroup,subgraphNetwork);
+        });
+    }
+}
+
+function drawCycleGroup(cycleGroup:string,subgraphNetwork:SubgraphNetwork):void{
+    const metanodePosition=subgraphNetwork.cyclesGroup[cycleGroup].position;
+    const currentCenterPosition=subgraphNetwork.cyclesGroup[cycleGroup].originCoordinates;
+    const dx=metanodePosition.x-currentCenterPosition.x;
+    const dy=metanodePosition.y-currentCenterPosition.y;
+    const listNode = Object.entries(subgraphNetwork.cyclesGroup[cycleGroup].metadata)
+                            .filter(([key,item]) => item["x"] !== undefined && item["y"] !== undefined);
+    listNode.forEach(([nodeID,coord])=>{
+        const node=subgraphNetwork.network.value.nodes[nodeID];
+        node.x = coord["x"] ;//+ dx;
+        node.y = coord["y"] ;//+ dy;
+    });
 }
 
 // function pushFromIndepGroupCycles(subgraphNetwork:SubgraphNetwork, groupCyclesID:string[],allGroupCycleDrawn:string[][]):void{

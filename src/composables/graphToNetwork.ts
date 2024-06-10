@@ -80,18 +80,18 @@ export async function changeNetworkFromViz(json: JsonViz, subgraphNetwork: Subgr
     });
 
         // for test to see as a single node:
-        if (subgraphNetwork.cyclesGroup){
-            Object.keys(subgraphNetwork.cyclesGroup).forEach(cycle=>{
-                const nodeInsideMetanode = Object.entries(subgraphNetwork.cyclesGroup[cycle].metadata)
-                                            .filter(([key, item]) => item["x"] !== undefined && item["y"] !== undefined)
-                nodeInsideMetanode.forEach( ([key, item])=>{
-                    //console.log(network.nodes[cycleNode]);
-                   network.nodes[key].x=subgraphNetwork.cyclesGroup[cycle].position.x;
-                   network.nodes[key].y=subgraphNetwork.cyclesGroup[cycle].position.y;
-               });
-            })
+        // if (subgraphNetwork.cyclesGroup){
+        //     Object.keys(subgraphNetwork.cyclesGroup).forEach(cycle=>{
+        //         const nodeInsideMetanode = Object.entries(subgraphNetwork.cyclesGroup[cycle].metadata)
+        //                                     .filter(([key, item]) => item["x"] !== undefined && item["y"] !== undefined)
+        //         nodeInsideMetanode.forEach( ([key, item])=>{
+        //             //console.log(network.nodes[cycleNode]);
+        //            network.nodes[key].x=subgraphNetwork.cyclesGroup[cycle].position.x;
+        //            network.nodes[key].y=subgraphNetwork.cyclesGroup[cycle].position.y;
+        //        });
+        //     })
             
-        }
+        // }
                 
 
     if(assignRank){
