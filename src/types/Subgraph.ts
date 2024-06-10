@@ -2,7 +2,8 @@
 export enum TypeSubgraph {
     MAIN_CHAIN = "mainChains",
     SECONDARY_CHAIN = "secondaryChains",
-    CYCLE = "cycles"
+    CYCLE = "cycles",
+    CYCLEGROUP="cyclesGroup"
 }
 
 export interface Subgraph {
