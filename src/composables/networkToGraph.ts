@@ -99,14 +99,14 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
     });
 
     // insert cycle metanode
-    // if (cycle && subgraphNetwork.cycles){
-    //     Object.keys(subgraphNetwork.cycles).forEach((cycle) => {
-    //         // const cycleLength=subgraphNetwork.cycles[cycle].nodes.length;
-    //         // const diameterCycle=cycleLength*radiusFactor*2;
-    //         // const sizeMetanode=1;//diameterCycle/500;
-    //         graphViz.nodes.push({name:cycle});//attributes:{height:sizeMetanode,width:sizeMetanode}
-    //     });
-    // }
+    if (cycle && subgraphNetwork.cyclesGroup){
+        Object.values(subgraphNetwork.cyclesGroup).forEach((cycle) => {
+            const height=cycle.height;
+            const width=cycle.width;
+            const factor=0.02;
+            graphViz.nodes.push({name:cycle.name, attributes:{height:factor*height,width:factor*width}});
+        });
+    }
     console.log(graphViz);
     return graphViz;
 
