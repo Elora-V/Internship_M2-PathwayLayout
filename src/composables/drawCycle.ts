@@ -81,6 +81,7 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
     let cycle:string[]=[];
     if (cycleToDrawID in subgraphNetwork.cycles){
         cycle=subgraphNetwork.cycles[cycleToDrawID].nodes;
+        subgraphNetwork.cycles[cycleToDrawID].metadata={};
     }else{  
         console.log('cycle not in subgraph network');
     }

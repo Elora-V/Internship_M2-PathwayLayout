@@ -46,7 +46,6 @@ export async function changeNetworkFromDagre(graph: dagre.graphlib.Graph,network
 export async function changeNetworkFromViz(json: JsonViz, subgraphNetwork: SubgraphNetwork, assignRank:boolean=false): Promise<SubgraphNetwork> {
     const network=subgraphNetwork.network.value;
     const unique_y:Array<number> =[];
-    console.log(json["objects"]);
     json["objects"].forEach((node) => {
        
         const nodeId = node.name;

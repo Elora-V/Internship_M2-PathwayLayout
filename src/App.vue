@@ -179,7 +179,7 @@ import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
 import { node } from "prop-types";
 import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetwork";
-import { drawAllCycles } from "@/composables/drawCycle";
+import { coordinateAllCycles, drawAllCycles } from "@/composables/drawCycle";
 
 
 
@@ -396,46 +396,62 @@ console.log("Type path ? " + pathType);
 console.log('Cycle ? ' + String(cycle));
 console.log('---------------');
 
+// get rank 0 with Sugiyama
 await vizLayout(subgraphNetwork, true).then(
   () => {
+    // duplicate reactions
     duplicateReversibleReactions(network);
   }
 ).then(
   () => {
+    // detect cycles and choose some of the reaction duplicated
     if (cycle){
       addDirectedCycleToSubgraphNetwork(subgraphNetwork,3);
     }
   }
 ).then(
   () => {
+    // choose all other reversible reactions
     const sources=getSourcesParam(network,SourceType.RANK_SOURCE_ALL);
     chooseReversibleReaction(network,sources,BFSWithSources);
   }
 ).then(
   () => {
+    // get main chains
     const sources=getSourcesParam(network,sourceTypePath);
     addMainChainFromSources(subgraphNetwork, sources,getSubgraph, merge,pathType);
   }
 ).then(
   () => {
+    // add minibranch
     if(minibranch){
       subgraphNetwork= addMiniBranchToMainChain(subgraphNetwork);
     }
   }
 ).then(
+  async () => {
+    // Sugiyama without cycle metanodes (to get top nodes for cycles)
+    await vizLayout(subgraphNetwork, true);
+  }
+).then(
   () => {
-    subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
-    subgraphNetwork=addRedLinkcycle(subgraphNetwork);
+    // relative coordinates for cycles
+    if (cycle){
+      coordinateAllCycles(subgraphNetwork);
+    }
   }
 ).then(
   async () => {
-    await vizLayout(subgraphNetwork, false, rescaleAfterAction);
+    // Sugiyama with cycle metanodes 
+    if (cycle){
+      await vizLayout(subgraphNetwork, false,rescaleAfterAction);
+    }
   }
 ).then(
   () => {
-    if (cycle){
-      drawAllCycles(subgraphNetwork);
-    }
+    // add color to link (optional : for debug)
+    subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
+    subgraphNetwork=addRedLinkcycle(subgraphNetwork);
   }
 )
 console.log('_____________________________________________');

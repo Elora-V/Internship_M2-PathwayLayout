@@ -1,7 +1,7 @@
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import dagre from 'dagrejs';
 import { Graph, instance } from "@viz-js/viz";
-import { NetworkToDagre, NetworkToDot, NetworkToViz } from './networkToGraph';
+import { NetworkToDagre, NetworkToViz } from './networkToGraph';
 import { changeNetworkFromDagre, changeNetworkFromViz, dagreToNetwork } from './graphToNetwork';
 import { JsonViz } from "@/types/JsonViz";
 import { Subgraph } from "@/types/Subgraph";
@@ -40,7 +40,6 @@ export async function vizLayout(subgraphNetwork:SubgraphNetwork,assignRank:boole
     console.log('Viz');
     await instance().then( async viz => {
         const graphViz=NetworkToViz(subgraphNetwork);
-        //console.log(NetworkToDot(subgraphNetwork));
         const json=viz.renderJSON(graphViz) as JsonViz;
         subgraphNetwork= await changeNetworkFromViz(json,subgraphNetwork,assignRank);
         callbackFunction();
