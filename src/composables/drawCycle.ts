@@ -73,6 +73,7 @@ export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork):SubgraphNet
 }
 
 function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,groupCycleName:string):SubgraphNetwork{
+    const network = subgraphNetwork.network.value;
     let centroidX :number=0;
     let centroidY :number=0;
     
@@ -81,19 +82,20 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
     if (cycleToDrawID in subgraphNetwork.cycles){
         cycle=subgraphNetwork.cycles[cycleToDrawID].nodes;
     }else{  
-        console.log('argument cycleToDraw invalid');
+        console.log('cycle not in subgraph network');
     }
 
-    // Check if the node are present in the graph, and see if position is fixed in another cycle
-    const network = subgraphNetwork.network.value;
-    let cycleExist = true;
-    const nodesFixed:string[]=[];
+    // Check existence of all nodes
+    const cycleExist = cycle.every(node => node in network.nodes);
+
+    // Nodes with attribute 'fixedInCycle'
+    const nodesFixed = cycle.filter(node => 
+        network.nodes[node].metadata && network.nodes[node].metadata.fixedInCycle
+    );
+
+    // Update node metadata to place them in cycleGroup
     cycle.forEach(node=>{
-        if (!(node in network.nodes)){
-            cycleExist=false;
-        } else if (network.nodes[node].metadata && network.nodes[node].metadata.fixedInCycle){
-            nodesFixed.push(node);
-        }
+        network.nodes[node].metadata[TypeSubgraph.CYCLEGROUP]=groupCycleName;
     });
 
     // If cycle exist: place his nodes
