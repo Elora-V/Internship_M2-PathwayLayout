@@ -1,6 +1,7 @@
 import { Subgraph, TypeSubgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { group } from "console";
+import { a } from "vitest/dist/suite-ghspeorC";
 
 
 export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork):SubgraphNetwork {
@@ -153,8 +154,10 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
 
                 const startNode=cycle[(interval[0]-1+ cycle.length) % cycle.length];
                 const endNode=cycle[(interval[1]+1+ cycle.length) % cycle.length];
+                const startNodePosition=subgraphNetwork.cyclesGroup[groupCycleName].metadata[startNode] as {x:number,y:number};
+                const endNodePosition=subgraphNetwork.cyclesGroup[groupCycleName].metadata[endNode] as {x:number,y:number};
                 // Give position to each node
-                subgraphNetwork=lineNodesCoordinates(network.nodes[startNode],network.nodes[endNode],cycle.slice(interval[0],interval[1]+1),subgraphNetwork,groupCycleName);
+                subgraphNetwork=lineNodesCoordinates(startNodePosition,endNodePosition,cycle.slice(interval[0],interval[1]+1),subgraphNetwork,groupCycleName);
 
             });
 
