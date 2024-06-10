@@ -142,7 +142,8 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
             
 
             // shift of start angle (default:pi/2) : angle of fixed node in the new cycle (with centroid calculted before)
-            const shiftAngle = Math.atan2(nodeFixed.y - centroidY, nodeFixed.x - centroidX);
+            const positionFixedNode=subgraphNetwork.cyclesGroup[groupCycleName].metadata[nodeFixed.id] as {x:number,y:number};
+            const shiftAngle = Math.atan2(positionFixedNode.y - centroidY, positionFixedNode.x - centroidX);
             
             // Give position to each node
             subgraphNetwork=cycleNodesCoordinates(cycleToDrawID,shiftedCycle,centroidX,centroidY,radius,subgraphNetwork,shiftAngle,groupCycleName);
