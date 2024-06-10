@@ -42,17 +42,17 @@ function changeCycleMetanodes(subgraphNetwork:SubgraphNetwork,listNodeBefore:str
     const listNodeAfter:string[]=[];
     // for each nodes :
     listNodeBefore.forEach(node =>{
-        // if node  is in cycle metanode :
+        // if node is in cycle metanode :
         let cycle:string;
-        if (network.nodes[node].metadata && network.nodes[node].metadata[TypeSubgraph.CYCLE]){
-            cycle = network.nodes[node].metadata[TypeSubgraph.CYCLE][0]; // the first one should be the biggest
-            cycle=inBiggerCycle(cycle,subgraphNetwork)
+        if (network.nodes[node].metadata && network.nodes[node].metadata[TypeSubgraph.CYCLEGROUP]){
+            cycle = network.nodes[node].metadata[TypeSubgraph.CYCLEGROUP] as string; 
+            //cycle=inBiggerCycle(cycle,subgraphNetwork)
         }
-        if(cycle && !(listNodeAfter.includes(cycle))){
+        if(cycle!==undefined && !(listNodeAfter.includes(cycle))){
             // push node cycle
             listNodeAfter.push(cycle);
         } 
-        if (!cycle){
+        if (cycle===undefined){
             listNodeAfter.push(node);
         }
     })

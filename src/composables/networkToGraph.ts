@@ -70,7 +70,7 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
         if (link.metadata && Object.keys(link.metadata).includes("constraint")){
             attributs.constraint=link.metadata["constraint"] as boolean;
         }
-        //attributs.minlen=1;
+        //attributs.minlen=3;
        
 
         // get tail and head (take into account cycle metanode)
@@ -93,10 +93,10 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
     });
         
 
-    // insert mainChain subgraphs (with edges)
-    // Object.keys(subgraphNetwork.mainChains).forEach((nameMainChain) => {
-    //     graphViz=addMainChainClusterViz(graphViz,nameMainChain,subgraphNetwork);
-    // });
+    // insert mainChain subgraphs 
+    Object.keys(subgraphNetwork.mainChains).forEach((nameMainChain) => {
+        graphViz=addMainChainClusterViz(graphViz,nameMainChain,subgraphNetwork);
+    });
 
     // insert cycle metanode
     // if (cycle && subgraphNetwork.cycles){
@@ -204,7 +204,6 @@ function cycleMetanodeLink(link:Link, subgraphNetwork:SubgraphNetwork):{inCycle:
     }else{
         newLink={inCycle:undefined,tail:undefined,head:undefined};
     }
-
     return newLink;
 }
 

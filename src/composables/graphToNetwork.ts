@@ -5,6 +5,7 @@ import  dagre  from 'dagrejs/dist/dagre.js';
 import { type } from 'os';
 import { assignRankOrder } from './rankAndSources';
 import { SubgraphNetwork } from '@/types/SubgraphNetwork';
+import { TypeSubgraph } from '@/types/Subgraph';
 
 
 
@@ -64,32 +65,33 @@ export async function changeNetworkFromViz(json: JsonViz, subgraphNetwork: Subgr
                     unique_y.push(y);
                 }
 
-        }else if (subgraphNetwork.cycles && nodeId in subgraphNetwork.cycles && 'pos' in node){
+        }else if (subgraphNetwork.cyclesGroup && nodeId in subgraphNetwork.cyclesGroup && 'pos' in node){
 
             //if node is a cycle metanode
             const pos = node.pos.split(',');
             const x = parseFloat(pos[0]);
             const y = parseFloat(pos[1]);
-            if (!subgraphNetwork.cycles[nodeId].metadata){
-                subgraphNetwork.cycles[nodeId].metadata={};
+            if (!subgraphNetwork.cyclesGroup[nodeId].metadata){
+                subgraphNetwork.cyclesGroup[nodeId].metadata={};
             }
-            subgraphNetwork.cycles[nodeId].metadata["x"]=x;
-            subgraphNetwork.cycles[nodeId].metadata["y"]=y;
+            subgraphNetwork.cyclesGroup[nodeId].position={x:x,y:y};
             
         }
     });
 
         // for test to see as a single node:
-        // if (subgraphNetwork.cycles){
-        //     Object.keys(subgraphNetwork.cycles).forEach(cycle=>{
-        //         subgraphNetwork.cycles[cycle].nodes.forEach( cycleNode=>{
-        //             //console.log(network.nodes[cycleNode]);
-        //            network.nodes[cycleNode].x=subgraphNetwork.cycles[cycle].metadata["x"] as number;
-        //            network.nodes[cycleNode].y=subgraphNetwork.cycles[cycle].metadata["y"] as number;
-        //        });
-        //     })
+        if (subgraphNetwork.cyclesGroup){
+            Object.keys(subgraphNetwork.cyclesGroup).forEach(cycle=>{
+                const nodeInsideMetanode = Object.entries(subgraphNetwork.cyclesGroup[cycle].metadata)
+                                            .filter(([key, item]) => item["x"] !== undefined && item["y"] !== undefined)
+                nodeInsideMetanode.forEach( ([key, item])=>{
+                    //console.log(network.nodes[cycleNode]);
+                   network.nodes[key].x=subgraphNetwork.cyclesGroup[cycle].position.x;
+                   network.nodes[key].y=subgraphNetwork.cyclesGroup[cycle].position.y;
+               });
+            })
             
-        // }
+        }
                 
 
     if(assignRank){

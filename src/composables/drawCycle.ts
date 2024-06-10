@@ -5,70 +5,71 @@ import { group } from "console";
 
 export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork):SubgraphNetwork {
     const network = subgraphNetwork.network.value;
-    const cycles = Object.values(subgraphNetwork.cycles);
+    const cycles = subgraphNetwork.cycles? Object.values(subgraphNetwork.cycles):undefined;
 
-    // creation first cycle group
-    let group=0;
-    let groupName=cycleGroupName(String(group));
-    subgraphNetwork=addNewCycleGroup(subgraphNetwork,groupName);
+    if (cycles && cycles.length > 0) {
+        // creation first cycle group
+        let group=0;
+        let groupName=cycleGroupName(String(group));
+        subgraphNetwork=addNewCycleGroup(subgraphNetwork,groupName);
 
-    // Find the largest cycle that does not have a forSubgraph of type cycle : the first one to process -------------------
-    const parentCycles = cycles.filter(cycle => !cycle.forSubgraph || cycle.forSubgraph.type !== TypeSubgraph.CYCLE);
-    if (parentCycles.length === 0) {
-        console.error("No cycle found without a forSubgraph of type cycle");
-        return;
-    }
-    parentCycles.sort((a, b) => b.nodes.length - a.nodes.length);
-    const largestParentCycle = parentCycles[0]; // get largest cycle
-    subgraphNetwork.cyclesGroup[groupName].nodes.push(largestParentCycle.name); // add it to the current group of cycle
-    coordinateCycle(subgraphNetwork, largestParentCycle.name,groupName); // drawing largest cycle
-
-
-    // Drawing the others : --------------------------------------------------------------------------------------------
-
-    // Remove the drawn cycle from the list
-    const remainingCycles = cycles.filter(cycle => cycle.name !== largestParentCycle.name);
-
-    // If group of connected cycle is drawn : update information
-    const updateGroupCycle=updateGroupCycles(remainingCycles,subgraphNetwork,group);
-    subgraphNetwork=updateGroupCycle.subgraphNetwork;
-    if(updateGroupCycle.group!==group){
-        group=updateGroupCycle.group;
-        groupName=cycleGroupName(String(group));
-    }
-
-    // Draw the remaining cycles, starting with the one with the most fixed nodes (and if equal number : the largest one)
-    while (remainingCycles.length > 0) {
-
-        // sort cycles by number of fixed node (and then by size)
-        remainingCycles.sort((a, b) => {
-            const fixedNodesA = a.nodes.filter(node => network.nodes[node].metadata && network.nodes[node].metadata.fixedInCycle).length;
-            const fixedNodesB = b.nodes.filter(node => network.nodes[node].metadata && network.nodes[node].metadata.fixedInCycle).length;
-            return fixedNodesB - fixedNodesA || b.nodes.length - a.nodes.length;
-        });
-
-        const cycleToDraw = remainingCycles[0]; // the cycle with the most fixed nodes
-        // if groupcycle do not exist : add one
-        if (!(groupName in subgraphNetwork.cyclesGroup)){
-            subgraphNetwork=addNewCycleGroup(subgraphNetwork,groupName);
+        // Find the largest cycle that does not have a forSubgraph of type cycle : the first one to process -------------------
+        const parentCycles = cycles.filter(cycle => !cycle.forSubgraph || cycle.forSubgraph.type !== TypeSubgraph.CYCLE);
+        if (parentCycles.length === 0) {
+            console.error("No cycle found without a forSubgraph of type cycle");
+            return;
         }
-        // add the cycle to the current group of cycle
-        subgraphNetwork.cyclesGroup[groupName].nodes.push(cycleToDraw.name); 
-        // give coordinate to cycle node
-        coordinateCycle(subgraphNetwork, cycleToDraw.name,groupName); 
-        // remove cycle from the list of cycle to process
-        remainingCycles.shift(); 
+        parentCycles.sort((a, b) => b.nodes.length - a.nodes.length);
+        const largestParentCycle = parentCycles[0]; // get largest cycle
+        subgraphNetwork.cyclesGroup[groupName].nodes.push(largestParentCycle.name); // add it to the current group of cycle
+        coordinateCycle(subgraphNetwork, largestParentCycle.name,groupName); // drawing largest cycle
 
-        // If group of connected cycle is processed : update information of cycle group
-        const updateGroupCycle=updateGroupCycles(remainingCycles,subgraphNetwork,group);
+
+        // Drawing the others : --------------------------------------------------------------------------------------------
+
+        // Remove the drawn cycle from the list
+        const remainingCycles = cycles.filter(cycle => cycle.name !== largestParentCycle.name);
+
+        // If group of connected cycle is drawn : update information
+        const updateGroupCycle=updateGroupCycles(remainingCycles,subgraphNetwork,group,groupName);
         subgraphNetwork=updateGroupCycle.subgraphNetwork;
         if(updateGroupCycle.group!==group){
             group=updateGroupCycle.group;
             groupName=cycleGroupName(String(group));
         }
 
-    }
+        // Draw the remaining cycles, starting with the one with the most fixed nodes (and if equal number : the largest one)
+        while (remainingCycles.length > 0) {
 
+            // sort cycles by number of fixed node (and then by size)
+            remainingCycles.sort((a, b) => {
+                const fixedNodesA = a.nodes.filter(node => network.nodes[node].metadata && network.nodes[node].metadata.fixedInCycle).length;
+                const fixedNodesB = b.nodes.filter(node => network.nodes[node].metadata && network.nodes[node].metadata.fixedInCycle).length;
+                return fixedNodesB - fixedNodesA || b.nodes.length - a.nodes.length;
+            });
+
+            const cycleToDraw = remainingCycles[0]; // the cycle with the most fixed nodes
+            // if groupcycle do not exist : add one
+            if (!(groupName in subgraphNetwork.cyclesGroup)){
+                subgraphNetwork=addNewCycleGroup(subgraphNetwork,groupName);
+            }
+            // add the cycle to the current group of cycle
+            subgraphNetwork.cyclesGroup[groupName].nodes.push(cycleToDraw.name); 
+            // give coordinate to cycle node
+            coordinateCycle(subgraphNetwork, cycleToDraw.name,groupName); 
+            // remove cycle from the list of cycle to process
+            remainingCycles.shift(); 
+
+            // If group of connected cycle is processed : update information of cycle group
+            const updateGroupCycle=updateGroupCycles(remainingCycles,subgraphNetwork,group,groupName);
+            subgraphNetwork=updateGroupCycle.subgraphNetwork;
+            if(updateGroupCycle.group!==group){
+                group=updateGroupCycle.group;
+                groupName=cycleGroupName(String(group));
+            }
+
+        }
+    }
     return subgraphNetwork;
 }
 
@@ -489,16 +490,28 @@ function isRemainingCycleIndepOfDrawing(remainingCycles:Subgraph[], subgraphNetw
 }
 
 
-function updateGroupCycles(remainingCycles:Subgraph[], subgraphNetwork:SubgraphNetwork,group:number): {subgraphNetwork:SubgraphNetwork,group:number}{
+function updateGroupCycles(remainingCycles:Subgraph[], subgraphNetwork:SubgraphNetwork,group:number,groupCycleName:string): {subgraphNetwork:SubgraphNetwork,group:number}{
     const groupCycleIsDraw=isRemainingCycleIndepOfDrawing(remainingCycles, subgraphNetwork);
     if (groupCycleIsDraw){
         console.log('independant of the cycles drawn');
         // get size of group and update cycle group information
-        // TO DOOOOOOOOOOOOOOOO !!!!
+        if(subgraphNetwork.cyclesGroup[groupCycleName].metadata){
+            const listCoord = Object.values(subgraphNetwork.cyclesGroup[groupCycleName].metadata)
+                            .filter(item => item["x"] !== undefined && item["y"] !== undefined);
+            const {width,height}=rectangleSize(listCoord as {x:number,y:number}[]);
+            subgraphNetwork.cyclesGroup[groupCycleName].width=width;
+            subgraphNetwork.cyclesGroup[groupCycleName].height=height;
+        }
         // change group
         group+=1;
     }
     return {subgraphNetwork:subgraphNetwork,group:group};
+}
+
+function rectangleSize(listCoordinates:{x:number,y:number}[]):{width:number,height:number}{
+    const xCoordinates=listCoordinates.map(coord=>coord.x);
+    const yCoordinates=listCoordinates.map(coord=>coord.y);
+    return {width:Math.max(...xCoordinates)-Math.min(...xCoordinates),height:Math.max(...yCoordinates)-Math.min(...yCoordinates)};
 }
 
 // function pushFromIndepGroupCycles(subgraphNetwork:SubgraphNetwork, groupCyclesID:string[],allGroupCycleDrawn:string[][]):void{

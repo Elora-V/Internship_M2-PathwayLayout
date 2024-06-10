@@ -15,6 +15,9 @@ export interface Subgraph {
     forSubgraph?: {name:string,type:TypeSubgraph}; // the "parent" subgraph
     associatedSubgraphs?: Array<{name:string,type:TypeSubgraph}>; // the "children" subgraphs
     rank?:string;
+    width?:number;
+    height?:number;
+    position?:{x:number,y:number};
     metadata?: {[key: string]: string | number| boolean | {[key: string]: string | number} | Array<string>};
 }
 
