@@ -1,6 +1,8 @@
 import { Subgraph, TypeSubgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
+import { Network } from "@metabohub/viz-core/src/types/Network";
 import { group } from "console";
+import { start } from "repl";
 import { a } from "vitest/dist/suite-ghspeorC";
 
 
@@ -154,7 +156,6 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
 
             const unfixedInterval=getUnfixedIntervals(cycle,subgraphNetwork);
             unfixedInterval.forEach(interval=>{
-
                 const startNode=cycle[(interval[0]-1+ cycle.length) % cycle.length];
                 const endNode=cycle[(interval[1]+1+ cycle.length) % cycle.length];
                 const startNodePosition=subgraphNetwork.cyclesGroup[groupCycleName].metadata[startNode] as {x:number,y:number};
@@ -302,13 +303,19 @@ function getUnfixedIntervals(nodes:string[],subgraphNetwork:SubgraphNetwork) {
         intervals.push([start, nodes.length - 1]);
     }
 
+    // case first interval and last are linked : combine interval as one long interval
+    if (intervals.length!==0 && intervals[0][0]===0 && intervals[intervals.length-1][1]===nodes.length-1){
+        intervals[0][0]=intervals[intervals.length-1][0]; // change start of first interval
+        intervals.pop(); // remove last interval
+    }
+
     return intervals;
 }
 
 function findTopCycleNode(subgraphNetwork: SubgraphNetwork, cycleNodes:string[]):number{
 
     let minY:number=Infinity; // min Y as y-axis as in matrix, not as usual (infinity at the bottom, -inf at the top)
-    let cycleNodeLinkedMinY:number=0; // node, in cycle, linked with the highest node (min y)
+    let cycleNodeLinkedMinY:number[]=[0]; // node, in cycle, linked with the highest node (min y)
     const network=subgraphNetwork.network.value;
 
     for(let i=0;i<cycleNodes.length;i++){
@@ -318,19 +325,23 @@ function findTopCycleNode(subgraphNetwork: SubgraphNetwork, cycleNodes:string[])
         const nodeNeighbors = network.links
             .filter(link => link.source.id === node || link.target.id === node) // get link linked with node
             .map(link => link.source.id === node ? link.target.id : link.source.id) // get the other node 
-            .filter(id => !cycleNodes.includes(id)); // no node from this cycle
+            //.filter(id => !cycleNodes.includes(id)) // no node from this cycle
+            .filter(id => inCycle(network, id)); // no node in a cycle 
             
         
         nodeNeighbors.forEach(neighbor=>{
             if(network.nodes[neighbor] && network.nodes[neighbor].y){
                 if(network.nodes[neighbor].y<minY){
                     minY=network.nodes[neighbor].y;
-                    cycleNodeLinkedMinY=i;
+                    cycleNodeLinkedMinY=[i];
+                }else if(network.nodes[neighbor].y==minY){
+                    cycleNodeLinkedMinY.push(i);
                 }
             }
         });
     }
-    return cycleNodeLinkedMinY;
+    
+    return cycleNodeLinkedMinY.sort()[0]; // to always take the same node if several have the same y
 }
 
 function lineNodesCoordinates(start: {x: number, y: number}, end: {x: number, y: number}, nodes: string[],subgraphNetwork:SubgraphNetwork,groupCycleName?:string):SubgraphNetwork {
@@ -419,6 +430,13 @@ function getRadiusSize(cycle:string[],radiusFactor:number=15){
     return cycle.length*radiusFactor;
 }
 
+
+function inCycle(network: Network, idNode: string): boolean {
+    // no metadata or no cycle metadata or empty cycle metadata : that is, not in a cycle
+    return !(Object.keys(network.nodes[idNode]?.metadata?.[TypeSubgraph.CYCLE] || {}).length > 0);
+}
+
+
 function centroidFromNodes(nodesList:string[],subgraphNetwork:SubgraphNetwork):{x:number,y:number}{
     if (nodesList.length>0){
         const network=subgraphNetwork.network.value;
@@ -500,7 +518,14 @@ function isRemainingCycleIndepOfDrawing(remainingCycles:Subgraph[], subgraphNetw
 function updateGroupCycles(remainingCycles:Subgraph[], subgraphNetwork:SubgraphNetwork,group:number,groupCycleName:string): {subgraphNetwork:SubgraphNetwork,group:number}{
     const groupCycleIsDraw=isRemainingCycleIndepOfDrawing(remainingCycles, subgraphNetwork);
     if (groupCycleIsDraw){
-        console.log('independant of the cycles drawn');
+        console.log( `${groupCycleName} has coordinates`);
+        // rotate depending on top node 
+        // const nodesGroup = Object.entries(subgraphNetwork.cyclesGroup[groupCycleName].metadata)
+        //                     .filter(([, item]) => item["x"] !== undefined && item["y"] !== undefined)
+        //                     .map(([key]) => key);
+        // const topGroupNode = nodesGroup[findTopCycleNode(subgraphNetwork,nodesGroup)];
+        // console.log("maybe top node of group cycle :" +topGroupNode);
+
         // get size of group and update cycle group information
         if(subgraphNetwork.cyclesGroup[groupCycleName].metadata){
             const listCoord = Object.values(subgraphNetwork.cyclesGroup[groupCycleName].metadata)
