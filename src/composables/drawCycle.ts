@@ -121,6 +121,8 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
 
         } else if (nodesFixed.length===1){ // if cycle linked to another cycle by one node ----------------------------------------------------------------------------------
             const nodeFixed=network.nodes[nodesFixed[0]];
+            const groupCycleFixed=nodeFixed.metadata[TypeSubgraph.CYCLEGROUP] as string;
+            const coordNodeFixed=subgraphNetwork.cyclesGroup[groupCycleFixed].metadata[nodeFixed.id] as {x:number,y:number};
 
              // first node is the one fixed :
              const cycleCopy= cycle.slice();
@@ -134,7 +136,7 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
             //centroid depending on fixed cycle
             const radiusFixedCycle=subgraphNetwork.cycles[nodeFixed.metadata.fixedCycle as string].metadata.radius as number;
             const centroidFixedCycle=subgraphNetwork.cycles[nodeFixed.metadata.fixedCycle as string].metadata.centroid;
-            const fixedAngle = Math.atan2(nodeFixed.y - centroidFixedCycle["y"], nodeFixed.x - centroidFixedCycle["x"]);
+            const fixedAngle = Math.atan2(coordNodeFixed.y - centroidFixedCycle["y"], coordNodeFixed.x - centroidFixedCycle["x"]);
             const d = radius + radiusFixedCycle; 
             const centroidX = centroidFixedCycle["x"] + d * Math.cos(fixedAngle);
             const centroidY = centroidFixedCycle["y"] + d * Math.sin(fixedAngle);
@@ -318,7 +320,7 @@ function findTopCycleNode(subgraphNetwork: SubgraphNetwork, cycleNodes:string[])
             .map(link => link.source.id === node ? link.target.id : link.source.id) // get the other node 
             .filter(id => !cycleNodes.includes(id)); // no node from this cycle
             
-
+        
         nodeNeighbors.forEach(neighbor=>{
             if(network.nodes[neighbor] && network.nodes[neighbor].y){
                 if(network.nodes[neighbor].y<minY){
@@ -328,7 +330,6 @@ function findTopCycleNode(subgraphNetwork: SubgraphNetwork, cycleNodes:string[])
             }
         });
     }
-    
     return cycleNodeLinkedMinY;
 }
 
@@ -384,28 +385,30 @@ function cycleNodesCoordinates(cycleName:string,cycle:string[],centroidX:number,
         const x = centroidX + radius * Math.cos(2 * Math.PI * i / cycle.length + shiftAngle );
         const y = centroidY + radius * Math.sin(2 * Math.PI * i / cycle.length  + shiftAngle );
         
-        // Give position 
-        if (groupcycle){
-            if (groupcycle in subgraphNetwork.cyclesGroup){
-                if (!subgraphNetwork.cyclesGroup[groupcycle].metadata[node]){
-                    subgraphNetwork.cyclesGroup[groupcycle].metadata[node] = {};
+        // Give position if not fixed
+        if(network.nodes[node].metadata && !network.nodes[node].metadata.fixedInCycle){
+            if (groupcycle){
+                if (groupcycle in subgraphNetwork.cyclesGroup){
+                    if (!subgraphNetwork.cyclesGroup[groupcycle].metadata[node]){
+                        subgraphNetwork.cyclesGroup[groupcycle].metadata[node] = {};
+                    }
+                    subgraphNetwork.cyclesGroup[groupcycle].metadata[node]["x"]=x;
+                    subgraphNetwork.cyclesGroup[groupcycle].metadata[node]["y"]=y;
+                } else {
+                    console.error("CycleGroup not in subgraphNetwork");
                 }
-                subgraphNetwork.cyclesGroup[groupcycle].metadata[node]["x"]=x;
-                subgraphNetwork.cyclesGroup[groupcycle].metadata[node]["y"]=y;
-            } else {
-                console.error("CycleGroup not in subgraphNetwork");
+            } else if (node in subgraphNetwork.network.value.nodes) {
+                subgraphNetwork.network.value.nodes[node].x=x;
+                subgraphNetwork.network.value.nodes[node].y=y;
+            } else{
+                console.error("Node not in network or groupcycle not provided")
             }
-        } else if (node in subgraphNetwork.network.value.nodes) {
-            subgraphNetwork.network.value.nodes[node].x=x;
-            subgraphNetwork.network.value.nodes[node].y=y;
-        } else{
-            console.error("Node not in network or groupcycle not provided")
-        }
 
-        // Fix the nodes 
-        if (!nodeNetwork.metadata) nodeNetwork.metadata={};
-        nodeNetwork.metadata.fixedInCycle= true;
-        nodeNetwork.metadata.fixedCycle= cycleName;
+            // Fix the nodes 
+            if (!nodeNetwork.metadata) nodeNetwork.metadata={};
+            nodeNetwork.metadata.fixedInCycle= true;
+            nodeNetwork.metadata.fixedCycle= cycleName;
+        }
         
     });
 
