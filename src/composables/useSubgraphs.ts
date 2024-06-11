@@ -64,23 +64,23 @@ function changeCycleMetanodes(subgraphNetwork:SubgraphNetwork,listNodeBefore:str
     return listNodeAfter;
 }
 
-export function addClusterDot(subgraph: Subgraph,isCluster:boolean=true): string {
+export function addClusterDot(subgraph: SubgraphViz,isCluster:boolean=true): string {
 
     const prefix = isCluster?"cluster_":"";  
 
     let clusterString = `subgraph ${prefix}${subgraph.name} {\n`;
     // add rank
-    if ("rank" in subgraph){
-        clusterString+=`{rank="${subgraph.rank}";`;
-    }
+    // if ("rank" in subgraph){
+    //     clusterString+=`{rank="${subgraph.rank}";`;
+    // }
 
     // add nodes
     subgraph.nodes.forEach((node) => {
-        clusterString+=`${node};`;
+        clusterString+=`${node.name};`;
     });
-    if ("rank" in subgraph){
-        clusterString+=`}\n`;
-    }
+    // if ("rank" in subgraph){
+    //     clusterString+=`}\n`;
+    // }
     return clusterString+"}\n";
   }
   

@@ -111,6 +111,29 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true)
     return graphViz;
 }
 
+export function NetworkToDot(vizGraph:Graph):string{
+    // initialisation viz graph with graph attributs
+    let dotString="digraph G {\n graph "+customStringify(vizGraph.graphAttributes)+"\n";
+
+    // nodes (metanodes only)
+    vizGraph.nodes.forEach((node) => {
+        const nodeAttributes= customStringify(node.attributes);
+        dotString+=`${node.name}  ${nodeAttributes};\n`;
+    });
+
+    // clusters
+    vizGraph.subgraphs.forEach((subgraph) => {
+        dotString+=addClusterDot(subgraph as SubgraphViz);
+    });
+    
+    // edges 
+    vizGraph.edges.forEach((edge) => {
+        dotString+=`${edge.tail} -> ${edge.head} `+customStringify(edge.attributes)+`;\n`;
+    });
+    
+    return dotString+"}";
+}
+
 // export function NetworkToDot(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,radiusFactor:number=15): string{
 
 //     const network=subgraphNetwork.network.value;

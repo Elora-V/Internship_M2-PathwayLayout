@@ -4,7 +4,7 @@ import { group } from "console";
 import { a } from "vitest/dist/suite-ghspeorC";
 
 
-export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork):SubgraphNetwork {
+export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork,radiusFactor:number=15):SubgraphNetwork {
     const network = subgraphNetwork.network.value;
     const cycles = subgraphNetwork.cycles? Object.values(subgraphNetwork.cycles):undefined;
 
@@ -23,7 +23,7 @@ export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork):SubgraphNet
         parentCycles.sort((a, b) => b.nodes.length - a.nodes.length);
         const largestParentCycle = parentCycles[0]; // get largest cycle
         subgraphNetwork.cyclesGroup[groupName].nodes.push(largestParentCycle.name); // add it to the current group of cycle
-        coordinateCycle(subgraphNetwork, largestParentCycle.name,groupName); // drawing largest cycle
+        coordinateCycle(subgraphNetwork, largestParentCycle.name,groupName,radiusFactor); // drawing largest cycle
 
 
         // Drawing the others : --------------------------------------------------------------------------------------------
@@ -57,7 +57,7 @@ export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork):SubgraphNet
             // add the cycle to the current group of cycle
             subgraphNetwork.cyclesGroup[groupName].nodes.push(cycleToDraw.name); 
             // give coordinate to cycle node
-            coordinateCycle(subgraphNetwork, cycleToDraw.name,groupName); 
+            coordinateCycle(subgraphNetwork, cycleToDraw.name,groupName,radiusFactor); 
             // remove cycle from the list of cycle to process
             remainingCycles.shift(); 
 
@@ -74,7 +74,7 @@ export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork):SubgraphNet
     return subgraphNetwork;
 }
 
-function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,groupCycleName:string):SubgraphNetwork{
+function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,groupCycleName:string,radiusFactor:number=15):SubgraphNetwork{
     const network = subgraphNetwork.network.value;
     let centroidX :number=0;
     let centroidY :number=0;
@@ -107,7 +107,7 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
         if (nodesFixed.length===0){ // if independant cycle (first of a group cycle)----------------------------------------------------------------------------------
 
             // radius and centroid
-            const radius = getRadiusSize(cycle,15);
+            const radius = getRadiusSize(cycle,radiusFactor);
             subgraphNetwork.cycles[cycleToDrawID].metadata.radius=radius;   
             subgraphNetwork.cycles[cycleToDrawID].metadata.centroid={x:centroidX,y:centroidY};         
          
@@ -130,7 +130,7 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
              const shiftedCycle = cycleCopy.splice(firstIndex).concat(cycleCopy);
 
             // radius
-            const radius = getRadiusSize(cycle,15);
+            const radius = getRadiusSize(cycle,radiusFactor);
             subgraphNetwork.cycles[cycleToDrawID].metadata.radius=radius;
 
             //centroid depending on fixed cycle
