@@ -553,8 +553,8 @@ function drawCycleGroup(cycleGroup:string,subgraphNetwork:SubgraphNetwork):void{
                             .filter(([key,item]) => item["x"] !== undefined && item["y"] !== undefined);
     listNode.forEach(([nodeID,coord])=>{
         const node=subgraphNetwork.network.value.nodes[nodeID];
-        node.x = coord["x"] ;//+ dx;
-        node.y = coord["y"] ;//+ dy;
+        node.x = coord["x"] + dx;
+        node.y = coord["y"] + dy;
     });
 }
 
