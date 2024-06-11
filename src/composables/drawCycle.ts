@@ -105,7 +105,8 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
 
     // If cycle exist: place his nodes
     if (cycleExist && cycle.length>0){
-
+        console.log('cycle : '+cycle);
+        console.log('nodes fixed : '+nodesFixed);
         if (nodesFixed.length===0){ // if independant cycle (first of a group cycle)----------------------------------------------------------------------------------
 
             // radius and centroid
@@ -153,7 +154,7 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
             subgraphNetwork=cycleNodesCoordinates(cycleToDrawID,shiftedCycle,centroidX,centroidY,radius,subgraphNetwork,shiftAngle,groupCycleName);
              
         } else { // several node in common with other cycle(s) ----------------------------------------------------------------------------------
-
+            console.log('line');
             const unfixedInterval=getUnfixedIntervals(cycle,subgraphNetwork);
             unfixedInterval.forEach(interval=>{
                 const startNode=cycle[(interval[0]-1+ cycle.length) % cycle.length];
@@ -345,6 +346,7 @@ function findTopCycleNode(subgraphNetwork: SubgraphNetwork, cycleNodes:string[])
 }
 
 function lineNodesCoordinates(start: {x: number, y: number}, end: {x: number, y: number}, nodes: string[],subgraphNetwork:SubgraphNetwork,groupCycleName?:string):SubgraphNetwork {
+    const network=subgraphNetwork.network.value;
     // Calculate direction vector
     let dx = end.x - start.x;
     let dy = end.y - start.y;
@@ -382,6 +384,12 @@ function lineNodesCoordinates(start: {x: number, y: number}, end: {x: number, y:
         } else{
             console.error("Node not in network or groupcycle not provided")
         }
+
+        // Fix the nodes 
+        const nodeNetwork=network.nodes[node];
+        if (!nodeNetwork.metadata) nodeNetwork.metadata={};
+        nodeNetwork.metadata.fixedInCycle= true;
+        nodeNetwork.metadata.fixedCycle= undefined;
         
     });    
     return subgraphNetwork;
