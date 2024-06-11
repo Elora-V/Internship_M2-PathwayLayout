@@ -397,7 +397,7 @@ console.log('Cycle ? ' + String(cycle));
 console.log('---------------');
 
 // get rank 0 with Sugiyama
-await vizLayout(subgraphNetwork, true).then(
+await vizLayout(subgraphNetwork, true,false).then(
   () => {
     // duplicate reactions
     duplicateReversibleReactions(network);
@@ -431,7 +431,7 @@ await vizLayout(subgraphNetwork, true).then(
 ).then(
   async () => {
     // Sugiyama without cycle metanodes (to get top nodes for cycles)
-    await vizLayout(subgraphNetwork, true);
+    await vizLayout(subgraphNetwork, false,false);
   }
 ).then(
   () => {
@@ -444,7 +444,7 @@ await vizLayout(subgraphNetwork, true).then(
   async () => {
     // Sugiyama with cycle metanodes 
     if (cycle){
-      await vizLayout(subgraphNetwork, false,rescaleAfterAction);
+      await vizLayout(subgraphNetwork, false,true,rescaleAfterAction);
     }
   }
 ).then(

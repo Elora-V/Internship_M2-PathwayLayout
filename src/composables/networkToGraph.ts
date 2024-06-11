@@ -47,7 +47,7 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
  * @param clusters clusters for viz
  * @returns {Graph} Return graph object for viz
  */
-export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,radiusFactor:number=15): Graph{
+export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true): Graph{
     // initialisation viz graph
     let graphViz: Graph ={
         graphAttributes: subgraphNetwork.attributs,
@@ -74,7 +74,8 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
        
 
         // get tail and head (take into account cycle metanode)
-        const {inCycle,tail,head}=cycleMetanodeLink(link,subgraphNetwork);
+        const {tail,head}=cycleMetanodeLink(link,subgraphNetwork,cycle);
+
 
         // if (inCycle){
         //     const lengthToCentroid=Math.round(subgraphNetwork.cycles[inCycle].nodes.length/4)+1; // to test
@@ -95,7 +96,7 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
 
     // insert mainChain subgraphs 
     Object.keys(subgraphNetwork.mainChains).forEach((nameMainChain) => {
-        graphViz=addMainChainClusterViz(graphViz,nameMainChain,subgraphNetwork);
+        graphViz=addMainChainClusterViz(graphViz,nameMainChain,subgraphNetwork,cycle);
     });
 
     // insert cycle metanode
@@ -103,13 +104,11 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
         Object.values(subgraphNetwork.cyclesGroup).forEach((cycle) => {
             const height=cycle.height;
             const width=cycle.width;
-            const factor=0.02;
+            const factor=0.01;
             graphViz.nodes.push({name:cycle.name, attributes:{height:factor*height,width:factor*width}});
         });
     }
-    console.log(graphViz);
     return graphViz;
-
 }
 
 // export function NetworkToDot(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,radiusFactor:number=15): string{
@@ -175,7 +174,7 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
 
 // }
 
-function cycleMetanodeLink(link:Link, subgraphNetwork:SubgraphNetwork):{inCycle:string[],tail:string,head:string}{
+function cycleMetanodeLink(link:Link, subgraphNetwork:SubgraphNetwork,cycle:boolean=true):{inCycle:string[],tail:string,head:string}{
     
     let inCycle:string[]=[];
     let tail:string;
@@ -183,7 +182,7 @@ function cycleMetanodeLink(link:Link, subgraphNetwork:SubgraphNetwork):{inCycle:
     let newLink:{inCycle:string[],tail:string,head:string};
 
      // source in cycleMetanode ?
-    if(link.source.metadata && Object.keys(link.source.metadata).includes(TypeSubgraph.CYCLEGROUP) && link.source.metadata[TypeSubgraph.CYCLEGROUP][0]){
+    if(cycle && link.source.metadata && Object.keys(link.source.metadata).includes(TypeSubgraph.CYCLEGROUP) && link.source.metadata[TypeSubgraph.CYCLEGROUP][0]){
         tail=link.source.metadata[TypeSubgraph.CYCLEGROUP] as string;  
         inCycle.push(tail);
     }else{
@@ -191,7 +190,7 @@ function cycleMetanodeLink(link:Link, subgraphNetwork:SubgraphNetwork):{inCycle:
     }
 
     // target in cycleMetanode ?
-    if(link.target.metadata && Object.keys(link.target.metadata).includes(TypeSubgraph.CYCLEGROUP) && link.target.metadata[TypeSubgraph.CYCLEGROUP][0]){
+    if(cycle && link.target.metadata && Object.keys(link.target.metadata).includes(TypeSubgraph.CYCLEGROUP) && link.target.metadata[TypeSubgraph.CYCLEGROUP][0]){
         head=link.target.metadata[TypeSubgraph.CYCLEGROUP] as string;  
         inCycle.push(head);
     }else{
