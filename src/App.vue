@@ -449,7 +449,7 @@ await vizLayout(subgraphNetwork, true,false).then(
   }
 ).then(
   () => {
-    // Sugiyama with cycle metanodes 
+    // place the cycles
     if (cycle){
       drawAllCyclesGroup(subgraphNetwork);
     }
@@ -478,7 +478,7 @@ function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
     dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
-    vizLayout(subgraphNetwork ,true,rescaleAfterAction);
+    vizLayout(subgraphNetwork ,true,true,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
   } else if (event.key =="n"){

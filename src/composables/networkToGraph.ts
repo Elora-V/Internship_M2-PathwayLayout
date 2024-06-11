@@ -110,7 +110,7 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true)
         .forEach((cycle) => {
             const height=cycle.height;
             const width=cycle.width;
-            const factor=0.01;
+            const factor=0.015;
             graphViz.nodes.push({name:cycle.name, attributes:{height:factor*height,width:factor*width}});
         });
     }
