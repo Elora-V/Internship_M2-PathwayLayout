@@ -81,7 +81,9 @@ export function getSources(network:Network, typeSource:SourceType):Array<string>
 
     // adding node depending on sourcetype : Order is important !! 
     // always rank, then source, then all
-    Object.values(network.nodes).forEach(node =>{      
+    Object.entries(network.nodes).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+    .map(([, value]) => value)
+    .forEach(node =>{      
         if(needRank(typeSource) && hasRank0(node)){
             sources_rank.push(node.id);
         } else if (needSource(typeSource) && graph.indegree(node.id)===0){

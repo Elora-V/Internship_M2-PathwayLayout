@@ -59,6 +59,14 @@
       No_cycle
     </button>
 
+    <span class="bold margin">|</span>
+
+    <button v-on:click="mainChainChoice(true)" class="styled-button">
+    MainChain
+  </button>
+  <button v-on:click="mainChainChoice(false)" class="styled-button">
+    No_MainChain
+  </button>
 
 
     <span class="bold margin">|</span>
@@ -179,7 +187,7 @@ import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
 import { node } from "prop-types";
 import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetwork";
-import { drawAllCycles } from "@/composables/drawCycle";
+import { coordinateAllCycles, drawAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
 
 
 
@@ -205,6 +213,7 @@ let originalNetwork:Network;
 let merge:boolean=true;
 let pathType:PathType=PathType.ALL_LONGEST;
 let minibranch:boolean=true;
+let mainchain:boolean=true;
 let userSources:string[]=[];
 let onlyUserSources:boolean=false;
 let cycle:boolean=true;
@@ -327,6 +336,10 @@ function miniBranchChoice(value: boolean) {
   minibranch = value;
 }
 
+function mainChainChoice(value: boolean) {
+  mainchain = value;
+}
+
 function OnlyUserSources(){
   onlyUserSources=!onlyUserSources;
 }
@@ -396,46 +409,71 @@ console.log("Type path ? " + pathType);
 console.log('Cycle ? ' + String(cycle));
 console.log('---------------');
 
-await vizLayout(subgraphNetwork, true).then(
+// get rank 0 with Sugiyama
+await vizLayout(subgraphNetwork, true,false).then(
   () => {
+    // duplicate reactions
     duplicateReversibleReactions(network);
   }
 ).then(
   () => {
+    // detect cycles and choose some of the reaction duplicated
     if (cycle){
       addDirectedCycleToSubgraphNetwork(subgraphNetwork,3);
     }
   }
 ).then(
   () => {
+    // choose all other reversible reactions
     const sources=getSourcesParam(network,SourceType.RANK_SOURCE_ALL);
     chooseReversibleReaction(network,sources,BFSWithSources);
   }
 ).then(
   () => {
-    const sources=getSourcesParam(network,sourceTypePath);
-    addMainChainFromSources(subgraphNetwork, sources,getSubgraph, merge,pathType);
+    // get main chains
+    if (mainchain){
+      const sources=getSourcesParam(network,sourceTypePath);
+      addMainChainFromSources(subgraphNetwork, sources,getSubgraph, merge,pathType);
+    }
   }
 ).then(
   () => {
+    // add minibranch
     if(minibranch){
       subgraphNetwork= addMiniBranchToMainChain(subgraphNetwork);
     }
   }
 ).then(
+  async () => {
+    // Sugiyama without cycle metanodes (to get top nodes for cycles)
+    await vizLayout(subgraphNetwork, false,false);
+  }
+).then(
   () => {
-    subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
-    subgraphNetwork=addRedLinkcycle(subgraphNetwork);
+    // relative coordinates for cycles
+    if (cycle){
+      coordinateAllCycles(subgraphNetwork);
+    }
   }
 ).then(
   async () => {
-    await vizLayout(subgraphNetwork, false, rescaleAfterAction);
+    // Sugiyama with cycle metanodes 
+    if (cycle){
+      await vizLayout(subgraphNetwork, false,true,rescaleAfterAction);
+    }
   }
 ).then(
   () => {
+    // place the cycles
     if (cycle){
-      drawAllCycles(subgraphNetwork);
+      drawAllCyclesGroup(subgraphNetwork);
     }
+  }
+).then(
+  () => {
+    // add color to link (optional : for debug)
+    subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
+    subgraphNetwork=addRedLinkcycle(subgraphNetwork);
   }
 )
 console.log('_____________________________________________');
@@ -455,7 +493,7 @@ function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
     dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
-    vizLayout(subgraphNetwork ,true,rescaleAfterAction);
+    vizLayout(subgraphNetwork ,true,true,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
   } else if (event.key =="n"){

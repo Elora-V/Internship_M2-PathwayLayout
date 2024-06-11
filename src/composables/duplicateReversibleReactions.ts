@@ -115,7 +115,7 @@ function reversibleNodeReaction(node: Node, suffix: string = "_rev"): Node {
     x: x,
     y: y,
     classes: newClasses,
-    metadata: {reversibleVersion:id},
+    metadata: {reversibleVersion:id,reversible:true},
   };
 
   return newNode;

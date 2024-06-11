@@ -301,7 +301,7 @@ function DistanceFromSourceDAG(graph:{[key:string]:Function}, topologicalOrderFr
     // Process node in topological order
     topologicalOrderFromSource.forEach(parent=> {
         // For each children
-        graph.adjacent(parent).forEach( child => {
+        graph.adjacent(parent).sort().forEach( child => {
             const childDistance= distanceFromSource[child];
             const newDistance=distanceFromSource[parent] + graph.getEdgeWeight(parent,child);
             if ( newDistance > childDistance) {
@@ -337,7 +337,8 @@ function DistanceFromSourceDAG(graph:{[key:string]:Function}, topologicalOrderFr
 function findMaxKeys(obj: { [key: string]: number }): {key:string[]|undefined,max:number} {
     let maxKeys: string[] | undefined;
     let maxValue = -Infinity;
-    Object.entries(obj).forEach(([key, value]) => {
+    Object.entries(obj).sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+    .forEach(([key, value]) => {
         if (value > maxValue) {
             maxValue = value;
             maxKeys = [key];
@@ -360,7 +361,7 @@ function findMaxKeys(obj: { [key: string]: number }): {key:string[]|undefined,ma
  * @returns all paths including the new one
  */
 function mergeNewPath(source:string,newPath:{nodes:Array<string>, height:number},pathsFromSources:{[key:string]:{nodes:Array<string>, height:number}}, merge:boolean=true):{[key:string]:{nodes:Array<string>, height:number}}{
-    const keys=Object.keys(pathsFromSources);
+    const keys=Object.keys(pathsFromSources).sort();
     let hasmerged=false;
     if (merge) {
         keys.forEach(key=>{

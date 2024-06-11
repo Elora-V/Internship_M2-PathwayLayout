@@ -191,7 +191,7 @@ function readJsonMetExploreViz(jsonGraph: string, network: Network, networkStyle
 				node.label = n.dbIdentifier as string;
 			}
 			else {
-				node.label = n.name as string;
+				node.label = n.dbIdentifier as string; //.name
 			}
 	
 			if (n.x) {

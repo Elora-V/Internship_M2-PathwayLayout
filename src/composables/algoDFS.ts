@@ -95,7 +95,7 @@ function nodeDagDFS(DFS:DFS,nodeIndex:number,currentPath:number[]):DFS{
     path.push(nodeIndex)
 
     // loop through the children of the node
-    DFS.GDSgraph.adjacent(DFS.nodesID[nodeIndex]).forEach(childID => {
+    DFS.GDSgraph.adjacent(DFS.nodesID[nodeIndex]).sort().forEach(childID => {
 
         // get the index of the child
         const childIndex = DFS.nodesID.indexOf(childID);

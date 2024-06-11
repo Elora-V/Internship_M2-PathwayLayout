@@ -75,7 +75,7 @@ export function addDirectedCycleToSubgraphNetwork(subgraphNetwork:SubgraphNetwor
 
 function getJohnsonCycles(subNetwork:SubgraphNetwork,onlyDirectedCycle:boolean=true,minsize:number=4):{[key:string]:string[]} {
         // get graph structure for johnson algorithm
-        const nodes=Object.keys(subNetwork.network.value.nodes);
+        const nodes=Object.keys(subNetwork.network.value.nodes).sort();
         const graph=graphForJohnson(subNetwork.network.value,nodes,onlyDirectedCycle);
         // apply johnson algorithm : get cycle
          return JohnsonAlgorithm(graph,nodes,"All",onlyDirectedCycle,minsize,subNetwork.network.value);
@@ -144,7 +144,7 @@ export function JohnsonAlgorithm(graph: number[][], list_nodes:string[],flag: "S
             if (w < start) {
                 continue;
             }
-            // if network : node w doesn't taken into account if reversible version in the stack (cycle with only one of the version)
+            // if network : node w not taken into account if reversible version in the stack (cycle with only one of the version)
             if(network){ 
                 const wNode=network.nodes[list_nodes[w]];
                 if( "metadata" in wNode && "reversibleVersion" in wNode.metadata){

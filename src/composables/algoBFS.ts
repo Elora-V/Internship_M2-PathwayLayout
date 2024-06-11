@@ -9,9 +9,10 @@ import { NetworkToAdjacentObject } from "./networkToGraph";
  * Perform Breadth-First Search (BFS) on a graph represented by an adjacency object.
  * @param adjacency The adjacency object representing the graph.
  * @param source The starting node for BFS.
+ * @param blockedNodes List of nodes that can't be visited (blocked)
  * @returns An array of nodes visited in BFS order.
  */
-export function BFS(adjacency: { [key: string]: string[] }, source: string): string[] {
+export function BFS(adjacency: { [key: string]: string[] }, source: string, blockedNodes?:string[]): string[] {
     const visitedNodes: Set<string> = new Set();
     const nodesToProcess: string[] = [source];
 
@@ -23,7 +24,9 @@ export function BFS(adjacency: { [key: string]: string[] }, source: string): str
             const children = adjacency[currentNode] || [];
             children.forEach(child => {
                 if (!visitedNodes.has(child)) {
-                    nodesToProcess.push(child);
+                    if ( (blockedNodes && !blockedNodes.includes(child)) || !blockedNodes ){
+                        nodesToProcess.push(child);
+                    }
                 }
             });
         }
@@ -65,7 +68,7 @@ export function BFSWithSources(network:Network, sources:Array<string>|SourceType
     sources_list.forEach(source=>{
         // bfs on source only if source not already visited
         if( !bfsAllSources.includes(source)){
-            const bfs=BFS(adj,source); 
+            const bfs=BFS(adj,source,bfsAllSources); 
             bfsAllSources = bfsAllSources.concat(bfs);
         }
     })

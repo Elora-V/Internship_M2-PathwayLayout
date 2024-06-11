@@ -6,11 +6,13 @@ import { inBiggerCycle } from "./networkToGraph";
 /**
  * 
  */
-export function addMainChainClusterViz(vizGraph: Graph, nameMainChain: string, subgraphNetwork:SubgraphNetwork): Graph {
+export function addMainChainClusterViz(vizGraph: Graph, nameMainChain: string, subgraphNetwork:SubgraphNetwork,cycle:boolean=true): Graph {
 
     // get values from cluster and change nodes format : new cluster format (for viz)
     let { name, nodes ,associatedSubgraphs} = subgraphNetwork.mainChains[nameMainChain];
-    nodes=changeCycleMetanodes(subgraphNetwork,nodes);
+    if(cycle) {
+        nodes=changeCycleMetanodes(subgraphNetwork,nodes);
+    }
 
     // change format 
     const clusterViz: SubgraphViz = {
@@ -22,7 +24,9 @@ export function addMainChainClusterViz(vizGraph: Graph, nameMainChain: string, s
         if (associatedSubgraphs){
             associatedSubgraphs.forEach(subgraph => {
                 let nodeToAdd =subgraphNetwork[subgraph.type][subgraph.name].nodes;
-                nodeToAdd=changeCycleMetanodes(subgraphNetwork,nodeToAdd);
+                if(cycle){
+                    nodeToAdd=changeCycleMetanodes(subgraphNetwork,nodeToAdd);
+                }
                 clusterViz.nodes.push(...nodeToAdd.map((name: string) => ({ name:name })));   // add and change format    
             });
         }
@@ -35,24 +39,24 @@ export function addMainChainClusterViz(vizGraph: Graph, nameMainChain: string, s
     vizGraph.subgraphs.push(clusterViz);
 
     return vizGraph;
-    }
+}
 
 function changeCycleMetanodes(subgraphNetwork:SubgraphNetwork,listNodeBefore:string[]):string[]{
     const network=subgraphNetwork.network.value;
     const listNodeAfter:string[]=[];
     // for each nodes :
     listNodeBefore.forEach(node =>{
-        // if node  is in cycle metanode :
+        // if node is in cycle metanode :
         let cycle:string;
-        if (network.nodes[node].metadata && network.nodes[node].metadata[TypeSubgraph.CYCLE]){
-            cycle = network.nodes[node].metadata[TypeSubgraph.CYCLE][0]; // the first one should be the biggest
-            cycle=inBiggerCycle(cycle,subgraphNetwork)
+        if (network.nodes[node].metadata && network.nodes[node].metadata[TypeSubgraph.CYCLEGROUP]){
+            cycle = network.nodes[node].metadata[TypeSubgraph.CYCLEGROUP] as string; 
+            //cycle=inBiggerCycle(cycle,subgraphNetwork)
         }
-        if(cycle && !(listNodeAfter.includes(cycle))){
+        if(cycle!==undefined && !(listNodeAfter.includes(cycle))){
             // push node cycle
             listNodeAfter.push(cycle);
         } 
-        if (!cycle){
+        if (cycle===undefined){
             listNodeAfter.push(node);
         }
     })
@@ -60,23 +64,23 @@ function changeCycleMetanodes(subgraphNetwork:SubgraphNetwork,listNodeBefore:str
     return listNodeAfter;
 }
 
-export function addClusterDot(subgraph: Subgraph,isCluster:boolean=true): string {
+export function addClusterDot(subgraph: SubgraphViz,isCluster:boolean=true): string {
 
     const prefix = isCluster?"cluster_":"";  
 
     let clusterString = `subgraph ${prefix}${subgraph.name} {\n`;
     // add rank
-    if ("rank" in subgraph){
-        clusterString+=`{rank="${subgraph.rank}";`;
-    }
+    // if ("rank" in subgraph){
+    //     clusterString+=`{rank="${subgraph.rank}";`;
+    // }
 
     // add nodes
     subgraph.nodes.forEach((node) => {
-        clusterString+=`${node};`;
+        clusterString+=`${node.name};`;
     });
-    if ("rank" in subgraph){
-        clusterString+=`}\n`;
-    }
+    // if ("rank" in subgraph){
+    //     clusterString+=`}\n`;
+    // }
     return clusterString+"}\n";
   }
   

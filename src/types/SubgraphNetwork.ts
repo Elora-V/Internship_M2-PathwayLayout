@@ -14,4 +14,8 @@ export interface SubgraphNetwork {
 	cycles?:{
 		[key:string]:Subgraph
 	}
+	// The cycle metanode :
+	cyclesGroup?:{
+		[key:string]:Subgraph
+	}
 }
