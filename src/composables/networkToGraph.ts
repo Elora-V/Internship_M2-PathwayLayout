@@ -127,15 +127,16 @@ export function NetworkToDot(vizGraph:Graph):string{
         dotString+=`${node.name}  ${nodeAttributes};\n`;
     });
 
+    // edges 
+    vizGraph.edges.forEach((edge) => {
+        dotString+=`${edge.tail} -> ${edge.head} `+customStringify(edge.attributes)+`;\n`;
+    });
+    
     // clusters
     vizGraph.subgraphs.forEach((subgraph) => {
         dotString+=addClusterDot(subgraph as SubgraphViz);
     });
     
-    // edges 
-    vizGraph.edges.forEach((edge) => {
-        dotString+=`${edge.tail} -> ${edge.head} `+customStringify(edge.attributes)+`;\n`;
-    });
     
     return dotString+"}";
 }
