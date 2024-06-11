@@ -95,13 +95,19 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true)
         
 
     // insert mainChain subgraphs 
-    Object.keys(subgraphNetwork.mainChains).forEach((nameMainChain) => {
-        graphViz=addMainChainClusterViz(graphViz,nameMainChain,subgraphNetwork,cycle);
+    Object.keys(subgraphNetwork.mainChains).sort((a, b) => subgraphNetwork.mainChains[b].nodes.length - subgraphNetwork.mainChains[a].nodes.length) // sort depending on size : bigger first
+        .forEach((nameMainChain) => {
+            graphViz=addMainChainClusterViz(graphViz,nameMainChain,subgraphNetwork,cycle);
     });
 
     // insert cycle metanode
     if (cycle && subgraphNetwork.cyclesGroup){
-        Object.values(subgraphNetwork.cyclesGroup).forEach((cycle) => {
+        Object.values(subgraphNetwork.cyclesGroup).sort((a, b) => { // sort depending on size : bigger first
+            const areaB = b.width * b.height;
+            const areaA = a.width * a.height;
+            return areaB - areaA;
+        })
+        .forEach((cycle) => {
             const height=cycle.height;
             const width=cycle.width;
             const factor=0.01;
