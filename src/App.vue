@@ -59,6 +59,14 @@
       No_cycle
     </button>
 
+    <span class="bold margin">|</span>
+
+    <button v-on:click="mainChainChoice(true)" class="styled-button">
+    MainChain
+  </button>
+  <button v-on:click="mainChainChoice(false)" class="styled-button">
+    No_MainChain
+  </button>
 
 
     <span class="bold margin">|</span>
@@ -205,6 +213,7 @@ let originalNetwork:Network;
 let merge:boolean=true;
 let pathType:PathType=PathType.ALL_LONGEST;
 let minibranch:boolean=true;
+let mainchain:boolean=true;
 let userSources:string[]=[];
 let onlyUserSources:boolean=false;
 let cycle:boolean=true;
@@ -327,6 +336,10 @@ function miniBranchChoice(value: boolean) {
   minibranch = value;
 }
 
+function mainChainChoice(value: boolean) {
+  mainchain = value;
+}
+
 function OnlyUserSources(){
   onlyUserSources=!onlyUserSources;
 }
@@ -418,8 +431,10 @@ await vizLayout(subgraphNetwork, true,false).then(
 ).then(
   () => {
     // get main chains
-    const sources=getSourcesParam(network,sourceTypePath);
-    addMainChainFromSources(subgraphNetwork, sources,getSubgraph, merge,pathType);
+    if (mainchain){
+      const sources=getSourcesParam(network,sourceTypePath);
+      addMainChainFromSources(subgraphNetwork, sources,getSubgraph, merge,pathType);
+    }
   }
 ).then(
   () => {
