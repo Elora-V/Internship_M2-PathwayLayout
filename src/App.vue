@@ -240,7 +240,7 @@ async function callbackFunction() {
 
   console.log('________New_graph__________');
   subgraphNetwork={network:network,attributs:{},mainChains:{}};
-  subgraphNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
+  subgraphNetwork.attributs={rankdir: "BT" , newrank:false, compound:true};
 
   await removeSideCompounds(network.value,"/sideCompounds.txt").then(
     ()=>{
