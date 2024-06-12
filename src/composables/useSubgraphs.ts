@@ -16,7 +16,7 @@ export function addMainChainClusterViz(vizGraph: Graph, nameMainChain: string, s
 
     // change format 
     const clusterViz: SubgraphViz = {
-        name: name.startsWith("cluster_") ? name : "cluster_" + name,
+        name: name.startsWith("cluster_") ? "name"+name : "cluster_" + name,
         nodes: nodes?.map((name: string) => ({ name:name })) || []
     };
 
@@ -64,11 +64,10 @@ function changeCycleMetanodes(subgraphNetwork:SubgraphNetwork,listNodeBefore:str
     return listNodeAfter;
 }
 
-export function addClusterDot(subgraph: SubgraphViz,isCluster:boolean=true): string {
+export function addClusterDot(subgraph: SubgraphViz): string {
 
-    const prefix = isCluster?"cluster_":"";  
 
-    let clusterString = `subgraph ${prefix}${subgraph.name} {\n`;
+    let clusterString = `subgraph ${subgraph.name} {\n`;
     // add rank
     // if ("rank" in subgraph){
     //     clusterString+=`{rank="${subgraph.rank}";`;
