@@ -117,26 +117,37 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true)
     return graphViz;
 }
 
-export function NetworkToDot(vizGraph:Graph):string{
+export function NetworkToDot(vizGraph:Graph, subgraphFirst:boolean=true):string{
     // initialisation viz graph with graph attributs
-    let dotString="digraph G {\n graph "+customStringify(vizGraph.graphAttributes)+"\n";
+    let dotString="strict digraph G {\n graph "+customStringify(vizGraph.graphAttributes)+"\n";
 
     // nodes (metanodes only)
     vizGraph.nodes.forEach((node) => {
         const nodeAttributes= customStringify(node.attributes);
         dotString+=`${node.name}  ${nodeAttributes};\n`;
     });
+    
+    if (subgraphFirst){
+        // clusters
+        vizGraph.subgraphs.forEach((subgraph) => {
+            dotString+=addClusterDot(subgraph as SubgraphViz);
+        });
 
-    // edges 
-    vizGraph.edges.forEach((edge) => {
-        dotString+=`${edge.tail} -> ${edge.head} `+customStringify(edge.attributes)+`;\n`;
-    });
-    
-    // clusters
-    vizGraph.subgraphs.forEach((subgraph) => {
-        dotString+=addClusterDot(subgraph as SubgraphViz);
-    });
-    
+        // edges 
+        vizGraph.edges.forEach((edge) => {
+            dotString+=`${edge.tail} -> ${edge.head} `+customStringify(edge.attributes)+`;\n`;
+        });
+    } else {
+        // edges 
+        vizGraph.edges.forEach((edge) => {
+            dotString+=`${edge.tail} -> ${edge.head} `+customStringify(edge.attributes)+`;\n`;
+        });
+
+        // clusters
+        vizGraph.subgraphs.forEach((subgraph) => {
+            dotString+=addClusterDot(subgraph as SubgraphViz);
+        });
+    }
     
     return dotString+"}";
 }
