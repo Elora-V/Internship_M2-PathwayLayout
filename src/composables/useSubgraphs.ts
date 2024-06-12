@@ -6,7 +6,7 @@ import { inBiggerCycle } from "./networkToGraph";
 /**
  * 
  */
-export function addMainChainClusterViz(vizGraph: Graph, nameMainChain: string, subgraphNetwork:SubgraphNetwork,cycle:boolean=true): Graph {
+export function addMainChainClusterViz(vizGraph: Graph, nameMainChain: string, subgraphNetwork:SubgraphNetwork,cycle:boolean=true,isCluster:boolean=true): Graph {
 
     // get values from cluster and change nodes format : new cluster format (for viz)
     let { name, nodes ,associatedSubgraphs} = subgraphNetwork.mainChains[nameMainChain];
@@ -14,9 +14,12 @@ export function addMainChainClusterViz(vizGraph: Graph, nameMainChain: string, s
         nodes=changeCycleMetanodes(subgraphNetwork,nodes);
     }
 
-    // change format 
+    // change format
+    if (isCluster && !name.startsWith("cluster_")) {
+        name = "cluster_" + name;
+    }
     const clusterViz: SubgraphViz = {
-        name: name.startsWith("cluster_") ? "name"+name : "cluster_" + name,
+        name: name,
         nodes: nodes?.map((name: string) => ({ name:name })) || []
     };
 
