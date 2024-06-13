@@ -370,7 +370,7 @@ function childNodeNotInCycle(subgraphNetwork: SubgraphNetwork, listNodes: string
         const childNodesI = subgraphNetwork.network.value.links
             .filter(link => link.source.id === node) // get link with those node as parent
             .map(link => link.target.id) // get the other node 
-            .filter(id => inCycle(subgraphNetwork.network.value, id)) // no node in a cycle 
+            .filter(id => !inCycle(subgraphNetwork.network.value, id)) // no node in a cycle 
         return childNodesI;
     });
 
