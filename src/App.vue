@@ -58,6 +58,12 @@
     <button v-on:click="Cycle(false)" class="styled-button">
       No_cycle
     </button>
+    <button v-on:click="allowInternalCycle(true)" class="styled-button">
+      internal_cycle
+    </button>
+    <button v-on:click="allowInternalCycle(false)" class="styled-button">
+      No_internal_cycle
+    </button>
 
     <span class="bold margin">|</span>
 
@@ -175,7 +181,7 @@ import { DFSsourceDAG, DFSWithSources } from "@/composables/algoDFS";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 import { BFSWithSources } from "@/composables/algoBFS";
 import { concatSources, getSources } from "@/composables/rankAndSources";
-import { addBoldLinkMainChain, addRedLinkcycle } from "@/composables/useSubgraphs";
+import { addBoldLinkMainChain, addRedLinkcycleGroup } from "@/composables/useSubgraphs";
 import { addMainChainFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/chooseSubgraph";
 
 
@@ -188,6 +194,7 @@ import { ContextMenu } from "@metabohub/viz-context-menu";
 import { node } from "prop-types";
 import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetwork";
 import { coordinateAllCycles, drawAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
+import func from "vue-temp/vue-editor-bridge";
 
 
 
@@ -217,6 +224,7 @@ let mainchain:boolean=true;
 let userSources:string[]=[];
 let onlyUserSources:boolean=false;
 let cycle:boolean=true;
+let allowInternalCycles:boolean=false;
 
 
 
@@ -259,8 +267,8 @@ async function callbackFunction() {
     if (!("linkStyles" in networkStyle.value)){
       networkStyle.value.linkStyles={}
     }
-    networkStyle.value.linkStyles["mainChains"]={strokeWidth:3,stroke:"blue"};
-    networkStyle.value.linkStyles["cycles"]={stroke:"red"};
+    networkStyle.value.linkStyles[TypeSubgraph.MAIN_CHAIN]={strokeWidth:3,stroke:"blue"};
+    networkStyle.value.linkStyles[TypeSubgraph.CYCLEGROUP]={stroke:"red"};
 
 }
 
@@ -272,7 +280,7 @@ function rescaleAfterAction(){
 onMounted(() => {
   svgProperties = initZoom();
   window.addEventListener('keydown', keydownHandler);
-  importNetworkFromURL('/pathways/Citric_acid_cycle.json', network, networkStyle, callbackFunction); 
+  importNetworkFromURL('/pathways/Glycerophospholipid_metabolism.json', network, networkStyle, callbackFunction); 
   
 });
 function removeNode() {
@@ -344,6 +352,10 @@ function OnlyUserSources(){
   onlyUserSources=!onlyUserSources;
 }
 
+function allowInternalCycle(value:boolean){
+  allowInternalCycles=value;
+}
+
 async function subgraphAlgorithm(algorithm:string):Promise<void> {
     //console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
 
@@ -404,9 +416,11 @@ console.log('Parameters :');
 console.log("Source type : "+ sourceTypePath);
 console.log('Only user sources ? ' + String(onlyUserSources));
 console.log("Merge ? " + String(merge));
+console.log('Main chain ? ' + String(mainchain));
 console.log("Add Mini branch ? " + String(minibranch));
 console.log("Type path ? " + pathType);
 console.log('Cycle ? ' + String(cycle));
+console.log('Allow internal cycle ? ' + String(allowInternalCycles));
 console.log('---------------');
 
 // get rank 0 with Sugiyama
@@ -452,7 +466,7 @@ await vizLayout(subgraphNetwork, true,false).then(
   () => {
     // relative coordinates for cycles
     if (cycle){
-      coordinateAllCycles(subgraphNetwork);
+      coordinateAllCycles(subgraphNetwork,allowInternalCycles);
     }
   }
 ).then(
@@ -473,7 +487,7 @@ await vizLayout(subgraphNetwork, true,false).then(
   () => {
     // add color to link (optional : for debug)
     subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
-    subgraphNetwork=addRedLinkcycle(subgraphNetwork);
+    subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
   }
 )
 console.log('_____________________________________________');
