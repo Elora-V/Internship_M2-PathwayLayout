@@ -367,12 +367,13 @@ function findTopCycleNode(subgraphNetwork: SubgraphNetwork, cycleNodes:string[])
         // get the one with highest parent
     const withHighestParent=getNodesAssociatedMinY(subgraphNetwork, cycleNodesParent)
                             .map(i=>cycleNodes[i]);
-    if (withHighestParent.length==1){
+    if (withHighestParent.length===1){
         return cycleNodes.indexOf(withHighestParent[0]);
 
     } else if (withHighestParent.length>1){
         // if several : take the one with median x
-        return nodeMedianX(subgraphNetwork, withHighestParent);
+        const nodeMedianName=nodeMedianX(subgraphNetwork, withHighestParent);
+        return cycleNodes.indexOf(nodeMedianName);
 
     }else{
         // if no parent : opposite node of the node with lowest child (to put the one with with to the bottom)
@@ -390,7 +391,8 @@ function findTopCycleNode(subgraphNetwork: SubgraphNetwork, cycleNodes:string[])
                 bottomNode=cycleNodes.indexOf(withLowestChild[0]);
             }else if (withLowestChild.length>1){
                 // if several : take the one with median x
-                bottomNode=nodeMedianX(subgraphNetwork, withLowestChild);
+                const nodeMedianName=nodeMedianX(subgraphNetwork, withLowestChild);
+                bottomNode=cycleNodes.indexOf(nodeMedianName);
             }
             // get the opposite node of the first (one as to be chosen) node in the 
             return (bottomNode+Math.floor(cycleNodes.length/2))%cycleNodes.length;
@@ -435,7 +437,7 @@ function getNodesAssociatedMinY(subgraphNetwork: SubgraphNetwork, associatedList
                 if (network.nodes[node].y < minY) {
                     minY = network.nodes[node].y;
                     minNodes = [i];
-                }else if (network.nodes[node].y == minY) {
+                }else if (network.nodes[node].y == minY && !minNodes.includes(i)) {
                     minNodes.push(i);
                 }
             }
@@ -454,7 +456,7 @@ function getNodesAssociatedMaxY(subgraphNetwork: SubgraphNetwork, associatedList
                 if (network.nodes[node].y > maxY) {
                     maxY = network.nodes[node].y;
                     maxNodes = [i];
-                }else if (network.nodes[node].y == maxY) {
+                }else if (network.nodes[node].y == maxY && !maxNodes.includes(i)) { 
                     maxNodes.push(i);
                 }
             }
@@ -463,10 +465,11 @@ function getNodesAssociatedMaxY(subgraphNetwork: SubgraphNetwork, associatedList
     return maxNodes;
 }
 
-function nodeMedianX(subgraphNetwork: SubgraphNetwork, listNodes: string[]): number {
+function nodeMedianX(subgraphNetwork: SubgraphNetwork, listNodes: string[]): string {
     const network=subgraphNetwork.network.value;
     let xValues = listNodes.map(node => [node,network.nodes[node].x]);
     xValues.sort((a, b) =>  Number(a[1]) - Number(b[1])); // sort by x
+    console.log('xValues',xValues);
 
     let midIndex :number;
     // if even number of nodes
@@ -475,9 +478,8 @@ function nodeMedianX(subgraphNetwork: SubgraphNetwork, listNodes: string[]): num
     } else { // odd number of nodes
         midIndex = Math.floor(xValues.length / 2);  
     }
-
     const nodeNameMedian=xValues[midIndex][0] as string;
-    return listNodes.indexOf(nodeNameMedian);
+    return nodeNameMedian;
 }
 
 
