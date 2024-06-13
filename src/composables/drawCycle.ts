@@ -45,11 +45,7 @@ export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork,radiusFactor
         while (remainingCycles.length > 0) {
 
             // sort cycles by number of fixed node (and then by size)
-            remainingCycles.sort((a, b) => {
-                const fixedNodesA = a.nodes.filter(node => network.nodes[node].metadata && network.nodes[node].metadata.fixedInCycle).length;
-                const fixedNodesB = b.nodes.filter(node => network.nodes[node].metadata && network.nodes[node].metadata.fixedInCycle).length;
-                return fixedNodesB - fixedNodesA || b.nodes.length - a.nodes.length;
-            });
+            remainingCycles.sort((a, b) => sortingCycleForDrawing(subgraphNetwork,a,b));
 
             const cycleToDraw = remainingCycles[0]; // the cycle with the most fixed nodes
             // if groupcycle do not exist : add one
@@ -277,6 +273,39 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
 //     }
 
 // }
+
+
+function sortingCycleForDrawing(subgraphNetwork:SubgraphNetwork,a:Subgraph,b:Subgraph):number{
+    const network=subgraphNetwork.network.value;
+
+    // first sort by number of fixed nodes
+    const fixedNodesA = a.nodes.filter(node => network.nodes[node].metadata && network.nodes[node].metadata.fixedInCycle).length;
+    const fixedNodesB = b.nodes.filter(node => network.nodes[node].metadata && network.nodes[node].metadata.fixedInCycle).length;
+    if (fixedNodesA !== fixedNodesB){
+        return fixedNodesB - fixedNodesA;
+    }else{
+        // then by number of parent nodes
+        const totalParentNodesA = parentNodeNotInCycle(subgraphNetwork, a.nodes)
+            .flat().length;
+        const totalParentNodesB = parentNodeNotInCycle(subgraphNetwork, b.nodes)
+            .flat().length;
+        if (totalParentNodesA !== totalParentNodesB){
+            return totalParentNodesB - totalParentNodesA;
+        }else{
+            // then by number of child nodes
+            const totalChildNodesA = childNodeNotInCycle(subgraphNetwork, a.nodes)
+                .flat().length;
+            const totalChildNodesB = childNodeNotInCycle(subgraphNetwork, b.nodes)
+                .flat().length;
+            if (totalChildNodesA !== totalChildNodesB){
+                return totalChildNodesB - totalChildNodesA;
+            }else{
+                // then by size
+                return b.nodes.length - a.nodes.length;
+            }
+        }                   
+    }
+}
 
 function getUnfixedIntervals(nodes:string[],subgraphNetwork:SubgraphNetwork) {
     let intervals:number[][] = [];
