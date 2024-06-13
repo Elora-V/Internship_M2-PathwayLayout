@@ -582,9 +582,15 @@ function getRadiusSize(cycle:string[],radiusFactor:number=15){
  * @param idNode - The ID of the node to check.
  * @returns A boolean indicating whether the node is in a cycle or not.
  */
-function inCycle(network: Network, idNode: string): boolean {
+export function inCycle(network: Network, idNode: string): boolean {
     // no metadata or no cycle metadata or empty cycle metadata : that is, not in a cycle
-    return !(Object.keys(network.nodes[idNode]?.metadata?.[TypeSubgraph.CYCLE] || {}).length > 0);
+    let inCycle:boolean=false;
+    if (idNode in network.nodes && "metadata" in network.nodes[idNode] 
+        && TypeSubgraph.CYCLE in network.nodes[idNode].metadata){
+            const cycles=network.nodes[idNode].metadata[TypeSubgraph.CYCLE] as string[];
+            if (cycles.length>0) inCycle=true;
+    }
+    return inCycle;
 }
 
 

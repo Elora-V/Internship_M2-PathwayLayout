@@ -25,6 +25,27 @@
       All_steps_with_DAG_Dijkstra
     </button>
 
+    <span class="bold margin">|</span>
+
+
+    <button v-on:click="addNodesViz(true)" class="styled-button">
+      Add_Nodes
+    </button>
+    <button v-on:click="addNodesViz(false)" class="styled-button">
+      No_nodes
+    </button>
+
+    <span class="bold margin">|</span>
+
+
+    <button v-on:click="groupInsteadCluster(true)" class="styled-button">
+      Group
+    </button>
+    <button v-on:click="groupInsteadCluster(false)" class="styled-button">
+      Cluster
+    </button>
+
+
   
 
     <div>
@@ -193,7 +214,7 @@ import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
 import { node } from "prop-types";
 import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetwork";
-import { coordinateAllCycles, drawAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
+import { coordinateAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
 import func from "vue-temp/vue-editor-bridge";
 
 
@@ -225,7 +246,8 @@ let userSources:string[]=[];
 let onlyUserSources:boolean=false;
 let cycle:boolean=true;
 let allowInternalCycles:boolean=false;
-
+let groupOrCluster:"group"|"cluster"="cluster";
+let addNodes:boolean=true;
 
 
 
@@ -280,7 +302,7 @@ function rescaleAfterAction(){
 onMounted(() => {
   svgProperties = initZoom();
   window.addEventListener('keydown', keydownHandler);
-  importNetworkFromURL('/pathways/Glycerophospholipid_metabolism.json', network, networkStyle, callbackFunction); 
+  importNetworkFromURL('/pathways/Aminosugar_metabolism.json', network, networkStyle, callbackFunction); 
   
 });
 function removeNode() {
@@ -356,6 +378,18 @@ function allowInternalCycle(value:boolean){
   allowInternalCycles=value;
 }
 
+function groupInsteadCluster(value:boolean){
+  if(value){
+    groupOrCluster="group";
+  }else{
+    groupOrCluster="cluster";
+  }
+}
+
+function addNodesViz(value:boolean){
+  addNodes=value;
+}
+
 async function subgraphAlgorithm(algorithm:string):Promise<void> {
     //console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
 
@@ -421,10 +455,14 @@ console.log("Add Mini branch ? " + String(minibranch));
 console.log("Type path ? " + pathType);
 console.log('Cycle ? ' + String(cycle));
 console.log('Allow internal cycle ? ' + String(allowInternalCycles));
+console.log('addNodes ' +String(addNodes));
+if(!(!addNodes && groupOrCluster=="group")){
+  console.log('groupOrCluster '+groupOrCluster);
+}
 console.log('---------------');
 
 // get rank 0 with Sugiyama
-await vizLayout(subgraphNetwork, true,false).then(
+await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster).then(
   () => {
     // duplicate reactions
     duplicateReversibleReactions(network);
@@ -460,7 +498,7 @@ await vizLayout(subgraphNetwork, true,false).then(
 ).then(
   async () => {
     // Sugiyama without cycle metanodes (to get top nodes for cycles)
-    await vizLayout(subgraphNetwork, false,false);
+    await vizLayout(subgraphNetwork, false,false,addNodes,groupOrCluster);
   }
 ).then(
   () => {
@@ -473,7 +511,7 @@ await vizLayout(subgraphNetwork, true,false).then(
   async () => {
     // Sugiyama with cycle metanodes 
     if (cycle){
-      await vizLayout(subgraphNetwork, false,true,rescaleAfterAction);
+      await vizLayout(subgraphNetwork, false,true,addNodes,groupOrCluster,rescaleAfterAction);
     }
   }
 ).then(
