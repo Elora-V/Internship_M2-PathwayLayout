@@ -105,8 +105,6 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
 
     // If cycle exist: place his nodes
     if (cycleExist && cycle.length>0){
-        console.log('cycle : '+cycle);
-        console.log('nodes fixed : '+nodesFixed);
         if (nodesFixed.length===0){ // if independant cycle (first of a group cycle)----------------------------------------------------------------------------------
 
             // radius and centroid
@@ -154,7 +152,6 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
             subgraphNetwork=cycleNodesCoordinates(cycleToDrawID,shiftedCycle,centroidX,centroidY,radius,subgraphNetwork,shiftAngle,groupCycleName);
              
         } else { // several node in common with other cycle(s) ----------------------------------------------------------------------------------
-            console.log('line');
             const unfixedInterval=getUnfixedIntervals(cycle,subgraphNetwork);
             unfixedInterval.forEach(interval=>{
                 const startNode=cycle[(interval[0]-1+ cycle.length) % cycle.length];
@@ -315,35 +312,125 @@ function getUnfixedIntervals(nodes:string[],subgraphNetwork:SubgraphNetwork) {
 
 function findTopCycleNode(subgraphNetwork: SubgraphNetwork, cycleNodes:string[]):number{
 
-    let minY:number=Infinity; // min Y as y-axis as in matrix, not as usual (infinity at the bottom, -inf at the top)
-    let cycleNodeLinkedMinY:number[]=[0]; // node, in cycle, linked with the highest node (min y)
-    const network=subgraphNetwork.network.value;
+    // find node with the highest parent (smaller y)
+        // get parent nodes of the cycle
+    const cycleNodesParent = parentNodeNotInCycle(subgraphNetwork, cycleNodes);
+        // get the one with highest parent
+    const withHighestParent=getNodesAssociatedMinY(subgraphNetwork, cycleNodesParent)
+                            .map(i=>cycleNodes[i]);
+    if (withHighestParent.length==1){
+        return cycleNodes.indexOf(withHighestParent[0]);
 
-    for(let i=0;i<cycleNodes.length;i++){
+    } else if (withHighestParent.length>1){
+        // if several : take the one with median x
+        return nodeMedianX(subgraphNetwork, withHighestParent);
 
-        const node=cycleNodes[i];
-        // get neighbors of node that aren't in the cycle
-        const nodeNeighbors = network.links
-            .filter(link => link.source.id === node || link.target.id === node) // get link linked with node
-            .map(link => link.source.id === node ? link.target.id : link.source.id) // get the other node 
-            //.filter(id => !cycleNodes.includes(id)) // no node from this cycle
-            .filter(id => inCycle(network, id)); // no node in a cycle 
-            
+    }else{
+        // if no parent : opposite node of the node with lowest child (to put the one with with to the bottom)
+        let bottomNode:number;
+        // find node with the lowest child (bigger y)
+            // get child nodes of the cycle
+        const cycleNodesChild = childNodeNotInCycle(subgraphNetwork, cycleNodes);
         
-        nodeNeighbors.forEach(neighbor=>{
-            if(network.nodes[neighbor] && network.nodes[neighbor].y){
-                if(network.nodes[neighbor].y<minY){
-                    minY=network.nodes[neighbor].y;
-                    cycleNodeLinkedMinY=[i];
-                }else if(network.nodes[neighbor].y==minY){
-                    cycleNodeLinkedMinY.push(i);
+            // get the one with lowest child
+        const withLowestChild=getNodesAssociatedMaxY(subgraphNetwork, cycleNodesChild)
+                             .map(i=>cycleNodes[i]); 
+
+         if (withLowestChild.length>=1){
+            if(withLowestChild.length==1){
+                bottomNode=cycleNodes.indexOf(withLowestChild[0]);
+            }else if (withLowestChild.length>1){
+                // if several : take the one with median x
+                bottomNode=nodeMedianX(subgraphNetwork, withLowestChild);
+            }
+            // get the opposite node of the first (one as to be chosen) node in the 
+            return (bottomNode+Math.floor(cycleNodes.length/2))%cycleNodes.length;
+
+        }else{
+            return 0;
+        }
+    }
+}
+
+function parentNodeNotInCycle(subgraphNetwork: SubgraphNetwork, listNodes: string[]): string[][] {
+    const parentNodes = listNodes.map((node: string) => {
+        const parentNodesI = subgraphNetwork.network.value.links
+            .filter(link => link.target.id === node) // get link with those node as child
+            .map(link => link.source.id) // get the other node 
+            .filter(id => inCycle(subgraphNetwork.network.value, id)) // no node in a cycle 
+        return parentNodesI;
+    });
+
+    return parentNodes;
+}
+
+function childNodeNotInCycle(subgraphNetwork: SubgraphNetwork, listNodes: string[]): string[][] {
+    const childNodes = listNodes.map((node: string) => {
+        const childNodesI = subgraphNetwork.network.value.links
+            .filter(link => link.source.id === node) // get link with those node as parent
+            .map(link => link.target.id) // get the other node 
+            .filter(id => inCycle(subgraphNetwork.network.value, id)) // no node in a cycle 
+        return childNodesI;
+    });
+
+    return childNodes;
+}
+
+function getNodesAssociatedMinY(subgraphNetwork: SubgraphNetwork, associatedListNodes: string[][]): number[] {
+    const network=subgraphNetwork.network.value;
+    let minY=Infinity;
+    let minNodes: number[] = [];
+    associatedListNodes.forEach((listNodes,i) => {
+        listNodes.forEach(node => {
+            if (network.nodes[node] && network.nodes[node].y) {
+                if (network.nodes[node].y < minY) {
+                    minY = network.nodes[node].y;
+                    minNodes = [i];
+                }else if (network.nodes[node].y == minY) {
+                    minNodes.push(i);
                 }
             }
         });
-    }
-    
-    return cycleNodeLinkedMinY.sort()[0]; // to always take the same node if several have the same y
+    });
+    return minNodes;
 }
+
+function getNodesAssociatedMaxY(subgraphNetwork: SubgraphNetwork, associatedListNodes: string[][]): number[] {
+    const network=subgraphNetwork.network.value;
+    let maxY=-Infinity;
+    let maxNodes:number[]=[];
+    associatedListNodes.forEach((listNodes,i) => {
+        listNodes.forEach(node => {
+            if (network.nodes[node] && network.nodes[node].y) {
+                if (network.nodes[node].y > maxY) {
+                    maxY = network.nodes[node].y;
+                    maxNodes = [i];
+                }else if (network.nodes[node].y == maxY) {
+                    maxNodes.push(i);
+                }
+            }
+        });
+    });
+    return maxNodes;
+}
+
+function nodeMedianX(subgraphNetwork: SubgraphNetwork, listNodes: string[]): number {
+    const network=subgraphNetwork.network.value;
+    let xValues = listNodes.map(node => [node,network.nodes[node].x]);
+    xValues.sort((a, b) =>  Number(a[1]) - Number(b[1])); // sort by x
+
+    let midIndex :number;
+    // if even number of nodes
+    if (xValues.length % 2 === 0) {
+        midIndex = (xValues.length / 2)-1; // the lowest x of the two median
+    } else { // odd number of nodes
+        midIndex = Math.floor(xValues.length / 2);  
+    }
+
+    const nodeNameMedian=xValues[midIndex][0] as string;
+    return listNodes.indexOf(nodeNameMedian);
+}
+
 
 function lineNodesCoordinates(start: {x: number, y: number}, end: {x: number, y: number}, nodes: string[],subgraphNetwork:SubgraphNetwork,groupCycleName?:string):SubgraphNetwork {
     const network=subgraphNetwork.network.value;
@@ -526,7 +613,7 @@ function isRemainingCycleIndepOfDrawing(remainingCycles:Subgraph[], subgraphNetw
 function updateGroupCycles(remainingCycles:Subgraph[], subgraphNetwork:SubgraphNetwork,group:number,groupCycleName:string): {subgraphNetwork:SubgraphNetwork,group:number}{
     const groupCycleIsDraw=isRemainingCycleIndepOfDrawing(remainingCycles, subgraphNetwork);
     if (groupCycleIsDraw){
-        console.log( `${groupCycleName} has coordinates`);
+        //console.log( `${groupCycleName} has coordinates`);
         // rotate depending on top node 
         // const nodesGroup = Object.entries(subgraphNetwork.cyclesGroup[groupCycleName].metadata)
         //                     .filter(([, item]) => item["x"] !== undefined && item["y"] !== undefined)
