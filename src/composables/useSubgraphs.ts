@@ -193,7 +193,6 @@ export function addBoldLinkMainChain(subgraphNetwork:SubgraphNetwork):SubgraphNe
                 link.classes=[];
             }
             if (!(link.classes.includes(TypeSubgraph.CYCLEGROUP))){
-                console.log('adding class');
                 link.classes.push(TypeSubgraph.CYCLEGROUP);
             }
         }else{
