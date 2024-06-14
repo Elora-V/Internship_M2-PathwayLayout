@@ -23,13 +23,13 @@ export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork,allowInternc
         let groupName=cycleGroupName(String(group));
         subgraphNetwork=addNewCycleGroup(subgraphNetwork,groupName);
 
-        // Find the largest cycle that does not have a forSubgraph of type cycle : the first one to process -------------------
+        // Find the first cycle to draw : it shouldn't have a 'forgraph' of type cycle -------------------
         const parentCycles = cycles.filter(cycle => !cycle.forSubgraph || cycle.forSubgraph.type !== TypeSubgraph.CYCLE);
         if (parentCycles.length === 0) {
             console.error("No cycle found without a forSubgraph of type cycle");
             return;
         }
-        parentCycles.sort((a, b) => b.nodes.length - a.nodes.length);
+        parentCycles.sort((a, b) => sortingCycleForDrawing(subgraphNetwork,a,b,true));
         const largestParentCycle = parentCycles[0]; // get largest cycle
         subgraphNetwork.cyclesGroup[groupName].nodes.push(largestParentCycle.name); // add it to the current group of cycle
         coordinateCycle(subgraphNetwork, largestParentCycle.name,groupName,radiusFactor,allowInterncircle); // drawing largest cycle
@@ -207,13 +207,13 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
 
 /**
  * Sorting function for knowing order of cycle drawing. 
- * First sort by number of circle fixed nodes (nodes fixed in a circle drawing), then by number of parent nodes (of the cycle), then by number of child nodes (of the cycle), and finally by size.
+ * First sort by number of circle fixed nodes (nodes fixed in a circle drawing), then by size, by number of parent nodes (of the cycle),  and finally by number of child nodes (of the cycle) .
  * @param subgraphNetwork - The subgraph network.
  * @param a - The first cycle to compare.
  * @param b - The second cycle to compare.
  * @returns A number indicating the sorting order.
  */
-function sortingCycleForDrawing(subgraphNetwork:SubgraphNetwork,a:Subgraph,b:Subgraph):number{
+function sortingCycleForDrawing(subgraphNetwork:SubgraphNetwork,a:Subgraph,b:Subgraph,fullConstraint:boolean=false):number{
     const network=subgraphNetwork.network.value;
 
     // first sort by number of fixed nodes
@@ -222,24 +222,25 @@ function sortingCycleForDrawing(subgraphNetwork:SubgraphNetwork,a:Subgraph,b:Sub
     if (fixedNodesA !== fixedNodesB){
         return fixedNodesB - fixedNodesA;
     }else{
-        // then by number of parent nodes
-        const totalParentNodesA = parentNodeNotInCycle(subgraphNetwork, a.nodes)
-            .flat().length;
-        const totalParentNodesB = parentNodeNotInCycle(subgraphNetwork, b.nodes)
-            .flat().length;
-        if (totalParentNodesA !== totalParentNodesB){
-            return totalParentNodesB - totalParentNodesA;
+        // sort by size
+        if ( !fullConstraint || b.nodes.length !== a.nodes.length ){
+            return b.nodes.length - a.nodes.length;
         }else{
-            // then by number of child nodes
-            const totalChildNodesA = childNodeNotInCycle(subgraphNetwork, a.nodes)
+            // then by number of parent nodes
+            const totalParentNodesA = parentNodeNotInCycle(subgraphNetwork, a.nodes)
                 .flat().length;
-            const totalChildNodesB = childNodeNotInCycle(subgraphNetwork, b.nodes)
+            const totalParentNodesB = parentNodeNotInCycle(subgraphNetwork, b.nodes)
                 .flat().length;
-            if (totalChildNodesA !== totalChildNodesB){
-                return totalChildNodesB - totalChildNodesA;
+            if (totalParentNodesA !== totalParentNodesB){
+                return totalParentNodesB - totalParentNodesA;
             }else{
-                // then by size
-                return b.nodes.length - a.nodes.length;
+                // then by number of child nodes
+                const totalChildNodesA = childNodeNotInCycle(subgraphNetwork, a.nodes)
+                    .flat().length;
+                const totalChildNodesB = childNodeNotInCycle(subgraphNetwork, b.nodes)
+                    .flat().length;
+               
+                return totalChildNodesB - totalChildNodesA;
             }
         }                   
     }
