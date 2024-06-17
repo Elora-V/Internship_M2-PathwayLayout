@@ -50,6 +50,13 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
  * @returns {Graph} Return graph object for viz
  */
 export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true, addNodes:boolean=false,groupOrCluster:"group"|"cluster"="cluster",orderChange:boolean=false): Graph{
+
+    if (groupOrCluster==="group" && !addNodes){
+        console.error('Group without nodes in the file not taken into account'); 
+    }else if (groupOrCluster==="cluster" && orderChange){
+        console.error('When ordering and cluster : cluster is prioritized over ordering');
+    }
+
     // initialisation viz graph
     let graphViz: Graph ={
         graphAttributes: subgraphNetwork.attributs,
@@ -285,7 +292,6 @@ function sortLinksWithGroupCycle(subgraphNetwork:SubgraphNetwork,groupCycle:stri
         // (first : parent of the left node of group cycle)
         const parentOrder=xSortParentsGroupCycle(subgraphNetwork,groupCycle);
         // get links between parent and group cycle in the right order for each parent 
-        console.log(parentOrder);
         parentOrder.forEach((parentId) => {
             const newLinksOrder = getLinkParent2GroupCycle(subgraphNetwork,parentId,groupCycle);
             // Add links to new ordered links object

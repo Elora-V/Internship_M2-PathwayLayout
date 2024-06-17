@@ -124,7 +124,7 @@
   </button>
 </div>
 
-
+ <!--
   <div>
  
   <button v-on:click="ordering('default')" class="styled-button">
@@ -138,7 +138,7 @@
   <button v-on:click="ordering('in')" class="styled-button">
      Ordering_in
   </button>
-</div>
+</div> -->
 
 
   <h5>Number of crossings in the Network : {{ countIntersection(network) }}</h5>

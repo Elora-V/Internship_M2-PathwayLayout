@@ -17,6 +17,7 @@ export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork,allowInternc
     const network = subgraphNetwork.network.value;
     const cycles = subgraphNetwork.cycles? Object.values(subgraphNetwork.cycles):undefined;
     let i=0
+    let newGroup=true;
     if (cycles && cycles.length > 0) {
         // creation first cycle group
         let group=0;
@@ -45,13 +46,16 @@ export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork,allowInternc
         if(updateGroupCycle.group!==group){
             group=updateGroupCycle.group;
             groupName=cycleGroupName(String(group));
+            newGroup=true;
+        }else{
+            newGroup=false;
         }
 
         // Draw the remaining cycles, starting with the one with the most fixed nodes (and if equal number : the largest one)
         while (remainingCycles.length > 0 ) {
 
             // sort cycles by number of fixed node (and then by size)
-            remainingCycles.sort((a, b) => sortingCycleForDrawing(subgraphNetwork,a,b));
+            remainingCycles.sort((a, b) => sortingCycleForDrawing(subgraphNetwork,a,b,newGroup));
 
             const cycleToDraw = remainingCycles[0]; // the cycle with the most fixed nodes
             // if groupcycle do not exist : add one
@@ -71,6 +75,9 @@ export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork,allowInternc
             if(updateGroupCycle.group!==group){
                 group=updateGroupCycle.group;
                 groupName=cycleGroupName(String(group));
+                newGroup=true;
+            }else{
+                newGroup=false;
             }
 
         }
@@ -102,6 +109,7 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
     }else{  
         console.log('cycle not in subgraph network');
     }
+
 
     // Check existence of all nodes
     const cycleExist = cycle.every(node => node in network.nodes);
@@ -471,7 +479,6 @@ function nodeMedianX(subgraphNetwork: SubgraphNetwork, listNodes: string[]): str
     const network=subgraphNetwork.network.value;
     let xValues = listNodes.map(node => [node,network.nodes[node].x]);
     xValues.sort((a, b) =>  Number(a[1]) - Number(b[1])); // sort by x
-    console.log('xValues',xValues);
 
     let midIndex :number;
     // if even number of nodes

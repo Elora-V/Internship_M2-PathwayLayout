@@ -41,7 +41,7 @@ export async function vizLayout(subgraphNetwork:SubgraphNetwork,assignRank:boole
     await instance().then( async viz => {
         const graphViz=NetworkToViz(subgraphNetwork,cycle,addNodes,groupOrCluster,orderChange);
         const dot =NetworkToDot(graphViz,true)
-        console.log(dot);
+        //console.log(dot);
         const json=viz.renderJSON(dot) as JsonViz;
         subgraphNetwork= await changeNetworkFromViz(json,subgraphNetwork,assignRank);
         callbackFunction();
