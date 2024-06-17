@@ -124,7 +124,7 @@
   </button>
 </div>
 
-
+ <!--
   <div>
  
   <button v-on:click="ordering('default')" class="styled-button">
@@ -138,7 +138,7 @@
   <button v-on:click="ordering('in')" class="styled-button">
      Ordering_in
   </button>
-</div>
+</div> -->
 
 
   <h5>Number of crossings in the Network : {{ countIntersection(network) }}</h5>
@@ -462,7 +462,7 @@ if(!(!addNodes && groupOrCluster=="group")){
 console.log('---------------');
 
 // get rank 0 with Sugiyama
-await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster).then(
+await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster,false).then(
   () => {
     // duplicate reactions
     duplicateReversibleReactions(network);
@@ -498,7 +498,7 @@ await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster).then(
 ).then(
   async () => {
     // Sugiyama without cycle metanodes (to get top nodes for cycles)
-    await vizLayout(subgraphNetwork, false,false,addNodes,groupOrCluster);
+    await vizLayout(subgraphNetwork, false,false,addNodes,groupOrCluster,false);
   }
 ).then(
   () => {
@@ -511,7 +511,7 @@ await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster).then(
   async () => {
     // Sugiyama with cycle metanodes 
     if (cycle){
-      await vizLayout(subgraphNetwork, false,true,addNodes,groupOrCluster,rescaleAfterAction);
+      await vizLayout(subgraphNetwork, false,true,addNodes,groupOrCluster,true,true,rescaleAfterAction);
     }
   }
 ).then(

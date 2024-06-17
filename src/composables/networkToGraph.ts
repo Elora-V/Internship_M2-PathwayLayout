@@ -8,7 +8,8 @@ import * as GDS from 'graph-data-structure';
 import { SubgraphNetwork } from '@/types/SubgraphNetwork';
 import { h } from 'vue';
 import { Link } from '@metabohub/viz-core/src/types/Link';
-import { inCycle } from './drawCycle';
+import { getNodesPlacedGroupCycle, inCycle, xSortParentsGroupCycle } from './drawCycle';
+import { link } from 'fs';
 
 
 /** 
@@ -48,7 +49,14 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
  * @param clusters clusters for viz
  * @returns {Graph} Return graph object for viz
  */
-export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true, addNodes:boolean=false,groupOrCluster:"group"|"cluster"="cluster"): Graph{
+export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true, addNodes:boolean=false,groupOrCluster:"group"|"cluster"="cluster",orderChange:boolean=false): Graph{
+
+    if (groupOrCluster==="group" && !addNodes){
+        console.warn('Group without nodes in the file not taken into account'); 
+    }else if (groupOrCluster==="cluster" && orderChange){
+        console.warn('When ordering and cluster : cluster is prioritized over ordering');
+    }
+
     // initialisation viz graph
     let graphViz: Graph ={
         graphAttributes: subgraphNetwork.attributs,
@@ -80,8 +88,13 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
         });
     }
     
-    // insert edge (but with cycle metanode) 
-    subgraphNetwork.network.value.links.forEach((link)=>{
+    
+    // order of edge changed :
+    let links:Link[]=[];
+    links=sortLinksWithAllGroupCycle(subgraphNetwork,orderChange);
+
+    // insert edge (but with cycle metanode if cycle is true) 
+    links.forEach((link)=>{
 
         // attributs
         let attributs:AttributesViz={};
@@ -131,7 +144,11 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
             const height=cycle.height;
             const width=cycle.width;
             const factor=0.015;
-            graphViz.nodes.push({name:cycle.name, attributes:{height:factor*height,width:factor*width}});
+            let ordering="";
+            if(orderChange){
+                ordering="in";
+            }
+            graphViz.nodes.push({name:cycle.name, attributes:{height:factor*height,width:factor*width,ordering:ordering}});
         });
     }
     return graphViz;
@@ -242,6 +259,57 @@ export function NetworkToDot(vizGraph:Graph, subgraphFirst:boolean=true):string{
 //     return dotString+"}";
 
 // }
+
+function sortLinksWithAllGroupCycle(subgraphNetwork:SubgraphNetwork,orderChange:boolean=false):Link[]{
+    let links:Link[]=[];
+
+    // change ordre with group cycle
+    if (orderChange  && subgraphNetwork.cyclesGroup){
+        console.log('Change order');
+        
+        // adding edge in right order for each group cycle
+        Object.keys(subgraphNetwork.cyclesGroup).forEach((groupCycle) => {
+            links=links.concat(sortLinksWithGroupCycle(subgraphNetwork,groupCycle));
+        });
+        // add other links
+        Object.values(subgraphNetwork.network.value.links).forEach((link) => {
+            if (!links.includes(link)){
+                links.push(link);
+            }
+        });
+
+        return links;
+    
+    }else{ // no change
+        return subgraphNetwork.network.value.links;
+    }
+}
+
+function sortLinksWithGroupCycle(subgraphNetwork:SubgraphNetwork,groupCycle:string):Link[]{
+    let links:Link[]=[];
+    if( groupCycle in subgraphNetwork.cyclesGroup){
+        // sort parent of cycle by x of the child in the cycle
+        // (first : parent of the left node of group cycle)
+        const parentOrder=xSortParentsGroupCycle(subgraphNetwork,groupCycle);
+        // get links between parent and group cycle in the right order for each parent 
+        parentOrder.forEach((parentId) => {
+            const newLinksOrder = getLinkParent2GroupCycle(subgraphNetwork,parentId,groupCycle);
+            // Add links to new ordered links object
+            newLinksOrder.forEach((newLink) => {
+                links.push(newLink);
+            });
+        });
+        return links;
+    }else{
+        return [];
+    }
+}
+
+function getLinkParent2GroupCycle(subgraphNetwork:SubgraphNetwork,parentId:string,groupCycle:string){
+    return Object.values(subgraphNetwork.network.value.links).filter((link) => {
+        return link.source.id === parentId && link.target.metadata && TypeSubgraph.CYCLEGROUP in link.target.metadata && link.target.metadata[TypeSubgraph.CYCLEGROUP] === groupCycle;
+    });
+}
 
 function cycleMetanodeLink(link:Link, subgraphNetwork:SubgraphNetwork,cycle:boolean=true):{inCycle:string[],tail:string,head:string}{
     
