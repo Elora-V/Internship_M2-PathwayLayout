@@ -25,6 +25,27 @@
       All_steps_with_DAG_Dijkstra
     </button>
 
+    <span class="bold margin">|</span>
+
+
+    <button v-on:click="addNodesViz(true)" class="styled-button">
+      Add_Nodes
+    </button>
+    <button v-on:click="addNodesViz(false)" class="styled-button">
+      No_nodes
+    </button>
+
+    <span class="bold margin">|</span>
+
+
+    <button v-on:click="groupInsteadCluster(true)" class="styled-button">
+      Group
+    </button>
+    <button v-on:click="groupInsteadCluster(false)" class="styled-button">
+      Cluster
+    </button>
+
+
   
 
     <div>
@@ -57,6 +78,12 @@
     </button>
     <button v-on:click="Cycle(false)" class="styled-button">
       No_cycle
+    </button>
+    <button v-on:click="allowInternalCycle(true)" class="styled-button">
+      internal_cycle
+    </button>
+    <button v-on:click="allowInternalCycle(false)" class="styled-button">
+      No_internal_cycle
     </button>
 
     <span class="bold margin">|</span>
@@ -175,7 +202,7 @@ import { DFSsourceDAG, DFSWithSources } from "@/composables/algoDFS";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 import { BFSWithSources } from "@/composables/algoBFS";
 import { concatSources, getSources } from "@/composables/rankAndSources";
-import { addBoldLinkMainChain, addRedLinkcycle } from "@/composables/useSubgraphs";
+import { addBoldLinkMainChain, addRedLinkcycleGroup } from "@/composables/useSubgraphs";
 import { addMainChainFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/chooseSubgraph";
 
 
@@ -187,7 +214,8 @@ import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
 import { node } from "prop-types";
 import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetwork";
-import { coordinateAllCycles, drawAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
+import { coordinateAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
+import func from "vue-temp/vue-editor-bridge";
 
 
 
@@ -217,7 +245,9 @@ let mainchain:boolean=true;
 let userSources:string[]=[];
 let onlyUserSources:boolean=false;
 let cycle:boolean=true;
-
+let allowInternalCycles:boolean=false;
+let groupOrCluster:"group"|"cluster"="cluster";
+let addNodes:boolean=true;
 
 
 
@@ -240,7 +270,7 @@ async function callbackFunction() {
 
   console.log('________New_graph__________');
   subgraphNetwork={network:network,attributs:{},mainChains:{}};
-  subgraphNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
+  subgraphNetwork.attributs={rankdir: "BT" , newrank:false, compound:true};
 
   await removeSideCompounds(network.value,"/sideCompounds.txt").then(
     ()=>{
@@ -259,8 +289,8 @@ async function callbackFunction() {
     if (!("linkStyles" in networkStyle.value)){
       networkStyle.value.linkStyles={}
     }
-    networkStyle.value.linkStyles["mainChains"]={strokeWidth:3,stroke:"blue"};
-    networkStyle.value.linkStyles["cycles"]={stroke:"red"};
+    networkStyle.value.linkStyles[TypeSubgraph.MAIN_CHAIN]={strokeWidth:3,stroke:"blue"};
+    networkStyle.value.linkStyles[TypeSubgraph.CYCLEGROUP]={stroke:"red"};
 
 }
 
@@ -272,7 +302,7 @@ function rescaleAfterAction(){
 onMounted(() => {
   svgProperties = initZoom();
   window.addEventListener('keydown', keydownHandler);
-  importNetworkFromURL('/pathways/Citric_acid_cycle.json', network, networkStyle, callbackFunction); 
+  importNetworkFromURL('/pathways/Aminosugar_metabolism.json', network, networkStyle, callbackFunction); 
   
 });
 function removeNode() {
@@ -344,6 +374,22 @@ function OnlyUserSources(){
   onlyUserSources=!onlyUserSources;
 }
 
+function allowInternalCycle(value:boolean){
+  allowInternalCycles=value;
+}
+
+function groupInsteadCluster(value:boolean){
+  if(value){
+    groupOrCluster="group";
+  }else{
+    groupOrCluster="cluster";
+  }
+}
+
+function addNodesViz(value:boolean){
+  addNodes=value;
+}
+
 async function subgraphAlgorithm(algorithm:string):Promise<void> {
     //console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
 
@@ -404,13 +450,19 @@ console.log('Parameters :');
 console.log("Source type : "+ sourceTypePath);
 console.log('Only user sources ? ' + String(onlyUserSources));
 console.log("Merge ? " + String(merge));
+console.log('Main chain ? ' + String(mainchain));
 console.log("Add Mini branch ? " + String(minibranch));
 console.log("Type path ? " + pathType);
 console.log('Cycle ? ' + String(cycle));
+console.log('Allow internal cycle ? ' + String(allowInternalCycles));
+console.log('addNodes ' +String(addNodes));
+if(!(!addNodes && groupOrCluster=="group")){
+  console.log('groupOrCluster '+groupOrCluster);
+}
 console.log('---------------');
 
 // get rank 0 with Sugiyama
-await vizLayout(subgraphNetwork, true,false).then(
+await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster).then(
   () => {
     // duplicate reactions
     duplicateReversibleReactions(network);
@@ -446,20 +498,20 @@ await vizLayout(subgraphNetwork, true,false).then(
 ).then(
   async () => {
     // Sugiyama without cycle metanodes (to get top nodes for cycles)
-    await vizLayout(subgraphNetwork, false,false);
+    await vizLayout(subgraphNetwork, false,false,addNodes,groupOrCluster);
   }
 ).then(
   () => {
     // relative coordinates for cycles
     if (cycle){
-      coordinateAllCycles(subgraphNetwork);
+      coordinateAllCycles(subgraphNetwork,allowInternalCycles);
     }
   }
 ).then(
   async () => {
     // Sugiyama with cycle metanodes 
     if (cycle){
-      await vizLayout(subgraphNetwork, false,true,rescaleAfterAction);
+      await vizLayout(subgraphNetwork, false,true,addNodes,groupOrCluster,rescaleAfterAction);
     }
   }
 ).then(
@@ -473,7 +525,7 @@ await vizLayout(subgraphNetwork, true,false).then(
   () => {
     // add color to link (optional : for debug)
     subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
-    subgraphNetwork=addRedLinkcycle(subgraphNetwork);
+    subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
   }
 )
 console.log('_____________________________________________');

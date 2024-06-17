@@ -6,7 +6,7 @@ import { inBiggerCycle } from "./networkToGraph";
 /**
  * 
  */
-export function addMainChainClusterViz(vizGraph: Graph, nameMainChain: string, subgraphNetwork:SubgraphNetwork,cycle:boolean=true): Graph {
+export function addMainChainClusterViz(vizGraph: Graph, nameMainChain: string, subgraphNetwork:SubgraphNetwork,cycle:boolean=true,isCluster:boolean=true): Graph {
 
     // get values from cluster and change nodes format : new cluster format (for viz)
     let { name, nodes ,associatedSubgraphs} = subgraphNetwork.mainChains[nameMainChain];
@@ -14,9 +14,12 @@ export function addMainChainClusterViz(vizGraph: Graph, nameMainChain: string, s
         nodes=changeCycleMetanodes(subgraphNetwork,nodes);
     }
 
-    // change format 
+    // change format
+    if (isCluster && !name.startsWith("cluster_")) {
+        name = "cluster_" + name;
+    }
     const clusterViz: SubgraphViz = {
-        name: name.startsWith("cluster_") ? name : "cluster_" + name,
+        name: name,
         nodes: nodes?.map((name: string) => ({ name:name })) || []
     };
 
@@ -64,11 +67,10 @@ function changeCycleMetanodes(subgraphNetwork:SubgraphNetwork,listNodeBefore:str
     return listNodeAfter;
 }
 
-export function addClusterDot(subgraph: SubgraphViz,isCluster:boolean=true): string {
+export function addClusterDot(subgraph: SubgraphViz): string {
 
-    const prefix = isCluster?"cluster_":"";  
 
-    let clusterString = `subgraph ${prefix}${subgraph.name} {\n`;
+    let clusterString = `subgraph ${subgraph.name} {\n`;
     // add rank
     // if ("rank" in subgraph){
     //     clusterString+=`{rank="${subgraph.rank}";`;
@@ -131,11 +133,11 @@ export function addBoldLinkMainChain(subgraphNetwork:SubgraphNetwork):SubgraphNe
         let mainChainSource: string[] = [];
         let mainChainTarget: string[] = [];
         if ( Object.keys(link.source).includes("metadata") && Object.keys(link.source.metadata).includes(TypeSubgraph.MAIN_CHAIN)){
-            mainChainSource= link.source.metadata?.mainChains ? link.source.metadata.mainChains as string[] : [];
+            mainChainSource=  link.source.metadata.mainChains as string[];
         }
   
         if ( Object.keys(link.target).includes("metadata") && Object.keys(link.target.metadata).includes(TypeSubgraph.MAIN_CHAIN)){
-            mainChainTarget= link.target.metadata?.mainChains ? link.target.metadata.mainChains as string[] : [];
+            mainChainTarget=  link.target.metadata.mainChains as string[];
         }        
         // let sameClusters=true;
         // // if same number of cluster, and in a cluster: let's check if there are the same
@@ -174,32 +176,28 @@ export function addBoldLinkMainChain(subgraphNetwork:SubgraphNetwork):SubgraphNe
 
 
 
-  export function addRedLinkcycle(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
+  export function addRedLinkcycleGroup(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
     let network=subgraphNetwork.network.value;
     network.links.forEach(link=>{
-        let cycleSource: string[] = [];
-        let cycleTarget: string[] = [];
-        if ( Object.keys(link.source).includes("metadata") && Object.keys(link.source.metadata).includes(TypeSubgraph.CYCLE)){
-            cycleSource= link.source.metadata?.cycles ? link.source.metadata.cycles as string[] : [];
+        let cycleSource: string;
+        let cycleTarget: string;
+        if ( Object.keys(link.source).includes("metadata") && Object.keys(link.source.metadata).includes(TypeSubgraph.CYCLEGROUP)){
+            cycleSource=link.source.metadata[TypeSubgraph.CYCLEGROUP]  as string;
         }
   
-        if ( Object.keys(link.target).includes("metadata") && Object.keys(link.target.metadata).includes(TypeSubgraph.CYCLE)){
-            cycleTarget= link.target.metadata?.cycles ? link.target.metadata.cycles as string[] : [];
-        }        
-
-        // Check if there is at least one common cluster
-        let commonCycle = cycleSource.some(cycle => cycleTarget.includes(cycle));
-
-        if (commonCycle){ 
+        if ( Object.keys(link.target).includes("metadata") && Object.keys(link.target.metadata).includes(TypeSubgraph.CYCLEGROUP)){
+            cycleTarget= link.target.metadata[TypeSubgraph.CYCLEGROUP] as string;
+        }       
+        if (cycleSource && cycleSource===cycleTarget){ 
             if(!link.classes){
                 link.classes=[];
             }
-            if (!(link.classes.includes(TypeSubgraph.CYCLE))){
-                link.classes.push(TypeSubgraph.CYCLE);
+            if (!(link.classes.includes(TypeSubgraph.CYCLEGROUP))){
+                link.classes.push(TypeSubgraph.CYCLEGROUP);
             }
         }else{
             if(link.classes){
-                link.classes = link.classes.filter((c) => c !== TypeSubgraph.CYCLE);
+                link.classes = link.classes.filter((c) => c !== TypeSubgraph.CYCLEGROUP);
             }
         }
     });

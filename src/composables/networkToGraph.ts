@@ -8,6 +8,7 @@ import * as GDS from 'graph-data-structure';
 import { SubgraphNetwork } from '@/types/SubgraphNetwork';
 import { h } from 'vue';
 import { Link } from '@metabohub/viz-core/src/types/Link';
+import { inCycle } from './drawCycle';
 
 
 /** 
@@ -47,7 +48,7 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
  * @param clusters clusters for viz
  * @returns {Graph} Return graph object for viz
  */
-export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true): Graph{
+export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true, addNodes:boolean=false,groupOrCluster:"group"|"cluster"="cluster"): Graph{
     // initialisation viz graph
     let graphViz: Graph ={
         graphAttributes: subgraphNetwork.attributs,
@@ -57,10 +58,27 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true)
         subgraphs:[]
     }
 
-    // insert nodes
-    // Object.keys(subgraphNetwork.network.value.nodes).forEach((node) => { 
-    //     graphViz.nodes.push({name:node});
-    // });
+    // insert nodes if use group
+    if (addNodes){
+        Object.entries(subgraphNetwork.network.value.nodes)
+        .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
+        .forEach(([key, node])=> { 
+            // if not in metanode, that is, not in cycle :
+            if (!inCycle(subgraphNetwork.network.value,node.id)){
+                const attributes:AttributesViz={};
+                // if main chain : add group attribut
+                if (groupOrCluster==="group"){
+                    if (node.metadata && node.metadata[TypeSubgraph.MAIN_CHAIN]){
+                        const mainChain=node.metadata[TypeSubgraph.MAIN_CHAIN] as string[];
+                        if (mainChain.length!==0){
+                            attributes.group=mainChain[0]; // can't be in several main chain
+                        }
+                    }
+                }
+                graphViz.nodes.push({name:node.id,attributes:attributes});
+            }       
+        });
+    }
     
     // insert edge (but with cycle metanode) 
     subgraphNetwork.network.value.links.forEach((link)=>{
@@ -94,11 +112,13 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true)
     });
         
 
-    // insert mainChain subgraphs 
-    Object.keys(subgraphNetwork.mainChains).sort((a, b) => subgraphNetwork.mainChains[b].nodes.length - subgraphNetwork.mainChains[a].nodes.length) // sort depending on size : bigger first
-        .forEach((nameMainChain) => {
-            graphViz=addMainChainClusterViz(graphViz,nameMainChain,subgraphNetwork,cycle);
-    });
+    // insert mainChain cluster 
+    if (groupOrCluster==="cluster"){
+        Object.keys(subgraphNetwork.mainChains).sort((a, b) => subgraphNetwork.mainChains[b].nodes.length - subgraphNetwork.mainChains[a].nodes.length) // sort depending on size : bigger first
+            .forEach((nameMainChain) => {
+                graphViz=addMainChainClusterViz(graphViz,nameMainChain,subgraphNetwork,cycle);
+        });
+    }
 
     // insert cycle metanode
     if (cycle && subgraphNetwork.cyclesGroup){
@@ -117,26 +137,45 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true)
     return graphViz;
 }
 
-export function NetworkToDot(vizGraph:Graph):string{
+export function NetworkToDot(vizGraph:Graph, subgraphFirst:boolean=true):string{
     // initialisation viz graph with graph attributs
-    let dotString="digraph G {\n graph "+customStringify(vizGraph.graphAttributes)+"\n";
+    let dotString="strict digraph G {\n graph "+customStringify(vizGraph.graphAttributes)+"\n";
 
-    // nodes (metanodes only)
-    vizGraph.nodes.forEach((node) => {
-        const nodeAttributes= customStringify(node.attributes);
-        dotString+=`${node.name}  ${nodeAttributes};\n`;
-    });
 
-    // edges 
-    vizGraph.edges.forEach((edge) => {
-        dotString+=`${edge.tail} -> ${edge.head} `+customStringify(edge.attributes)+`;\n`;
-    });
     
-    // clusters
-    vizGraph.subgraphs.forEach((subgraph) => {
-        dotString+=addClusterDot(subgraph as SubgraphViz);
-    });
-    
+    if (subgraphFirst){
+        // clusters
+        vizGraph.subgraphs.forEach((subgraph) => {
+            dotString+=addClusterDot(subgraph as SubgraphViz);
+        });
+
+        // nodes 
+        vizGraph.nodes.forEach((node) => {
+            const nodeAttributes= customStringify(node.attributes);
+            dotString+=`${node.name}  ${nodeAttributes};\n`;
+        });
+
+        // edges 
+        vizGraph.edges.forEach((edge) => {
+            dotString+=`${edge.tail} -> ${edge.head} `+customStringify(edge.attributes)+`;\n`;
+        });
+    } else {
+
+        // nodes 
+        vizGraph.nodes.forEach((node) => {
+            const nodeAttributes= customStringify(node.attributes);
+            dotString+=`${node.name}  ${nodeAttributes};\n`;
+        });
+        // edges 
+        vizGraph.edges.forEach((edge) => {
+            dotString+=`${edge.tail} -> ${edge.head} `+customStringify(edge.attributes)+`;\n`;
+        });
+
+        // clusters
+        vizGraph.subgraphs.forEach((subgraph) => {
+            dotString+=addClusterDot(subgraph as SubgraphViz);
+        });
+    }
     
     return dotString+"}";
 }
