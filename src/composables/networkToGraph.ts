@@ -52,9 +52,9 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
 export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true, addNodes:boolean=false,groupOrCluster:"group"|"cluster"="cluster",orderChange:boolean=false): Graph{
 
     if (groupOrCluster==="group" && !addNodes){
-        console.error('Group without nodes in the file not taken into account'); 
+        console.warn('Group without nodes in the file not taken into account'); 
     }else if (groupOrCluster==="cluster" && orderChange){
-        console.error('When ordering and cluster : cluster is prioritized over ordering');
+        console.warn('When ordering and cluster : cluster is prioritized over ordering');
     }
 
     // initialisation viz graph
