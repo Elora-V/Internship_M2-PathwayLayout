@@ -340,6 +340,17 @@ function findTopCycleNode(subgraphNetwork: SubgraphNetwork, cycleNodes:string[])
     }
 }
 
+
+export function getNodesPlacedGroupCycle(subgraphNetwork:SubgraphNetwork,groupCycleID:string):string[]{
+    if (groupCycleID in subgraphNetwork.cyclesGroup && "metadata" in subgraphNetwork.cyclesGroup[groupCycleID]){
+        return Object.entries(subgraphNetwork.cyclesGroup[groupCycleID].metadata)
+                .filter(([key,item]) => item["x"] !== undefined && item["y"] !== undefined)
+                .map(([key,item])=>key);
+    }else{
+        return [];
+    }
+}
+
 /**
  * Returns an array of parent nodes, of a list of nodes, that are not part of any cycle in the subgraph network.
  * 
@@ -358,6 +369,25 @@ function parentNodeNotInCycle(subgraphNetwork: SubgraphNetwork, listNodes: strin
 
     return parentNodes;
 }
+
+
+export function xSortParentsGroupCycle(subgraphNetwork:SubgraphNetwork,cycleGroupId:string):string[]{
+    if (cycleGroupId in subgraphNetwork.cyclesGroup && "metadata" in subgraphNetwork.cyclesGroup[cycleGroupId]){
+        const nodes=getNodesPlacedGroupCycle(subgraphNetwork,cycleGroupId);
+        // sort nodes of the group cycle by x
+        nodes.sort((nodeIdA, nodeIdB) => {
+            const nodeA = subgraphNetwork.cyclesGroup[cycleGroupId].metadata[nodeIdA];
+            const nodeB = subgraphNetwork.cyclesGroup[cycleGroupId].metadata[nodeIdB];
+            return nodeA["x"] - nodeB["x"];
+        });
+        // get parent nodes
+        const parentCycles = Array.from(new Set(parentNodeNotInCycle(subgraphNetwork, nodes).flat()));
+        return parentCycles;
+    }else{
+        return [];
+    }
+}
+
 
 /**
  * Returns an array of child nodes, of a list of nodes, that are not part of any cycle in the subgraph network.
@@ -734,6 +764,7 @@ function drawCycleGroup(cycleGroup:string,subgraphNetwork:SubgraphNetwork):void{
         node.y = coord["y"] + dy;
     });
 }
+
 
 
 // function centroidFromNodes(nodesList:string[],subgraphNetwork:SubgraphNetwork):{x:number,y:number}{

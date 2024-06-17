@@ -462,7 +462,7 @@ if(!(!addNodes && groupOrCluster=="group")){
 console.log('---------------');
 
 // get rank 0 with Sugiyama
-await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster).then(
+await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster,false).then(
   () => {
     // duplicate reactions
     duplicateReversibleReactions(network);
@@ -498,7 +498,7 @@ await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster).then(
 ).then(
   async () => {
     // Sugiyama without cycle metanodes (to get top nodes for cycles)
-    await vizLayout(subgraphNetwork, false,false,addNodes,groupOrCluster);
+    await vizLayout(subgraphNetwork, false,false,addNodes,groupOrCluster,false);
   }
 ).then(
   () => {
@@ -511,7 +511,7 @@ await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster).then(
   async () => {
     // Sugiyama with cycle metanodes 
     if (cycle){
-      await vizLayout(subgraphNetwork, false,true,addNodes,groupOrCluster,rescaleAfterAction);
+      await vizLayout(subgraphNetwork, false,true,addNodes,groupOrCluster,true,rescaleAfterAction);
     }
   }
 ).then(
