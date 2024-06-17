@@ -511,7 +511,7 @@ await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster,false).then(
   async () => {
     // Sugiyama with cycle metanodes 
     if (cycle){
-      await vizLayout(subgraphNetwork, false,true,addNodes,groupOrCluster,true,rescaleAfterAction);
+      await vizLayout(subgraphNetwork, false,true,addNodes,groupOrCluster,true,true,rescaleAfterAction);
     }
   }
 ).then(
