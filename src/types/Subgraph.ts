@@ -6,6 +6,12 @@ export enum TypeSubgraph {
     CYCLEGROUP="cyclesGroup"
 }
 
+export enum Ordering {
+    DEFAULT = "",
+    IN = "in",
+    OUT = "out"
+}
+
 export interface Subgraph {
     name: string;
     classes?: Array<string>;
@@ -18,7 +24,8 @@ export interface Subgraph {
     width?:number;
     height?:number;
     position?:{x:number,y:number};
-    originCoordinates?:{x:number,y:number}; // if metanode : the metanode center not well positionned
+    originCoordinates?:{x:number,y:number}; // if metanode : the metanode center not well positionned (precalulated position)
+    ordering?:Ordering;
     metadata?: {[key: string]: string | number| boolean | {[key: string]: string | number} | Array<string>};
 }
 

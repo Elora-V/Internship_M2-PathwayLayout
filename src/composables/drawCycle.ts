@@ -349,7 +349,7 @@ function findTopCycleNode(subgraphNetwork: SubgraphNetwork, cycleNodes:string[])
 }
 
 
-export function getNodesPlacedGroupCycle(subgraphNetwork:SubgraphNetwork,groupCycleID:string):string[]{
+export function getNodesPlacedInGroupCycle(subgraphNetwork:SubgraphNetwork,groupCycleID:string):string[]{
     if (groupCycleID in subgraphNetwork.cyclesGroup && "metadata" in subgraphNetwork.cyclesGroup[groupCycleID]){
         return Object.entries(subgraphNetwork.cyclesGroup[groupCycleID].metadata)
                 .filter(([key,item]) => item["x"] !== undefined && item["y"] !== undefined)
@@ -379,18 +379,26 @@ function parentNodeNotInCycle(subgraphNetwork: SubgraphNetwork, listNodes: strin
 }
 
 
-export function xSortParentsGroupCycle(subgraphNetwork:SubgraphNetwork,cycleGroupId:string):string[]{
+export function neighborsGroupCycle(subgraphNetwork:SubgraphNetwork,cycleGroupId:string, parentOrChild:"parent"|"child",xSort:boolean=true):string[]{
     if (cycleGroupId in subgraphNetwork.cyclesGroup && "metadata" in subgraphNetwork.cyclesGroup[cycleGroupId]){
-        const nodes=getNodesPlacedGroupCycle(subgraphNetwork,cycleGroupId);
+        const nodes=getNodesPlacedInGroupCycle(subgraphNetwork,cycleGroupId);
         // sort nodes of the group cycle by x
-        nodes.sort((nodeIdA, nodeIdB) => {
-            const nodeA = subgraphNetwork.cyclesGroup[cycleGroupId].metadata[nodeIdA];
-            const nodeB = subgraphNetwork.cyclesGroup[cycleGroupId].metadata[nodeIdB];
-            return nodeA["x"] - nodeB["x"];
-        });
-        // get parent nodes
-        const parentCycles = Array.from(new Set(parentNodeNotInCycle(subgraphNetwork, nodes).flat()));
-        return parentCycles;
+        if (xSort){
+            nodes.sort((nodeIdA, nodeIdB) => {
+                const nodeA = subgraphNetwork.cyclesGroup[cycleGroupId].metadata[nodeIdA];
+                const nodeB = subgraphNetwork.cyclesGroup[cycleGroupId].metadata[nodeIdB];
+                return nodeA["x"] - nodeB["x"];
+            });
+        }
+        if (parentOrChild==="parent"){
+            // get parent nodes
+            const parentCycles = Array.from(new Set(parentNodeNotInCycle(subgraphNetwork, nodes).flat()));
+            return parentCycles;
+        } else {
+            // get child nodes
+            const childCycles = Array.from(new Set(childNodeNotInCycle(subgraphNetwork, nodes).flat()));
+            return childCycles;
+        }
     }else{
         return [];
     }
