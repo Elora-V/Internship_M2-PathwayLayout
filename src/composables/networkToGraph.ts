@@ -2,14 +2,15 @@ import { Network } from '@metabohub/viz-core/src/types/Network';
 import  dagre  from 'dagrejs/dist/dagre.js';
 import { Graph } from "@viz-js/viz";
 import { addMainChainClusterViz } from './useSubgraphs';
-import { Subgraph, TypeSubgraph } from '@/types/Subgraph';
+import { Ordering, Subgraph, TypeSubgraph } from '@/types/Subgraph';
 import { addClusterDot } from './useSubgraphs';
 import * as GDS from 'graph-data-structure';
 import { SubgraphNetwork } from '@/types/SubgraphNetwork';
 import { h } from 'vue';
 import { Link } from '@metabohub/viz-core/src/types/Link';
-import { getNodesPlacedGroupCycle, inCycle, xSortParentsGroupCycle } from './drawCycle';
+import { getNodesPlacedInGroupCycle, inCycle, neighborsGroupCycle } from './drawCycle';
 import { link } from 'fs';
+import { s } from 'vitest/dist/reporters-1evA5lom';
 
 
 /** 
@@ -144,9 +145,9 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
             const height=cycle.height;
             const width=cycle.width;
             const factor=0.015;
-            let ordering="";
+            let ordering=Ordering.DEFAULT;
             if(orderChange){
-                ordering="in";
+                ordering=cycle.ordering;
             }
             graphViz.nodes.push({name:cycle.name, attributes:{height:factor*height,width:factor*width,ordering:ordering}});
         });
@@ -290,20 +291,55 @@ function sortLinksWithGroupCycle(subgraphNetwork:SubgraphNetwork,groupCycle:stri
     if( groupCycle in subgraphNetwork.cyclesGroup){
         // sort parent of cycle by x of the child in the cycle
         // (first : parent of the left node of group cycle)
-        const parentOrder=xSortParentsGroupCycle(subgraphNetwork,groupCycle);
-        // get links between parent and group cycle in the right order for each parent 
-        parentOrder.forEach((parentId) => {
-            const newLinksOrder = getLinkParent2GroupCycle(subgraphNetwork,parentId,groupCycle);
-            // Add links to new ordered links object
+        const parents=neighborsGroupCycle(subgraphNetwork,groupCycle,"parent");
+        const children=neighborsGroupCycle(subgraphNetwork,groupCycle,"child");
+        let nodeOrder:string[]=[];
+        let source:"node"|"groupCycle";
+
+        // if more parent than children : order parent
+        if (parents.length>=children.length){
+            nodeOrder=parents;
+            source="node";
+            subgraphNetwork.cyclesGroup[groupCycle].ordering=Ordering.IN;
+        }else{
+            // order children
+            nodeOrder=children;
+            source="groupCycle";
+            subgraphNetwork.cyclesGroup[groupCycle].ordering=Ordering.OUT;
+        }
+
+        // get links between the parent (or children) and the group cycle in the right order
+        nodeOrder.forEach((nodeId) => {
+            // get links for each node
+            const newLinksOrder = getLinksNodeGroupCycle(subgraphNetwork,nodeId,groupCycle,source);
+            // add links
             newLinksOrder.forEach((newLink) => {
                 links.push(newLink);
             });
+
         });
         return links;
     }else{
         return [];
     }
 }
+
+
+function getLinksNodeGroupCycle(subgraphNetwork:SubgraphNetwork,nodeId:string,groupCycleId:string,source:"node"|"groupCycle"){
+    if (source==="node"){
+        // node to group cycle
+        return Object.values(subgraphNetwork.network.value.links).filter((link) => {
+            return link.source.id === nodeId && link.target.metadata && TypeSubgraph.CYCLEGROUP in link.target.metadata && link.target.metadata[TypeSubgraph.CYCLEGROUP] === groupCycleId;
+        });
+    }else{
+        // group cycle to node
+        return Object.values(subgraphNetwork.network.value.links).filter((link) => {
+            return link.target.id === nodeId && link.source.metadata && TypeSubgraph.CYCLEGROUP in link.source.metadata && link.source.metadata[TypeSubgraph.CYCLEGROUP] === groupCycleId;
+        });
+    }
+    
+}
+
 
 function getLinkParent2GroupCycle(subgraphNetwork:SubgraphNetwork,parentId:string,groupCycle:string){
     return Object.values(subgraphNetwork.network.value.links).filter((link) => {

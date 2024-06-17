@@ -124,21 +124,19 @@
   </button>
 </div>
 
- <!--
+ 
   <div>
  
-  <button v-on:click="ordering('default')" class="styled-button">
-     Ordering_default
+  <button v-on:click="Ordering(true)" class="styled-button">
+     Ordering
   </button>
   
-  <button v-on:click="ordering('out')" class="styled-button">
-     Ordering_out
+  <button v-on:click="Ordering(false)" class="styled-button">
+     No_Ordering
   </button>
  
-  <button v-on:click="ordering('in')" class="styled-button">
-     Ordering_in
-  </button>
-</div> -->
+
+</div> 
 
 
   <h5>Number of crossings in the Network : {{ countIntersection(network) }}</h5>
@@ -248,6 +246,7 @@ let cycle:boolean=true;
 let allowInternalCycles:boolean=false;
 let groupOrCluster:"group"|"cluster"="cluster";
 let addNodes:boolean=true;
+let ordering:boolean=true;
 
 
 
@@ -324,16 +323,16 @@ function openContextMenu(Event: MouseEvent, nodeId: string) {
 // ----------------------------------------------- Parameters
 
 
-function ordering(value:string="default"){
-  if (!subgraphNetwork.attributs){
-    subgraphNetwork.attributs={};
-  }
-  if (value == "default" && "ordering" in subgraphNetwork.attributs){
-    delete subgraphNetwork.attributs.ordering;
-  } else if (value == "in" || value == "out"){
-    subgraphNetwork.attributs.ordering=value;
-  }
-}
+// function ordering(value:string="default"){
+//   if (!subgraphNetwork.attributs){
+//     subgraphNetwork.attributs={};
+//   }
+//   if (value == "default" && "ordering" in subgraphNetwork.attributs){
+//     delete subgraphNetwork.attributs.ordering;
+//   } else if (value == "in" || value == "out"){
+//     subgraphNetwork.attributs.ordering=value;
+//   }
+// }
 
 function sourcesChoice(sourcetype:string):void{
   if (sourcetype==SourceType.RANK_ONLY){
@@ -357,6 +356,11 @@ function mergeChoice(value:boolean) {
 function Cycle(value:boolean) {
     cycle=value;
 }
+
+function Ordering(value:boolean) {
+    ordering=value;
+}
+
 
 function setPathType(type:PathType) {
     pathType = type;
@@ -459,6 +463,7 @@ console.log('addNodes ' +String(addNodes));
 if(!(!addNodes && groupOrCluster=="group")){
   console.log('groupOrCluster '+groupOrCluster);
 }
+console.log('Ordering ? ' + String(ordering));
 console.log('---------------');
 
 // get rank 0 with Sugiyama
@@ -511,7 +516,7 @@ await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster,false).then(
   async () => {
     // Sugiyama with cycle metanodes 
     if (cycle){
-      await vizLayout(subgraphNetwork, false,true,addNodes,groupOrCluster,true,true,rescaleAfterAction);
+      await vizLayout(subgraphNetwork, false,true,addNodes,groupOrCluster,ordering,true,rescaleAfterAction);
     }
   }
 ).then(
