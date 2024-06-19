@@ -214,6 +214,7 @@ import { node } from "prop-types";
 import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetwork";
 import { coordinateAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
 import func from "vue-temp/vue-editor-bridge";
+import { removeSideCompoundsFromNetwork } from "@/composables/manageCofactors";
 
 
 
@@ -271,7 +272,7 @@ async function callbackFunction() {
   subgraphNetwork={network:network,attributs:{},mainChains:{}};
   subgraphNetwork.attributs={rankdir: "BT" , newrank:false, compound:true};
 
-  await removeSideCompounds(network.value,"/sideCompounds.txt").then(
+  await removeSideCompoundsFromNetwork(subgraphNetwork,"/sideCompounds.txt").then(
     ()=>{
       originalNetwork=networkCopy(network.value);
     }
