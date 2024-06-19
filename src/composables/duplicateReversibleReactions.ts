@@ -170,14 +170,21 @@ export async function chooseReversibleReaction(
  */
 export function keepFirstReversibleNode(network,nodeOrder:string[]){
   const reactionToRemove:Array<string>=[];
+  const nodeToRename:Array<{oldName:string,newname:string}>=[];
 
   for(let i=0;i<nodeOrder.length;i++){
     const nodeID=nodeOrder[i];
     // if there is a reversible version of the current node:
     if(network.nodes[nodeID].metadata && network.nodes[nodeID].metadata.reversibleVersion){
+      
       const reversibleNodeID=network.nodes[nodeID].metadata.reversibleVersion as string;
       // add the reversible reaction to the list of nodes to remove
       reactionToRemove.push(reversibleNodeID);
+      // Rename of id if necessary :
+      if(network.nodes[nodeID].classes && network.nodes[nodeID].classes.includes("reversibleVersion")){
+        // the reversible version is the one keeped, its id have to be renamed by the original id
+        nodeToRename.push({oldName:nodeID,newname:reversibleNodeID});
+      }
       // remove metadata information about reversible node for current node and its reversible version
       delete network.nodes[nodeID].metadata.reversibleVersion;
       if(reversibleNodeID in network.nodes && network.nodes[reversibleNodeID].metadata && "reversibleVersion" in network.nodes[reversibleNodeID].metadata){ 
@@ -186,5 +193,42 @@ export function keepFirstReversibleNode(network,nodeOrder:string[]){
     }
   }
 
+  // remove one version of the reaction
   removeAllSelectedNode(reactionToRemove,network);
+  // rename the other if it was the reversible version that is keeped
+  nodeToRename.forEach((node) => {
+    renameIDNode(network,node.oldName,node.newname);
+  });
+}
+
+
+function renameIDNode(network:Network,oldName:string,newName:string){
+  if(oldName in network.nodes && !(newName in network.nodes)){
+    // modify node :
+    // insert new node with new name
+    network.nodes[newName]=network.nodes[oldName];
+    const newNode=network.nodes[newName];
+    newNode.id=newName;
+    // delete old node
+    delete network.nodes[oldName];
+
+    // modify edges :
+    // when the node is source
+    const linksOldNodeAsSource = Object.values(network.links).filter((link) => {
+      return link.source.id === oldName;
+    });
+    linksOldNodeAsSource.forEach((link) => {
+      link.source = newNode;
+    });
+    // when the node is target
+    const linksOldNodeAsTarget = Object.values(network.links).filter((link) => {
+      return link.target.id === oldName;
+    });
+    linksOldNodeAsTarget.forEach((link) => {
+      link.target = newNode;
+    });
+
+  }else{
+    console.log("Error : impossible to rename node "+oldName+" to "+newName+", node already exist or not found in network.");
+  }
 }
