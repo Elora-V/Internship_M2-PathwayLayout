@@ -374,7 +374,6 @@ function parentNodeNotInCycle(subgraphNetwork: SubgraphNetwork, listNodes: strin
             .filter(id => !inCycle(subgraphNetwork.network.value, id)) // no node in a cycle 
         return parentNodesI;
     });
-
     return parentNodes;
 }
 

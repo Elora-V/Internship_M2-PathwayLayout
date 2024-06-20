@@ -1,6 +1,6 @@
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { Network } from "@metabohub/viz-core/src/types/Network";
-import { addNewSubgraph, createSubgraph } from "./UseSubgraphNetwork";
+import { addNewSubgraph, createSubgraph, updateNodeMetadataSubgraph } from "./UseSubgraphNetwork";
 import { TypeSubgraph } from "@/types/Subgraph";
 import { keepFirstReversibleNode } from "./duplicateReversibleReactions";
 
@@ -29,6 +29,10 @@ export function addDirectedCycleToSubgraphNetwork(subgraphNetwork:SubgraphNetwor
         } 
         
         if (existingCycle){
+            // update metada node : add cycle information
+            cycle[1].forEach(node=>{
+                updateNodeMetadataSubgraph(subgraphNetwork.network.value,node,cycle[0],TypeSubgraph.CYCLE);
+            });
             // remove reversible version of node in cycle, to only keep the one in the direction of cycle
             keepFirstReversibleNode(subgraphNetwork.network.value,cycle[1]);
 
