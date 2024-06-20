@@ -187,10 +187,10 @@ export async function chooseReversibleReaction(
  * @param subgraphNetwork 
  * @param nodeOrder The order of nodes to consider for keeping the first reversible node.
  */
-export function keepFirstReversibleNode(subgraphNetwork:SubgraphNetwork,nodeOrder:string[],doRename:boolean=true):SubgraphNetwork |Array<{oldName:string,newname:string}>{
+export function keepFirstReversibleNode(subgraphNetwork:SubgraphNetwork,nodeOrder:string[],doRename:boolean=true):SubgraphNetwork |{[key: string]: string}{
   const network = subgraphNetwork.network.value;
   const reactionToRemove:Array<string>=[];
-  const nodeToRename:Array<{oldName:string,newname:string}>=[];
+  const nodeToRename:{[key: string]: string}={};
 
   for(let i=0;i<nodeOrder.length;i++){
     const nodeID=nodeOrder[i];
@@ -203,7 +203,7 @@ export function keepFirstReversibleNode(subgraphNetwork:SubgraphNetwork,nodeOrde
       // Rename of id if necessary :
       if(network.nodes[nodeID].classes && network.nodes[nodeID].classes.includes("reversibleVersion")){
         // the reversible version is the one keeped, its id have to be renamed by the original id
-        nodeToRename.push({oldName:nodeID,newname:reversibleNodeID});
+        nodeToRename[nodeID]=reversibleNodeID;
       }
       // remove metadata information about reversible node for current node and its reversible version
       delete network.nodes[nodeID].metadata.reversibleVersion;
@@ -217,67 +217,121 @@ export function keepFirstReversibleNode(subgraphNetwork:SubgraphNetwork,nodeOrde
   removeAllSelectedNodes(reactionToRemove,network);
   // rename the other if it was the reversible version that is keeped
   if(doRename){
-    nodeToRename.forEach((node) => {
-      console.log('Rename node '+node.oldName+' to '+node.newname);
-      subgraphNetwork=renameIDNode(subgraphNetwork,node.oldName,node.newname);
-    });
-    return subgraphNetwork; // return object renamed
+    return renameAllIDNode(subgraphNetwork,nodeToRename); // return object renamed
   }
   return nodeToRename; // if doRename is false, return the list of node to rename to do it later
 }
 
-
-export function renameIDNode(subgraphNetwork:SubgraphNetwork,oldName:string,newName:string):SubgraphNetwork{
+export function renameAllIDNode(subgraphNetwork:SubgraphNetwork,nodesToRename:{[key: string]: string}):SubgraphNetwork{
   const network = subgraphNetwork.network.value;
-  if(oldName in network.nodes && !(newName in network.nodes)){
 
-    // modify node :
-    // insert new node with new name
-    network.nodes[newName]=network.nodes[oldName];
-    const newNode=network.nodes[newName];
-    newNode.id=newName;
-    // delete old node
-    delete network.nodes[oldName];
+  // Modify nodes
+  Object.keys(network.nodes).forEach(ID => { 
+    if (nodesToRename[ID]) { 
+      // then change the name of the node :
+      const oldName=ID;
+      const newName=nodesToRename[ID];
+      // insert new node with new name
+      network.nodes[newName]=network.nodes[oldName];
+      network.nodes[newName].id=newName;
+      // delete old node
+      delete network.nodes[oldName];     
+    }
+  });
 
-    // modify edges :
-    // when the node is source
-    const linksOldNodeAsSource = Object.values(network.links).filter((link) => {
-      return link.source.id === oldName;
-    });
-    linksOldNodeAsSource.forEach((link) => {
-      link.source = newNode;
-    });
-    // when the node is target
-    const linksOldNodeAsTarget = Object.values(network.links).filter((link) => {
-      return link.target.id === oldName;
-    });
-    linksOldNodeAsTarget.forEach((link) => {
-      link.target = newNode;
-    });
+  // Modify edges
+  network.links.forEach(link => {
+    if (nodesToRename[link.source.id]) {
+      link.source = network.nodes[nodesToRename[link.source.id]];
+    }
+    if (nodesToRename[link.target.id]) {
+      link.target = network.nodes[nodesToRename[link.target.id]];
+    }
+  });
 
-    // modify subgraphs :
-    // in cycles
-    renameInSubgraph(subgraphNetwork,TypeSubgraph.CYCLE,oldName,newName);
-    // in main chains
-    renameInSubgraph(subgraphNetwork,TypeSubgraph.MAIN_CHAIN,oldName,newName);
-    // in secondary chains
-    renameInSubgraph(subgraphNetwork,TypeSubgraph.SECONDARY_CHAIN,oldName,newName);
+  // Modify subgraphs
+  // in cycles
+  renameAllInSubgraph(subgraphNetwork,TypeSubgraph.CYCLE,nodesToRename);
+  // in main chains
+  renameAllInSubgraph(subgraphNetwork,TypeSubgraph.MAIN_CHAIN,nodesToRename);
+  // in secondary chains
+  renameAllInSubgraph(subgraphNetwork,TypeSubgraph.SECONDARY_CHAIN,nodesToRename);
 
-    return subgraphNetwork;
-
-  }else{
-    console.log("Error : impossible to rename node "+oldName+" to "+newName+", node already exist or not found in network.");
-  }
+  return subgraphNetwork;
 }
 
-function renameInSubgraph(subgraphNetwork:SubgraphNetwork,typeSubgraph:TypeSubgraph,oldName:string,newName:string){
-  const subgraphs = subgraphNetwork[typeSubgraph]? subgraphNetwork[typeSubgraph]:{};
-    Object.entries(subgraphs).forEach(([ID,subgraph])=>{
-      if(subgraph.nodes.includes(oldName)){
-        // change the name of the node in the cycle
-        subgraph.nodes = subgraph.nodes.map(node => node === oldName ? newName : node);
-        // change metadata of node to know in which cycle it is
-        updateNodeMetadataSubgraph(subgraphNetwork.network.value, newName, ID,typeSubgraph); //newName because the node has been renamed
+
+
+function renameAllInSubgraph(subgraphNetwork:SubgraphNetwork, typeSubgraph:TypeSubgraph, nodesToRename:{[key: string]: string}){
+  const subgraphs = subgraphNetwork[typeSubgraph] ? subgraphNetwork[typeSubgraph] : {};
+  Object.entries(subgraphs).forEach(([ID, subgraph]) => {
+    subgraph.nodes = subgraph.nodes.map(node => {
+      if(nodesToRename[node]){
+        // change metadata of node to know in which subgraph it is
+        updateNodeMetadataSubgraph(subgraphNetwork.network.value, nodesToRename[node], ID, typeSubgraph);
+        // change the name of the node in the subgraph
+        return nodesToRename[node];
       }
+      return node;
     });
+  });
 }
+
+
+
+
+// export function renameIDNode(subgraphNetwork:SubgraphNetwork,oldName:string,newName:string):SubgraphNetwork{
+//   const network = subgraphNetwork.network.value;
+//   if(oldName in network.nodes && !(newName in network.nodes)){
+
+//     // modify node :
+//     // insert new node with new name
+//     network.nodes[newName]=network.nodes[oldName];
+//     const newNode=network.nodes[newName];
+//     newNode.id=newName;
+//     // delete old node
+//     delete network.nodes[oldName];
+
+//     // modify edges :
+//     // when the node is source
+//     const linksOldNodeAsSource = Object.values(network.links).filter((link) => {
+//       return link.source.id === oldName;
+//     });
+//     linksOldNodeAsSource.forEach((link) => {
+//       link.source = newNode;
+//     });
+//     // when the node is target
+//     const linksOldNodeAsTarget = Object.values(network.links).filter((link) => {
+//       return link.target.id === oldName;
+//     });
+//     linksOldNodeAsTarget.forEach((link) => {
+//       link.target = newNode;
+//     });
+
+//     // modify subgraphs :
+//     // in cycles
+//     renameInSubgraph(subgraphNetwork,TypeSubgraph.CYCLE,oldName,newName);
+//     // in main chains
+//     renameInSubgraph(subgraphNetwork,TypeSubgraph.MAIN_CHAIN,oldName,newName);
+//     // in secondary chains
+//     renameInSubgraph(subgraphNetwork,TypeSubgraph.SECONDARY_CHAIN,oldName,newName);
+
+//     return subgraphNetwork;
+
+//   }else{
+//     console.log("Error : impossible to rename node "+oldName+" to "+newName+", node already exist or not found in network.");
+//   }
+// }
+
+// function renameInSubgraph(subgraphNetwork:SubgraphNetwork,typeSubgraph:TypeSubgraph,oldName:string,newName:string){
+//   const subgraphs = subgraphNetwork[typeSubgraph]? subgraphNetwork[typeSubgraph]:{};
+//     Object.entries(subgraphs).forEach(([ID,subgraph])=>{
+//       if(subgraph.nodes.includes(oldName)){
+//         // change the name of the node in the subgraph
+//         subgraph.nodes = subgraph.nodes.map(node => node === oldName ? newName : node);
+//         // change metadata of node to know in which subgraph it is
+//         updateNodeMetadataSubgraph(subgraphNetwork.network.value, newName, ID,typeSubgraph); //newName because the node has been renamed
+//       }
+//     });
+// }
+
