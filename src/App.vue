@@ -529,7 +529,7 @@ await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster,false).then(
   }
 ).then(
   () => {
-    //subgraphNetwork=updateCofactorsReversibleReaction(subgraphNetwork);
+    subgraphNetwork=updateCofactorsReversibleReaction(subgraphNetwork);
   }
 ).then(
   () => {

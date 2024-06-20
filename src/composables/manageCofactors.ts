@@ -8,25 +8,25 @@ export async function removeSideCompoundsFromNetwork(subgraphNetwork:SubgraphNet
     const network = subgraphNetwork.network.value;
     const listIDCoftactors = await getListCofactors(pathListSideCompounds);
 
-    // subgraphNetwork.cofactors={};
+    subgraphNetwork.cofactors={};
 
-    // // for each link, see if the source or target is in the list of cofactors : add information in subgraphNetwork.cofactors
-    // network.links.forEach((link) => {
-    //     // if source is cofactor
-    //     if (isCofactor(link.source.id,listIDCoftactors)) {
-    //         if(!(link.target.id in subgraphNetwork.cofactors)){
-    //             subgraphNetwork.cofactors[link.target.id]={reactants:[],products:[]};
-    //         }
-    //         subgraphNetwork.cofactors[link.target.id].reactants.push(link.source);
-    //     }
-    //     // if target is cofactor
-    //     if (isCofactor(link.target.id,listIDCoftactors)) {
-    //         if(!(link.source.id in subgraphNetwork.cofactors)){
-    //             subgraphNetwork.cofactors[link.source.id]={reactants:[],products:[]};
-    //         }
-    //         subgraphNetwork.cofactors[link.source.id].products.push(link.target);
-    //     }
-    // });
+    // for each link, see if the source or target is in the list of cofactors : add information in subgraphNetwork.cofactors
+    network.links.forEach((link) => {
+        // if source is cofactor
+        if (isCofactor(link.source.id,listIDCoftactors)) {
+            if(!(link.target.id in subgraphNetwork.cofactors)){
+                subgraphNetwork.cofactors[link.target.id]={reactants:[],products:[]};
+            }
+            subgraphNetwork.cofactors[link.target.id].reactants.push(link.source);
+        }
+        // if target is cofactor
+        if (isCofactor(link.target.id,listIDCoftactors)) {
+            if(!(link.source.id in subgraphNetwork.cofactors)){
+                subgraphNetwork.cofactors[link.source.id]={reactants:[],products:[]};
+            }
+            subgraphNetwork.cofactors[link.source.id].products.push(link.target);
+        }
+    });
 
     // remove cofactors from network
     removeAllSelectedNodes(listIDCoftactors,network);
