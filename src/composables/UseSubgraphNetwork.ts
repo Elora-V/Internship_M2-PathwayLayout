@@ -1,6 +1,7 @@
 import { Subgraph, TypeSubgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { Network } from "@metabohub/viz-core/src/types/Network";
+import { Node } from "@metabohub/viz-core/src/types/Node";
 
 
 /**
@@ -136,7 +137,7 @@ export function addNodeToSubgraph(subgraphNetwork:SubgraphNetwork,subgraphID:str
  * @param subgraphID - The ID of the cluster to add.
  */
 export function updateNodeMetadataSubgraph(network: Network, nodeID: string, subgraphID: string, subgraphType: TypeSubgraph = TypeSubgraph.MAIN_CHAIN): void {
-  if (! ("metadata" in network.nodes[nodeID]) ){
+  if ( !("metadata" in network.nodes[nodeID].metadata)){
     network.nodes[nodeID].metadata={mainChain:[],secondaryChain:[],cycles:[]};
   }
   if (!(subgraphType in network.nodes[nodeID].metadata)){

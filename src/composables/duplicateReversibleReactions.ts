@@ -1,7 +1,7 @@
 import { Link } from "@metabohub/viz-core/src/types/Link";
 import { Node } from "@metabohub/viz-core/src/types/Node";
 import { Network } from "@metabohub/viz-core/src/types/Network";
-import { removeAllSelectedNode } from "@metabohub/viz-core";
+import { removeAllSelectedNodes } from "@metabohub/viz-core";
 import { DFSWithSources } from "./algoDFS";
 import { SourceType } from "@/types/EnumArgs";
 import { BFSWithSources } from "./algoBFS";
@@ -194,11 +194,11 @@ export function keepFirstReversibleNode(network,nodeOrder:string[]){
   }
 
   // remove one version of the reaction
-  removeAllSelectedNode(reactionToRemove,network);
+  removeAllSelectedNodes(reactionToRemove,network);
   // rename the other if it was the reversible version that is keeped
-  nodeToRename.forEach((node) => {
-    renameIDNode(network,node.oldName,node.newname);
-  });
+  // nodeToRename.forEach((node) => {
+  //   renameIDNode(network,node.oldName,node.newname);
+  // });
 }
 
 

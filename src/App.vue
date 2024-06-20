@@ -190,9 +190,8 @@ import { removeSideCompounds } from "./composables/removeSideCompounds";
 import {chooseReversibleReaction, duplicateReversibleReactions} from "./composables/duplicateReversibleReactions"
 import {importNetworkFromFile,importNetworkFromURL} from "./composables/importNetwork"
 import { networkCopy } from "@/composables/networkToGraph";
-import { initZoom, rescale } from "@metabohub/viz-core";
+import { initZoom, rescale,duplicateNode,removeNode } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
-import { removeThisNode,duplicateThisNode} from "@metabohub/viz-core";
 import { JohnsonAlgorithm, addDirectedCycleToSubgraphNetwork } from "@/composables/findCycle";
 import { countIntersection } from "./composables/countIntersections";
 import { countIsolatedNodes } from "./composables/countIsolatedNodes";
@@ -214,7 +213,7 @@ import { node } from "prop-types";
 import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetwork";
 import { coordinateAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
 import func from "vue-temp/vue-editor-bridge";
-import { removeSideCompoundsFromNetwork } from "@/composables/manageCofactors";
+import { removeSideCompoundsFromNetwork, updateCofactorsReversibleReaction } from "@/composables/manageCofactors";
 
 
 
@@ -229,7 +228,7 @@ const networkStyle = ref<GraphStyleProperties>({
   linkStyles: {}
 });
 let svgProperties = reactive({});
-const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeNode},{label:'Duplicate', action:duplicateNode},{label:'AddToCluster', action:addToCluster},{label:'AddToSource', action:addToUserSource}])
+const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeThisNode},{label:'Duplicate', action:duplicateThisNode},{label:'AddToCluster', action:addToCluster},{label:'AddToSource', action:addToUserSource}])
 let undoFunction: any = reactive({});
 //let clusters : Array<Cluster> =reactive([])
 //let attributGraphViz : AttributesViz=reactive({});
@@ -270,15 +269,16 @@ async function callbackFunction() {
 
   console.log('________New_graph__________');
   subgraphNetwork={network:network,attributs:{},mainChains:{}};
-  subgraphNetwork.attributs={rankdir: "BT" , newrank:false, compound:true};
+  subgraphNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
 
   await removeSideCompoundsFromNetwork(subgraphNetwork,"/sideCompounds.txt").then(
-    ()=>{
+    (subgraphNetworkModified)=>{
+      subgraphNetwork=subgraphNetworkModified;
       originalNetwork=networkCopy(network.value);
     }
   ).then(
     ()=>{
-      algoForce();
+      //algoForce();
     }
   ).then(
     ()=>{
@@ -305,13 +305,13 @@ onMounted(() => {
   importNetworkFromURL('/pathways/Aminosugar_metabolism.json', network, networkStyle, callbackFunction); 
   
 });
-function removeNode() {
-  removeThisNode(menuProps.targetElement, network.value);
+function removeThisNode() {
+  removeNode(menuProps.targetElement, network.value);
   originalNetwork=networkCopy(network.value);
 
 }
-function duplicateNode() {
-  duplicateThisNode(menuProps.targetElement, network.value, networkStyle.value);
+function duplicateThisNode() {
+  duplicateNode(menuProps.targetElement, network.value, networkStyle.value);
   originalNetwork=networkCopy(network.value);
 }
 
@@ -529,6 +529,10 @@ await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster,false).then(
   }
 ).then(
   () => {
+    //subgraphNetwork=updateCofactorsReversibleReaction(subgraphNetwork);
+  }
+).then(
+  () => {
     // add color to link (optional : for debug)
     subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
     subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
@@ -542,7 +546,6 @@ console.log('_____________________________________________');
 
 
 
-
 // ______________________________________________________________________________
 // ----------------------------------------------- Events
 
@@ -551,7 +554,7 @@ function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
     dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
-    vizLayout(subgraphNetwork ,true,true,rescaleAfterAction);
+    vizLayout(subgraphNetwork ,true,true,true,"cluster",true, false,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
   } else if (event.key =="n"){
