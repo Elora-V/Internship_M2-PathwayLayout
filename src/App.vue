@@ -213,7 +213,8 @@ import { node } from "prop-types";
 import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetwork";
 import { coordinateAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
 import func from "vue-temp/vue-editor-bridge";
-import { removeSideCompoundsFromNetwork, updateCofactorsReversibleReaction } from "@/composables/manageCofactors";
+import { putDuplicatedSideCompoundAside, updateSideCompoundsReversibleReaction } from "@/composables/manageSideCompounds";
+import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
 
 
@@ -265,38 +266,34 @@ function loadFile(event: Event) {
 }
 
 
-async function callbackFunction() {
+function callbackFunction() {
 
   console.log('________New_graph__________');
-  subgraphNetwork={network:network,attributs:{},mainChains:{}};
+  // set subgraphNetwork
+  subgraphNetwork={network:network,networkStyle:networkStyle,attributs:{},mainChains:{}};
   subgraphNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
 
-  await removeSideCompoundsFromNetwork(subgraphNetwork,"/sideCompounds.txt").then(
-    (subgraphNetworkModified)=>{
-      subgraphNetwork=subgraphNetworkModified;
-      originalNetwork=networkCopy(network.value);
-    }
-  ).then(
-    ()=>{
-      algoForce();
-    }
-  ).then(
+  // copy network
+  originalNetwork = networkCopy(network.value);
+
+  // force layout
+  algoForce().then(
     ()=>{
       rescale(svgProperties);
-    });
-
-    // set style
-    changeNodeStyles(networkStyle.value);
-    if (!("linkStyles" in networkStyle.value)){
-      networkStyle.value.linkStyles={}
     }
-    networkStyle.value.linkStyles[TypeSubgraph.MAIN_CHAIN]={strokeWidth:3,stroke:"blue"};
-    networkStyle.value.linkStyles[TypeSubgraph.CYCLEGROUP]={stroke:"red"};
+  );
+
+  // set style
+  changeNodeStyles(networkStyle.value);
+  if (!(networkStyle.value.linkStyles)){
+    networkStyle.value.linkStyles={}
+  }
+  networkStyle.value.linkStyles[TypeSubgraph.MAIN_CHAIN]={strokeWidth:3,stroke:"blue"};
+  networkStyle.value.linkStyles[TypeSubgraph.CYCLEGROUP]={stroke:"red"};
 
 }
 
 function rescaleAfterAction(){
-  //console.log('Rescaling');
   rescale(svgProperties);
 }
 
@@ -441,7 +438,7 @@ function getOriginalNetwork():SubgraphNetwork{
 }
 
 // force algorithm : force layout
-function algoForce(){
+async function algoForce():Promise<void>{
   console.log('Force');
   createStaticForceLayout(network.value);
 }
@@ -468,8 +465,18 @@ if(!(!addNodes && groupOrCluster=="group")){
 console.log('Ordering ? ' + String(ordering));
 console.log('---------------');
 
-// get rank 0 with Sugiyama
-await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster,false).then(
+
+
+await putDuplicatedSideCompoundAside(subgraphNetwork,"/sideCompounds.txt").then(
+   (subgraphNetworkModified)=>{
+       subgraphNetwork=subgraphNetworkModified;
+   }
+).then(
+  async () => {
+    //  get rank 0 with Sugiyama
+    await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster,false);
+  }
+).then(
   () => {
     // duplicate reactions
     duplicateReversibleReactions(network);
@@ -530,7 +537,8 @@ await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster,false).then(
   }
 ).then(
   () => {
-    subgraphNetwork=updateCofactorsReversibleReaction(subgraphNetwork);
+    // reverse side compounds of reversed reactions
+    subgraphNetwork=updateSideCompoundsReversibleReaction(subgraphNetwork);
   }
 ).then(
   () => {
@@ -628,6 +636,12 @@ function changeNodeStyles(networkStyle:GraphStyleProperties):void{
 			width: 20,
 			height: 20,
 			fill:  '#FFFFFF',
+			shape: 'circle'
+		},
+    sideCompound: {
+			width: 12,
+			height: 12,
+			fill:  '#f0e3e0',
 			shape: 'circle'
 		},
 		reaction: {
