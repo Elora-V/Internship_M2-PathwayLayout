@@ -286,6 +286,7 @@ async function callbackFunction() {
     });
 
     // set style
+    changeNodeStyles(networkStyle.value);
     if (!("linkStyles" in networkStyle.value)){
       networkStyle.value.linkStyles={}
     }
@@ -618,6 +619,34 @@ function addToUserSource() {
   userSources.push(menuProps.targetElement); 
 }
 
+// ______________________________________________________________________________
+// ----------------------------------------------- Style
+
+function changeNodeStyles(networkStyle:GraphStyleProperties):void{
+	networkStyle.nodeStyles = {
+		metabolite: {
+			width: 20,
+			height: 20,
+			fill:  '#FFFFFF',
+			shape: 'circle'
+		},
+		reaction: {
+			width: 15,
+			height: 15,
+			fill: "grey",
+			shape: 'rect'
+		},
+		reversible : {
+			fill : "green",
+			shape:"inverseTriangle"
+		},
+		reversibleVersion:{
+			fill:"red",
+			shape: "triangle"
+		}
+
+	}
+}
 
 
 </script><style>
