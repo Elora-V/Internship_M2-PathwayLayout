@@ -562,8 +562,10 @@ function keydownHandler(event: KeyboardEvent) {
   } else if (event.key =="c"){
     addDirectedCycleToSubgraphNetwork(subgraphNetwork);
   }else if (event.key =="r"){
-    const sources=getSourcesParam(network.value,SourceType.RANK_SOURCE_ALL);
-    chooseReversibleReaction(network.value,sources,BFSWithSources);
+    (async () => {
+      const sources=getSourcesParam(network.value,SourceType.RANK_SOURCE_ALL);
+      subgraphNetwork= await chooseReversibleReaction(subgraphNetwork,sources,BFSWithSources);
+    })();
   }else if (event.key =="p"){
     const sources=getSourcesParam(network.value,sourceTypePath);
     addMainChainFromSources(subgraphNetwork, sources,getSubgraph, merge,pathType);
