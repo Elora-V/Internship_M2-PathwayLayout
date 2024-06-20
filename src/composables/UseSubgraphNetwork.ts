@@ -137,7 +137,7 @@ export function addNodeToSubgraph(subgraphNetwork:SubgraphNetwork,subgraphID:str
  * @param subgraphID - The ID of the cluster to add.
  */
 export function updateNodeMetadataSubgraph(network: Network, nodeID: string, subgraphID: string, subgraphType: TypeSubgraph = TypeSubgraph.MAIN_CHAIN): void {
-  if ( !("metadata" in network.nodes[nodeID].metadata)){
+  if ( !("metadata" in network.nodes[nodeID])){
     network.nodes[nodeID].metadata={mainChain:[],secondaryChain:[],cycles:[]};
   }
   if (!(subgraphType in network.nodes[nodeID].metadata)){
