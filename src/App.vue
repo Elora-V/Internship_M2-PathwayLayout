@@ -278,7 +278,7 @@ async function callbackFunction() {
     }
   ).then(
     ()=>{
-      //algoForce();
+      algoForce();
     }
   ).then(
     ()=>{
@@ -442,7 +442,7 @@ function getOriginalNetwork():SubgraphNetwork{
 // force algorithm : force layout
 function algoForce(){
   console.log('Force');
-  network.value=createStaticForceLayout(network.value);
+  createStaticForceLayout(network.value);
 }
 
 // algorithm pipeline : pathway layout 
@@ -517,7 +517,7 @@ await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster,false).then(
   async () => {
     // Sugiyama with cycle metanodes 
     if (cycle){
-      await vizLayout(subgraphNetwork, false,true,addNodes,groupOrCluster,ordering,true,rescaleAfterAction);
+      await vizLayout(subgraphNetwork, false,true,addNodes,groupOrCluster,ordering,false,rescaleAfterAction);
     }
   }
 ).then(
