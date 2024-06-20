@@ -9,6 +9,17 @@ import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { TypeSubgraph } from "@/types/Subgraph";
 import { updateNodeMetadataSubgraph } from "./UseSubgraphNetwork";
 
+function addMetadataReversible(network:Network):void{
+  Object.values(network.nodes).forEach((node) => {
+    if(node.classes && node.classes.includes("reversible")){
+      if(!node.metadata){
+        node.metadata={};
+      }
+      node.metadata.reversible=true;
+    }
+  });
+}
+
 /**
  * Take a network and add a duplicated node of reversible reactions, and add links to this reaction
  * @param {Network}  Network object
@@ -17,6 +28,9 @@ import { updateNodeMetadataSubgraph } from "./UseSubgraphNetwork";
 export async function duplicateReversibleReactions(network: Network,suffix:string="_rev"):Promise<void> {
 
   console.log('Duplicate');
+
+  // add metadata "reversible" to nodes
+  addMetadataReversible(network);
 
   const newLinks: Array<Link> = []; //links associated with new reactions nodes
 
