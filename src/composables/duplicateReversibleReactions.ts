@@ -5,6 +5,9 @@ import { removeAllSelectedNodes } from "@metabohub/viz-core";
 import { DFSWithSources } from "./algoDFS";
 import { SourceType } from "@/types/EnumArgs";
 import { BFSWithSources } from "./algoBFS";
+import { SubgraphNetwork } from "@/types/SubgraphNetwork";
+import { TypeSubgraph } from "@/types/Subgraph";
+import { updateNodeMetadataSubgraph } from "./UseSubgraphNetwork";
 
 /**
  * Take a network and add a duplicated node of reversible reactions, and add links to this reaction
@@ -137,7 +140,7 @@ export function pushUniqueString(object:Array<string>, value: string): Array<str
  * and remove one of the duplication. A method in argument (nodeOrderFunction) is used for the choice, the source nodes for the method are in parameter of the function. The node that is keeped 
  * is the first in the returned array.
  * BEWARE : the method with not all sources might miss some duplicated nodes
- * @param network the network with the duplicated nodes
+ * @param subgraphNetwork 
  * @param sources sources nodes (id) to use, if type source :
  * RANK_ONLY : sources are nodes of rank 0
  * SOURCE_ONLY : sources are topological sources of the network (nul indegree)
@@ -149,26 +152,29 @@ export function pushUniqueString(object:Array<string>, value: string): Array<str
  * @param nodeOrderFunction the method that return an array of nodes order (a same node can be present several time!), with sources as input
  */
 export async function chooseReversibleReaction(
-  network: Network,
+  subgraphNetwork:SubgraphNetwork,
   sources: Array<string> | SourceType,
   nodeOrderFunction: (network: Network, sources: Array<string> | SourceType) => string[] =BFSWithSources
-): Promise<void> {
+): Promise<SubgraphNetwork> {
   let nodeOrder: string[] = [];
-
+  const network = subgraphNetwork.network.value;
   // get node order
   nodeOrder = nodeOrderFunction(network,sources);
 
   // keep the first node seen only, for duplicated nodes
-  keepFirstReversibleNode(network, nodeOrder);
+  subgraphNetwork=keepFirstReversibleNode(subgraphNetwork, nodeOrder) as SubgraphNetwork;
+
+  return subgraphNetwork;
 }
 
 
 /**
  * Keeps the first reversible node in the given node order, removing all others and their corresponding reversible versions from the network.
- * @param network The network containing nodes and reactions.
+ * @param subgraphNetwork 
  * @param nodeOrder The order of nodes to consider for keeping the first reversible node.
  */
-export function keepFirstReversibleNode(network,nodeOrder:string[]){
+export function keepFirstReversibleNode(subgraphNetwork:SubgraphNetwork,nodeOrder:string[],doRename:boolean=true):SubgraphNetwork |Array<{oldName:string,newname:string}>{
+  const network = subgraphNetwork.network.value;
   const reactionToRemove:Array<string>=[];
   const nodeToRename:Array<{oldName:string,newname:string}>=[];
 
@@ -196,14 +202,21 @@ export function keepFirstReversibleNode(network,nodeOrder:string[]){
   // remove one version of the reaction
   removeAllSelectedNodes(reactionToRemove,network);
   // rename the other if it was the reversible version that is keeped
-  // nodeToRename.forEach((node) => {
-  //   renameIDNode(network,node.oldName,node.newname);
-  // });
+  if(doRename){
+    nodeToRename.forEach((node) => {
+      console.log('Rename node '+node.oldName+' to '+node.newname);
+      subgraphNetwork=renameIDNode(subgraphNetwork,node.oldName,node.newname);
+    });
+    return subgraphNetwork; // return object renamed
+  }
+  return nodeToRename; // if doRename is false, return the list of node to rename to do it later
 }
 
 
-function renameIDNode(network:Network,oldName:string,newName:string){
+export function renameIDNode(subgraphNetwork:SubgraphNetwork,oldName:string,newName:string):SubgraphNetwork{
+  const network = subgraphNetwork.network.value;
   if(oldName in network.nodes && !(newName in network.nodes)){
+
     // modify node :
     // insert new node with new name
     network.nodes[newName]=network.nodes[oldName];
@@ -228,7 +241,29 @@ function renameIDNode(network:Network,oldName:string,newName:string){
       link.target = newNode;
     });
 
+    // modify subgraphs :
+    // in cycles
+    renameInSubgraph(subgraphNetwork,TypeSubgraph.CYCLE,oldName,newName);
+    // in main chains
+    renameInSubgraph(subgraphNetwork,TypeSubgraph.MAIN_CHAIN,oldName,newName);
+    // in secondary chains
+    renameInSubgraph(subgraphNetwork,TypeSubgraph.SECONDARY_CHAIN,oldName,newName);
+
+    return subgraphNetwork;
+
   }else{
     console.log("Error : impossible to rename node "+oldName+" to "+newName+", node already exist or not found in network.");
   }
+}
+
+function renameInSubgraph(subgraphNetwork:SubgraphNetwork,typeSubgraph:TypeSubgraph,oldName:string,newName:string){
+  const subgraphs = subgraphNetwork[typeSubgraph]? subgraphNetwork[typeSubgraph]:{};
+    Object.entries(subgraphs).forEach(([ID,subgraph])=>{
+      if(subgraph.nodes.includes(oldName)){
+        // change the name of the node in the cycle
+        subgraph.nodes = subgraph.nodes.map(node => node === oldName ? newName : node);
+        // change metadata of node to know in which cycle it is
+        updateNodeMetadataSubgraph(subgraphNetwork.network.value, newName, ID,typeSubgraph); //newName because the node has been renamed
+      }
+    });
 }

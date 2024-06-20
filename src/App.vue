@@ -481,10 +481,10 @@ await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster,false).then(
     }
   }
 ).then(
-  () => {
+  async () => {
     // choose all other reversible reactions
     const sources=getSourcesParam(network,SourceType.RANK_SOURCE_ALL);
-    chooseReversibleReaction(network,sources,BFSWithSources);
+    subgraphNetwork=await chooseReversibleReaction(subgraphNetwork,sources,BFSWithSources);
   }
 ).then(
   () => {

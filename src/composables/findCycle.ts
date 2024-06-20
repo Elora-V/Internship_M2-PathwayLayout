@@ -2,7 +2,7 @@ import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { addNewSubgraph, createSubgraph, updateNodeMetadataSubgraph } from "./UseSubgraphNetwork";
 import { TypeSubgraph } from "@/types/Subgraph";
-import { keepFirstReversibleNode } from "./duplicateReversibleReactions";
+import { keepFirstReversibleNode, renameIDNode } from "./duplicateReversibleReactions";
 
 
 export function addDirectedCycleToSubgraphNetwork(subgraphNetwork:SubgraphNetwork,minsize:number=4):SubgraphNetwork{
@@ -10,6 +10,7 @@ export function addDirectedCycleToSubgraphNetwork(subgraphNetwork:SubgraphNetwor
     if (!subgraphNetwork.cycles){
         subgraphNetwork.cycles={};
     }
+    const nodeToRename:Array<{oldName:string,newname:string}>=[]; // to keep track of reversible reaction that have been removed
     
     // get cycles
     const cycles =getJohnsonCycles(subgraphNetwork,true,minsize);
@@ -34,7 +35,8 @@ export function addDirectedCycleToSubgraphNetwork(subgraphNetwork:SubgraphNetwor
                 updateNodeMetadataSubgraph(subgraphNetwork.network.value,node,cycle[0],TypeSubgraph.CYCLE);
             });
             // remove reversible version of node in cycle, to only keep the one in the direction of cycle
-            keepFirstReversibleNode(subgraphNetwork.network.value,cycle[1]);
+            const toRename=keepFirstReversibleNode(subgraphNetwork,cycle[1],false) as Array<{oldName:string,newname:string}>;
+            nodeToRename.push(...toRename);
 
             // has common nodes with a cycle in subgraphNetwork ?
             let networkCycles = Object.values(subgraphNetwork.cycles);
@@ -72,6 +74,11 @@ export function addDirectedCycleToSubgraphNetwork(subgraphNetwork:SubgraphNetwor
             }
                       
         }
+    });
+
+    // rename reversible reactions (keep the original name)
+    nodeToRename.forEach((node) => {
+        subgraphNetwork=renameIDNode(subgraphNetwork,node.oldName,node.newname);
     });
 
     return subgraphNetwork;
