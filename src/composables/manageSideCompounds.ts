@@ -3,7 +3,7 @@ import { getContentFromURL } from "./importNetwork";
 import { removeAllSelectedNodes , duplicateAllNodesByAttribut} from "@metabohub/viz-core";
 import { S } from "vitest/dist/reporters-1evA5lom";
 import { Network } from "@metabohub/viz-core/src/types/Network";
-import { MetaboliteType, Reaction } from "@/types/Reaction";
+import { MetaboliteType, Reaction, ReactionInterval } from "@/types/Reaction";
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 //___________________________________________________Remove side compounds____________________________________________________
@@ -139,7 +139,9 @@ export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork):Subgra
 
 function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string):void{
     const reaction=initializeReactionSideCompounds(subgraphNetwork,reactionID);
+    reaction.sideCompoundIntervals=findCofactorIntervals(reaction);
     console.log(reaction);
+
 }
 
 
@@ -193,7 +195,7 @@ function getMetaboliteFromReaction(subgraphNetwork: SubgraphNetwork, idReaction:
         .filter((link) => link.source.id === idReaction || link.target.id === idReaction)
         .map((link) => ({
             id: link.source.id === idReaction ? link.target.id : link.source.id,
-            type: link.source.id === idReaction ? MetaboliteType.PRODUCT : MetaboliteType.REACTIF,
+            type: link.source.id === idReaction ? MetaboliteType.PRODUCT : MetaboliteType.REACTANT,
         }));
 }
 
@@ -202,6 +204,61 @@ function angleRadianSegment(x1:number,y1:number,x2:number,y2:number,anticlockwis
     if (anticlockwise) {return  2*Math.PI-(Math.atan2(y2-y1,x2-x1)+2*Math.PI)%(2*Math.PI);}
     // angle in the clockwise direction from the positive x-axis to the line segment from (x1,y1) to (x2,y2) :
     else{return (Math.atan2(y2-y1,x2-x1)+2*Math.PI)%(2*Math.PI);}
+}
+
+function findCofactorIntervals(reaction: Reaction): ReactionInterval[] {
+    let intervals: ReactionInterval[] = [];
+    // sort metabolites by angle
+    const sortedMetabolites = Object.entries(reaction.angleMetabolites)
+        .map(([id, {angle, type}]) => ({id, angle, type}))
+        .sort((a, b) => a.angle - b.angle);
+
+    // initialisation
+    const lastIndex=sortedMetabolites.length-1;
+    let previousType = sortedMetabolites[lastIndex]?.type;
+    let previousId = sortedMetabolites[lastIndex]?.id;
+    let firstInterval=false;
+
+    // Process sorted metabolites to find intervals between reactants and products
+    sortedMetabolites.forEach((currentMetabolite, i) => {
+        if (currentMetabolite.type !== previousType) {
+            // is it the interval between the last and the first metabolite ? (special case for calculations)
+            if (i === 0) {
+                firstInterval=true;
+            }else{
+                firstInterval=false;
+            }
+            // Change of type, we have a new interval
+            const interval= createInterval(reaction,previousId,previousType,currentMetabolite.id,currentMetabolite.type,firstInterval);
+            intervals.push(interval);
+        }
+        // Update previous values
+        previousType = currentMetabolite.type;
+        previousId = currentMetabolite.id;
+    });
+
+    return intervals;
+}
+
+function createInterval(reaction:Reaction,id1:string,type1:MetaboliteType,id2:string,type2:MetaboliteType,firstInterval:boolean=false):ReactionInterval{
+    let typeInterval:number;
+    const angles=reaction.angleMetabolites;
+    const reactant= type1 === MetaboliteType.REACTANT ? id1 : id2;
+    const product= type2 === MetaboliteType.PRODUCT ? id2 : id1; 
+
+    if (angles[reactant].angle<angles[product].angle){
+        // 0 if not special case , else 2
+        typeInterval=0+2*Number(firstInterval);
+    }else{
+        // 1 if not special case , else 3
+        typeInterval=1+2*Number(firstInterval);
+    }
+
+    return{
+        typeInterval: typeInterval, 
+        reactant: reactant,
+        product: product,
+    }
 }
 
 function bissectriceAngle(angle1:number,angle2:number,addAngle:number=0):number{
