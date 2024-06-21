@@ -140,6 +140,7 @@ export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork):Subgra
 function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string):void{
     const reaction=initializeReactionSideCompounds(subgraphNetwork,reactionID);
     reaction.sideCompoundIntervals=findCofactorIntervals(reaction);
+    reaction.sideCompoundIntervals=[biggestInterval(reaction)];
     console.log(reaction);
 
 }
@@ -261,10 +262,33 @@ function createInterval(reaction:Reaction,id1:string,type1:MetaboliteType,id2:st
     }
 }
 
-function bissectriceAngle(angle1:number,angle2:number,addAngle:number=0):number{
-    return ((angle1+angle2)/2 + addAngle+2*Math.PI)%(2*Math.PI);
+
+function biggestInterval(reaction: Reaction): ReactionInterval {
+    const intervals = reaction.sideCompoundIntervals;
+    if (intervals.length === 0) {
+        throw new Error("Empty intervals");
+    }
+    // size of intervals
+    const sizes = intervals.map((_, index) => sizeInterval(reaction, index));
+    // find biggest size
+    const maxValue = Math.max(...sizes);
+    // Return interval associated
+    const maxIndex = sizes.indexOf(maxValue);
+    return intervals[maxIndex];
 }
 
+
+function sizeInterval(reaction:Reaction,intervalIndex:number):number{
+    const angles=reaction.angleMetabolites;
+    const interval=reaction.sideCompoundIntervals[intervalIndex];
+    if (interval.typeInterval===0 || interval.typeInterval===1){
+        // |angle1-angle2|
+        return Math.abs(angles[interval.product].angle-angles[interval.reactant].angle);
+    }else{
+        // special case where we want the complementary angle
+        return 2*Math.PI-Math.abs(angles[interval.product].angle-angles[interval.reactant].angle);
+    }
+}
 
 
 
