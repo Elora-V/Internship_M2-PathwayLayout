@@ -3,6 +3,7 @@ import { getContentFromURL } from "./importNetwork";
 import { removeAllSelectedNodes , duplicateAllNodesByAttribut} from "@metabohub/viz-core";
 import { S } from "vitest/dist/reporters-1evA5lom";
 import { Network } from "@metabohub/viz-core/src/types/Network";
+import { Node } from "@metabohub/viz-core/src/types/Node";
 import { MetaboliteType, Reaction, ReactionInterval } from "@/types/Reaction";
 
 //-----------------------------------------------------------------------------------------------------------------------------------
@@ -138,15 +139,20 @@ export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork):Subgra
 }
 
 function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string):void{
+    // initialize reaction stamp
     const reaction=initializeReactionSideCompounds(subgraphNetwork,reactionID);
+    // find intervals between reactants and products
     reaction.sideCompoundIntervals=findCofactorIntervals(reaction);
+    // find the biggest interval
     const biggest=biggestInterval(reaction);
     reaction.sideCompoundIntervals=[biggest.interval];
+    // find spacing between side compounds
     const spacing=findSpacingSideCompounds(reaction,biggest.size);
     reaction.angleSpacingReactant=spacing.reactant;
     reaction.angleSpacingProduct=spacing.product;
     console.log(reaction);
-
+    // insert side compounds in network
+    //insertAllSideCompoundsInNetwork(subgraphNetwork,reaction);
 }
 
 
@@ -299,9 +305,56 @@ function findSpacingSideCompounds(reaction:Reaction,sizeInterval):{reactant:numb
     const reactantNumber=reaction.reactantSideCompounds.length;
     const productNumber=reaction.productSideCompounds.length;
     return {
-        reactant: reactantNumber === 0 ? undefined : sizeInterval / (2 * reactantNumber),
-        product: productNumber === 0 ? undefined : sizeInterval / (2 * productNumber)
+        reactant: reactantNumber === 0 ? undefined : sizeInterval / (2 * (reactantNumber+1)),
+        product: productNumber === 0 ? undefined : sizeInterval / (2 * (productNumber+1))
     };
+}
+
+function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reaction):SubgraphNetwork{
+    const sideCompounds=subgraphNetwork.sideCompounds[reaction.id];
+    // Reactants Placement
+    sideCompounds.reactants.forEach((sideCompoundNode,i)=>{
+    });
+    // Products Placement
+    sideCompounds.products.forEach((sideCompoundNode,i)=>{
+    });
+   
+    return subgraphNetwork;
+}
+
+
+
+function giveCoordSideCompound(sideCompound:Node,angle:number,center:{x:number,y:number},distance:number):Node{
+    sideCompound.x = center.x + distance * Math.cos(angle);
+    sideCompound.y = center.y + distance * Math.sin(angle);
+    return sideCompound;
+}
+
+function insertAllSideCompoundsInNetwork(subgraphNetwork:SubgraphNetwork,reaction:Reaction):void{
+    const network = subgraphNetwork.network.value;
+    const sideCompounds=subgraphNetwork.sideCompounds[reaction.id];
+    // Reactants
+    Object.keys(reaction.reactantSideCompounds).forEach((reactant)=>{
+        insertSideCompoundInNetwork(subgraphNetwork,reaction.id,sideCompounds.reactants[reactant],MetaboliteType.REACTANT);
+    });
+    // Products
+    Object.keys(reaction.productSideCompounds).forEach((product)=>{
+        insertSideCompoundInNetwork(subgraphNetwork,reaction.id,sideCompounds.products[product],MetaboliteType.PRODUCT);
+    });
+}
+
+function insertSideCompoundInNetwork(subgraphNetwork:SubgraphNetwork,reactionID:string,sideCompound:Node,typeSideCompound:MetaboliteType):void{
+    const network = subgraphNetwork.network.value;
+    // insert node
+    network.nodes[sideCompound.id]=sideCompound;
+    // insert link
+    if (typeSideCompound===MetaboliteType.REACTANT){
+        const idLink=sideCompound.id+"--"+reactionID;
+        network.links.push({id:idLink,source:network.nodes[sideCompound.id],target:network.nodes[reactionID]});
+    }else{
+        const idLink=reactionID+"--"+sideCompound.id;
+        network.links.push({id:idLink,source:network.nodes[reactionID],target:network.nodes[sideCompound.id]});
+    }
 }
 
 
