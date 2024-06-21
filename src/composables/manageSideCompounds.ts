@@ -140,7 +140,11 @@ export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork):Subgra
 function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string):void{
     const reaction=initializeReactionSideCompounds(subgraphNetwork,reactionID);
     reaction.sideCompoundIntervals=findCofactorIntervals(reaction);
-    reaction.sideCompoundIntervals=[biggestInterval(reaction)];
+    const biggest=biggestInterval(reaction);
+    reaction.sideCompoundIntervals=[biggest.interval];
+    const spacing=findSpacingSideCompounds(reaction,biggest.size);
+    reaction.angleSpacingReactant=spacing.reactant;
+    reaction.angleSpacingProduct=spacing.product;
     console.log(reaction);
 
 }
@@ -263,7 +267,7 @@ function createInterval(reaction:Reaction,id1:string,type1:MetaboliteType,id2:st
 }
 
 
-function biggestInterval(reaction: Reaction): ReactionInterval {
+function biggestInterval(reaction: Reaction): {interval:ReactionInterval,size:number} {
     const intervals = reaction.sideCompoundIntervals;
     if (intervals.length === 0) {
         throw new Error("Empty intervals");
@@ -274,7 +278,7 @@ function biggestInterval(reaction: Reaction): ReactionInterval {
     const maxValue = Math.max(...sizes);
     // Return interval associated
     const maxIndex = sizes.indexOf(maxValue);
-    return intervals[maxIndex];
+    return {interval:intervals[maxIndex],size:maxValue};
 }
 
 
@@ -288,6 +292,16 @@ function sizeInterval(reaction:Reaction,intervalIndex:number):number{
         // special case where we want the complementary angle
         return 2*Math.PI-Math.abs(angles[interval.product].angle-angles[interval.reactant].angle);
     }
+}
+
+
+function findSpacingSideCompounds(reaction:Reaction,sizeInterval):{reactant:number,product:number}{
+    const reactantNumber=reaction.reactantSideCompounds.length;
+    const productNumber=reaction.productSideCompounds.length;
+    return {
+        reactant: reactantNumber === 0 ? undefined : sizeInterval / (2 * reactantNumber),
+        product: productNumber === 0 ? undefined : sizeInterval / (2 * productNumber)
+    };
 }
 
 
