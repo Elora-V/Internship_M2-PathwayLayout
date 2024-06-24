@@ -212,9 +212,9 @@ function getMetaboliteFromReaction(subgraphNetwork: SubgraphNetwork, idReaction:
         }));
 }
 
-function angleRadianSegment(x1:number,y1:number,x2:number,y2:number,anticlockwise:boolean=true):number{
+function angleRadianSegment(x1:number,y1:number,x2:number,y2:number,clockwise:boolean=true):number{
     // angle in the anti-clockwise direction from the positive x-axis to the line segment from (x1,y1) to (x2,y2) :
-    if (anticlockwise) {return  2*Math.PI-(Math.atan2(y2-y1,x2-x1)+2*Math.PI)%(2*Math.PI);}
+    if (!clockwise) {return  2*Math.PI-(Math.atan2(y2-y1,x2-x1)+2*Math.PI)%(2*Math.PI);}
     // angle in the clockwise direction from the positive x-axis to the line segment from (x1,y1) to (x2,y2) :
     else{return (Math.atan2(y2-y1,x2-x1)+2*Math.PI)%(2*Math.PI);}
 }
@@ -259,7 +259,7 @@ function createInterval(reaction:Reaction,id1:string,type1:MetaboliteType,id2:st
     const reactant= type1 === MetaboliteType.REACTANT ? id1 : id2;
     const product= type2 === MetaboliteType.PRODUCT ? id2 : id1; 
 
-    if (angles[reactant].angle<angles[product].angle){
+    if (angles[reactant].angle>angles[product].angle){
         // 0 if not special case , else 2
         typeInterval=0+2*Number(firstInterval);
     }else{
@@ -313,10 +313,7 @@ function findSpacingSideCompounds(reaction:Reaction,sizeInterval):{reactant:numb
 }
 
 function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reaction):SubgraphNetwork{
-    if (reaction.id === "r_17"){
-        console.log(reaction);
-    }
-    const distance=100; /// TO CHANGE
+    const distance=50; /// TO CHANGE
     const sideCompounds=subgraphNetwork.sideCompounds[reaction.id];
     const reactionCoord=subgraphNetwork.network.value.nodes[reaction.id];
     // Reactants Placement
@@ -330,7 +327,7 @@ function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reac
         } else if (typeInterval===1 || typeInterval===2){
             direction=1; // go right
         }
-        const angle:number=startAngle;//+ direction * i*reaction.angleSpacingReactant;
+        const angle:number=startAngle + direction * (i+1) *reaction.angleSpacingReactant;
         sideCompoundNode=giveCoordSideCompound(sideCompoundNode,angle,reactionCoord,distance);
     });
     // Products Placement
@@ -344,10 +341,7 @@ function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reac
         } else if (typeInterval===1 || typeInterval===2){
             direction=-1; // go left
         }
-        const angle:number=startAngle;//+ direction * i*reaction.angleSpacingProduct;
-        if (reaction.id === "r_17"){
-            console.log(angle);
-        }
+        const angle:number=startAngle+ direction * (i+1) *reaction.angleSpacingProduct;
         sideCompoundNode=giveCoordSideCompound(sideCompoundNode,angle,reactionCoord,distance);
         
     });
