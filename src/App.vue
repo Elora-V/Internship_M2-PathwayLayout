@@ -213,8 +213,8 @@ import { node } from "prop-types";
 import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetwork";
 import { coordinateAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
 import func from "vue-temp/vue-editor-bridge";
-import { putDuplicatedSideCompoundAside, updateSideCompoundsReversibleReaction } from "@/composables/manageSideCompounds";
-import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
+import { putDuplicatedSideCompoundAside, reinsertionSideCompounds } from "@/composables/manageSideCompounds";
+//import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
 
 
@@ -538,7 +538,7 @@ await putDuplicatedSideCompoundAside(subgraphNetwork,"/sideCompounds.txt").then(
 ).then(
   () => {
     // reverse side compounds of reversed reactions
-    subgraphNetwork=updateSideCompoundsReversibleReaction(subgraphNetwork);
+    subgraphNetwork=reinsertionSideCompounds(subgraphNetwork);
   }
 ).then(
   () => {
