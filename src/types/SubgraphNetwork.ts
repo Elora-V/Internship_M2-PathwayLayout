@@ -1,9 +1,12 @@
 import { Network } from "@metabohub/viz-core/src/types/Network";
+import { Node } from "@metabohub/viz-core/src/types/Node";
 import { Subgraph } from "./Subgraph";
 import { Ref } from "vue";
+import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
 export interface SubgraphNetwork {
 	network: Ref<Network>;
+	networkStyle: Ref<GraphStyleProperties>;
 	attributs?: AttributesViz;
 	mainChains: {
 		[key: string]: Subgraph
@@ -17,5 +20,9 @@ export interface SubgraphNetwork {
 	// The cycle metanode :
 	cyclesGroup?:{
 		[key:string]:Subgraph
+	}
+
+	sideCompounds?:{
+		[key:string]:{reactants:Array<Node>,products:Array<Node>}
 	}
 }

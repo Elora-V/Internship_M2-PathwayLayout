@@ -1,5 +1,5 @@
 import { Network } from "@metabohub/viz-core/src/types/Network";
-import { removeAllSelectedNode } from "@metabohub/viz-core";
+import { removeAllSelectedNodes } from "@metabohub/viz-core";
 import {getContentFromURL} from "./importNetwork"
 
 /**
@@ -17,7 +17,7 @@ export async function removeSideCompounds(network:Network,pathListSideCompounds:
   lines.forEach((line: string) => {
     listId.push(line.split('\t')[0]);
   })
-  removeAllSelectedNode(listId,network);
+  removeAllSelectedNodes(listId,network);
 }
 
 
