@@ -128,7 +128,7 @@ function reversibleNodeReaction(node: Node, suffix: string = "_rev"): Node {
   
   const newNode: Node = {
     id: newId,
-    label: newLabel,
+    label: label,
     x: x,
     y: y,
     classes: newClasses,
