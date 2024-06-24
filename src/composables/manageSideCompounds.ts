@@ -131,14 +131,14 @@ export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork):Subgra
         subgraphNetwork=updateSideCompoundsReversibleReaction(subgraphNetwork);
         // for each reaction, apply motif stamp
         Object.keys(subgraphNetwork.sideCompounds).forEach((reactionID)=>{
-            motifStampSideCompound(subgraphNetwork,reactionID);
+            subgraphNetwork=motifStampSideCompound(subgraphNetwork,reactionID);
         });       
     }
     return subgraphNetwork;
 
 }
 
-function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string):void{
+function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string):SubgraphNetwork{
     // initialize reaction stamp
     const reaction=initializeReactionSideCompounds(subgraphNetwork,reactionID);
     // find intervals between reactants and products
@@ -150,9 +150,11 @@ function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:strin
     const spacing=findSpacingSideCompounds(reaction,biggest.size);
     reaction.angleSpacingReactant=spacing.reactant;
     reaction.angleSpacingProduct=spacing.product;
-    console.log(reaction);
+    // give coordinates to all side compounds
+    subgraphNetwork=giveCoordAllSideCompounds(subgraphNetwork,reaction);
     // insert side compounds in network
-    //insertAllSideCompoundsInNetwork(subgraphNetwork,reaction);
+    insertAllSideCompoundsInNetwork(subgraphNetwork,reaction);
+    return subgraphNetwork;
 }
 
 
@@ -311,12 +313,43 @@ function findSpacingSideCompounds(reaction:Reaction,sizeInterval):{reactant:numb
 }
 
 function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reaction):SubgraphNetwork{
+    if (reaction.id === "r_17"){
+        console.log(reaction);
+    }
+    const distance=100; /// TO CHANGE
     const sideCompounds=subgraphNetwork.sideCompounds[reaction.id];
+    const reactionCoord=subgraphNetwork.network.value.nodes[reaction.id];
     // Reactants Placement
+    const startReactant= reaction.sideCompoundIntervals[0].reactant;
+    let startAngle=reaction.angleMetabolites[startReactant].angle;
     sideCompounds.reactants.forEach((sideCompoundNode,i)=>{
+        let direction:number;
+        const typeInterval=reaction.sideCompoundIntervals[0].typeInterval;
+        if (typeInterval===0 || typeInterval===3){
+            direction=-1; // go left
+        } else if (typeInterval===1 || typeInterval===2){
+            direction=1; // go right
+        }
+        const angle:number=startAngle;//+ direction * i*reaction.angleSpacingReactant;
+        sideCompoundNode=giveCoordSideCompound(sideCompoundNode,angle,reactionCoord,distance);
     });
     // Products Placement
+    const startProduct= reaction.sideCompoundIntervals[0].product;
+    startAngle=reaction.angleMetabolites[startProduct].angle;
     sideCompounds.products.forEach((sideCompoundNode,i)=>{
+        let direction:number;
+        const typeInterval=reaction.sideCompoundIntervals[0].typeInterval;
+        if (typeInterval===0 || typeInterval===3){
+            direction=1; // go right
+        } else if (typeInterval===1 || typeInterval===2){
+            direction=-1; // go left
+        }
+        const angle:number=startAngle;//+ direction * i*reaction.angleSpacingProduct;
+        if (reaction.id === "r_17"){
+            console.log(angle);
+        }
+        sideCompoundNode=giveCoordSideCompound(sideCompoundNode,angle,reactionCoord,distance);
+        
     });
    
     return subgraphNetwork;
