@@ -191,11 +191,15 @@ function initializeReactionSideCompounds(subgraphNetwork:SubgraphNetwork,idReact
             const angle=angleRadianSegment(x,y,xMetabolite,yMetabolite);
             angleMetabolites[metabolite.id]={angle:angle,type:metabolite.type};
         });
+        // median size of links
+        const metaboliteIds = metabolitesReaction.map(metabolite => metabolite.id);
+        const medianLinks=medianLinksReaction(x,y,network,metaboliteIds);
         return {
             id:idReaction,
             reactantSideCompounds:reactantSideCompounds,
             productSideCompounds:productSideCompounds,
-            angleMetabolites:angleMetabolites
+            angleMetabolites:angleMetabolites,
+            medianLengthLink:medianLinks,
         };
     }else{
         return null;
@@ -217,6 +221,29 @@ function angleRadianSegment(x1:number,y1:number,x2:number,y2:number,clockwise:bo
     if (!clockwise) {return  2*Math.PI-(Math.atan2(y2-y1,x2-x1)+2*Math.PI)%(2*Math.PI);}
     // angle in the clockwise direction from the positive x-axis to the line segment from (x1,y1) to (x2,y2) :
     else{return (Math.atan2(y2-y1,x2-x1)+2*Math.PI)%(2*Math.PI);}
+}
+
+function medianLinksReaction(xReaction: number, yReaction: number, network: Network, metabolites: string[]): number {
+    if (metabolites.length === 0) return null;
+
+    const distances = metabolites.map(metabolite => {
+        const metaboliteNode = network.nodes[metabolite];
+        if (!metaboliteNode) return null;
+        const dx = xReaction - metaboliteNode.x;
+        const dy = yReaction - metaboliteNode.y;
+        return Math.sqrt(dx * dx + dy * dy);
+    }).filter(distance => distance !== null);
+
+    if (distances.length === 0) return null;
+
+    distances.sort((a, b) => a - b);
+
+    const midIndex = Math.floor(distances.length / 2);
+    if (distances.length % 2 === 0) {
+        return (distances[midIndex - 1] + distances[midIndex]) / 2;
+    } else {
+        return distances[midIndex];
+    }
 }
 
 function findCofactorIntervals(reaction: Reaction): ReactionInterval[] {
@@ -312,8 +339,8 @@ function findSpacingSideCompounds(reaction:Reaction,sizeInterval):{reactant:numb
     };
 }
 
-function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reaction):SubgraphNetwork{
-    const distance=50; /// TO CHANGE
+function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reaction,factorLenght:number=1/3):SubgraphNetwork{
+    const distance=reaction.medianLengthLink* factorLenght;
     const sideCompounds=subgraphNetwork.sideCompounds[reaction.id];
     const reactionCoord=subgraphNetwork.network.value.nodes[reaction.id];
     // Reactants Placement
