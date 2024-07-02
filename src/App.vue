@@ -538,13 +538,13 @@ await putDuplicatedSideCompoundAside(subgraphNetwork,"/sideCompounds.txt").then(
 ).then(
   () => {
     // reverse side compounds of reversed reactions
-    //subgraphNetwork=reinsertionSideCompounds(subgraphNetwork);
+    subgraphNetwork=reinsertionSideCompounds(subgraphNetwork);
   }
 ).then(
   () => {
     // add color to link (optional : for debug)
-    subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
-    subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
+    //subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
+    //subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
   }
 )
 console.log('_____________________________________________');

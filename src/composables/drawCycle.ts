@@ -7,6 +7,8 @@ import { a } from "vitest/dist/suite-ghspeorC";
 import * as d3 from 'd3';
 import { Link } from "@metabohub/viz-core/src/types/Link";
 import { Node } from "@metabohub/viz-core/src/types/Node";
+import { link } from "fs";
+import { emit } from "process";
 
 export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork):Promise<SubgraphNetwork>{
     return new Promise((resolve) => {
@@ -79,7 +81,7 @@ function firstStepGroupCycles(subgraphNetwork:SubgraphNetwork,radiusFactor:numbe
     return subgraphNetwork;
 }
 
-async function forceGroupCycle(subgraphNetwork:SubgraphNetwork, groupCycleName:string):Promise<SubgraphNetwork>{
+async function forceGroupCycle(subgraphNetwork:SubgraphNetwork, groupCycleName:string,force:number=-200):Promise<SubgraphNetwork>{
 
     if (!subgraphNetwork.cyclesGroup[groupCycleName] || !subgraphNetwork.cyclesGroup[groupCycleName].metadata){
         return subgraphNetwork;
@@ -90,16 +92,11 @@ async function forceGroupCycle(subgraphNetwork:SubgraphNetwork, groupCycleName:s
    
     // applying force layout
     const simulation = d3.forceSimulation(graph.nodes)
-        .force('link', d3.forceLink()
-        .id((d: any) => {
-               return d.id;
-        })
-        .links(graph.links)
-        )
-       .force('charge', d3.forceManyBody().strength(-30))
-       .force('center', d3.forceCenter(0, 0))
-       .alphaMin(0.4)
-       .stop();
+    .force('link', d3.forceLink().id((d: any) => {return d.id;}).links(graph.links))
+    .force('charge', d3.forceManyBody().strength(force))
+    .force('center', d3.forceCenter(0,0))
+    .alphaMin(0.4)
+    .stop();
     
     await sendTick();
     
@@ -110,9 +107,8 @@ async function forceGroupCycle(subgraphNetwork:SubgraphNetwork, groupCycleName:s
     }
 
     // get the new position of the nodes
-    console.log(graph);
     graph.nodes.forEach(node => {
-        subgraphNetwork.cyclesGroup[groupCycleName].metadata[node.id] = { x: node.x, y: node.y };
+        subgraphNetwork.cyclesGroup[groupCycleName].metadata[node.id] = { x: node["x"], y: node["y"] };
     });
 
     return subgraphNetwork;
@@ -276,26 +272,31 @@ export function getNodesIDPlacedInGroupCycle(subgraphNetwork:SubgraphNetwork,gro
     }
 }
 
-export function getNodesPlacedInGroupCycle(subgraphNetwork:SubgraphNetwork,groupCycleID:string):{id:string}[]{
+export function getNodesPlacedInGroupCycle(subgraphNetwork:SubgraphNetwork,groupCycleID:string):{ id: string,fx?:number, fy?:number }[]{
     if (groupCycleID in subgraphNetwork.cyclesGroup && "metadata" in subgraphNetwork.cyclesGroup[groupCycleID]){
         return Object.entries(subgraphNetwork.cyclesGroup[groupCycleID].metadata)
                 .filter(([_, item]) => { return item["x"] !== undefined && item["y"] !== undefined })
-                .map(([key, item]) => { return { id: key, } }); //  x:item["x"], y:item["y"]
+                .map(([key, item]) => { 
+                    if (item["x"]!==0 || item["y"]!==0){
+                        return { id: key,fx:item["x"], fy:item["y"] } 
+                    }else{
+                        return { id: key }
+                    }}); 
                                    
     }else{
         return null;
     }
 }
 
-export function getLinksForNodes(network: Network, nodes: string[]): Link[] {
+export function getLinksForNodes(network: Network, nodes: string[]): {source:string,target:string}[] {
     return network.links.filter(link => 
         nodes.includes(link.source.id) && nodes.includes(link.target.id)
-    );
+    ).map(link => { return { source: link.source.id, target: link.target.id } });
 }
 
-export function getListNodeLinksForCycleGroup(subgraphNetwork:SubgraphNetwork,groupCycleName:string):{nodes:{id:string}[],links:Link[]}{
+export function getListNodeLinksForCycleGroup(subgraphNetwork:SubgraphNetwork,groupCycleName:string):{nodes:{ id: string,fx?:number, fy?:number }[],links:{source:string,target:string}[]}{
     const nodesGroupCycle=getNodesPlacedInGroupCycle(subgraphNetwork,groupCycleName);
-    const nodesGroupCycleName=Object.keys(nodesGroupCycle);
+    const nodesGroupCycleName=Object.values(nodesGroupCycle).map(node=>node.id);
     const linksGroupCycle=getLinksForNodes(subgraphNetwork.network.value,nodesGroupCycleName);
     return {nodes:nodesGroupCycle,links:linksGroupCycle};
 }
