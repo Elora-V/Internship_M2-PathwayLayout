@@ -2,7 +2,8 @@ import type { Ref } from "vue";
 import type { Network } from "@metabohub/viz-core/src/types/Network";
 import type { GraphStyleProperties } from "@metabohub/viz-core/src//types/GraphStyleProperties";
 
-import { readJsonGraph } from "./readJson";
+//import { readJsonGraph } from "./readJson";
+import { readJsonGraph } from "@metabohub/viz-core";
 import { sbml2json } from "./SBMLtoJSON";
 
 
@@ -48,6 +49,7 @@ export function importNetworkFromFile(file: File, network: Ref<Network>, network
 			data = JSON.stringify(await sbml2json(data));
 		}
 		const networkData = readJsonGraph(data);
+		console.log(networkData);
 		networkStyle.value = networkData.networkStyle;
     loadNetwork(networkData.network, network).then(() => {
 			callbackFunction();
