@@ -4,11 +4,22 @@ import { Network } from "@metabohub/viz-core/src/types/Network";
 import { group } from "console";
 import { start } from "repl";
 import { a } from "vitest/dist/suite-ghspeorC";
+import * as d3 from 'd3';
+import { Link } from "@metabohub/viz-core/src/types/Link";
+import { Node } from "@metabohub/viz-core/src/types/Node";
 
-export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
-    subgraphNetwork=firstStepGroupCycles(subgraphNetwork);
-    subgraphNetwork=getSizeGroupCycles(subgraphNetwork);
-    return subgraphNetwork;
+export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork):Promise<SubgraphNetwork>{
+    return new Promise((resolve) => {
+        subgraphNetwork=firstStepGroupCycles(subgraphNetwork);
+        Promise.all(
+            Object.keys(subgraphNetwork.cyclesGroup).map(groupCycleName => 
+                forceGroupCycle(subgraphNetwork, groupCycleName)
+            )
+        ).then(() => {
+            subgraphNetwork=getSizeGroupCycles(subgraphNetwork);
+            resolve(subgraphNetwork);
+        });
+    });
 }
 
 function firstStepGroupCycles(subgraphNetwork:SubgraphNetwork,radiusFactor:number=15):SubgraphNetwork {
@@ -64,6 +75,45 @@ function firstStepGroupCycles(subgraphNetwork:SubgraphNetwork,radiusFactor:numbe
         newGroup=isRemainingCycleIndepOfDrawing(cycles, subgraphNetwork);
 
     }
+
+    return subgraphNetwork;
+}
+
+async function forceGroupCycle(subgraphNetwork:SubgraphNetwork, groupCycleName:string):Promise<SubgraphNetwork>{
+
+    if (!subgraphNetwork.cyclesGroup[groupCycleName] || !subgraphNetwork.cyclesGroup[groupCycleName].metadata){
+        return subgraphNetwork;
+    }
+
+    // get subgraph for groupCycle
+    const graph =getListNodeLinksForCycleGroup(subgraphNetwork,groupCycleName);
+   
+    // applying force layout
+    const simulation = d3.forceSimulation(graph.nodes)
+        .force('link', d3.forceLink()
+        .id((d: any) => {
+               return d.id;
+        })
+        .links(graph.links)
+        )
+       .force('charge', d3.forceManyBody().strength(-30))
+       .force('center', d3.forceCenter(0, 0))
+       .alphaMin(0.4)
+       .stop();
+    
+    await sendTick();
+    
+    async function sendTick() {
+        for (let i = simulation.alpha(); i > 0.4; i = simulation.alpha()) {
+        simulation.tick();
+        }
+    }
+
+    // get the new position of the nodes
+    console.log(graph);
+    graph.nodes.forEach(node => {
+        subgraphNetwork.cyclesGroup[groupCycleName].metadata[node.id] = { x: node.x, y: node.y };
+    });
 
     return subgraphNetwork;
 }
@@ -216,15 +266,40 @@ function findTopCycleNode(subgraphNetwork: SubgraphNetwork, cycleNodes:string[])
 }
 
 
-export function getNodesPlacedInGroupCycle(subgraphNetwork:SubgraphNetwork,groupCycleID:string):string[]{
+export function getNodesIDPlacedInGroupCycle(subgraphNetwork:SubgraphNetwork,groupCycleID:string):string[]{
     if (groupCycleID in subgraphNetwork.cyclesGroup && "metadata" in subgraphNetwork.cyclesGroup[groupCycleID]){
         return Object.entries(subgraphNetwork.cyclesGroup[groupCycleID].metadata)
-                .filter(([key,item]) => item["x"] !== undefined && item["y"] !== undefined)
-                .map(([key,item])=>key);
+                .filter(([_,item]) => item["x"] !== undefined && item["y"] !== undefined)
+                .map(([key,_])=>key);
     }else{
         return [];
     }
 }
+
+export function getNodesPlacedInGroupCycle(subgraphNetwork:SubgraphNetwork,groupCycleID:string):{id:string}[]{
+    if (groupCycleID in subgraphNetwork.cyclesGroup && "metadata" in subgraphNetwork.cyclesGroup[groupCycleID]){
+        return Object.entries(subgraphNetwork.cyclesGroup[groupCycleID].metadata)
+                .filter(([_, item]) => { return item["x"] !== undefined && item["y"] !== undefined })
+                .map(([key, item]) => { return { id: key, } }); //  x:item["x"], y:item["y"]
+                                   
+    }else{
+        return null;
+    }
+}
+
+export function getLinksForNodes(network: Network, nodes: string[]): Link[] {
+    return network.links.filter(link => 
+        nodes.includes(link.source.id) && nodes.includes(link.target.id)
+    );
+}
+
+export function getListNodeLinksForCycleGroup(subgraphNetwork:SubgraphNetwork,groupCycleName:string):{nodes:{id:string}[],links:Link[]}{
+    const nodesGroupCycle=getNodesPlacedInGroupCycle(subgraphNetwork,groupCycleName);
+    const nodesGroupCycleName=Object.keys(nodesGroupCycle);
+    const linksGroupCycle=getLinksForNodes(subgraphNetwork.network.value,nodesGroupCycleName);
+    return {nodes:nodesGroupCycle,links:linksGroupCycle};
+}
+
 
 /**
  * Returns an array of parent nodes, of a list of nodes, that are not part of any cycle in the subgraph network.
@@ -247,7 +322,7 @@ function parentNodeNotInCycle(subgraphNetwork: SubgraphNetwork, listNodes: strin
 
 export function neighborsGroupCycle(subgraphNetwork:SubgraphNetwork,cycleGroupId:string, parentOrChild:"parent"|"child",xSort:boolean=true):string[]{
     if (cycleGroupId in subgraphNetwork.cyclesGroup && "metadata" in subgraphNetwork.cyclesGroup[cycleGroupId]){
-        const nodes=getNodesPlacedInGroupCycle(subgraphNetwork,cycleGroupId);
+        const nodes=getNodesIDPlacedInGroupCycle(subgraphNetwork,cycleGroupId);
         // sort nodes of the group cycle by x
         if (xSort){
             nodes.sort((nodeIdA, nodeIdB) => {
