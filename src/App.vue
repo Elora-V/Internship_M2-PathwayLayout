@@ -518,7 +518,7 @@ await putDuplicatedSideCompoundAside(subgraphNetwork,"/sideCompounds.txt").then(
   () => {
     // relative coordinates for cycles
     if (cycle){
-      coordinateAllCycles(subgraphNetwork,allowInternalCycles);
+      coordinateAllCycles(subgraphNetwork);
     }
   }
 ).then(
@@ -538,7 +538,7 @@ await putDuplicatedSideCompoundAside(subgraphNetwork,"/sideCompounds.txt").then(
 ).then(
   () => {
     // reverse side compounds of reversed reactions
-    subgraphNetwork=reinsertionSideCompounds(subgraphNetwork);
+    //subgraphNetwork=reinsertionSideCompounds(subgraphNetwork);
   }
 ).then(
   () => {
