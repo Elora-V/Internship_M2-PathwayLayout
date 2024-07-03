@@ -128,6 +128,9 @@ function removeSideCompoundsFromNetwork(subgraphNetwork:SubgraphNetwork):Subgrap
 export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork,factorLenght:number=1/2):SubgraphNetwork{
     if(subgraphNetwork.sideCompounds){
         const network = subgraphNetwork.network.value;
+        // get min length distance for stats
+        if (!subgraphNetwork.stats) subgraphNetwork.stats={};
+        subgraphNetwork.stats["minLenghtPixel"]=minLenghtDistance(subgraphNetwork.network.value,false);
         // update side compounds for reversed reactions
         subgraphNetwork=updateSideCompoundsReversibleReaction(subgraphNetwork);
         // for each reaction, apply motif stamp
@@ -281,6 +284,26 @@ function findCofactorIntervals(reaction: Reaction): ReactionInterval[] {
         previousId = currentMetabolite.id;
     });
 
+    // if no interval between reactants and products :
+    previousId = sortedMetabolites[lastIndex]?.id;
+    if (intervals.length === 0) {
+        sortedMetabolites.forEach((currentMetabolite, i) => {
+                // is it the interval between the last and the first metabolite ? (special case for calculations)
+                if (i === 0) {
+                    firstInterval=true;
+                }else{
+                    firstInterval=false;
+                }
+                // new interval
+                const interval= createInterval(reaction,previousId,currentMetabolite.type,currentMetabolite.id,currentMetabolite.type,firstInterval);
+                intervals.push(interval);
+                // update
+                previousId= currentMetabolite.id;
+        });
+    }
+
+
+
     return intervals;
 }
 
@@ -288,14 +311,14 @@ function createInterval(reaction:Reaction,id1:string,type1:MetaboliteType,id2:st
     let typeInterval:number;
     const angles=reaction.angleMetabolites;
     const reactant= type1 === MetaboliteType.REACTANT ? id1 : id2;
-    const product= type2 === MetaboliteType.PRODUCT ? id2 : id1; 
+    const product= type1 === MetaboliteType.REACTANT ? id2 : id1; 
 
-    if (angles[reactant].angle>angles[product].angle){
-        // 0 if not special case , else 2
-        typeInterval=0+2*Number(firstInterval);
-    }else{
+    if (angles[reactant].angle<angles[product].angle){
         // 1 if not special case , else 3
         typeInterval=1+2*Number(firstInterval);
+    }else{
+        // 0 if not special case , else 2
+        typeInterval=0+2*Number(firstInterval);
     }
 
     return{

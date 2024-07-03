@@ -269,11 +269,11 @@ function callbackFunction() {
   networkStyle.value.linkStyles[TypeSubgraph.CYCLEGROUP]={stroke:"red"};
 
   // to test
-  // const size=200;
-  // networkStyle.value.nodeStyles["metabolite"]["height"]=size;
-  // networkStyle.value.nodeStyles["metabolite"]["width"]=size;
-  // networkStyle.value.nodeStyles["reaction"]["height"]=size;
-  // networkStyle.value.nodeStyles["reaction"]["width"]=size;
+  const size=20;
+  networkStyle.value.nodeStyles["metabolite"]["height"]=size;
+  networkStyle.value.nodeStyles["metabolite"]["width"]=size;
+  networkStyle.value.nodeStyles["reaction"]["height"]=size;
+  networkStyle.value.nodeStyles["reaction"]["width"]=size;
 
 }
 
@@ -521,9 +521,6 @@ async function allSteps(subgraphNetwork: SubgraphNetwork,sourceTypePath:SourceTy
     }
   ).then(
     () => {
-      // get min length distance for stats
-      if (!subgraphNetwork.stats) subgraphNetwork.stats={};
-      subgraphNetwork.stats["minLenghtPixel"]=minLenghtDistance(subgraphNetwork.network.value,false);
       // reverse side compounds of reversed reactions
       subgraphNetwork=reinsertionSideCompounds(subgraphNetwork,factorLenght);
     }
