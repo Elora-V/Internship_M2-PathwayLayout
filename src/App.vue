@@ -25,27 +25,6 @@
       All_steps_with_DAG_Dijkstra
     </button>
 
-    <span class="bold margin">|</span>
-
-
-    <button v-on:click="addNodesViz(true)" class="styled-button">
-      Add_Nodes
-    </button>
-    <button v-on:click="addNodesViz(false)" class="styled-button">
-      No_nodes
-    </button>
-
-    <span class="bold margin">|</span>
-
-
-    <button v-on:click="groupInsteadCluster(true)" class="styled-button">
-      Group
-    </button>
-    <button v-on:click="groupInsteadCluster(false)" class="styled-button">
-      Cluster
-    </button>
-
-
   
 
     <div>
@@ -79,12 +58,7 @@
     <button v-on:click="Cycle(false)" class="styled-button">
       No_cycle
     </button>
-    <button v-on:click="allowInternalCycle(true)" class="styled-button">
-      internal_cycle
-    </button>
-    <button v-on:click="allowInternalCycle(false)" class="styled-button">
-      No_internal_cycle
-    </button>
+
 
     <span class="bold margin">|</span>
 
@@ -177,7 +151,7 @@ import { ref, reactive, onMounted } from "vue";
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
 import { SourceType } from "@/types/EnumArgs";
-import { Subgraph, TypeSubgraph } from "@/types/Subgraph";
+import { TypeSubgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { PathType } from './types/EnumArgs';
 
@@ -186,16 +160,15 @@ import { PathType } from './types/EnumArgs';
   // Composables ----------
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
 import { dagreLayout, vizLayout } from './composables/useLayout';
-import { removeSideCompounds } from "./composables/removeSideCompounds";
 import {chooseReversibleReaction, duplicateReversibleReactions} from "./composables/duplicateReversibleReactions"
 import {importNetworkFromFile,importNetworkFromURL} from "./composables/importNetwork"
 import { networkCopy } from "@/composables/networkToGraph";
 import { initZoom, rescale,duplicateNode,removeNode } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
-import { JohnsonAlgorithm, addDirectedCycleToSubgraphNetwork } from "@/composables/findCycle";
+import {  addDirectedCycleToSubgraphNetwork } from "@/composables/findCycle";
 import { countIntersection } from "./composables/countIntersections";
 import { countIsolatedNodes } from "./composables/countIsolatedNodes";
-import { DFSsourceDAG, DFSWithSources } from "@/composables/algoDFS";
+import { DFSsourceDAG } from "@/composables/algoDFS";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 import { BFSWithSources } from "@/composables/algoBFS";
 import { concatSources, getSources } from "@/composables/rankAndSources";
@@ -214,7 +187,7 @@ import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetw
 import { coordinateAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
 import func from "vue-temp/vue-editor-bridge";
 import { putDuplicatedSideCompoundAside, reinsertionSideCompounds } from "@/composables/manageSideCompounds";
-import { getSepAttributesInches, minLenghtDistance, rankSep } from "@/composables/calculateSize";
+import { getSepAttributesInches, minLenghtDistance } from "@/composables/calculateSize";
 import { MinMedianMax } from "@/types/Reaction";
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 

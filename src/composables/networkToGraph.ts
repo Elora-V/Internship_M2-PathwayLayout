@@ -51,7 +51,7 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
  * @param clusters clusters for viz
  * @returns {Graph} Return graph object for viz
  */
-export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true, addNodes:boolean=false,groupOrCluster:"group"|"cluster"="cluster",orderChange:boolean=false): Graph{
+export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true, addNodes:boolean=true,groupOrCluster:"group"|"cluster"="cluster",orderChange:boolean=false): Graph{
 
     if (groupOrCluster==="group" && !addNodes){
         console.warn('Group without nodes in the file not taken into account'); 
@@ -68,7 +68,7 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
         subgraphs:[]
     }
 
-    // insert nodes if use group
+    // insert nodes 
     if (addNodes){
         Object.entries(subgraphNetwork.network.value.nodes)
         .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
@@ -96,31 +96,16 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
     links=sortLinksWithAllGroupCycle(subgraphNetwork,orderChange);
 
     // insert edge (but with cycle metanode if cycle is true) 
-    links.forEach((link)=>{
-
-        // attributs
-        let attributs:AttributesViz={};
-        if (link.metadata && Object.keys(link.metadata).includes("constraint")){
-            attributs.constraint=link.metadata["constraint"] as boolean;
-        }
-        //attributs.minlen=3;
-       
+    links.forEach((link)=>{   
 
         // get tail and head (take into account cycle metanode)
         const {tail,head}=cycleMetanodeLink(link,subgraphNetwork,cycle);
-
-
-        // if (inCycle){
-        //     const lengthToCentroid=Math.round(subgraphNetwork.cycles[inCycle].nodes.length/4)+1; // to test
-        //     //attributs.minlen=lengthToCentroid;
-        // }
 
         // add edge (tail and head) if not already in graphviz   
         if ( tail!== undefined && head!==undefined && tail!==head &&  !graphViz.edges.some(edge => edge.tail === tail && edge.head === head)){
             graphViz.edges.push({
                 tail: tail,
                 head: head,
-                attributes:attributs
             });
         }
 
@@ -175,7 +160,7 @@ export function NetworkToDot(vizGraph:Graph, subgraphFirst:boolean=true):string{
 
         // edges 
         vizGraph.edges.forEach((edge) => {
-            dotString+=`${edge.tail} -> ${edge.head} `+customStringify(edge.attributes)+`;\n`;
+            dotString+=`${edge.tail} -> ${edge.head};\n`;
         });
     } else {
 
@@ -186,7 +171,7 @@ export function NetworkToDot(vizGraph:Graph, subgraphFirst:boolean=true):string{
         });
         // edges 
         vizGraph.edges.forEach((edge) => {
-            dotString+=`${edge.tail} -> ${edge.head} `+customStringify(edge.attributes)+`;\n`;
+            dotString+=`${edge.tail} -> ${edge.head};\n`;
         });
 
         // clusters
