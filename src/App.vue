@@ -214,7 +214,7 @@ import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetw
 import { coordinateAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
 import func from "vue-temp/vue-editor-bridge";
 import { putDuplicatedSideCompoundAside, reinsertionSideCompounds } from "@/composables/manageSideCompounds";
-import { getSepAttributesInches, rankSep } from "@/composables/calculateSize";
+import { getSepAttributesInches, minLenghtDistance, rankSep } from "@/composables/calculateSize";
 import { MinMedianMax } from "@/types/Reaction";
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
@@ -253,7 +253,6 @@ let ordering:boolean=true;
 const dpi:number=72;
 const numberNodeOnEdge:number=3;
 const factorLenght:number=1/2; // % of the lenght of the edge for cofactor edges
-const minMedianMax:MinMedianMax=MinMedianMax.MIN; // base lenght for the cofactor edges : the min, max or median of rectants and product edges
 
 
 
@@ -544,8 +543,11 @@ await putDuplicatedSideCompoundAside(subgraphNetwork,"/sideCompounds.txt").then(
   }
 ).then(
   () => {
+    // get min length distance for stats
+    if (!subgraphNetwork.stats) subgraphNetwork.stats={};
+    subgraphNetwork.stats["minLenghtPixel"]=minLenghtDistance(subgraphNetwork.network.value,false);
     // reverse side compounds of reversed reactions
-    subgraphNetwork=reinsertionSideCompounds(subgraphNetwork,factorLenght,minMedianMax);
+    subgraphNetwork=reinsertionSideCompounds(subgraphNetwork,factorLenght);
   }
 ).then(
   () => {

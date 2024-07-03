@@ -1,6 +1,7 @@
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { Node } from "@metabohub/viz-core/src/types/Node";
+import { inCycle } from "./drawCycle";
 
 
 /**
@@ -67,4 +68,33 @@ export function getMeanNodesSizePixel(nodes:Node[],styleNetwork:GraphStyleProper
  */
 export function pixelsToInches(pixels: number, dpi: number = 72): number {
     return parseFloat((pixels / dpi).toFixed(2));
+}
+
+/**
+ * Converts inches to pixels based on the given DPI (dots per inch).
+ * @param inches - The number of inches to convert.
+ * @param dpi - The DPI value to use for the conversion. Defaults to 72 DPI.
+ * @returns The converted value in pixels.
+ */
+export function inchesToPixels(inches: number, dpi: number = 72): number {
+    return Math.round(inches * dpi);
+}
+
+/**
+ * Calculates the minimum length distance between nodes in a network.
+ * 
+ * @param network - The network object containing nodes.
+ * @returns The minimum length distance between nodes.
+ */
+export function minLenghtDistance(network: Network,cycleInclude:boolean=true): number {
+    let minDistance = Infinity;
+    network.links.forEach((link) => {
+        if (cycleInclude || (!inCycle(network,link.target.id) || !inCycle(network,link.source.id)) ){
+            const dx = link.source.x - link.target.x;
+            const dy = link.source.y - link.target.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            minDistance = Math.min(minDistance, distance);
+        }
+    });
+    return parseFloat(minDistance.toFixed(2));
 }
