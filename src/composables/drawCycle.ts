@@ -94,7 +94,7 @@ async function forceGroupCycle(subgraphNetwork:SubgraphNetwork, groupCycleName:s
     const simulation = d3.forceSimulation(graph.nodes)
     .force('link', d3.forceLink().id((d: any) => {return d.id;}).links(graph.links))
     .force('charge', d3.forceManyBody().strength(force))
-    .force('center', d3.forceCenter(0,0))
+    //.force('center', d3.forceCenter(0,0))
     .alphaMin(0.4)
     .stop();
     

@@ -8,7 +8,7 @@ import * as GDS from 'graph-data-structure';
 import { SubgraphNetwork } from '@/types/SubgraphNetwork';
 import { h } from 'vue';
 import { Link } from '@metabohub/viz-core/src/types/Link';
-import { getNodesPlacedInGroupCycle, inCycle, neighborsGroupCycle } from './drawCycle';
+import { getNodesIDPlacedInGroupCycle, inCycle, neighborsGroupCycle } from './drawCycle';
 import { link } from 'fs';
 import { s } from 'vitest/dist/reporters-1evA5lom';
 
