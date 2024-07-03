@@ -102,6 +102,39 @@ export function minLenghtDistance(network: Network,cycleInclude:boolean=true): n
 }
 
 /**
+ * Calculates the median length distance between nodes in a network.
+ * 
+ * @param network - The network object containing nodes.
+ * @param cycleInclude - Flag to include or exclude links in cycles.
+ * @returns The median length distance between nodes.
+ */
+export function medianLengthDistance(network: Network, cycleInclude: boolean = true): number {
+    const distances: number[] = [];
+    network.links.forEach((link) => {
+        if (cycleInclude || (!inCycle(network, link.target.id) || !inCycle(network, link.source.id))) {
+            const dx = link.source.x - link.target.x;
+            const dy = link.source.y - link.target.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            distances.push(distance);
+        }
+    });
+
+    distances.sort((a, b) => a - b);
+
+    if (distances.length === 0) return 0; // Handle case with no distances
+
+    const mid = Math.floor(distances.length / 2);
+
+    // If even number of distances, median is average of two middle numbers
+    if (distances.length % 2 === 0) {
+        return parseFloat(((distances[mid - 1] + distances[mid]) / 2).toFixed(2));
+    }
+
+    // If odd number of distances, median is middle number
+    return parseFloat(distances[mid].toFixed(2));
+}
+
+/**
  * Calculates the size and center coordinates of a rectangle based on a list of coordinates.
  * @param listCoordinates - The list of coordinates representing the corners of the rectangle.
  * @returns An object containing the width, height, and center coordinates of the rectangle.

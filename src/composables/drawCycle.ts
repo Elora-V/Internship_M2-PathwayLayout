@@ -9,7 +9,7 @@ import { Link } from "@metabohub/viz-core/src/types/Link";
 import { Node } from "@metabohub/viz-core/src/types/Node";
 import { link } from "fs";
 import { emit } from "process";
-import { getMeanNodesSizePixel, getSizeAllGroupCycles } from "./calculateSize";
+import { getMeanNodesSizePixel, getSizeAllGroupCycles, medianLengthDistance } from "./calculateSize";
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
 export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork):Promise<SubgraphNetwork>{
@@ -87,7 +87,7 @@ function firstStepGroupCycles(subgraphNetwork:SubgraphNetwork):SubgraphNetwork {
     return subgraphNetwork;
 }
 
-async function forceGroupCycle(subgraphNetwork:SubgraphNetwork, groupCycleName:string,force:number=-200):Promise<SubgraphNetwork>{
+async function forceGroupCycle(subgraphNetwork:SubgraphNetwork, groupCycleName:string,force:number=-500):Promise<SubgraphNetwork>{
 
     if (!subgraphNetwork.cyclesGroup[groupCycleName] || !subgraphNetwork.cyclesGroup[groupCycleName].metadata){
         return subgraphNetwork;
@@ -95,12 +95,18 @@ async function forceGroupCycle(subgraphNetwork:SubgraphNetwork, groupCycleName:s
 
     // get subgraph for groupCycle
     const graph =getListNodeLinksForCycleGroup(subgraphNetwork,groupCycleName);
+
+    // get attributes for force layout
+    const distanceLinks=medianLengthDistance(subgraphNetwork.network.value,false);
+    const strengthManyBody=-distanceLinks*10;
    
     // applying force layout
     const simulation = d3.forceSimulation(graph.nodes)
-    .force('link', d3.forceLink().id((d: any) => {return d.id;}).links(graph.links))
-    .force('charge', d3.forceManyBody().strength(force))
+    .force('link', d3.forceLink().id((d: any) => {return d.id;}).links(graph.links).distance(distanceLinks).strength(0.3))
+    .force('charge', d3.forceManyBody().strength(strengthManyBody))
+    //.force("collide", d3.forceCollide(distanceLinks/2))
     //.force('center', d3.forceCenter(0,0))
+    //.force("radial", d3.forceRadial(0,0))
     .alphaMin(0.4)
     .stop();
     

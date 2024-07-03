@@ -269,7 +269,7 @@ function callbackFunction() {
   networkStyle.value.linkStyles[TypeSubgraph.CYCLEGROUP]={stroke:"red"};
 
   // to test
-  const size=20;
+  const size=60;
   networkStyle.value.nodeStyles["metabolite"]["height"]=size;
   networkStyle.value.nodeStyles["metabolite"]["width"]=size;
   networkStyle.value.nodeStyles["reaction"]["height"]=size;
@@ -547,7 +547,7 @@ function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
     dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
-    vizLayout(subgraphNetwork ,true,true,true,"cluster",true, false,rescaleAfterAction);
+    vizLayout(subgraphNetwork ,true,true,true,"cluster",true, false,dpi,numberNodeOnEdge,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
   } else if (event.key =="n"){
