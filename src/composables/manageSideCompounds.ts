@@ -4,7 +4,7 @@ import { removeAllSelectedNodes , duplicateAllNodesByAttribut} from "@metabohub/
 import { S } from "vitest/dist/reporters-1evA5lom";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { Node } from "@metabohub/viz-core/src/types/Node";
-import { MetaboliteType, Reaction, ReactionInterval } from "@/types/Reaction";
+import { MetaboliteType, MinMedianMax, Reaction, ReactionInterval } from "@/types/Reaction";
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 //___________________________________________________Remove side compounds____________________________________________________
@@ -124,21 +124,21 @@ function removeSideCompoundsFromNetwork(subgraphNetwork:SubgraphNetwork):Subgrap
 //___________________________________________________Reinsert side compounds____________________________________________________
 
 
-export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
+export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork,factorLenght:number=5/12,minMedianMax:MinMedianMax=MinMedianMax.MEDIAN):SubgraphNetwork{
     if(subgraphNetwork.sideCompounds){
         const network = subgraphNetwork.network.value;
         // update side compounds for reversed reactions
         subgraphNetwork=updateSideCompoundsReversibleReaction(subgraphNetwork);
         // for each reaction, apply motif stamp
         Object.keys(subgraphNetwork.sideCompounds).forEach((reactionID)=>{
-            subgraphNetwork=motifStampSideCompound(subgraphNetwork,reactionID);
+            subgraphNetwork=motifStampSideCompound(subgraphNetwork,reactionID,factorLenght,minMedianMax);
         });       
     }
     return subgraphNetwork;
 
 }
 
-function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string):SubgraphNetwork{
+function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string,factorLenght:number=5/12,minMedianMax:MinMedianMax=MinMedianMax.MEDIAN):SubgraphNetwork{
     // initialize reaction stamp
     const reaction=initializeReactionSideCompounds(subgraphNetwork,reactionID);
     // find intervals between reactants and products
@@ -151,7 +151,7 @@ function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:strin
     reaction.angleSpacingReactant=spacing.reactant;
     reaction.angleSpacingProduct=spacing.product;
     // give coordinates to all side compounds
-    subgraphNetwork=giveCoordAllSideCompounds(subgraphNetwork,reaction);
+    subgraphNetwork=giveCoordAllSideCompounds(subgraphNetwork,reaction,factorLenght,minMedianMax);
     // insert side compounds in network
     insertAllSideCompoundsInNetwork(subgraphNetwork,reaction);
     return subgraphNetwork;
@@ -193,13 +193,13 @@ function initializeReactionSideCompounds(subgraphNetwork:SubgraphNetwork,idReact
         });
         // median size of links
         const metaboliteIds = metabolitesReaction.map(metabolite => metabolite.id);
-        const medianLinks=medianLinksReaction(x,y,network,metaboliteIds);
+        const medianMinMaxLinks=medianMinMaxLinksReaction(x,y,network,metaboliteIds);
         return {
             id:idReaction,
             reactantSideCompounds:reactantSideCompounds,
             productSideCompounds:productSideCompounds,
             angleMetabolites:angleMetabolites,
-            medianLengthLink:medianLinks,
+            medianMinMaxLengthLink:medianMinMaxLinks,
         };
     }else{
         return null;
@@ -223,7 +223,7 @@ function angleRadianSegment(x1:number,y1:number,x2:number,y2:number,clockwise:bo
     else{return (Math.atan2(y2-y1,x2-x1)+2*Math.PI)%(2*Math.PI);}
 }
 
-function medianLinksReaction(xReaction: number, yReaction: number, network: Network, metabolites: string[]): number {
+function medianMinMaxLinksReaction(xReaction: number, yReaction: number, network: Network, metabolites: string[]): {min:number,max:number,median:number} {
     if (metabolites.length === 0) return null;
 
     const distances = metabolites.map(metabolite => {
@@ -237,13 +237,15 @@ function medianLinksReaction(xReaction: number, yReaction: number, network: Netw
     if (distances.length === 0) return null;
 
     distances.sort((a, b) => a - b);
+    let medianMinMax ={min:distances[0],max:distances[distances.length - 1],median:undefined};
 
     const midIndex = Math.floor(distances.length / 2);
     if (distances.length % 2 === 0) {
-        return (distances[midIndex - 1] + distances[midIndex]) / 2;
+        medianMinMax["median"] =(distances[midIndex - 1] + distances[midIndex]) / 2;
     } else {
-        return distances[midIndex];
+        medianMinMax["median"]= distances[midIndex];
     }
+    return medianMinMax;
 }
 
 function findCofactorIntervals(reaction: Reaction): ReactionInterval[] {
@@ -339,8 +341,8 @@ function findSpacingSideCompounds(reaction:Reaction,sizeInterval):{reactant:numb
     };
 }
 
-function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reaction,factorLenght:number=1/3):SubgraphNetwork{
-    const distance=reaction.medianLengthLink* factorLenght;
+function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reaction,factorLenght:number=5/12,medianMinMax:MinMedianMax=MinMedianMax.MEDIAN):SubgraphNetwork{
+    const distance=reaction.medianMinMaxLengthLink[medianMinMax]* factorLenght;
     const sideCompounds=subgraphNetwork.sideCompounds[reaction.id];
     const reactionCoord=subgraphNetwork.network.value.nodes[reaction.id];
     // Reactants Placement

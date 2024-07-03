@@ -4,12 +4,18 @@ export enum MetaboliteType {
     PRODUCT='product',
 }
 
+export enum MinMedianMax {
+    MEDIAN='median',
+    MIN='min',
+    MAX='max'
+}
+
 export interface Reaction {
     id:string
     reactantSideCompounds: Array<string>
     productSideCompounds:Array<string>
     angleMetabolites:{[key:string]:{angle:number,type:MetaboliteType}}
-    medianLengthLink?:number
+    medianMinMaxLengthLink?:{median:number,min:number,max:number}
     sideCompoundIntervals?: ReactionInterval[]
     angleSpacingReactant?:number
     angleSpacingProduct?:number
