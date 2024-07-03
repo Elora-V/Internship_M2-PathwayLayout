@@ -48,7 +48,7 @@ function getSizeNodePixel(node:Node,styleNetwork:GraphStyleProperties):{height:n
  * @param styleNetwork - The style properties of the graph.
  * @returns An object containing the mean height and width of the nodes in pixels.
  */
-function getMeanNodesSizePixel(nodes:Node[],styleNetwork:GraphStyleProperties):{height:number,width:number}{
+export function getMeanNodesSizePixel(nodes:Node[],styleNetwork:GraphStyleProperties):{height:number,width:number}{
     let height:number = 0;
     let width:number = 0;
     nodes.forEach((node)=>{

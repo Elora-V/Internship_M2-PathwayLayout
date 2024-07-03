@@ -9,6 +9,8 @@ import { Link } from "@metabohub/viz-core/src/types/Link";
 import { Node } from "@metabohub/viz-core/src/types/Node";
 import { link } from "fs";
 import { emit } from "process";
+import { getMeanNodesSizePixel } from "./calculateSize";
+import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
 export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork):Promise<SubgraphNetwork>{
     return new Promise((resolve) => {
@@ -24,7 +26,7 @@ export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork):Promise<Sub
     });
 }
 
-function firstStepGroupCycles(subgraphNetwork:SubgraphNetwork,radiusFactor:number=15):SubgraphNetwork {
+function firstStepGroupCycles(subgraphNetwork:SubgraphNetwork):SubgraphNetwork {
     let cycles = subgraphNetwork.cycles? Object.values(subgraphNetwork.cycles):undefined;
     let i=0;
     let group=-1;
@@ -53,7 +55,7 @@ function firstStepGroupCycles(subgraphNetwork:SubgraphNetwork,radiusFactor:numbe
             subgraphNetwork.cyclesGroup[groupName].nodes.push(largestParentCycle.name); 
             cycles = cycles.filter(cycle => cycle.name !== largestParentCycle.name);
             // give it coordinates      
-            subgraphNetwork=coordinateCycle(subgraphNetwork, largestParentCycle.name,groupName,radiusFactor,true); 
+            subgraphNetwork=coordinateCycle(subgraphNetwork, largestParentCycle.name,groupName,true); 
 
         }else{
             // if not first cycle of a group cycle
@@ -65,7 +67,7 @@ function firstStepGroupCycles(subgraphNetwork:SubgraphNetwork,radiusFactor:numbe
                 subgraphNetwork.cyclesGroup[groupName].nodes.push(dependantCycle); 
                 // fix the nodes (to (0,0))
                 const nodes=subgraphNetwork.cycles[dependantCycle].nodes;
-                subgraphNetwork=coordinateCycle(subgraphNetwork, dependantCycle,groupName,radiusFactor,false);
+                subgraphNetwork=coordinateCycle(subgraphNetwork, dependantCycle,groupName,false);
             });
 
             // remove them from the list of cycle to process
@@ -129,7 +131,7 @@ function getSizeGroupCycles(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
     return subgraphNetwork;
 }
 
-function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,groupCycleName:string,radiusFactor:number=15,asCircle:boolean=true):SubgraphNetwork{
+function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,groupCycleName:string,asCircle:boolean=true):SubgraphNetwork{
     const network = subgraphNetwork.network.value;
     let centroidX :number=0;
     let centroidY :number=0;
@@ -158,7 +160,7 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
         // if the cycle has to be drawn as a circle
         if (asCircle){
             // radius and centroid
-            const radius = getRadiusSize(cycle,radiusFactor);
+            const radius = getRadiusSize(cycle,network,subgraphNetwork.networkStyle.value);
             subgraphNetwork.cycles[cycleToDrawID].metadata.radius=radius;   
             subgraphNetwork.cycles[cycleToDrawID].metadata.centroid={x:centroidX,y:centroidY};         
          
@@ -526,8 +528,10 @@ function fixedCycleNodesToOrigin(cycle:string[],subgraphNetwork:SubgraphNetwork,
  * @param radiusFactor - The factor to multiply the length of the cycle by to calculate the radius size. Default value is 15.
  * @returns The calculated radius size.
  */
-function getRadiusSize(cycle:string[],radiusFactor:number=15){
-    return cycle.length*radiusFactor;
+function getRadiusSize(cycle:string[],network:Network,styleNetwork:GraphStyleProperties){
+    const nodes=Object.values(network.nodes).filter(node=>cycle.includes(node.id));
+    const meanSize=getMeanNodesSizePixel(nodes,styleNetwork);
+    return cycle.length*(meanSize.height+meanSize.width)/2;
 }
 
 
@@ -671,6 +675,8 @@ function drawCycleGroup(cycleGroup:string,subgraphNetwork:SubgraphNetwork):void{
         node.y = coord["y"] + dy;
     });
 }
+
+
 
 
 // /**
