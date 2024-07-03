@@ -214,6 +214,7 @@ import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetw
 import { coordinateAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
 import func from "vue-temp/vue-editor-bridge";
 import { putDuplicatedSideCompoundAside, reinsertionSideCompounds } from "@/composables/manageSideCompounds";
+import { getSepAttributesInches, rankSep } from "@/calculateSize";
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
 
@@ -248,6 +249,7 @@ let allowInternalCycles:boolean=false;
 let groupOrCluster:"group"|"cluster"="cluster";
 let addNodes:boolean=true;
 let ordering:boolean=true;
+const dpi:number=96;
 
 
 
@@ -271,7 +273,8 @@ function callbackFunction() {
   console.log('________New_graph__________');
   // set subgraphNetwork
   subgraphNetwork={network:network,networkStyle:networkStyle,attributs:{},mainChains:{}};
-  subgraphNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
+  const sep =getSepAttributesInches(network.value,networkStyle.value,4);
+  subgraphNetwork.attributs={rankdir: "BT" , newrank:true, compound:true,splines:false,ranksep:sep.rankSep +" equally",nodesep:sep.nodeSep+" equally",dpi:dpi};
 
   // copy network
   originalNetwork = networkCopy(network.value);
@@ -544,7 +547,7 @@ await putDuplicatedSideCompoundAside(subgraphNetwork,"/sideCompounds.txt").then(
   () => {
     // add color to link (optional : for debug)
     //subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
-    //subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
+    subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
   }
 )
 console.log('_____________________________________________');
