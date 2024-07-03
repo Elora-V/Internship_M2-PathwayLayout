@@ -1,7 +1,9 @@
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { Node } from "@metabohub/viz-core/src/types/Node";
-import { inCycle } from "./drawCycle";
+import { getNodesPlacedInGroupCycle, inCycle } from "./drawCycle";
+import { SubgraphNetwork } from "@/types/SubgraphNetwork";
+import { Subgraph } from "@/types/Subgraph";
 
 
 /**
@@ -27,7 +29,7 @@ export function getSepAttributesInches(network:Network,styleNetwork:GraphStylePr
  * @param styleNetwork - The style properties of the graph.
  * @returns An object containing the height and width of the node in pixels.
  */
-function getSizeNodePixel(node:Node,styleNetwork:GraphStyleProperties):{height:number,width:number}{
+export function getSizeNodePixel(node:Node,styleNetwork:GraphStyleProperties):{height:number,width:number}{
     let height:number;
     let width:number;
     if (node.classes && styleNetwork.nodeStyles){
@@ -97,4 +99,82 @@ export function minLenghtDistance(network: Network,cycleInclude:boolean=true): n
         }
     });
     return parseFloat(minDistance.toFixed(2));
+}
+
+/**
+ * Calculates the size and center coordinates of a rectangle based on a list of coordinates.
+ * @param listCoordinates - The list of coordinates representing the corners of the rectangle.
+ * @returns An object containing the width, height, and center coordinates of the rectangle.
+ */
+function rectangleSize(listCoordinates:{x:number,y:number}[],listID?:string[],subgraphNetwork?:SubgraphNetwork):{width:number,height:number,center:{x:number,y:number}}{
+
+    // get the x and y coordinates
+    const xCoordinates=listCoordinates.map(coord=>coord.x);
+    const yCoordinates=listCoordinates.map(coord=>coord.y);
+
+    // get the min and max of x and y coordinates
+    let minX = Math.min(...xCoordinates);
+    const minXIndex = xCoordinates.indexOf(minX); 
+
+    let maxX = Math.max(...xCoordinates);
+    const maxXIndex = xCoordinates.indexOf(maxX); 
+
+    let minY = Math.min(...yCoordinates);
+    const minYIndex = yCoordinates.indexOf(minY); 
+
+    let maxY = Math.max(...yCoordinates);
+    const maxYIndex = yCoordinates.indexOf(maxY); 
+
+    // if nodes ID : take into account its size
+    if (listID && subgraphNetwork){
+        // min x
+        const minXNode = listID[minXIndex];
+        const sizeMinXNode = getSizeNodePixel(subgraphNetwork.network.value.nodes[minXNode],subgraphNetwork.networkStyle.value);
+        minX = minX - sizeMinXNode.width/2;
+        // max x
+        const maxXNode = listID[maxXIndex];
+        const sizeMaxXNode = getSizeNodePixel(subgraphNetwork.network.value.nodes[maxXNode],subgraphNetwork.networkStyle.value);
+        maxX = maxX + sizeMaxXNode.width/2;
+        // min y
+        const minYNode = listID[minYIndex];
+        const sizeMinYNode = getSizeNodePixel(subgraphNetwork.network.value.nodes[minYNode],subgraphNetwork.networkStyle.value);
+        minY = minY - sizeMinYNode.height/2;
+        // max y
+        const maxYNode = listID[maxYIndex];
+        const sizeMaxYNode = getSizeNodePixel(subgraphNetwork.network.value.nodes[maxYNode],subgraphNetwork.networkStyle.value);
+        maxY = maxY + sizeMaxYNode.height/2;
+    }
+
+    return {
+        width: maxX - minX,
+        height: maxY - minY,
+        center: {
+            x: (minX + maxX) / 2,
+            y: (minY + maxY) / 2
+        }
+    };
+}
+
+export function getSizeAllGroupCycles(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
+    Object.values(subgraphNetwork.cyclesGroup).forEach(groupCycle => {
+        subgraphNetwork=getSizeGroupCycles(subgraphNetwork,groupCycle);
+    });
+
+    return subgraphNetwork;
+}
+
+function getSizeGroupCycles(subgraphNetwork:SubgraphNetwork,groupCycle:Subgraph):SubgraphNetwork{
+    if (groupCycle.metadata){
+        // get all nodes with x and y coordinates
+        const listNodesMetadata = Object.entries(groupCycle.metadata)
+                        .filter(([_,item]) => item["x"] !== undefined && item["y"] !== undefined);
+        const listCoordinates = listNodesMetadata.map(([_,item]) => {return {x:item["x"],y:item["y"]}});
+        const listID = listNodesMetadata.map(([id,_]) => {return id});
+        // get the size of the rectangle
+        const {width,height,center}=rectangleSize(listCoordinates,listID,subgraphNetwork);
+        groupCycle.width=width;
+        groupCycle.height=height;
+        groupCycle.originCoordinates=center;
+    }
+    return subgraphNetwork;
 }

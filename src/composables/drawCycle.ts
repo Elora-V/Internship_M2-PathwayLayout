@@ -9,7 +9,7 @@ import { Link } from "@metabohub/viz-core/src/types/Link";
 import { Node } from "@metabohub/viz-core/src/types/Node";
 import { link } from "fs";
 import { emit } from "process";
-import { getMeanNodesSizePixel } from "./calculateSize";
+import { getMeanNodesSizePixel, getSizeAllGroupCycles } from "./calculateSize";
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
 export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork):Promise<SubgraphNetwork>{
@@ -20,7 +20,7 @@ export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork):Promise<Sub
                 forceGroupCycle(subgraphNetwork, groupCycleName)
             )
         ).then(() => {
-            subgraphNetwork=getSizeGroupCycles(subgraphNetwork);
+            subgraphNetwork=getSizeAllGroupCycles(subgraphNetwork);
             resolve(subgraphNetwork);
         });
     });
@@ -116,20 +116,7 @@ async function forceGroupCycle(subgraphNetwork:SubgraphNetwork, groupCycleName:s
     return subgraphNetwork;
 }
 
-function getSizeGroupCycles(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
-    Object.values(subgraphNetwork.cyclesGroup).forEach(groupCycle => {
-        if (groupCycle.metadata){
-            const listCoord = Object.values(groupCycle.metadata)
-                            .filter(item => item["x"] !== undefined && item["y"] !== undefined);
-            const {width,height,center}=rectangleSize(listCoord as {x:number,y:number}[]);
-            groupCycle.width=width;
-            groupCycle.height=height;
-            groupCycle.originCoordinates=center;
-        }
-    });
 
-    return subgraphNetwork;
-}
 
 function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,groupCycleName:string,asCircle:boolean=true):SubgraphNetwork{
     const network = subgraphNetwork.network.value;
@@ -616,28 +603,6 @@ function dependantCycles(remainingCycles:Subgraph[], subgraphNetwork:SubgraphNet
 }
 
 
-
-/**
- * Calculates the size and center coordinates of a rectangle based on a list of coordinates.
- * @param listCoordinates - The list of coordinates representing the corners of the rectangle.
- * @returns An object containing the width, height, and center coordinates of the rectangle.
- */
-function rectangleSize(listCoordinates:{x:number,y:number}[]):{width:number,height:number,center:{x:number,y:number}}{
-    const xCoordinates=listCoordinates.map(coord=>coord.x);
-    const yCoordinates=listCoordinates.map(coord=>coord.y);
-    const minX = Math.min(...xCoordinates);
-    const maxX = Math.max(...xCoordinates);
-    const minY = Math.min(...yCoordinates);
-    const maxY = Math.max(...yCoordinates);
-    return {
-        width: maxX - minX,
-        height: maxY - minY,
-        center: {
-            x: (minX + maxX) / 2,
-            y: (minY + maxY) / 2
-        }
-    };
-}
 
 /**
  * Draws all cycle groups in the given subgraph network, that is put the precalculated coordinates inside the network

@@ -11,7 +11,8 @@ import { Link } from '@metabohub/viz-core/src/types/Link';
 import { getNodesIDPlacedInGroupCycle, inCycle, neighborsGroupCycle } from './drawCycle';
 import { link } from 'fs';
 import { s } from 'vitest/dist/reporters-1evA5lom';
-import { pixelsToInches } from './calculateSize';
+import { getSizeNodePixel, pixelsToInches } from './calculateSize';
+import { get } from 'http';
 
 
 /** 
@@ -76,6 +77,10 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
             // if not in metanode, that is, not in cycle :
             if (!inCycle(subgraphNetwork.network.value,node.id)){
                 const attributes:AttributesViz={};
+                // size of node in inches
+                const sizeNode= getSizeNodePixel(node,subgraphNetwork.networkStyle.value);
+                attributes.height=pixelsToInches(sizeNode.height);
+                attributes.width=pixelsToInches(sizeNode.width);
                 // if main chain : add group attribut
                 if (groupOrCluster==="group"){
                     if (node.metadata && node.metadata[TypeSubgraph.MAIN_CHAIN]){

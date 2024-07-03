@@ -249,8 +249,6 @@ function callbackFunction() {
   console.log('________New_graph__________');
   // set subgraphNetwork
   subgraphNetwork={network:network,networkStyle:networkStyle,attributs:{},mainChains:{}};
-  const sep =getSepAttributesInches(network.value,networkStyle.value,numberNodeOnEdge);
-  subgraphNetwork.attributs={rankdir: "BT" , newrank:true, compound:true,splines:false,ranksep:sep.rankSep,nodesep:sep.nodeSep,dpi:dpi};
 
   // copy network
   originalNetwork = networkCopy(network.value);
@@ -269,6 +267,13 @@ function callbackFunction() {
   }
   networkStyle.value.linkStyles[TypeSubgraph.MAIN_CHAIN]={strokeWidth:3,stroke:"blue"};
   networkStyle.value.linkStyles[TypeSubgraph.CYCLEGROUP]={stroke:"red"};
+
+  // to test
+  // const size=200;
+  // networkStyle.value.nodeStyles["metabolite"]["height"]=size;
+  // networkStyle.value.nodeStyles["metabolite"]["width"]=size;
+  // networkStyle.value.nodeStyles["reaction"]["height"]=size;
+  // networkStyle.value.nodeStyles["reaction"]["width"]=size;
 
 }
 
@@ -425,111 +430,111 @@ async function algoForce():Promise<void>{
 // algorithm pipeline : pathway layout 
 async function allSteps(subgraphNetwork: SubgraphNetwork,sourceTypePath:SourceType=SourceType.RANK_SOURCE):Promise<void> {
 
-let network=subgraphNetwork.network.value;
+  let network=subgraphNetwork.network.value;
 
-console.log('_____________________________________________');
-console.log('Parameters :');
-console.log("Source type : "+ sourceTypePath);
-console.log('Only user sources ? ' + String(onlyUserSources));
-console.log("Merge ? " + String(merge));
-console.log('Main chain ? ' + String(mainchain));
-console.log("Add Mini branch ? " + String(minibranch));
-console.log("Type path ? " + pathType);
-console.log('Cycle ? ' + String(cycle));
-console.log('Allow internal cycle ? ' + String(allowInternalCycles));
-console.log('addNodes ' +String(addNodes));
-if(!(!addNodes && groupOrCluster=="group")){
-  console.log('groupOrCluster '+groupOrCluster);
-}
-console.log('Ordering ? ' + String(ordering));
-console.log('---------------');
+  console.log('_____________________________________________');
+  console.log('Parameters :');
+  console.log("Source type : "+ sourceTypePath);
+  console.log('Only user sources ? ' + String(onlyUserSources));
+  console.log("Merge ? " + String(merge));
+  console.log('Main chain ? ' + String(mainchain));
+  console.log("Add Mini branch ? " + String(minibranch));
+  console.log("Type path ? " + pathType);
+  console.log('Cycle ? ' + String(cycle));
+  console.log('Allow internal cycle ? ' + String(allowInternalCycles));
+  console.log('addNodes ' +String(addNodes));
+  if(!(!addNodes && groupOrCluster=="group")){
+    console.log('groupOrCluster '+groupOrCluster);
+  }
+  console.log('Ordering ? ' + String(ordering));
+  console.log('---------------');
 
 
 
-await putDuplicatedSideCompoundAside(subgraphNetwork,"/sideCompounds.txt").then(
-   (subgraphNetworkModified)=>{
-       subgraphNetwork=subgraphNetworkModified;
-   }
-).then(
-  async () => {
-    //  get rank 0 with Sugiyama
-    await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster,false);
-  }
-).then(
-  () => {
-    // duplicate reactions
-    duplicateReversibleReactions(network);
-  }
-).then(
-  () => {
-    // detect cycles and choose some of the reaction duplicated
-    if (cycle){
-      addDirectedCycleToSubgraphNetwork(subgraphNetwork,3);
+  await putDuplicatedSideCompoundAside(subgraphNetwork,"/sideCompounds.txt").then(
+    (subgraphNetworkModified)=>{
+        subgraphNetwork=subgraphNetworkModified;
     }
-  }
-).then(
-  async () => {
-    // choose all other reversible reactions
-    const sources=getSourcesParam(network,SourceType.RANK_SOURCE_ALL);
-    subgraphNetwork=await chooseReversibleReaction(subgraphNetwork,sources,BFSWithSources);
-  }
-).then(
-  () => {
-    // get main chains
-    if (mainchain){
-      const sources=getSourcesParam(network,sourceTypePath);
-      addMainChainFromSources(subgraphNetwork, sources,getSubgraph, merge,pathType);
+  ).then(
+    async () => {
+      //  get rank 0 with Sugiyama
+      await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster,false);
     }
-  }
-).then(
-  () => {
-    // add minibranch
-    if(minibranch){
-      subgraphNetwork= addMiniBranchToMainChain(subgraphNetwork);
+  ).then(
+    () => {
+      // duplicate reactions
+      duplicateReversibleReactions(network);
     }
-  }
-).then(
-  async () => {
-    // Sugiyama without cycle metanodes (to get top nodes for cycles)
-    await vizLayout(subgraphNetwork, false,false,addNodes,groupOrCluster,false);
-  }
-).then(
-  () => {
-    // relative coordinates for cycles
-    if (cycle){
-      coordinateAllCycles(subgraphNetwork);
+  ).then(
+    () => {
+      // detect cycles and choose some of the reaction duplicated
+      if (cycle){
+        addDirectedCycleToSubgraphNetwork(subgraphNetwork,3);
+      }
     }
-  }
-).then(
-  async () => {
-    // Sugiyama with cycle metanodes 
-    if (cycle){
-      await vizLayout(subgraphNetwork, false,true,addNodes,groupOrCluster,ordering,false,rescaleAfterAction);
+  ).then(
+    async () => {
+      // choose all other reversible reactions
+      const sources=getSourcesParam(network,SourceType.RANK_SOURCE_ALL);
+      subgraphNetwork=await chooseReversibleReaction(subgraphNetwork,sources,BFSWithSources);
     }
-  }
-).then(
-  () => {
-    // place the cycles
-    if (cycle){
-      drawAllCyclesGroup(subgraphNetwork);
+  ).then(
+    () => {
+      // get main chains
+      if (mainchain){
+        const sources=getSourcesParam(network,sourceTypePath);
+        addMainChainFromSources(subgraphNetwork, sources,getSubgraph, merge,pathType);
+      }
     }
-  }
-).then(
-  () => {
-    // get min length distance for stats
-    if (!subgraphNetwork.stats) subgraphNetwork.stats={};
-    subgraphNetwork.stats["minLenghtPixel"]=minLenghtDistance(subgraphNetwork.network.value,false);
-    // reverse side compounds of reversed reactions
-    subgraphNetwork=reinsertionSideCompounds(subgraphNetwork,factorLenght);
-  }
-).then(
-  () => {
-    // add color to link (optional : for debug)
-    //subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
-    subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
-  }
-)
-console.log('_____________________________________________');
+  ).then(
+    () => {
+      // add minibranch
+      if(minibranch){
+        subgraphNetwork= addMiniBranchToMainChain(subgraphNetwork);
+      }
+    }
+  ).then(
+    async () => {
+      // Sugiyama without cycle metanodes (to get top nodes for cycles)
+      await vizLayout(subgraphNetwork, false,false,addNodes,groupOrCluster,false);
+    }
+  ).then(
+    () => {
+      // relative coordinates for cycles
+      if (cycle){
+        coordinateAllCycles(subgraphNetwork);
+      }
+    }
+  ).then(
+    async () => {
+      // Sugiyama with cycle metanodes 
+      if (cycle){
+        await vizLayout(subgraphNetwork, false,true,addNodes,groupOrCluster,ordering,false,dpi,numberNodeOnEdge,rescaleAfterAction);
+      }
+    }
+  ).then(
+    () => {
+      // place the cycles
+      if (cycle){
+        drawAllCyclesGroup(subgraphNetwork);
+      }
+    }
+  ).then(
+    () => {
+      // get min length distance for stats
+      if (!subgraphNetwork.stats) subgraphNetwork.stats={};
+      subgraphNetwork.stats["minLenghtPixel"]=minLenghtDistance(subgraphNetwork.network.value,false);
+      // reverse side compounds of reversed reactions
+      subgraphNetwork=reinsertionSideCompounds(subgraphNetwork,factorLenght);
+    }
+  ).then(
+    () => {
+      // add color to link (optional : for debug)
+      //subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
+      subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
+    }
+  )
+  console.log('_____________________________________________');
 
 }
 
