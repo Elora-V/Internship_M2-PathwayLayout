@@ -14,15 +14,19 @@ import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStylePr
 
 export function coordinateAllCycles(subgraphNetwork:SubgraphNetwork):Promise<SubgraphNetwork>{
     return new Promise((resolve) => {
+        // creation of group cycle and placement of first cycle
         subgraphNetwork=firstStepGroupCycles(subgraphNetwork);
-        Promise.all(
-            Object.keys(subgraphNetwork.cyclesGroup).map(groupCycleName => 
-                forceGroupCycle(subgraphNetwork, groupCycleName)
-            )
-        ).then(() => {
-            subgraphNetwork=getSizeAllGroupCycles(subgraphNetwork);
-            resolve(subgraphNetwork);
-        });
+        // if there are group cycle : continue to place the other cycles
+        if (subgraphNetwork.cyclesGroup && Object.keys(subgraphNetwork.cyclesGroup).length>0){
+            Promise.all(
+                Object.keys(subgraphNetwork.cyclesGroup).map(groupCycleName => { 
+                    forceGroupCycle(subgraphNetwork, groupCycleName)
+                })
+            ).then(() => {
+                subgraphNetwork=getSizeAllGroupCycles(subgraphNetwork);
+                resolve(subgraphNetwork);
+            });
+        }
     });
 }
 
