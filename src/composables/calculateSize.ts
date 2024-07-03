@@ -65,6 +65,6 @@ export function getMeanNodesSizePixel(nodes:Node[],styleNetwork:GraphStyleProper
  * @param dpi - The DPI value to use for the conversion. Defaults to 96 DPI.
  * @returns The converted value in inches.
  */
-function pixelsToInches(pixels: number, dpi: number = 96): number {
+export function pixelsToInches(pixels: number, dpi: number = 72): number {
     return parseFloat((pixels / dpi).toFixed(2));
 }

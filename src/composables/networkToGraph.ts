@@ -11,6 +11,7 @@ import { Link } from '@metabohub/viz-core/src/types/Link';
 import { getNodesIDPlacedInGroupCycle, inCycle, neighborsGroupCycle } from './drawCycle';
 import { link } from 'fs';
 import { s } from 'vitest/dist/reporters-1evA5lom';
+import { pixelsToInches } from './calculateSize';
 
 
 /** 
@@ -142,14 +143,13 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
             return areaB - areaA;
         })
         .forEach((cycle) => {
-            const height=cycle.height;
-            const width=cycle.width;
-            const factor=0.015;
+            const height=pixelsToInches(cycle.height);
+            const width=pixelsToInches(cycle.width);
             let ordering=Ordering.DEFAULT;
             if(orderChange){
                 ordering=cycle.ordering;
             }
-            graphViz.nodes.push({name:cycle.name, attributes:{height:factor*height,width:factor*width,ordering:ordering}});
+            graphViz.nodes.push({name:cycle.name, attributes:{height:height,width:width,ordering:ordering}});
         });
     }
     return graphViz;

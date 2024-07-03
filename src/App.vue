@@ -214,7 +214,7 @@ import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetw
 import { coordinateAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
 import func from "vue-temp/vue-editor-bridge";
 import { putDuplicatedSideCompoundAside, reinsertionSideCompounds } from "@/composables/manageSideCompounds";
-import { getSepAttributesInches, rankSep } from "@/calculateSize";
+import { getSepAttributesInches, rankSep } from "@/composables/calculateSize";
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
 
@@ -249,7 +249,8 @@ let allowInternalCycles:boolean=false;
 let groupOrCluster:"group"|"cluster"="cluster";
 let addNodes:boolean=true;
 let ordering:boolean=true;
-const dpi:number=96;
+const dpi:number=72;
+const numberNodeOnEdge:number=3;
 
 
 
@@ -273,8 +274,8 @@ function callbackFunction() {
   console.log('________New_graph__________');
   // set subgraphNetwork
   subgraphNetwork={network:network,networkStyle:networkStyle,attributs:{},mainChains:{}};
-  const sep =getSepAttributesInches(network.value,networkStyle.value,4);
-  subgraphNetwork.attributs={rankdir: "BT" , newrank:true, compound:true,splines:false,ranksep:sep.rankSep +" equally",nodesep:sep.nodeSep+" equally",dpi:dpi};
+  const sep =getSepAttributesInches(network.value,networkStyle.value,numberNodeOnEdge);
+  subgraphNetwork.attributs={rankdir: "BT" , newrank:true, compound:true,splines:false,ranksep:sep.rankSep,nodesep:sep.nodeSep,dpi:dpi};
 
   // copy network
   originalNetwork = networkCopy(network.value);
