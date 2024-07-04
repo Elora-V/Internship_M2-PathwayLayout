@@ -3,6 +3,8 @@ import { Network } from "@metabohub/viz-core/src/types/Network";
 import { checkIntersection } from 'line-intersect';
 import { Link } from '@metabohub/viz-core/src/types/Link';
 import { c } from 'vite/dist/node/types.d-aGj9QkWt';
+import { GraphStyleProperties } from '@metabohub/viz-core/src/types/GraphStyleProperties';
+import { getSizeNodePixel } from './calculateSize';
 
 /**
  * Check if the coordinates (x, y) are the same as the node's coordinates
@@ -122,4 +124,100 @@ export function countIntersectionGraph(nodes: {[key:string]:{x:number,y:number}}
         }
     }
     return nb;
+}
+
+export function isIntersectionGraph(nodes: {[key:string]:{x:number,y:number}},links:{source:string,target:string}[]): boolean {
+    for (let i=0 ; i<links.length ; i++) {
+        for (let j=i+1 ; j<links.length ; j++) {
+            const link1=links[i];
+            const link2=links[j];
+            // check if common node
+            if (commonNodeBetween2Edges(link1,link2)) {
+                continue;
+            }else{
+                // check if intersection
+                const node1Link1=nodes[link1.source];
+                const node2Link1=nodes[link1.target];
+                const node1Link2=nodes[link2.source];
+                const node2Link2=nodes[link2.target];
+                if (edgesIntersection(node1Link1,node2Link1,node1Link2,node2Link2)){
+                   return true;
+                }
+            }
+        }
+    }
+    return false;
+}
+
+//______________________Nodes overlap for graph______________________
+
+export function countOverlapNodes(nodesPosition: {[key:string]:{x:number,y:number}},network:Network,networkStyle:GraphStyleProperties):number{
+    let nb=0;
+    const nodesID=Object.keys(nodesPosition);
+    for (let i=0 ; i<nodesID.length ; i++) {
+        for (let j=i+1 ; j<nodesID.length ; j++) {
+            // info about node1
+            const node1=network.nodes[nodesID[i]];
+            const posNode1=nodesPosition[nodesID[i]];
+            const sizeNode1=getSizeNodePixel(node1,networkStyle);
+            // info about node2
+            const node2=network.nodes[nodesID[j]];
+            const posNode2=nodesPosition[nodesID[j]];
+            const sizeNode2=getSizeNodePixel(node2,networkStyle);
+
+            if (nodeOverlap(posNode1,sizeNode1,posNode2,sizeNode2)){
+                nb+=1;
+            }
+
+        }
+    }
+    return nb;
+}
+
+export function isOverlapNodes(nodesPosition: {[key:string]:{x:number,y:number}},network:Network,networkStyle:GraphStyleProperties):boolean{
+    const nodesID=Object.keys(nodesPosition);
+    for (let i=0 ; i<nodesID.length ; i++) {
+        for (let j=i+1 ; j<nodesID.length ; j++) {
+            // info about node1
+            const node1=network.nodes[nodesID[i]];
+            const posNode1=nodesPosition[nodesID[i]];
+            const sizeNode1=getSizeNodePixel(node1,networkStyle);
+            // info about node2
+            const node2=network.nodes[nodesID[j]];
+            const posNode2=nodesPosition[nodesID[j]];
+            const sizeNode2=getSizeNodePixel(node2,networkStyle);
+
+            if (nodeOverlap(posNode1,sizeNode1,posNode2,sizeNode2)){
+                return true;
+            }
+
+        }
+    }
+    return false;
+}
+
+function nodeOverlap(pos1: {x: number, y: number}, size1: {width: number, height: number}, pos2: {x: number, y: number}, size2: {width: number, height: number}): boolean {
+    if (!pos1 || !size1 || !pos2 || !size2 || !size1.width || !size1.height || !size2.width
+         || !size2.height || !pos1.x || !pos1.y || !pos2.x || !pos2.y) {
+        // Handle null or undefined inputs appropriately
+        return false;
+    }
+
+    // rectangle 1
+    const left1 = pos1.x - size1.width / 2;
+    const right1 = pos1.x + size1.width / 2;
+    const top1 = pos1.y - size1.height / 2;
+    const bottom1 = pos1.y + size1.height / 2;
+
+    // rectangle 2
+    const left2 = pos2.x - size2.width / 2;
+    const right2 = pos2.x + size2.width / 2;
+    const top2 = pos2.y - size2.height / 2;
+    const bottom2 = pos2.y + size2.height / 2;
+
+    // overlap?
+    const overlapX = left1 < right2 && right1 > left2;
+    const overlapY = top1 < bottom2 && bottom1 > top2;
+
+    return overlapX && overlapY;
 }
