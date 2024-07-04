@@ -39,7 +39,7 @@ export async function coordinateAllCycles(subgraphNetwork:SubgraphNetwork,allowI
         let groupName=cycleGroupName(String(group));
         subgraphNetwork=addNewCycleGroup(subgraphNetwork,groupName);
 
-        // Find the first cycle to draw : it shouldn't have a 'forgraph' of type cycle -------------------
+        // Find the first cycle to draw : it shouldn't have a 'forgraph' of type cycle as it should be a parent -------------------
         const parentCycles = cycles.filter(cycle => !cycle.forSubgraph || cycle.forSubgraph.type !== TypeSubgraph.CYCLE);
         if (parentCycles.length === 0) {
             console.error("No cycle found without a forSubgraph of type cycle");
@@ -48,14 +48,14 @@ export async function coordinateAllCycles(subgraphNetwork:SubgraphNetwork,allowI
         parentCycles.sort((a, b) => sortingCycleForDrawing(subgraphNetwork,a,b,true));
         const largestParentCycle = parentCycles[0]; // get largest cycle
         subgraphNetwork.cyclesGroup[groupName].nodes.push(largestParentCycle.name); // add it to the current group of cycle
-        coordinateCycle(subgraphNetwork, largestParentCycle.name,groupName,radiusFactor,allowInterncircle); // drawing largest cycle
+        coordinateCycle(subgraphNetwork, largestParentCycle.name,groupName,radiusFactor,allowInterncircle); // give coordinate for largest cycle
 
         // Drawing the others : --------------------------------------------------------------------------------------------
 
         // Remove the drawn cycle from the list
         const remainingCycles = cycles.filter(cycle => cycle.name !== largestParentCycle.name);
 
-        // If group of connected cycle is drawn : update information
+        // If group of connected cycle is drawn : update group cycle
         const updateGroupCycle=await updateGroupCycles(remainingCycles,subgraphNetwork,group,groupName);
         subgraphNetwork=updateGroupCycle.subgraphNetwork;
         if(updateGroupCycle.group!==group){
@@ -84,7 +84,7 @@ export async function coordinateAllCycles(subgraphNetwork:SubgraphNetwork,allowI
             // remove cycle from the list of cycle to process
             remainingCycles.shift(); 
 
-            // If group of connected cycle is processed : update information of cycle group
+            // If group of connected cycle is processed : update cycle group
             const updateGroupCycle=await updateGroupCycles(remainingCycles,subgraphNetwork,group,groupName);
             subgraphNetwork=updateGroupCycle.subgraphNetwork;
             if(updateGroupCycle.group!==group){
@@ -178,10 +178,8 @@ function sortingCycleForDrawing(subgraphNetwork:SubgraphNetwork,a:Subgraph,b:Sub
  * 
  * @returns The updated subgraph network with the nodes placed in the cycle.
  */
-function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,groupCycleName:string,radiusFactor:number=15,allowInterncircle:boolean=true):SubgraphNetwork{
+function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,groupCycleName:string,allowInterncircle:boolean=true):SubgraphNetwork{
     const network = subgraphNetwork.network.value;
-    let centroidX :number=0;
-    let centroidY :number=0;
     
     // Get nodes to place
     let cycle:string[]=[];
@@ -213,91 +211,119 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
     // If cycle exist: place his nodes
     if (cycleExist && cycle.length>0){
         if (nodesFixedCircle.length===0){ // if independant cycle (first of a group cycle)----------------------------------------------------------------------------------
-            // radius and centroid
-            const radius = getRadiusSize(cycle,network,subgraphNetwork.networkStyle.value);
-            subgraphNetwork.cycles[cycleToDrawID].metadata.radius=radius;   
-            subgraphNetwork.cycles[cycleToDrawID].metadata.centroid={x:centroidX,y:centroidY};         
-         
-            // Shift cycle 
-            const topIndex = findTopCycleNode(subgraphNetwork,cycle); // first node of list is the top 
-            const cycleCopy= cycle.slice();
-            const shiftedCycle = cycleCopy.splice(topIndex).concat(cycleCopy);
 
-            // Give position to each node (no nedd to check if overlap with other cycle, it is the first of the group)
-            subgraphNetwork=cycleNodesCoordinates(cycleToDrawID,shiftedCycle,centroidX,centroidY,radius,subgraphNetwork,-Math.PI/2,groupCycleName).subgraphNetwork;
-
-             
+             subgraphNetwork=independentCycleCoordinates(subgraphNetwork,cycleToDrawID,groupCycleName);
 
         } else if (nodesFixedCircle.length===1){ // if cycle linked to another cycle by one node ----------------------------------------------------------------------------------
             
-            const nodeFixed=network.nodes[nodesFixedCircle[0]];
-            const groupCycleFixed=nodeFixed.metadata[TypeSubgraph.CYCLEGROUP] as string;
-            const coordNodeFixed=subgraphNetwork.cyclesGroup[groupCycleFixed].metadata[nodeFixed.id] as {x:number,y:number};
-
-             // first node is the one fixed :
-             const cycleCopy= cycle.slice();
-             const firstIndex=cycle.indexOf(nodesFixedCircle[0]);
-             const shiftedCycle = cycleCopy.splice(firstIndex).concat(cycleCopy);
-
-            // radius
-            const radius = getRadiusSize(cycle,network,subgraphNetwork.networkStyle.value);
-            subgraphNetwork.cycles[cycleToDrawID].metadata.radius=radius;
-
-            //centroid depending on fixed cycle
-            const radiusFixedCycle=subgraphNetwork.cycles[nodeFixed.metadata.fixedCycle as string].metadata.radius as number;
-            const centroidFixedCycle=subgraphNetwork.cycles[nodeFixed.metadata.fixedCycle as string].metadata.centroid;
-            const fixedAngle = Math.atan2(coordNodeFixed.y - centroidFixedCycle["y"], coordNodeFixed.x - centroidFixedCycle["x"]);
-            let centroidX:number;
-            let centroidY:number;
-            let d:number;
-            // if has some node fixed in a line :
-            if(allowInterncircle && nodesFixed.length >1){
-                d = radiusFixedCycle - radius; // circle draw internally
-
-            }else{ // completely indep of fixed nodes but for the common node
-                d = radius + radiusFixedCycle; // circle draw externally
-            }
-            centroidX = centroidFixedCycle["x"] + d * Math.cos(fixedAngle);
-            centroidY = centroidFixedCycle["y"] + d * Math.sin(fixedAngle);
-            subgraphNetwork.cycles[cycleToDrawID].metadata.centroid={x:centroidX,y:centroidY};
+            const tangentNode=network.nodes[nodesFixedCircle[0]];
+            subgraphNetwork=tangentCycleCoordinates(subgraphNetwork,cycleToDrawID,groupCycleName,tangentNode,nodesFixed);
             
-
-            // shift of start angle (default:pi/2) : angle of fixed node in the new cycle (with centroid calculted before)
-            const positionFixedNode=subgraphNetwork.cyclesGroup[groupCycleName].metadata[nodeFixed.id] as {x:number,y:number};
-            const shiftAngle = Math.atan2(positionFixedNode.y - centroidY, positionFixedNode.x - centroidX);
-            
-            // Give position to each node, and get position before drawing cycle
-            const cycleCoord=cycleNodesCoordinates(cycleToDrawID,shiftedCycle,centroidX,centroidY,radius,subgraphNetwork,shiftAngle,groupCycleName);
-            subgraphNetwork=cycleCoord.subgraphNetwork;
-            const positionBefore=cycleCoord.positionBefore;
-            subgraphNetwork=undoIfOverlap(subgraphNetwork,groupCycleName,positionBefore);
              
         } else { // several node in common with other cycle(s) ----------------------------------------------------------------------------------
 
-            const unfixedInterval=getUnfixedIntervals(cycle,subgraphNetwork);
-            let cycleAsLine:string[]=[];
-            unfixedInterval.forEach(interval=>{
-                const startNode=cycle[(interval[0]-1+ cycle.length) % cycle.length];
-                const endNode=cycle[(interval[1]+1+ cycle.length) % cycle.length];
-                const startNodePosition=subgraphNetwork.cyclesGroup[groupCycleName].metadata[startNode] as {x:number,y:number};
-                const endNodePosition=subgraphNetwork.cyclesGroup[groupCycleName].metadata[endNode] as {x:number,y:number};
-                if (interval[0]>interval[1]){
-                    // if begginning of the cycle at the end, and the end at the beginning
-                    cycleAsLine=cycle.slice(interval[0],cycle.length).concat(cycle.slice(0,interval[1]+1));
-                }else{
-                    cycleAsLine=cycle.slice(interval[0],interval[1]+1);
-                }
-                // Give position to each node
-                const lineCoord=lineNodesCoordinates(startNodePosition,endNodePosition,cycleAsLine,subgraphNetwork,groupCycleName);
-                subgraphNetwork=lineCoord.subgraphNetwork;
-                const positionBefore=lineCoord.positionBefore;
-                subgraphNetwork=undoIfOverlap(subgraphNetwork,groupCycleName,positionBefore);
-            });
-
+            subgraphNetwork=lineCycleCoordinates(subgraphNetwork,cycleToDrawID,groupCycleName);
+            
         }
     }
 
 
+    return subgraphNetwork;
+}
+
+function independentCycleCoordinates(subgraphNetwork:SubgraphNetwork,cycleToDrawID:string,groupCycleName:string):SubgraphNetwork{
+    const network = subgraphNetwork.network.value;
+    const cycle=subgraphNetwork.cycles[cycleToDrawID].nodes;
+    
+    // radius and centroid
+    const radius = getRadiusSize(cycle,network,subgraphNetwork.networkStyle.value);
+        // first cycle centered at 0,0
+    const centroidX=0;
+    const centroidY=0;
+    subgraphNetwork.cycles[cycleToDrawID].metadata.radius=radius;   
+    subgraphNetwork.cycles[cycleToDrawID].metadata.centroid={x:centroidX,y:centroidY};         
+    
+    // Shift cycle 
+    const topIndex = findTopCycleNode(subgraphNetwork,cycle); // first node of list is the top 
+    const cycleCopy= cycle.slice();
+    const shiftedCycle = cycleCopy.splice(topIndex).concat(cycleCopy);
+
+    // Give position to each node (no nedd to check if overlap with other cycle, it is the first of the group)
+    subgraphNetwork=cycleNodesCoordinates(cycleToDrawID,shiftedCycle,centroidX,centroidY,radius,subgraphNetwork,-Math.PI/2,groupCycleName).subgraphNetwork;
+    return subgraphNetwork;
+}    
+
+function tangentCycleCoordinates(subgraphNetwork:SubgraphNetwork,cycleToDrawID:string,groupCycleName:string,nodeFixed:Node,nodesPlaced:string[],allowInterncircle:boolean=false):SubgraphNetwork{
+    const network = subgraphNetwork.network.value;
+    const cycle=subgraphNetwork.cycles[cycleToDrawID].nodes;
+
+    // get fixed node coordinates (in the group cycle)
+    const groupCycleFixed=nodeFixed.metadata[TypeSubgraph.CYCLEGROUP] as string;
+    const coordNodeFixed=subgraphNetwork.cyclesGroup[groupCycleFixed].metadata[nodeFixed.id] as {x:number,y:number};
+
+    // first node of cycle is the one fixed :
+    const cycleCopy= cycle.slice();
+    const firstIndex=cycle.indexOf(nodeFixed.id);
+    const shiftedCycle = cycleCopy.splice(firstIndex).concat(cycleCopy);
+
+    // radius
+    const radius = getRadiusSize(cycle,network,subgraphNetwork.networkStyle.value);
+    subgraphNetwork.cycles[cycleToDrawID].metadata.radius=radius;
+
+    //centroid depending on fixed cycle
+    const radiusFixedCycle=subgraphNetwork.cycles[nodeFixed.metadata.fixedCycle as string].metadata.radius as number;
+    const centroidFixedCycle=subgraphNetwork.cycles[nodeFixed.metadata.fixedCycle as string].metadata.centroid;
+    const fixedAngle = Math.atan2(coordNodeFixed.y - centroidFixedCycle["y"], coordNodeFixed.x - centroidFixedCycle["x"]);
+    let centroidX:number;
+    let centroidY:number;
+    let d:number;
+    // if has some node fixed in a line :
+    if(allowInterncircle && nodesPlaced.length >1){
+        d = radiusFixedCycle - radius; // circle draw internally
+
+    }else{ // completely indep of fixed nodes but for the common node
+        d = radius + radiusFixedCycle; // circle draw externally
+    }
+    centroidX = centroidFixedCycle["x"] + d * Math.cos(fixedAngle);
+    centroidY = centroidFixedCycle["y"] + d * Math.sin(fixedAngle);
+    subgraphNetwork.cycles[cycleToDrawID].metadata.centroid={x:centroidX,y:centroidY};
+    
+
+    // shift of start angle (default:pi/2) : angle of fixed node in the new cycle (with centroid calculted before)
+    const positionFixedNode=subgraphNetwork.cyclesGroup[groupCycleName].metadata[nodeFixed.id] as {x:number,y:number};
+    const shiftAngle = Math.atan2(positionFixedNode.y - centroidY, positionFixedNode.x - centroidX);
+    
+    // Give position to each node, and get position before drawing cycle
+    const cycleCoord=cycleNodesCoordinates(cycleToDrawID,shiftedCycle,centroidX,centroidY,radius,subgraphNetwork,shiftAngle,groupCycleName);
+    subgraphNetwork=cycleCoord.subgraphNetwork;
+    const positionBefore=cycleCoord.positionBefore;
+    subgraphNetwork=undoIfOverlap(subgraphNetwork,groupCycleName,positionBefore);
+
+    return subgraphNetwork;
+}
+
+function lineCycleCoordinates(subgraphNetwork:SubgraphNetwork,cycleToDrawID:string,groupCycleName:string){
+    const cycle=subgraphNetwork.cycles[cycleToDrawID].nodes;
+
+    const unfixedInterval=getUnfixedIntervals(cycle,subgraphNetwork);
+    let cycleAsLine:string[]=[];
+    unfixedInterval.forEach(interval=>{
+        const startNode=cycle[(interval[0]-1+ cycle.length) % cycle.length];
+        const endNode=cycle[(interval[1]+1+ cycle.length) % cycle.length];
+        const startNodePosition=subgraphNetwork.cyclesGroup[groupCycleName].metadata[startNode] as {x:number,y:number};
+        const endNodePosition=subgraphNetwork.cyclesGroup[groupCycleName].metadata[endNode] as {x:number,y:number};
+        if (interval[0]>interval[1]){
+            // if begginning of the cycle at the end, and the end at the beginning
+            cycleAsLine=cycle.slice(interval[0],cycle.length).concat(cycle.slice(0,interval[1]+1));
+        }else{
+            cycleAsLine=cycle.slice(interval[0],interval[1]+1);
+        }
+        // Give position to each node
+        const lineCoord=lineNodesCoordinates(startNodePosition,endNodePosition,cycleAsLine,subgraphNetwork,groupCycleName);
+        subgraphNetwork=lineCoord.subgraphNetwork;
+        const positionBefore=lineCoord.positionBefore;
+        subgraphNetwork=undoIfOverlap(subgraphNetwork,groupCycleName,positionBefore);
+    });
     return subgraphNetwork;
 }
 
@@ -401,7 +427,7 @@ function undoIfOverlap(subgraphNetwork:SubgraphNetwork,groupCycleName:string,pos
 function isOverlapCycles(subgraphNetwork:SubgraphNetwork,groupCycleName:string):boolean{
     const overlap= Math.random() < 0.5 ? false : true;
     console.log('overlap: ',overlap);
-    return true;
+    return false;
 }
 
 
@@ -748,7 +774,6 @@ export function getLinksForNodes(network: Network, nodes: string[]): {source:str
 
 export function getListNodeLinksForCycleGroup(subgraphNetwork:SubgraphNetwork,groupCycleName:string):{nodes:{ id: string,fx?:number, fy?:number }[],links:{source:string,target:string}[]}{
     const nodesGroupCycle=getNodesPlacedInGroupCycle(subgraphNetwork,groupCycleName);
-    console.log(nodesGroupCycle);
     const nodesGroupCycleName=Object.values(nodesGroupCycle).map(node=>node.id);
     const linksGroupCycle=getLinksForNodes(subgraphNetwork.network.value,nodesGroupCycleName);
     return {nodes:nodesGroupCycle,links:linksGroupCycle};
