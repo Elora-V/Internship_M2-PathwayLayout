@@ -25,27 +25,6 @@
       All_steps_with_DAG_Dijkstra
     </button>
 
-    <span class="bold margin">|</span>
-
-
-    <button v-on:click="addNodesViz(true)" class="styled-button">
-      Add_Nodes
-    </button>
-    <button v-on:click="addNodesViz(false)" class="styled-button">
-      No_nodes
-    </button>
-
-    <span class="bold margin">|</span>
-
-
-    <button v-on:click="groupInsteadCluster(true)" class="styled-button">
-      Group
-    </button>
-    <button v-on:click="groupInsteadCluster(false)" class="styled-button">
-      Cluster
-    </button>
-
-
   
 
     <div>
@@ -79,12 +58,7 @@
     <button v-on:click="Cycle(false)" class="styled-button">
       No_cycle
     </button>
-    <button v-on:click="allowInternalCycle(true)" class="styled-button">
-      internal_cycle
-    </button>
-    <button v-on:click="allowInternalCycle(false)" class="styled-button">
-      No_internal_cycle
-    </button>
+
 
     <span class="bold margin">|</span>
 
@@ -177,7 +151,7 @@ import { ref, reactive, onMounted } from "vue";
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
 import { SourceType } from "@/types/EnumArgs";
-import { Subgraph, TypeSubgraph } from "@/types/Subgraph";
+import { TypeSubgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { PathType } from './types/EnumArgs';
 
@@ -186,16 +160,15 @@ import { PathType } from './types/EnumArgs';
   // Composables ----------
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
 import { dagreLayout, vizLayout } from './composables/useLayout';
-import { removeSideCompounds } from "./composables/removeSideCompounds";
 import {chooseReversibleReaction, duplicateReversibleReactions} from "./composables/duplicateReversibleReactions"
 import {importNetworkFromFile,importNetworkFromURL} from "./composables/importNetwork"
 import { networkCopy } from "@/composables/networkToGraph";
 import { initZoom, rescale,duplicateNode,removeNode } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
-import { JohnsonAlgorithm, addDirectedCycleToSubgraphNetwork } from "@/composables/findCycle";
+import {  addDirectedCycleToSubgraphNetwork } from "@/composables/findCycle";
 import { countIntersection } from "./composables/countIntersections";
 import { countIsolatedNodes } from "./composables/countIsolatedNodes";
-import { DFSsourceDAG, DFSWithSources } from "@/composables/algoDFS";
+import { DFSsourceDAG } from "@/composables/algoDFS";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 import { BFSWithSources } from "@/composables/algoBFS";
 import { concatSources, getSources } from "@/composables/rankAndSources";
@@ -214,6 +187,8 @@ import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetw
 import { coordinateAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
 import func from "vue-temp/vue-editor-bridge";
 import { putDuplicatedSideCompoundAside, reinsertionSideCompounds } from "@/composables/manageSideCompounds";
+import { getSepAttributesInches, minLengthDistance } from "@/composables/calculateSize";
+import { MinMedianMax } from "@/types/Reaction";
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
 
@@ -244,10 +219,13 @@ let mainchain:boolean=true;
 let userSources:string[]=[];
 let onlyUserSources:boolean=false;
 let cycle:boolean=true;
-let allowInternalCycles:boolean=false;
+let allowInternalCycles:boolean=true;
 let groupOrCluster:"group"|"cluster"="cluster";
 let addNodes:boolean=true;
 let ordering:boolean=true;
+const dpi:number=72;
+const numberNodeOnEdge:number=3;
+const factorLength:number=1/2; // % of the length of the edge for cofactor edges
 
 
 
@@ -271,7 +249,6 @@ function callbackFunction() {
   console.log('________New_graph__________');
   // set subgraphNetwork
   subgraphNetwork={network:network,networkStyle:networkStyle,attributs:{},mainChains:{}};
-  subgraphNetwork.attributs={rankdir: "BT" , newrank:true, compound:true};
 
   // copy network
   originalNetwork = networkCopy(network.value);
@@ -290,6 +267,13 @@ function callbackFunction() {
   }
   networkStyle.value.linkStyles[TypeSubgraph.MAIN_CHAIN]={strokeWidth:3,stroke:"blue"};
   networkStyle.value.linkStyles[TypeSubgraph.CYCLEGROUP]={stroke:"red"};
+
+  // to test
+  // const size=20;
+  // networkStyle.value.nodeStyles["metabolite"]["height"]=size;
+  // networkStyle.value.nodeStyles["metabolite"]["width"]=size;
+  // networkStyle.value.nodeStyles["reaction"]["height"]=size;
+  // networkStyle.value.nodeStyles["reaction"]["width"]=size;
 
 }
 
@@ -446,108 +430,108 @@ async function algoForce():Promise<void>{
 // algorithm pipeline : pathway layout 
 async function allSteps(subgraphNetwork: SubgraphNetwork,sourceTypePath:SourceType=SourceType.RANK_SOURCE):Promise<void> {
 
-let network=subgraphNetwork.network.value;
+  let network=subgraphNetwork.network.value;
 
-console.log('_____________________________________________');
-console.log('Parameters :');
-console.log("Source type : "+ sourceTypePath);
-console.log('Only user sources ? ' + String(onlyUserSources));
-console.log("Merge ? " + String(merge));
-console.log('Main chain ? ' + String(mainchain));
-console.log("Add Mini branch ? " + String(minibranch));
-console.log("Type path ? " + pathType);
-console.log('Cycle ? ' + String(cycle));
-console.log('Allow internal cycle ? ' + String(allowInternalCycles));
-console.log('addNodes ' +String(addNodes));
-if(!(!addNodes && groupOrCluster=="group")){
-  console.log('groupOrCluster '+groupOrCluster);
-}
-console.log('Ordering ? ' + String(ordering));
-console.log('---------------');
+  console.log('_____________________________________________');
+  console.log('Parameters :');
+  console.log("Source type : "+ sourceTypePath);
+  console.log('Only user sources ? ' + String(onlyUserSources));
+  console.log("Merge ? " + String(merge));
+  console.log('Main chain ? ' + String(mainchain));
+  console.log("Add Mini branch ? " + String(minibranch));
+  console.log("Type path ? " + pathType);
+  console.log('Cycle ? ' + String(cycle));
+  console.log('Allow internal cycle ? ' + String(allowInternalCycles));
+  console.log('addNodes ' +String(addNodes));
+  if(!(!addNodes && groupOrCluster=="group")){
+    console.log('groupOrCluster '+groupOrCluster);
+  }
+  console.log('Ordering ? ' + String(ordering));
+  console.log('---------------');
 
 
 
-await putDuplicatedSideCompoundAside(subgraphNetwork,"/sideCompounds.txt").then(
-   (subgraphNetworkModified)=>{
-       subgraphNetwork=subgraphNetworkModified;
-   }
-).then(
-  async () => {
-    //  get rank 0 with Sugiyama
-    await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster,false);
-  }
-).then(
-  () => {
-    // duplicate reactions
-    duplicateReversibleReactions(network);
-  }
-).then(
-  () => {
-    // detect cycles and choose some of the reaction duplicated
-    if (cycle){
-      addDirectedCycleToSubgraphNetwork(subgraphNetwork,3);
+  await putDuplicatedSideCompoundAside(subgraphNetwork,"/sideCompounds.txt").then(
+    (subgraphNetworkModified)=>{
+        subgraphNetwork=subgraphNetworkModified;
     }
-  }
-).then(
-  async () => {
-    // choose all other reversible reactions
-    const sources=getSourcesParam(network,SourceType.RANK_SOURCE_ALL);
-    subgraphNetwork=await chooseReversibleReaction(subgraphNetwork,sources,BFSWithSources);
-  }
-).then(
-  () => {
-    // get main chains
-    if (mainchain){
-      const sources=getSourcesParam(network,sourceTypePath);
-      addMainChainFromSources(subgraphNetwork, sources,getSubgraph, merge,pathType);
+  ).then(
+    async () => {
+      //  get rank 0 with Sugiyama
+      await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster,false);
     }
-  }
-).then(
-  () => {
-    // add minibranch
-    if(minibranch){
-      subgraphNetwork= addMiniBranchToMainChain(subgraphNetwork);
+  ).then(
+    () => {
+      // duplicate reactions
+      duplicateReversibleReactions(network);
     }
-  }
-).then(
-  async () => {
-    // Sugiyama without cycle metanodes (to get top nodes for cycles)
-    await vizLayout(subgraphNetwork, false,false,addNodes,groupOrCluster,false);
-  }
-).then(
-  () => {
-    // relative coordinates for cycles
-    if (cycle){
-      coordinateAllCycles(subgraphNetwork,allowInternalCycles);
+  ).then(
+    () => {
+      // detect cycles and choose some of the reaction duplicated
+      if (cycle){
+        addDirectedCycleToSubgraphNetwork(subgraphNetwork,3);
+      }
     }
-  }
-).then(
-  async () => {
-    // Sugiyama with cycle metanodes 
-    if (cycle){
-      await vizLayout(subgraphNetwork, false,true,addNodes,groupOrCluster,ordering,false,rescaleAfterAction);
+  ).then(
+    async () => {
+      // choose all other reversible reactions
+      const sources=getSourcesParam(network,SourceType.RANK_SOURCE_ALL);
+      subgraphNetwork=await chooseReversibleReaction(subgraphNetwork,sources,BFSWithSources);
     }
-  }
-).then(
-  () => {
-    // place the cycles
-    if (cycle){
-      drawAllCyclesGroup(subgraphNetwork);
+  ).then(
+    () => {
+      // get main chains
+      if (mainchain){
+        const sources=getSourcesParam(network,sourceTypePath);
+        addMainChainFromSources(subgraphNetwork, sources,getSubgraph, merge,pathType);
+      }
     }
-  }
-).then(
-  () => {
-    // reverse side compounds of reversed reactions
-    subgraphNetwork=reinsertionSideCompounds(subgraphNetwork);
-  }
-).then(
-  () => {
-    // add color to link (optional : for debug)
-    subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
-    subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
-  }
-)
-console.log('_____________________________________________');
+  ).then(
+    () => {
+      // add minibranch
+      if(minibranch){
+        subgraphNetwork= addMiniBranchToMainChain(subgraphNetwork);
+      }
+    }
+  ).then(
+    async () => {
+      // Sugiyama without cycle metanodes (to get top nodes for cycles)
+      await vizLayout(subgraphNetwork, false,false,addNodes,groupOrCluster,false);
+    }
+  ).then(
+    async () => {
+      // relative coordinates for cycles
+      if (cycle){
+        await coordinateAllCycles(subgraphNetwork,allowInternalCycles);
+      }
+    }
+  ).then(
+    async () => {
+      // Sugiyama with cycle metanodes 
+      if (cycle){
+        await vizLayout(subgraphNetwork, false,true,addNodes,groupOrCluster,ordering,false,dpi,numberNodeOnEdge,rescaleAfterAction);
+      }
+    }
+  ).then(
+    () => {
+      // place the cycles
+      if (cycle){
+        drawAllCyclesGroup(subgraphNetwork);
+      }
+    }
+  ).then(
+    () => {
+      // reverse side compounds of reversed reactions
+      subgraphNetwork=reinsertionSideCompounds(subgraphNetwork,factorLength);
+    }
+  ).then(
+    () => {
+      // add color to link (optional : for debug)
+      //subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
+      subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
+    }
+  )
+  console.log('_____________________________________________');
 
 }
 
@@ -563,7 +547,7 @@ function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
     dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
-    vizLayout(subgraphNetwork ,true,true,true,"cluster",true, false,rescaleAfterAction);
+    vizLayout(subgraphNetwork ,true,true,true,"cluster",true, false,dpi,numberNodeOnEdge,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
   } else if (event.key =="n"){

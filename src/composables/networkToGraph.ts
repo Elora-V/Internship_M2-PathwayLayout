@@ -8,9 +8,11 @@ import * as GDS from 'graph-data-structure';
 import { SubgraphNetwork } from '@/types/SubgraphNetwork';
 import { h } from 'vue';
 import { Link } from '@metabohub/viz-core/src/types/Link';
-import { getNodesPlacedInGroupCycle, inCycle, neighborsGroupCycle } from './drawCycle';
+import { getNodesIDPlacedInGroupCycle, inCycle, neighborsGroupCycle } from './drawCycle';
 import { link } from 'fs';
 import { s } from 'vitest/dist/reporters-1evA5lom';
+import { getSizeNodePixel, pixelsToInches } from './calculateSize';
+import { get } from 'http';
 
 
 /** 
@@ -50,7 +52,7 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
  * @param clusters clusters for viz
  * @returns {Graph} Return graph object for viz
  */
-export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true, addNodes:boolean=false,groupOrCluster:"group"|"cluster"="cluster",orderChange:boolean=false): Graph{
+export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true, addNodes:boolean=true,groupOrCluster:"group"|"cluster"="cluster",orderChange:boolean=false): Graph{
 
     if (groupOrCluster==="group" && !addNodes){
         console.warn('Group without nodes in the file not taken into account'); 
@@ -67,7 +69,7 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
         subgraphs:[]
     }
 
-    // insert nodes if use group
+    // insert nodes 
     if (addNodes){
         Object.entries(subgraphNetwork.network.value.nodes)
         .sort(([keyA], [keyB]) => keyA.localeCompare(keyB))
@@ -75,6 +77,10 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
             // if not in metanode, that is, not in cycle :
             if (!inCycle(subgraphNetwork.network.value,node.id)){
                 const attributes:AttributesViz={};
+                // size of node in inches
+                const sizeNode= getSizeNodePixel(node,subgraphNetwork.networkStyle.value);
+                attributes.height=pixelsToInches(sizeNode.height);
+                attributes.width=pixelsToInches(sizeNode.width);
                 // if main chain : add group attribut
                 if (groupOrCluster==="group"){
                     if (node.metadata && node.metadata[TypeSubgraph.MAIN_CHAIN]){
@@ -95,31 +101,16 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
     links=sortLinksWithAllGroupCycle(subgraphNetwork,orderChange);
 
     // insert edge (but with cycle metanode if cycle is true) 
-    links.forEach((link)=>{
-
-        // attributs
-        let attributs:AttributesViz={};
-        if (link.metadata && Object.keys(link.metadata).includes("constraint")){
-            attributs.constraint=link.metadata["constraint"] as boolean;
-        }
-        //attributs.minlen=3;
-       
+    links.forEach((link)=>{   
 
         // get tail and head (take into account cycle metanode)
         const {tail,head}=cycleMetanodeLink(link,subgraphNetwork,cycle);
-
-
-        // if (inCycle){
-        //     const lengthToCentroid=Math.round(subgraphNetwork.cycles[inCycle].nodes.length/4)+1; // to test
-        //     //attributs.minlen=lengthToCentroid;
-        // }
 
         // add edge (tail and head) if not already in graphviz   
         if ( tail!== undefined && head!==undefined && tail!==head &&  !graphViz.edges.some(edge => edge.tail === tail && edge.head === head)){
             graphViz.edges.push({
                 tail: tail,
                 head: head,
-                attributes:attributs
             });
         }
 
@@ -142,14 +133,13 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
             return areaB - areaA;
         })
         .forEach((cycle) => {
-            const height=cycle.height;
-            const width=cycle.width;
-            const factor=0.015;
+            const height=pixelsToInches(cycle.height);
+            const width=pixelsToInches(cycle.width);
             let ordering=Ordering.DEFAULT;
             if(orderChange){
                 ordering=cycle.ordering;
             }
-            graphViz.nodes.push({name:cycle.name, attributes:{height:factor*height,width:factor*width,ordering:ordering}});
+            graphViz.nodes.push({name:cycle.name, attributes:{height:height,width:width,ordering:ordering}});
         });
     }
     return graphViz;
@@ -175,7 +165,7 @@ export function NetworkToDot(vizGraph:Graph, subgraphFirst:boolean=true):string{
 
         // edges 
         vizGraph.edges.forEach((edge) => {
-            dotString+=`${edge.tail} -> ${edge.head} `+customStringify(edge.attributes)+`;\n`;
+            dotString+=`${edge.tail} -> ${edge.head};\n`;
         });
     } else {
 
@@ -186,7 +176,7 @@ export function NetworkToDot(vizGraph:Graph, subgraphFirst:boolean=true):string{
         });
         // edges 
         vizGraph.edges.forEach((edge) => {
-            dotString+=`${edge.tail} -> ${edge.head} `+customStringify(edge.attributes)+`;\n`;
+            dotString+=`${edge.tail} -> ${edge.head};\n`;
         });
 
         // clusters

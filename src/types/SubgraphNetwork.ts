@@ -7,6 +7,7 @@ import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStylePr
 export interface SubgraphNetwork {
 	network: Ref<Network>;
 	networkStyle: Ref<GraphStyleProperties>;
+	stats?:{[key:string]:number}
 	attributs?: AttributesViz;
 	mainChains: {
 		[key: string]: Subgraph

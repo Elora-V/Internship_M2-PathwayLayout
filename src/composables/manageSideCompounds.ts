@@ -4,7 +4,8 @@ import { removeAllSelectedNodes , duplicateAllNodesByAttribut} from "@metabohub/
 import { S } from "vitest/dist/reporters-1evA5lom";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { Node } from "@metabohub/viz-core/src/types/Node";
-import { MetaboliteType, Reaction, ReactionInterval } from "@/types/Reaction";
+import { MetaboliteType, MinMedianMax, Reaction, ReactionInterval } from "@/types/Reaction";
+import { getMeanNodesSizePixel, getSepAttributesPixel, inchesToPixels, minLengthDistance as minLengthDistance, pixelsToInches } from "./calculateSize";
 
 //-----------------------------------------------------------------------------------------------------------------------------------
 //___________________________________________________Remove side compounds____________________________________________________
@@ -124,21 +125,29 @@ function removeSideCompoundsFromNetwork(subgraphNetwork:SubgraphNetwork):Subgrap
 //___________________________________________________Reinsert side compounds____________________________________________________
 
 
-export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
+export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork,factorLength:number=1/2):SubgraphNetwork{
     if(subgraphNetwork.sideCompounds){
         const network = subgraphNetwork.network.value;
+        // get min length distance for stats
+        if (!subgraphNetwork.stats) subgraphNetwork.stats={};
+        const rankSep=subgraphNetwork.attributs["ranksep"]?inchesToPixels(subgraphNetwork.attributs["ranksep"] as number):0;
+        const nodeSep=subgraphNetwork.attributs["nodesep"]?inchesToPixels(subgraphNetwork.attributs["nodesep"] as number):0;
+        const invFactor=factorLength===0?1:1/factorLength;
+        const minLengthDefault=(nodeSep+rankSep)/2*invFactor; // min lenght if there is no link in the network (when side compounds are removed)
+        const minLength=minLengthDistance(subgraphNetwork.network.value,false,minLengthDefault);
+        subgraphNetwork.stats["minLengthPixel"]=minLength;
         // update side compounds for reversed reactions
         subgraphNetwork=updateSideCompoundsReversibleReaction(subgraphNetwork);
         // for each reaction, apply motif stamp
         Object.keys(subgraphNetwork.sideCompounds).forEach((reactionID)=>{
-            subgraphNetwork=motifStampSideCompound(subgraphNetwork,reactionID);
+            subgraphNetwork=motifStampSideCompound(subgraphNetwork,reactionID,factorLength);
         });       
     }
     return subgraphNetwork;
 
 }
 
-function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string):SubgraphNetwork{
+function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string,factorLength:number=1/2):SubgraphNetwork{
     // initialize reaction stamp
     const reaction=initializeReactionSideCompounds(subgraphNetwork,reactionID);
     // find intervals between reactants and products
@@ -151,7 +160,7 @@ function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:strin
     reaction.angleSpacingReactant=spacing.reactant;
     reaction.angleSpacingProduct=spacing.product;
     // give coordinates to all side compounds
-    subgraphNetwork=giveCoordAllSideCompounds(subgraphNetwork,reaction);
+    subgraphNetwork=giveCoordAllSideCompounds(subgraphNetwork,reaction,factorLength);
     // insert side compounds in network
     insertAllSideCompoundsInNetwork(subgraphNetwork,reaction);
     return subgraphNetwork;
@@ -192,14 +201,14 @@ function initializeReactionSideCompounds(subgraphNetwork:SubgraphNetwork,idReact
             angleMetabolites[metabolite.id]={angle:angle,type:metabolite.type};
         });
         // median size of links
-        const metaboliteIds = metabolitesReaction.map(metabolite => metabolite.id);
-        const medianLinks=medianLinksReaction(x,y,network,metaboliteIds);
+        //const metaboliteIds = metabolitesReaction.map(metabolite => metabolite.id);
+        //const medianMinMaxLinks=medianMinMaxLinksReaction(x,y,network,metaboliteIds);
         return {
             id:idReaction,
             reactantSideCompounds:reactantSideCompounds,
             productSideCompounds:productSideCompounds,
             angleMetabolites:angleMetabolites,
-            medianLengthLink:medianLinks,
+           // medianMinMaxLengthLink:medianMinMaxLinks,
         };
     }else{
         return null;
@@ -223,28 +232,31 @@ function angleRadianSegment(x1:number,y1:number,x2:number,y2:number,clockwise:bo
     else{return (Math.atan2(y2-y1,x2-x1)+2*Math.PI)%(2*Math.PI);}
 }
 
-function medianLinksReaction(xReaction: number, yReaction: number, network: Network, metabolites: string[]): number {
-    if (metabolites.length === 0) return null;
+// function medianMinMaxLinksReaction(xReaction: number, yReaction: number, network: Network, metabolites: string[]): {min:number,max:number,median:number} {
+//     if (metabolites.length === 0) return null;
 
-    const distances = metabolites.map(metabolite => {
-        const metaboliteNode = network.nodes[metabolite];
-        if (!metaboliteNode) return null;
-        const dx = xReaction - metaboliteNode.x;
-        const dy = yReaction - metaboliteNode.y;
-        return Math.sqrt(dx * dx + dy * dy);
-    }).filter(distance => distance !== null);
+//     const distances = metabolites.map(metabolite => {
+//         const metaboliteNode = network.nodes[metabolite];
+//         if (!metaboliteNode) return null;
+//         const dx = xReaction - metaboliteNode.x;
+//         const dy = yReaction - metaboliteNode.y;
+//         return Math.sqrt(dx * dx + dy * dy);
+//     }).filter(distance => distance !== null);
 
-    if (distances.length === 0) return null;
+//     if (distances.length === 0) return null;
 
-    distances.sort((a, b) => a - b);
+//     distances.sort((a, b) => a - b);
+//     let medianMinMax ={min:distances[0],max:distances[distances.length - 1],median:undefined};
 
-    const midIndex = Math.floor(distances.length / 2);
-    if (distances.length % 2 === 0) {
-        return (distances[midIndex - 1] + distances[midIndex]) / 2;
-    } else {
-        return distances[midIndex];
-    }
-}
+//     const midIndex = Math.floor(distances.length / 2);
+//     if (distances.length % 2 === 0) {
+//         medianMinMax["median"] =(distances[midIndex - 1] + distances[midIndex]) / 2;
+//     } else {
+//         medianMinMax["median"]= distances[midIndex];
+//     }
+//     return medianMinMax;
+// }
+
 
 function findCofactorIntervals(reaction: Reaction): ReactionInterval[] {
     let intervals: ReactionInterval[] = [];
@@ -277,6 +289,32 @@ function findCofactorIntervals(reaction: Reaction): ReactionInterval[] {
         previousId = currentMetabolite.id;
     });
 
+    // if no interval between reactants and products :
+    previousId = sortedMetabolites[lastIndex]?.id;
+    if (intervals.length === 0) {
+        sortedMetabolites.forEach((currentMetabolite, i) => {
+                // is it the interval between the last and the first metabolite ? (special case for calculations)
+                if (i === 0) {
+                    firstInterval=true;
+                }else{
+                    firstInterval=false;
+                }
+                // new interval
+                const interval= createInterval(reaction,previousId,currentMetabolite.type,currentMetabolite.id,currentMetabolite.type,firstInterval);
+                intervals.push(interval);
+                // update
+                previousId= currentMetabolite.id;
+        });
+    }
+
+
+    if (intervals.length===0) {
+        intervals.push({
+            typeInterval: 0, 
+            reactant: null,
+            product: null,
+        })
+    };
     return intervals;
 }
 
@@ -284,14 +322,14 @@ function createInterval(reaction:Reaction,id1:string,type1:MetaboliteType,id2:st
     let typeInterval:number;
     const angles=reaction.angleMetabolites;
     const reactant= type1 === MetaboliteType.REACTANT ? id1 : id2;
-    const product= type2 === MetaboliteType.PRODUCT ? id2 : id1; 
+    const product= type1 === MetaboliteType.REACTANT ? id2 : id1; 
 
-    if (angles[reactant].angle>angles[product].angle){
-        // 0 if not special case , else 2
-        typeInterval=0+2*Number(firstInterval);
-    }else{
+    if (angles[reactant].angle<angles[product].angle){
         // 1 if not special case , else 3
         typeInterval=1+2*Number(firstInterval);
+    }else{
+        // 0 if not special case , else 2
+        typeInterval=0+2*Number(firstInterval);
     }
 
     return{
@@ -320,6 +358,8 @@ function biggestInterval(reaction: Reaction): {interval:ReactionInterval,size:nu
 function sizeInterval(reaction:Reaction,intervalIndex:number):number{
     const angles=reaction.angleMetabolites;
     const interval=reaction.sideCompoundIntervals[intervalIndex];
+    // if reactant and product null : return 2*PI 
+    if (interval.reactant===null || interval.product===null) return Math.PI*2;
     if (interval.typeInterval===0 || interval.typeInterval===1){
         // |angle1-angle2|
         return Math.abs(angles[interval.product].angle-angles[interval.reactant].angle);
@@ -339,13 +379,21 @@ function findSpacingSideCompounds(reaction:Reaction,sizeInterval):{reactant:numb
     };
 }
 
-function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reaction,factorLenght:number=1/3):SubgraphNetwork{
-    const distance=reaction.medianLengthLink* factorLenght;
+function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reaction,factorLength:number=1/2):SubgraphNetwork{
+    //const distance=reaction.medianMinMaxLengthLink[medianMinMax]* factorLength;
+    let baseLengthPixel:number;
+    if (subgraphNetwork.stats["minLengthPixel"]){
+        baseLengthPixel=subgraphNetwork.stats["minLengthPixel"];
+    }else{
+        console.error("stats minLength not found, use default value 1 inche");
+        baseLengthPixel=pixelsToInches(1);
+    }
+    const distance=baseLengthPixel*factorLength;
     const sideCompounds=subgraphNetwork.sideCompounds[reaction.id];
     const reactionCoord=subgraphNetwork.network.value.nodes[reaction.id];
     // Reactants Placement
     const startReactant= reaction.sideCompoundIntervals[0].reactant;
-    let startAngle=reaction.angleMetabolites[startReactant].angle;
+    let startAngle=startReactant?reaction.angleMetabolites[startReactant].angle:0;
     sideCompounds.reactants.forEach((sideCompoundNode,i)=>{
         let direction:number;
         const typeInterval=reaction.sideCompoundIntervals[0].typeInterval;
@@ -355,11 +403,12 @@ function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reac
             direction=1; // go right
         }
         const angle:number=startAngle + direction * (i+1) *reaction.angleSpacingReactant;
+
         sideCompoundNode=giveCoordSideCompound(sideCompoundNode,angle,reactionCoord,distance);
     });
     // Products Placement
     const startProduct= reaction.sideCompoundIntervals[0].product;
-    startAngle=reaction.angleMetabolites[startProduct].angle;
+    startAngle=startProduct?reaction.angleMetabolites[startProduct].angle:0;
     sideCompounds.products.forEach((sideCompoundNode,i)=>{
         let direction:number;
         const typeInterval=reaction.sideCompoundIntervals[0].typeInterval;
@@ -410,6 +459,5 @@ function insertSideCompoundInNetwork(subgraphNetwork:SubgraphNetwork,reactionID:
         network.links.push({id:idLink,source:network.nodes[reactionID],target:network.nodes[sideCompound.id]});
     }
 }
-
 
 
