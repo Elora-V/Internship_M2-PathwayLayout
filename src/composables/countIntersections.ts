@@ -221,3 +221,99 @@ function nodeOverlap(pos1: {x: number, y: number}, size1: {width: number, height
 
     return overlapX && overlapY;
 }
+
+//______________________Nodes overlap with edges for graph______________________
+
+export function countOverlapNodesEdges(nodesPosition: {[key:string]:{x:number,y:number}},links:{source:string,target:string}[],network:Network,networkStyle:GraphStyleProperties):number{
+    let nb=0;
+    const nodesID=Object.keys(nodesPosition);
+    for (let i=0 ; i<nodesID.length ; i++) {
+        // info about node
+        const node=network.nodes[nodesID[i]];
+        const posNode=nodesPosition[nodesID[i]];
+        const sizeNode=getSizeNodePixel(node,networkStyle);
+
+        for (let j=0 ; j<links.length ; j++) {        
+            // info about link
+            const link=links[j];
+            // if node is linked to the edge : continue
+            if(link.source==nodesID[i] || link.target==nodesID[i]){
+                continue;
+            }else{
+                const posLink1=nodesPosition[link.source];
+                const posLink2=nodesPosition[link.target];
+                if (nodeEdgeOverlap(posNode,sizeNode,posLink1,posLink2)){
+                    nb+=1;
+                }
+            }
+
+        }
+    }
+    return nb;
+}
+
+export function isOverlapNodesEdges(nodesPosition: {[key:string]:{x:number,y:number}},links:{source:string,target:string}[],network:Network,networkStyle:GraphStyleProperties):boolean{
+    const nodesID=Object.keys(nodesPosition);
+    for (let i=0 ; i<nodesID.length ; i++) {
+        // info about node
+        const node=network.nodes[nodesID[i]];
+        const posNode=nodesPosition[nodesID[i]];
+        const sizeNode=getSizeNodePixel(node,networkStyle);
+
+        for (let j=0 ; j<links.length ; j++) {        
+            // info about link
+            const link=links[j];
+            // if node is linked to the edge : continue
+            if(link.source==nodesID[i] || link.target==nodesID[i]){
+                continue;
+            }else{
+                const posLink1=nodesPosition[link.source];
+                const posLink2=nodesPosition[link.target];
+                if (nodeEdgeOverlap(posNode,sizeNode,posLink1,posLink2)){
+                    return true;
+                }
+            }
+
+        }
+    }
+    return false;
+}
+
+
+function nodeEdgeOverlap(posNode: { x: number, y: number }, sizeNode: { width: number, height: number }, posLink1: { x: number, y: number }, posLink2: { x: number, y: number }): boolean {
+    
+    // Treat the node as a rectangle 
+    const rect = {
+        left: posNode.x,
+        right: posNode.x + sizeNode.width,
+        top: posNode.y,
+        bottom: posNode.y + sizeNode.height
+    };
+
+    // Check if any of the edge's endpoints is inside the rectangle
+    const isPointInsideRect = (point: { x: number, y: number }) => 
+        point.x >= rect.left && point.x <= rect.right && point.y >= rect.top && point.y <= rect.bottom;
+
+    if (isPointInsideRect(posLink1) || isPointInsideRect(posLink2)) {
+        return true; // One of the endpoints is inside the rectangle
+    }
+
+   // Check for overlap between the edge and the sides of the rectangle
+    // Convert the sides of the rectangle into line segments
+    const edges = [
+        { start: { x: rect.left, y: rect.top }, end: { x: rect.right, y: rect.top } }, // Top
+        { start: { x: rect.right, y: rect.top }, end: { x: rect.right, y: rect.bottom } }, // Right
+        { start: { x: rect.left, y: rect.bottom }, end: { x: rect.right, y: rect.bottom } }, // Bottom
+        { start: { x: rect.left, y: rect.top }, end: { x: rect.left, y: rect.bottom } } // Left
+    ];
+
+    // Use checkIntersection function to check if two line segments intersect
+    for (const edge of edges) {
+        const result=checkIntersection(edge.start, edge.end, posLink1, posLink2);
+        if (result.type == "intersecting") {
+            return true; // There is an overlap
+        }
+    }
+
+    return false; // No overlap detected
+}

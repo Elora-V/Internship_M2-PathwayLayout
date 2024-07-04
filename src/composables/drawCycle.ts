@@ -11,7 +11,7 @@ import { link } from "fs";
 import { emit } from "process";
 import { getMeanNodesSizePixel, getSizeAllGroupCycles, medianLengthDistance, rectangleSize } from "./calculateSize";
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
-import { countIntersectionGraph, countOverlapNodes, isIntersectionGraph, isOverlapNodes } from "./countIntersections";
+import { countIntersectionGraph, countOverlapNodes, isIntersectionGraph, isOverlapNodes, isOverlapNodesEdges } from "./countIntersections";
 
 
 
@@ -430,17 +430,19 @@ function isOverlapCycles(subgraphNetwork:SubgraphNetwork,groupCycleName:string):
 
     // intersection of edges :
     const intersectionEdges=isIntersectionGraph(graph.nodes ,graph.links);
-    console.log('intersectionEdges: ',intersectionEdges);
     if (intersectionEdges){
         return true;
     }else{
         // overlap of nodes
         const nodesOverlap=isOverlapNodes(graph.nodes,subgraphNetwork.network.value,subgraphNetwork.networkStyle.value);
-        console.log('nodesOverlap: ',nodesOverlap);
         if (nodesOverlap){
             return true;
         }else{
             // overlap of node with edges
+            const edgeNodeOverlap=isOverlapNodesEdges(graph.nodes,graph.links,subgraphNetwork.network.value,subgraphNetwork.networkStyle.value);
+            if (edgeNodeOverlap){
+                return true;
+            }
         }
     }
     return false;
