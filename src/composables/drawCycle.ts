@@ -429,12 +429,9 @@ function isOverlapCycles(subgraphNetwork:SubgraphNetwork,groupCycleName:string):
     const graph =getListNodeLinksForCycleGroupAsObject(subgraphNetwork,groupCycleName);
     const intersectionEdges=countIntersectionGraph(graph.nodes ,graph.links);
     console.log('intersectionEdges: ',intersectionEdges);
-    // const network=subgraphNetwork.network.value;
-    // const nodesID=getNodesIDPlacedInGroupCycle(subgraphNetwork,groupCycleName);
-    // const nodes=Object.entries(network.nodes).filter(([key,_])=>nodesID.includes(key));
-    // const link
-    // countIntersectionGraph();
-    // console.log('overlap: ',overlap);
+    if (intersectionEdges>0){
+        return true;
+    }
     return false;
 }
 
