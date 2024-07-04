@@ -219,7 +219,7 @@ let mainchain:boolean=true;
 let userSources:string[]=[];
 let onlyUserSources:boolean=false;
 let cycle:boolean=true;
-let allowInternalCycles:boolean=false;
+let allowInternalCycles:boolean=true;
 let groupOrCluster:"group"|"cluster"="cluster";
 let addNodes:boolean=true;
 let ordering:boolean=true;
@@ -269,11 +269,11 @@ function callbackFunction() {
   networkStyle.value.linkStyles[TypeSubgraph.CYCLEGROUP]={stroke:"red"};
 
   // to test
-  const size=60;
-  networkStyle.value.nodeStyles["metabolite"]["height"]=size;
-  networkStyle.value.nodeStyles["metabolite"]["width"]=size;
-  networkStyle.value.nodeStyles["reaction"]["height"]=size;
-  networkStyle.value.nodeStyles["reaction"]["width"]=size;
+  // const size=20;
+  // networkStyle.value.nodeStyles["metabolite"]["height"]=size;
+  // networkStyle.value.nodeStyles["metabolite"]["width"]=size;
+  // networkStyle.value.nodeStyles["reaction"]["height"]=size;
+  // networkStyle.value.nodeStyles["reaction"]["width"]=size;
 
 }
 
@@ -499,10 +499,10 @@ async function allSteps(subgraphNetwork: SubgraphNetwork,sourceTypePath:SourceTy
       await vizLayout(subgraphNetwork, false,false,addNodes,groupOrCluster,false);
     }
   ).then(
-    () => {
+    async () => {
       // relative coordinates for cycles
       if (cycle){
-        coordinateAllCycles(subgraphNetwork);
+        await coordinateAllCycles(subgraphNetwork,allowInternalCycles);
       }
     }
   ).then(

@@ -11,6 +11,7 @@ import { link } from "fs";
 import { emit } from "process";
 import { getMeanNodesSizePixel, getSizeAllGroupCycles, medianLengthDistance, rectangleSize } from "./calculateSize";
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
+import { countIntersectionGraph } from "./countIntersections";
 
 
 
@@ -28,7 +29,7 @@ import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStylePr
  * @returns The updated subgraph network with coordinated cycles.
  */
 
-export async function coordinateAllCycles(subgraphNetwork:SubgraphNetwork,allowInterncircle:boolean=false,radiusFactor:number=15):Promise<SubgraphNetwork> {
+export async function coordinateAllCycles(subgraphNetwork:SubgraphNetwork,allowInterncircle:boolean=false):Promise<SubgraphNetwork> {
     const network = subgraphNetwork.network.value;
     const cycles = subgraphNetwork.cycles? Object.values(subgraphNetwork.cycles):undefined;
     let i=0
@@ -80,7 +81,7 @@ export async function coordinateAllCycles(subgraphNetwork:SubgraphNetwork,allowI
             // add the cycle to the current group of cycle
             subgraphNetwork.cyclesGroup[groupName].nodes.push(cycleToDraw.name); 
             // give coordinate to cycle node
-            coordinateCycle(subgraphNetwork, cycleToDraw.name,groupName); 
+            coordinateCycle(subgraphNetwork, cycleToDraw.name,groupName,allowInterncircle); 
             // remove cycle from the list of cycle to process
             remainingCycles.shift(); 
 
@@ -217,7 +218,7 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
         } else if (nodesFixedCircle.length===1){ // if cycle linked to another cycle by one node ----------------------------------------------------------------------------------
             
             const tangentNode=network.nodes[nodesFixedCircle[0]];
-            subgraphNetwork=tangentCycleCoordinates(subgraphNetwork,cycleToDrawID,groupCycleName,tangentNode,nodesFixed);
+            subgraphNetwork=tangentCycleCoordinates(subgraphNetwork,cycleToDrawID,groupCycleName,tangentNode,nodesFixed,allowInterncircle);
             
              
         } else { // several node in common with other cycle(s) ----------------------------------------------------------------------------------
@@ -425,8 +426,15 @@ function undoIfOverlap(subgraphNetwork:SubgraphNetwork,groupCycleName:string,pos
 }
 
 function isOverlapCycles(subgraphNetwork:SubgraphNetwork,groupCycleName:string):boolean{
-    const overlap= Math.random() < 0.5 ? false : true;
-    console.log('overlap: ',overlap);
+    const graph =getListNodeLinksForCycleGroupAsObject(subgraphNetwork,groupCycleName);
+    const intersectionEdges=countIntersectionGraph(graph.nodes ,graph.links);
+    console.log('intersectionEdges: ',intersectionEdges);
+    // const network=subgraphNetwork.network.value;
+    // const nodesID=getNodesIDPlacedInGroupCycle(subgraphNetwork,groupCycleName);
+    // const nodes=Object.entries(network.nodes).filter(([key,_])=>nodesID.includes(key));
+    // const link
+    // countIntersectionGraph();
+    // console.log('overlap: ',overlap);
     return false;
 }
 
@@ -594,7 +602,7 @@ async function forceGroupCycle(subgraphNetwork:SubgraphNetwork, groupCycleName:s
     }
 
     // get subgraph for groupCycle
-    const graph =getListNodeLinksForCycleGroup(subgraphNetwork,groupCycleName);
+    const graph =getListNodeLinksForCycleGroup(subgraphNetwork,groupCycleName,true);
 
     // get attributes for force layout
     const distanceLinks=medianLengthDistance(subgraphNetwork.network.value,false);
@@ -750,17 +758,34 @@ export function getNodesIDPlacedInGroupCycle(subgraphNetwork:SubgraphNetwork,gro
     }
 }
 
-export function getNodesPlacedInGroupCycle(subgraphNetwork:SubgraphNetwork,groupCycleID:string):{ id: string,fx?:number, fy?:number }[]{
+export function getNodesPlacedInGroupCycle(subgraphNetwork:SubgraphNetwork,groupCycleID:string,positionAsFixed:boolean=false):{ id: string,fx?:number, fy?:number }[]{
+    if (groupCycleID in subgraphNetwork.cyclesGroup && "metadata" in subgraphNetwork.cyclesGroup[groupCycleID]){
+            return Object.entries(subgraphNetwork.cyclesGroup[groupCycleID].metadata)
+                    .filter(([_, item]) => { return item["x"] !== undefined && item["y"] !== undefined })
+                    .map(([key, item]) => { 
+                        if (item["x"]!==null || item["y"]!==null){
+                            if (positionAsFixed) return { id: key,fx:item["x"], fy:item["y"] } 
+                            else return { id: key,x:item["x"], y:item["y"] } 
+                            
+                        }else{
+                            return { id: key }
+                        }
+            }); 
+    }else{
+        return null;
+    }
+}
+
+export function getNodesPlacedInGroupCycleAsObject(subgraphNetwork:SubgraphNetwork,groupCycleID:string):{ [key:string]:{x:number,y:number }}{
     if (groupCycleID in subgraphNetwork.cyclesGroup && "metadata" in subgraphNetwork.cyclesGroup[groupCycleID]){
         return Object.entries(subgraphNetwork.cyclesGroup[groupCycleID].metadata)
-                .filter(([_, item]) => { return item["x"] !== undefined && item["y"] !== undefined })
-                .map(([key, item]) => { 
-                    if (item["x"]!==null || item["y"]!==null){
-                        return { id: key,fx:item["x"], fy:item["y"] } 
-                    }else{
-                        return { id: key }
-                    }}); 
-                                   
+                        .filter(([_, item]) => { return item["x"] !== undefined && item["y"] !== undefined })
+                        .reduce((acc, node) => { 
+                            if (node[1]["x"]!==null || node[1]["y"]!==null){
+                                 acc[node[0]]={ x:node[1]["x"], y:node[1]["y"] } 
+                            }
+                            return acc;
+                        },{});
     }else{
         return null;
     }
@@ -772,9 +797,18 @@ export function getLinksForNodes(network: Network, nodes: string[]): {source:str
     ).map(link => { return { source: link.source.id, target: link.target.id } });
 }
 
-export function getListNodeLinksForCycleGroup(subgraphNetwork:SubgraphNetwork,groupCycleName:string):{nodes:{ id: string,fx?:number, fy?:number }[],links:{source:string,target:string}[]}{
-    const nodesGroupCycle=getNodesPlacedInGroupCycle(subgraphNetwork,groupCycleName);
+export function getListNodeLinksForCycleGroup(subgraphNetwork:SubgraphNetwork,groupCycleName:string,positionAsFixed:boolean=false)
+:{nodes:{ id: string,fx?:number, fy?:number,x?:number,y?:number }[],links:{source:string,target:string}[]}{
+    const nodesGroupCycle=getNodesPlacedInGroupCycle(subgraphNetwork,groupCycleName,positionAsFixed);
     const nodesGroupCycleName=Object.values(nodesGroupCycle).map(node=>node.id);
+    const linksGroupCycle=getLinksForNodes(subgraphNetwork.network.value,nodesGroupCycleName);
+    return {nodes:nodesGroupCycle,links:linksGroupCycle};
+}
+
+export function getListNodeLinksForCycleGroupAsObject(subgraphNetwork:SubgraphNetwork,groupCycleName:string)
+:{nodes:{[key:string]:{ x:number,y:number }},links:{source:string,target:string}[]}{
+    const nodesGroupCycle=getNodesPlacedInGroupCycleAsObject(subgraphNetwork,groupCycleName);
+    const nodesGroupCycleName=Object.keys(nodesGroupCycle);
     const linksGroupCycle=getLinksForNodes(subgraphNetwork.network.value,nodesGroupCycleName);
     return {nodes:nodesGroupCycle,links:linksGroupCycle};
 }
