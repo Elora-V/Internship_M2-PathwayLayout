@@ -48,7 +48,7 @@ export async function coordinateAllCycles(subgraphNetwork:SubgraphNetwork,allowI
         parentCycles.sort((a, b) => sortingCycleForDrawing(subgraphNetwork,a,b,true));
         const largestParentCycle = parentCycles[0]; // get largest cycle
         subgraphNetwork.cyclesGroup[groupName].nodes.push(largestParentCycle.name); // add it to the current group of cycle
-        coordinateCycle(subgraphNetwork, largestParentCycle.name,groupName,radiusFactor,allowInterncircle); // give coordinate for largest cycle
+        coordinateCycle(subgraphNetwork, largestParentCycle.name,groupName); // give coordinate for largest cycle
 
         // Drawing the others : --------------------------------------------------------------------------------------------
 
@@ -80,7 +80,7 @@ export async function coordinateAllCycles(subgraphNetwork:SubgraphNetwork,allowI
             // add the cycle to the current group of cycle
             subgraphNetwork.cyclesGroup[groupName].nodes.push(cycleToDraw.name); 
             // give coordinate to cycle node
-            coordinateCycle(subgraphNetwork, cycleToDraw.name,groupName,radiusFactor,allowInterncircle); 
+            coordinateCycle(subgraphNetwork, cycleToDraw.name,groupName); 
             // remove cycle from the list of cycle to process
             remainingCycles.shift(); 
 
@@ -223,7 +223,7 @@ function coordinateCycle(subgraphNetwork:SubgraphNetwork, cycleToDrawID:string,g
         } else { // several node in common with other cycle(s) ----------------------------------------------------------------------------------
 
             subgraphNetwork=lineCycleCoordinates(subgraphNetwork,cycleToDrawID,groupCycleName);
-            
+
         }
     }
 
