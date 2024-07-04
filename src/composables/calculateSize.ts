@@ -22,6 +22,13 @@ export function getSepAttributesInches(network:Network,styleNetwork:GraphStylePr
     return { rankSep, nodeSep };
 }
 
+export function getSepAttributesPixel(network:Network,styleNetwork:GraphStyleProperties,factor:number=1):{rankSep:number,nodeSep:number}{
+    const meanSizeNode=getMeanNodesSizePixel(Object.values(network.nodes),styleNetwork);
+    const rankSep = meanSizeNode.height * factor;
+    const nodeSep = meanSizeNode.width * factor;
+    return { rankSep, nodeSep };
+}
+
 
 /**
  * Calculates the size of a node in pixels based on its style properties.
@@ -79,7 +86,7 @@ export function pixelsToInches(pixels: number, dpi: number = 72): number {
  * @returns The converted value in pixels.
  */
 export function inchesToPixels(inches: number, dpi: number = 72): number {
-    return Math.round(inches * dpi);
+    return parseFloat((inches * dpi).toFixed(2));
 }
 
 /**
@@ -88,7 +95,7 @@ export function inchesToPixels(inches: number, dpi: number = 72): number {
  * @param network - The network object containing nodes.
  * @returns The minimum length distance between nodes.
  */
-export function minLenghtDistance(network: Network,cycleInclude:boolean=true): number {
+export function minLengthDistance(network: Network,cycleInclude:boolean=true,defaultMinLength:number=0): number {
     let minDistance = Infinity;
     network.links.forEach((link) => {
         if (cycleInclude || (!inCycle(network,link.target.id) || !inCycle(network,link.source.id)) ){
@@ -98,7 +105,11 @@ export function minLenghtDistance(network: Network,cycleInclude:boolean=true): n
             minDistance = Math.min(minDistance, distance);
         }
     });
-    return parseFloat(minDistance.toFixed(2));
+    minDistance= parseFloat(minDistance.toFixed(2));
+    if(minDistance === Infinity){
+        return defaultMinLength;
+    }
+    return minDistance;
 }
 
 /**

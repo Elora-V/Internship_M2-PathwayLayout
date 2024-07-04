@@ -38,7 +38,7 @@ export function dagreLayout(network: Network,graphAttributes={},callbackFunction
  * @param [callbackFunction=() => {}] function to do after the layout is done
  */
 export async function vizLayout(subgraphNetwork:SubgraphNetwork,assignRank:boolean=false, cycle:boolean=true,addNodes:boolean=true,
-    groupOrCluster:"group"|"cluster"="cluster",orderChange:boolean=false,printDot:boolean=false,dpi:number=72,factorLenghtEdge:number=3,callbackFunction = () => {}): Promise<void> {
+    groupOrCluster:"group"|"cluster"="cluster",orderChange:boolean=false,printDot:boolean=false,dpi:number=72,factorLenghtEdge:number=3,callbackFunction = () => {}): Promise<SubgraphNetwork> {
     console.log('Viz');
     await instance().then( async viz => {
         // attributes for viz
@@ -50,6 +50,6 @@ export async function vizLayout(subgraphNetwork:SubgraphNetwork,assignRank:boole
         const json=viz.renderJSON(dot) as JsonViz;
         subgraphNetwork= await changeNetworkFromViz(json,subgraphNetwork,assignRank);
         callbackFunction();
-        
     });
+    return subgraphNetwork;
 }

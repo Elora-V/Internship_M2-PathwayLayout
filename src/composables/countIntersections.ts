@@ -204,16 +204,16 @@ function nodeOverlap(pos1: {x: number, y: number}, size1: {width: number, height
     }
 
     // rectangle 1
-    const left1 = pos1.x - size1.width / 2;
-    const right1 = pos1.x + size1.width / 2;
-    const top1 = pos1.y - size1.height / 2;
-    const bottom1 = pos1.y + size1.height / 2;
+    const left1 = pos1.x;
+    const right1 = pos1.x + size1.width;
+    const top1 = pos1.y;
+    const bottom1 = pos1.y + size1.height;
 
     // rectangle 2
-    const left2 = pos2.x - size2.width / 2;
-    const right2 = pos2.x + size2.width / 2;
-    const top2 = pos2.y - size2.height / 2;
-    const bottom2 = pos2.y + size2.height / 2;
+    const left2 = pos2.x;
+    const right2 = pos2.x + size2.width;
+    const top2 = pos2.y;
+    const bottom2 = pos2.y + size2.height;
 
     // overlap?
     const overlapX = left1 < right2 && right1 > left2;
@@ -221,7 +221,6 @@ function nodeOverlap(pos1: {x: number, y: number}, size1: {width: number, height
 
     return overlapX && overlapY;
 }
-
 //______________________Nodes overlap with edges for graph______________________
 
 export function countOverlapNodesEdges(nodesPosition: {[key:string]:{x:number,y:number}},links:{source:string,target:string}[],network:Network,networkStyle:GraphStyleProperties):number{

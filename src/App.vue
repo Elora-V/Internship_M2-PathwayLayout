@@ -187,7 +187,7 @@ import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetw
 import { coordinateAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
 import func from "vue-temp/vue-editor-bridge";
 import { putDuplicatedSideCompoundAside, reinsertionSideCompounds } from "@/composables/manageSideCompounds";
-import { getSepAttributesInches, minLenghtDistance } from "@/composables/calculateSize";
+import { getSepAttributesInches, minLengthDistance } from "@/composables/calculateSize";
 import { MinMedianMax } from "@/types/Reaction";
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
@@ -225,7 +225,7 @@ let addNodes:boolean=true;
 let ordering:boolean=true;
 const dpi:number=72;
 const numberNodeOnEdge:number=3;
-const factorLenght:number=1/2; // % of the lenght of the edge for cofactor edges
+const factorLength:number=1/2; // % of the length of the edge for cofactor edges
 
 
 
@@ -522,7 +522,7 @@ async function allSteps(subgraphNetwork: SubgraphNetwork,sourceTypePath:SourceTy
   ).then(
     () => {
       // reverse side compounds of reversed reactions
-      subgraphNetwork=reinsertionSideCompounds(subgraphNetwork,factorLenght);
+      subgraphNetwork=reinsertionSideCompounds(subgraphNetwork,factorLength);
     }
   ).then(
     () => {
