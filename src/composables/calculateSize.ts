@@ -139,7 +139,7 @@ export function medianLengthDistance(network: Network, cycleInclude: boolean = t
  * @param listCoordinates - The list of coordinates representing the corners of the rectangle.
  * @returns An object containing the width, height, and center coordinates of the rectangle.
  */
-function rectangleSize(listCoordinates:{x:number,y:number}[],listID?:string[],subgraphNetwork?:SubgraphNetwork):{width:number,height:number,center:{x:number,y:number}}{
+export function rectangleSize(listCoordinates:{x:number,y:number}[],listID?:string[],subgraphNetwork?:SubgraphNetwork):{width:number,height:number,center:{x:number,y:number}}{
 
     // get the x and y coordinates
     const xCoordinates=listCoordinates.map(coord=>coord.x);
