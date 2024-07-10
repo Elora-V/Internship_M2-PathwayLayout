@@ -429,7 +429,7 @@ function isOverlapCycles(subgraphNetwork:SubgraphNetwork,groupCycleName:string):
     const graph =getListNodeLinksForCycleGroupAsObject(subgraphNetwork,groupCycleName);
 
     // intersection of edges :
-    const intersectionEdges=isIntersectionGraph(graph.nodes ,graph.links);
+    const intersectionEdges=isIntersectionGraph(graph.nodes ,graph.links,subgraphNetwork.network.value,subgraphNetwork.networkStyle.value);
     if (intersectionEdges){
         return true;
     }else{

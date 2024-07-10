@@ -113,7 +113,7 @@
 </div> 
 
 
-  <h5>Number of crossings in the Network : {{ countIntersection(network) }}</h5>
+  <h5>Number of crossings in the Network : {{ countIntersection(network,networkStyle) }}</h5>
   <h5>Number of isolated nodes : {{ countIsolatedNodes(network) }}</h5>
   
 
@@ -269,11 +269,11 @@ function callbackFunction() {
   networkStyle.value.linkStyles[TypeSubgraph.CYCLEGROUP]={stroke:"red"};
 
   // to test
-  const size=200;
-  networkStyle.value.nodeStyles["metabolite"]["height"]=size;
-  networkStyle.value.nodeStyles["metabolite"]["width"]=size;
-  networkStyle.value.nodeStyles["reaction"]["height"]=size/50;
-  networkStyle.value.nodeStyles["reaction"]["width"]=size/50;
+  // const size=200;
+  // networkStyle.value.nodeStyles["metabolite"]["height"]=size;
+  // networkStyle.value.nodeStyles["metabolite"]["width"]=size;
+  // networkStyle.value.nodeStyles["reaction"]["height"]=size/50;
+  // networkStyle.value.nodeStyles["reaction"]["width"]=size/50;
 
 }
 

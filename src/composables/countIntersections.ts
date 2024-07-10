@@ -28,11 +28,11 @@ function isNodeCoord(node: {x:number,y:number}, x: number, y: number): boolean {
  * @param link2 an edge
  * @returns a boolean
  */
-function edgesIntersectionLink(link1: Link, link2: Link): boolean {
+function edgesIntersectionLink(link1: Link, link2: Link,style:GraphStyleProperties): boolean {
 
     // case of common node
     if (commonNodeBetween2Links(link1,link2)) {
-        if (sameAngleBetween2ConnectedLinks(link1,link2)) {
+        if (sameAngleBetween2ConnectedLinks(link1,link2,style)) {
             return true;
         }else {
             return false;
@@ -40,18 +40,16 @@ function edgesIntersectionLink(link1: Link, link2: Link): boolean {
     }
 
     let x1: Node = link1.source;
+    const x1Center=AdjustCoordNodeToCenter(x1,style);
     let x2: Node = link1.target;
+    const x2Center=AdjustCoordNodeToCenter(x2,style);
     let x3: Node = link2.source;
+    const x3Center=AdjustCoordNodeToCenter(x3,style);
     let x4: Node = link2.target;
-    const result = checkIntersection(x1.x, x1.y, x2.x, x2.y, x3.x, x3.y, x4.x, x4.y);
+    const x4Center=AdjustCoordNodeToCenter(x4,style);
+
+    const result = checkIntersection(x1Center.x, x1Center.y, x2Center.x, x2Center.y, x3Center.x, x3Center.y, x4Center.x, x4Center.y);
     if (result.type == "intersecting") {
-        // check that intersection point is not the node itself
-        // if (!isNodeCoord(x1, result.point.x, result.point.y) 
-        //     && !isNodeCoord(x2, result.point.x, result.point.y) 
-        //     && !isNodeCoord(x3, result.point.x, result.point.y) 
-        //     && !isNodeCoord(x4, result.point.x, result.point.y) ) {
-        //         return true
-        //     }
         return true;
     } else {
         return false;
@@ -67,7 +65,7 @@ function commonNodeBetween2Links(link1: Link,link2: Link): boolean {
     }
 } 
 
-function sameAngleBetween2ConnectedLinks(link1: Link,link2: Link): boolean {
+function sameAngleBetween2ConnectedLinks(link1: Link,link2: Link,style:GraphStyleProperties): boolean {
 
     // get nodes information
     let commonNode: Node;
@@ -90,9 +88,13 @@ function sameAngleBetween2ConnectedLinks(link1: Link,link2: Link): boolean {
         node2=link2.source;
     }
 
+    // adjust coord
+    const commonNodeCenter=AdjustCoordNodeToCenter(commonNode,style);
+    const node1Center=AdjustCoordNodeToCenter(node1,style);
+    const node2Center=AdjustCoordNodeToCenter(node2,style);
     // get angle between the 2 edges
-    const angle1=adjustAngle(Math.atan2(node1.y-commonNode.y,node1.x-commonNode.x));
-    const angle2=adjustAngle(Math.atan2(node2.y-commonNode.y,node2.x-commonNode.x));    
+    const angle1=adjustAngle(Math.atan2(node1Center.y-commonNodeCenter.y,node1Center.x-commonNodeCenter.x));
+    const angle2=adjustAngle(Math.atan2(node2Center.y-commonNodeCenter.y,node2Center.x-commonNodeCenter.x));    
     
     // same angles ?
     return angle1==angle2;
@@ -103,18 +105,23 @@ function adjustAngle(angle: number): number {
     return (angle + 2 * Math.PI) % (2 * Math.PI);
 }
 
+function AdjustCoordNodeToCenter(node:Node,style:GraphStyleProperties):{x:number,y:number}{
+    const size = getSizeNodePixel(node,style);
+    return {x:node.x-size.width/2,y:node.y-size.height/2}
+}
+
 /**
  * Counts how many crossings are in a network
  * @param network the network
  * @returns the number of crossings
  */
-export function countIntersection(network: Network): number {
+export function countIntersection(network: Network,style:GraphStyleProperties): number {
     let nb: number = 0;
     for (let i=0 ; i<network.links.length ; i++) {
         for (let j=i+1 ; j<network.links.length ; j++) {
             const link1=network.links[i];
             const link2=network.links[j];
-            if (edgesIntersectionLink(link1, link2)){
+            if (edgesIntersectionLink(link1, link2,style)){
                 nb++;
             }
         }
@@ -124,6 +131,11 @@ export function countIntersection(network: Network): number {
 
 
 //______________________Intersection in another format of graph______________________
+
+function AdjustCoordNodeToCenter2(node:Node,nodeCoord:{x:number,y:number},style:GraphStyleProperties):{x:number,y:number}{
+    const size = getSizeNodePixel(node,style);
+    return {x:nodeCoord.x-size.width/2,y:nodeCoord.y-size.height/2}
+}
 
 function edgesIntersection(node1Link1:{x:number,y:number},node2Link1:{x:number,y:number},node1Link2:{x:number,y:number},node2Link2:{x:number,y:number}): boolean {
     // case node in common
@@ -194,17 +206,21 @@ function intersection2ConnectedLinks(node1Link1:{x:number,y:number},node2Link1:{
 
 }
 
-export function countIntersectionGraph(nodes: {[key:string]:{x:number,y:number}},links:{source:string,target:string}[]): number {
+export function countIntersectionGraph(nodes: {[key:string]:{x:number,y:number}},links:{source:string,target:string}[],network:Network,style:GraphStyleProperties): number {
     let nb: number = 0;
     for (let i=0 ; i<links.length ; i++) {
         for (let j=i+1 ; j<links.length ; j++) {
             const link1=links[i];
             const link2=links[j];
             // check if intersection
-            const node1Link1=nodes[link1.source];
-            const node2Link1=nodes[link1.target];
-            const node1Link2=nodes[link2.source];
-            const node2Link2=nodes[link2.target];
+            let node1Link1=nodes[link1.source];
+            node1Link1=AdjustCoordNodeToCenter2(network.nodes[link1.source],node1Link1,style);
+            let node2Link1=nodes[link1.target];
+            node2Link1=AdjustCoordNodeToCenter2(network.nodes[link1.target],node2Link1,style);
+            let node1Link2=nodes[link2.source];
+            node1Link2=AdjustCoordNodeToCenter2(network.nodes[link2.source],node1Link2,style);
+            let node2Link2=nodes[link2.target];
+            node2Link2=AdjustCoordNodeToCenter2(network.nodes[link2.target],node2Link2,style);
             if (edgesIntersection(node1Link1,node2Link1,node1Link2,node2Link2)){
                 nb++;
             }
@@ -213,16 +229,20 @@ export function countIntersectionGraph(nodes: {[key:string]:{x:number,y:number}}
     return nb;
 }
 
-export function isIntersectionGraph(nodes: {[key:string]:{x:number,y:number}},links:{source:string,target:string}[]): boolean {
+export function isIntersectionGraph(nodes: {[key:string]:{x:number,y:number}},links:{source:string,target:string}[],network:Network,style:GraphStyleProperties): boolean {
     for (let i=0 ; i<links.length ; i++) {
         for (let j=i+1 ; j<links.length ; j++) {
             const link1=links[i];
             const link2=links[j];
-            // check if intersection
-            const node1Link1=nodes[link1.source];
-            const node2Link1=nodes[link1.target];
-            const node1Link2=nodes[link2.source];
-            const node2Link2=nodes[link2.target];
+             // check if intersection
+             let node1Link1=nodes[link1.source];
+             node1Link1=AdjustCoordNodeToCenter2(network.nodes[link1.source],node1Link1,style);
+             let node2Link1=nodes[link1.target];
+             node2Link1=AdjustCoordNodeToCenter2(network.nodes[link1.target],node2Link1,style);
+             let node1Link2=nodes[link2.source];
+             node1Link2=AdjustCoordNodeToCenter2(network.nodes[link2.source],node1Link2,style);
+             let node2Link2=nodes[link2.target];
+             node2Link2=AdjustCoordNodeToCenter2(network.nodes[link2.target],node2Link2,style);
             if (edgesIntersection(node1Link1,node2Link1,node1Link2,node2Link2)){
                 return true;
             }
@@ -321,8 +341,10 @@ export function countOverlapNodesEdges(nodesPosition: {[key:string]:{x:number,y:
             if(link.source==nodesID[i] || link.target==nodesID[i]){
                 continue;
             }else{
-                const posLink1=nodesPosition[link.source];
-                const posLink2=nodesPosition[link.target];
+                let posLink1=nodesPosition[link.source];
+                let posLink2=nodesPosition[link.target];
+                posLink1=AdjustCoordNodeToCenter2(network.nodes[link.source],posLink1,networkStyle);
+                posLink2=AdjustCoordNodeToCenter2(network.nodes[link.target],posLink2,networkStyle);
                 if (nodeEdgeOverlap(posNode,sizeNode,posLink1,posLink2)){
                     nb+=1;
                 }
@@ -348,8 +370,10 @@ export function isOverlapNodesEdges(nodesPosition: {[key:string]:{x:number,y:num
             if(link.source==nodesID[i] || link.target==nodesID[i]){
                 continue;
             }else{
-                const posLink1=nodesPosition[link.source];
-                const posLink2=nodesPosition[link.target];
+                let posLink1=nodesPosition[link.source];
+                let posLink2=nodesPosition[link.target];
+                posLink1=AdjustCoordNodeToCenter2(network.nodes[link.source],posLink1,networkStyle);
+                posLink2=AdjustCoordNodeToCenter2(network.nodes[link.target],posLink2,networkStyle);
                 if (nodeEdgeOverlap(posNode,sizeNode,posLink1,posLink2)){
                     return true;
                 }
