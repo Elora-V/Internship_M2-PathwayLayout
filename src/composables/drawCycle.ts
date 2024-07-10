@@ -583,10 +583,12 @@ async function updateGroupCycles(remainingCycles: Subgraph[], subgraphNetwork: S
 
     if (groupCycleIsDraw && subgraphNetwork.cyclesGroup[groupCycleName].metadata) {
 
-        // move all nodes so that the coordinates are the center of nodes and not top left
-        subgraphNetwork = movecoordToCenter(subgraphNetwork,groupCycleName);
+        
         // force algo for node that have null position
         subgraphNetwork = await forceGroupCycle(subgraphNetwork, groupCycleName);
+
+        // move all nodes so that the coordinates are the center of nodes and not top left
+        subgraphNetwork = movecoordToCenter(subgraphNetwork,groupCycleName);
 
         // get size of group and update cycle group information
         const listCoord = Object.values(subgraphNetwork.cyclesGroup[groupCycleName].metadata)

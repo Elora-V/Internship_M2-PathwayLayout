@@ -269,11 +269,11 @@ function callbackFunction() {
   networkStyle.value.linkStyles[TypeSubgraph.CYCLEGROUP]={stroke:"red"};
 
   // to test
-  // const size=20;
-  // networkStyle.value.nodeStyles["metabolite"]["height"]=size;
-  // networkStyle.value.nodeStyles["metabolite"]["width"]=size;
-  // networkStyle.value.nodeStyles["reaction"]["height"]=size;
-  // networkStyle.value.nodeStyles["reaction"]["width"]=size;
+  const size=20;
+  networkStyle.value.nodeStyles["metabolite"]["height"]=size;
+  networkStyle.value.nodeStyles["metabolite"]["width"]=size;
+  networkStyle.value.nodeStyles["reaction"]["height"]=size/5;
+  networkStyle.value.nodeStyles["reaction"]["width"]=size/5;
 
 }
 

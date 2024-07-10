@@ -5,6 +5,7 @@ import { Link } from '@metabohub/viz-core/src/types/Link';
 import { c } from 'vite/dist/node/types.d-aGj9QkWt';
 import { GraphStyleProperties } from '@metabohub/viz-core/src/types/GraphStyleProperties';
 import { getSizeNodePixel } from './calculateSize';
+import { link } from 'fs';
 
 /**
  * Check if the coordinates (x, y) are the same as the node's coordinates
@@ -28,6 +29,15 @@ function isNodeCoord(node: {x:number,y:number}, x: number, y: number): boolean {
  * @returns a boolean
  */
 function edgesIntersectionLink(link1: Link, link2: Link): boolean {
+
+    // case of common node
+    if (commonNodeBetween2Links(link1,link2)) {
+        if (sameAngleBetween2ConnectedLinks(link1,link2)) {
+            return true;
+        }else {
+            return false;
+        }
+    }
 
     let x1: Node = link1.source;
     let x2: Node = link1.target;
@@ -57,6 +67,42 @@ function commonNodeBetween2Links(link1: Link,link2: Link): boolean {
     }
 } 
 
+function sameAngleBetween2ConnectedLinks(link1: Link,link2: Link): boolean {
+
+    // get nodes information
+    let commonNode: Node;
+    let node1: Node; // node from link 1 that is not in link 2
+    let node2: Node; // node from link 2 that is not in link 1
+
+    // if link 1 source is the common node :
+    if (link1.source==link2.source || link1.source==link2.target){
+        commonNode=link1.source;
+        node1=link1.target;
+    // if link 1 target is the common node :
+    }else if (link1.target==link2.source || link1.target==link2.target){
+        commonNode=link1.target;
+        node1=link1.source;
+    }
+    // get node 2
+    if (link2.source==commonNode){
+        node2=link2.target;
+    }else{
+        node2=link2.source;
+    }
+
+    // get angle between the 2 edges
+    const angle1=adjustAngle(Math.atan2(node1.y-commonNode.y,node1.x-commonNode.x));
+    const angle2=adjustAngle(Math.atan2(node2.y-commonNode.y,node2.x-commonNode.x));    
+    
+    // same angles ?
+    return angle1==angle2;
+
+}
+
+function adjustAngle(angle: number): number {
+    return (angle + 2 * Math.PI) % (2 * Math.PI);
+}
+
 /**
  * Counts how many crossings are in a network
  * @param network the network
@@ -68,14 +114,8 @@ export function countIntersection(network: Network): number {
         for (let j=i+1 ; j<network.links.length ; j++) {
             const link1=network.links[i];
             const link2=network.links[j];
-            // check if common node
-            if (commonNodeBetween2Links(link1,link2)) {
-                continue;
-            }else{
-                // check if intersection
-                if (edgesIntersectionLink(link1, link2)){
-                    nb++;
-                }
+            if (edgesIntersectionLink(link1, link2)){
+                nb++;
             }
         }
     }
@@ -86,6 +126,10 @@ export function countIntersection(network: Network): number {
 //______________________Intersection in another format of graph______________________
 
 function edgesIntersection(node1Link1:{x:number,y:number},node2Link1:{x:number,y:number},node1Link2:{x:number,y:number},node2Link2:{x:number,y:number}): boolean {
+    // case node in common
+    if (commonNodeBetween2EdgesCoord(node1Link1,node2Link1,node1Link2,node2Link2)) {
+     return intersection2ConnectedLinks(node1Link1,node2Link1,node1Link2,node2Link2);
+    }
     const result = checkIntersection(node1Link1.x, node1Link1.y, node2Link1.x, node2Link1.y, node1Link2.x, node1Link2.y, node2Link2.x, node2Link2.y);
     if (result.type == "intersecting") {
         return true;
@@ -94,12 +138,60 @@ function edgesIntersection(node1Link1:{x:number,y:number},node2Link1:{x:number,y
     }
 }
 
-function commonNodeBetween2Edges(link1: {source:string,target:string},link2: {source:string,target:string}): boolean {
+
+function commonNodeBetween2EdgesID(link1: {source:string,target:string},link2: {source:string,target:string}): boolean {
     if (link1.source==link2.source || link1.source==link2.target || link1.target==link2.source || link1.target==link2.target) {
         return true;
     }else {
         return false;
     }
+}
+
+function commonNodeBetween2EdgesCoord(node1Link1:{x:number,y:number},node2Link1:{x:number,y:number},node1Link2:{x:number,y:number},node2Link2:{x:number,y:number}): boolean {
+    if (sameNode(node1Link1,node1Link2) || sameNode(node1Link1,node2Link2) || sameNode(node2Link1,node1Link2) || sameNode(node2Link1,node2Link2)) {
+        return true;
+    }else {
+        return false;
+    }
+}
+
+function sameNode(node1: {x:number,y:number},node2: {x:number,y:number}): boolean {
+    if (!node1 || !node2 || !node1.x || !node1.y || !node2.x || !node2.y) {
+        return false;
+    }
+    return node1.x==node2.x && node1.y==node2.y;
+}
+
+function intersection2ConnectedLinks(node1Link1:{x:number,y:number},node2Link1:{x:number,y:number},node1Link2:{x:number,y:number},node2Link2:{x:number,y:number}): boolean {
+
+    // get nodes information
+    let commonNode: {x:number,y:number};
+    let node1: {x:number,y:number}; // node from link 1 that is not in link 2
+    let node2: {x:number,y:number}; // node from link 2 that is not in link 1
+
+    // if link 1 node 1 is the common node :
+    if (sameNode(node1Link1,node1Link2) || sameNode(node1Link1,node2Link2)){
+        commonNode=node1Link1;
+        node1=node2Link1;
+    // if link 1 node 2 is the common node :
+    }else if (sameNode(node2Link1,node1Link2) || sameNode(node2Link1,node2Link2)){
+        commonNode=node2Link1;
+        node1=node1Link1;
+    }
+    // get node 2
+    if (sameNode(node1Link2,commonNode)){
+        node2=node2Link2;
+    }else{
+        node2=node1Link2;
+    }
+
+    // get angle between the 2 edges
+    const angle1=adjustAngle(Math.atan2(node1.y-commonNode.y,node1.x-commonNode.x));
+    const angle2=adjustAngle(Math.atan2(node2.y-commonNode.y,node2.x-commonNode.x));
+    
+    // same angles ?
+    return angle1==angle2;
+
 }
 
 export function countIntersectionGraph(nodes: {[key:string]:{x:number,y:number}},links:{source:string,target:string}[]): number {
@@ -108,18 +200,13 @@ export function countIntersectionGraph(nodes: {[key:string]:{x:number,y:number}}
         for (let j=i+1 ; j<links.length ; j++) {
             const link1=links[i];
             const link2=links[j];
-            // check if common node
-            if (commonNodeBetween2Edges(link1,link2)) {
-                continue;
-            }else{
-                // check if intersection
-                const node1Link1=nodes[link1.source];
-                const node2Link1=nodes[link1.target];
-                const node1Link2=nodes[link2.source];
-                const node2Link2=nodes[link2.target];
-                if (edgesIntersection(node1Link1,node2Link1,node1Link2,node2Link2)){
-                    nb++;
-                }
+            // check if intersection
+            const node1Link1=nodes[link1.source];
+            const node2Link1=nodes[link1.target];
+            const node1Link2=nodes[link2.source];
+            const node2Link2=nodes[link2.target];
+            if (edgesIntersection(node1Link1,node2Link1,node1Link2,node2Link2)){
+                nb++;
             }
         }
     }
@@ -131,18 +218,13 @@ export function isIntersectionGraph(nodes: {[key:string]:{x:number,y:number}},li
         for (let j=i+1 ; j<links.length ; j++) {
             const link1=links[i];
             const link2=links[j];
-            // check if common node
-            if (commonNodeBetween2Edges(link1,link2)) {
-                continue;
-            }else{
-                // check if intersection
-                const node1Link1=nodes[link1.source];
-                const node2Link1=nodes[link1.target];
-                const node1Link2=nodes[link2.source];
-                const node2Link2=nodes[link2.target];
-                if (edgesIntersection(node1Link1,node2Link1,node1Link2,node2Link2)){
-                   return true;
-                }
+            // check if intersection
+            const node1Link1=nodes[link1.source];
+            const node2Link1=nodes[link1.target];
+            const node1Link2=nodes[link2.source];
+            const node2Link2=nodes[link2.target];
+            if (edgesIntersection(node1Link1,node2Link1,node1Link2,node2Link2)){
+                return true;
             }
         }
     }
