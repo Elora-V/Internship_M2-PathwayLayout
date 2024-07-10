@@ -9,7 +9,7 @@ import { Link } from "@metabohub/viz-core/src/types/Link";
 import { Node } from "@metabohub/viz-core/src/types/Node";
 import { link } from "fs";
 import { emit } from "process";
-import { getMeanNodesSizePixel, getSizeAllGroupCycles, medianLengthDistance, rectangleSize } from "./calculateSize";
+import { getMeanNodesSizePixel, getSizeAllGroupCycles, getSizeNodePixel, medianLengthDistance, rectangleSize } from "./calculateSize";
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 import { countIntersectionGraph, countOverlapNodes, isIntersectionGraph, isOverlapNodes, isOverlapNodesEdges } from "./countIntersections";
 
@@ -429,7 +429,7 @@ function isOverlapCycles(subgraphNetwork:SubgraphNetwork,groupCycleName:string):
     const graph =getListNodeLinksForCycleGroupAsObject(subgraphNetwork,groupCycleName);
 
     // intersection of edges :
-    const intersectionEdges=isIntersectionGraph(graph.nodes ,graph.links);
+    const intersectionEdges=isIntersectionGraph(graph.nodes ,graph.links,subgraphNetwork.network.value,subgraphNetwork.networkStyle.value);
     if (intersectionEdges){
         return true;
     }else{
@@ -582,6 +582,8 @@ async function updateGroupCycles(remainingCycles: Subgraph[], subgraphNetwork: S
     const groupCycleIsDraw = isRemainingCycleIndepOfDrawing(remainingCycles, subgraphNetwork);
 
     if (groupCycleIsDraw && subgraphNetwork.cyclesGroup[groupCycleName].metadata) {
+
+        
         // force algo for node that have null position
         subgraphNetwork = await forceGroupCycle(subgraphNetwork, groupCycleName);
 
@@ -613,6 +615,12 @@ async function forceGroupCycle(subgraphNetwork:SubgraphNetwork, groupCycleName:s
 
     // get subgraph for groupCycle
     const graph =getListNodeLinksForCycleGroup(subgraphNetwork,groupCycleName,true);
+
+    // need to apply force ?
+    const nullNode= graph.nodes.filter(node=>node["fx"]==null || node["fy"]==null);
+    if (nullNode.length==0){
+        return subgraphNetwork;
+    }
 
     // get attributes for force layout
     const distanceLinks=medianLengthDistance(subgraphNetwork.network.value,false);

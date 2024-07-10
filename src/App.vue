@@ -113,7 +113,7 @@
 </div> 
 
 
-  <h5>Number of crossings in the Network : {{ countIntersection(network) }}</h5>
+  <h5>Number of crossings in the Network : {{ countIntersection(network,networkStyle) }}</h5>
   <h5>Number of isolated nodes : {{ countIsolatedNodes(network) }}</h5>
   
 
@@ -187,7 +187,7 @@ import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetw
 import { coordinateAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
 import func from "vue-temp/vue-editor-bridge";
 import { putDuplicatedSideCompoundAside, reinsertionSideCompounds } from "@/composables/manageSideCompounds";
-import { getSepAttributesInches, minLengthDistance } from "@/composables/calculateSize";
+import { getSepAttributesInches, minLengthDistance, shiftCoordToCenter } from "@/composables/calculateSize";
 import { MinMedianMax } from "@/types/Reaction";
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
@@ -269,11 +269,11 @@ function callbackFunction() {
   networkStyle.value.linkStyles[TypeSubgraph.CYCLEGROUP]={stroke:"red"};
 
   // to test
-  // const size=20;
+  // const size=200;
   // networkStyle.value.nodeStyles["metabolite"]["height"]=size;
   // networkStyle.value.nodeStyles["metabolite"]["width"]=size;
-  // networkStyle.value.nodeStyles["reaction"]["height"]=size;
-  // networkStyle.value.nodeStyles["reaction"]["width"]=size;
+  // networkStyle.value.nodeStyles["reaction"]["height"]=size/50;
+  // networkStyle.value.nodeStyles["reaction"]["width"]=size/50;
 
 }
 
@@ -526,9 +526,15 @@ async function allSteps(subgraphNetwork: SubgraphNetwork,sourceTypePath:SourceTy
     }
   ).then(
     () => {
+      // shift coordinates : center is at the previous coord (because of top left corner)
+      // but for cycle, as it is already done
+      shiftCoordToCenter(network,networkStyle.value);
+    }
+  ).then(
+    () => {
       // add color to link (optional : for debug)
       //subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
-      subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
+      //subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
     }
   )
   console.log('_____________________________________________');

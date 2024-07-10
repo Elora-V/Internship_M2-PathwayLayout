@@ -6,6 +6,8 @@ import { type } from 'os';
 import { assignRankOrder } from './rankAndSources';
 import { SubgraphNetwork } from '@/types/SubgraphNetwork';
 import { TypeSubgraph } from '@/types/Subgraph';
+import { getSizeNodePixel } from './calculateSize';
+import { GraphStyleProperties } from '@metabohub/viz-core/src/types/GraphStyleProperties';
 
 
 
@@ -54,13 +56,12 @@ export async function changeNetworkFromViz(json: JsonViz, subgraphNetwork: Subgr
         // if node is a 'classic' node
         if (nodeId in network.nodes && 'pos' in node){
                 const pos = node.pos.split(',');
-                const x = parseFloat(pos[0]);
-                const y = parseFloat(pos[1]);
-                //console.log(nodeId+'  '+String(x)+'  '+String(y));
-
+                let x = parseFloat(pos[0]);
+                let y = parseFloat(pos[1]);
+                
                 network.nodes[nodeId].x = x;
                 network.nodes[nodeId].y = y;
-                //console.log(network.nodes[nodeId]);
+
                 if( !unique_y.includes(y)){
                     unique_y.push(y);
                 }

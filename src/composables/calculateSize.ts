@@ -25,9 +25,10 @@ export function getSepAttributesInches(network:Network,styleNetwork:GraphStylePr
 export function getSepAttributesPixel(network:Network,styleNetwork:GraphStyleProperties,factor:number=1):{rankSep:number,nodeSep:number}{
     const meanSizeNode=getMeanNodesSizePixel(Object.values(network.nodes),styleNetwork);
     const rankSep = meanSizeNode.height * factor;
-    const nodeSep = meanSizeNode.width * factor;
+    const nodeSep = meanSizeNode.width *factor;
     return { rankSep, nodeSep };
 }
+
 
 
 /**
@@ -221,4 +222,14 @@ function getSizeGroupCycles(subgraphNetwork:SubgraphNetwork,groupCycle:Subgraph)
         groupCycle.originCoordinates=center;
     }
     return subgraphNetwork;
+}
+
+export function shiftCoordToCenter(network:Network,style:GraphStyleProperties,movecycleToo:boolean=true) {
+    Object.values(network.nodes).forEach(node=>{
+        if( movecycleToo || !inCycle(network,node.id)){
+            const size =getSizeNodePixel(node,style);
+            node.x-=size.width/2;
+            node.y-=size.height/2;
+        }
+    })
 }
