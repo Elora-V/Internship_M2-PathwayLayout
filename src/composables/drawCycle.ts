@@ -587,9 +587,6 @@ async function updateGroupCycles(remainingCycles: Subgraph[], subgraphNetwork: S
         // force algo for node that have null position
         subgraphNetwork = await forceGroupCycle(subgraphNetwork, groupCycleName);
 
-        // move all nodes so that the coordinates are the center of nodes and not top left
-        subgraphNetwork = movecoordToCenter(subgraphNetwork,groupCycleName);
-
         // get size of group and update cycle group information
         const listCoord = Object.values(subgraphNetwork.cyclesGroup[groupCycleName].metadata)
                             .filter(item => item["x"] !== undefined && item["y"] !== undefined);
@@ -609,16 +606,6 @@ async function updateGroupCycles(remainingCycles: Subgraph[], subgraphNetwork: S
     return {subgraphNetwork: subgraphNetwork, group: group};
 }
 
-function movecoordToCenter(subgraphNetwork:SubgraphNetwork,groupCycleName:string):SubgraphNetwork{
-    getNodesIDPlacedInGroupCycle(subgraphNetwork,groupCycleName).forEach(nodeID=>{
-        const style = subgraphNetwork.networkStyle.value;
-        const node=subgraphNetwork.cyclesGroup[groupCycleName].metadata[nodeID] as {x:number,y:number};
-        const size =getSizeNodePixel(subgraphNetwork.network.value.nodes[nodeID],style);
-        node.x=node.x-size.width/2;
-        node.y=node.y-size.height/2;
-    });
-    return subgraphNetwork;
-}
 
 async function forceGroupCycle(subgraphNetwork:SubgraphNetwork, groupCycleName:string,force:number=-500):Promise<SubgraphNetwork>{
 

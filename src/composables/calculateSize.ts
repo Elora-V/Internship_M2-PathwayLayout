@@ -223,3 +223,13 @@ function getSizeGroupCycles(subgraphNetwork:SubgraphNetwork,groupCycle:Subgraph)
     }
     return subgraphNetwork;
 }
+
+export function shiftCoordToCenter(network:Network,style:GraphStyleProperties,movecycleToo:boolean=true) {
+    Object.values(network.nodes).forEach(node=>{
+        if( movecycleToo || !inCycle(network,node.id)){
+            const size =getSizeNodePixel(node,style);
+            node.x-=size.width/2;
+            node.y-=size.height/2;
+        }
+    })
+}
