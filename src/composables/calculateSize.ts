@@ -17,7 +17,6 @@ import { Subgraph } from "@/types/Subgraph";
  */
 export function getSepAttributesInches(network:Network,styleNetwork:GraphStyleProperties,factor:number=1):{rankSep:number,nodeSep:number}{
     const meanSizeNode=getMeanNodesSizePixel(Object.values(network.nodes),styleNetwork);
-    console.log('meanSizeNode',meanSizeNode);
     const rankSep = pixelsToInches(meanSizeNode.height * factor);
     const nodeSep = pixelsToInches(meanSizeNode.width * factor);
     return { rankSep, nodeSep };
