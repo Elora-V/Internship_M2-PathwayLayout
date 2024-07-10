@@ -534,7 +534,7 @@ async function allSteps(subgraphNetwork: SubgraphNetwork,sourceTypePath:SourceTy
     () => {
       // add color to link (optional : for debug)
       //subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
-      subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
+      //subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
     }
   )
   console.log('_____________________________________________');
