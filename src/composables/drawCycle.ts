@@ -9,7 +9,7 @@ import { Link } from "@metabohub/viz-core/src/types/Link";
 import { Node } from "@metabohub/viz-core/src/types/Node";
 import { link } from "fs";
 import { emit } from "process";
-import { getMeanNodesSizePixel, getSizeAllGroupCycles, medianLengthDistance, rectangleSize } from "./calculateSize";
+import { getMeanNodesSizePixel, getSizeAllGroupCycles, getSizeNodePixel, medianLengthDistance, rectangleSize } from "./calculateSize";
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 import { countIntersectionGraph, countOverlapNodes, isIntersectionGraph, isOverlapNodes, isOverlapNodesEdges } from "./countIntersections";
 
@@ -582,6 +582,9 @@ async function updateGroupCycles(remainingCycles: Subgraph[], subgraphNetwork: S
     const groupCycleIsDraw = isRemainingCycleIndepOfDrawing(remainingCycles, subgraphNetwork);
 
     if (groupCycleIsDraw && subgraphNetwork.cyclesGroup[groupCycleName].metadata) {
+
+        // move all nodes so that the coordinates are the center of nodes and not top left
+        subgraphNetwork = movecoordToCenter(subgraphNetwork,groupCycleName);
         // force algo for node that have null position
         subgraphNetwork = await forceGroupCycle(subgraphNetwork, groupCycleName);
 
@@ -604,6 +607,16 @@ async function updateGroupCycles(remainingCycles: Subgraph[], subgraphNetwork: S
     return {subgraphNetwork: subgraphNetwork, group: group};
 }
 
+function movecoordToCenter(subgraphNetwork:SubgraphNetwork,groupCycleName:string):SubgraphNetwork{
+    getNodesIDPlacedInGroupCycle(subgraphNetwork,groupCycleName).forEach(nodeID=>{
+        const style = subgraphNetwork.networkStyle.value;
+        const node=subgraphNetwork.cyclesGroup[groupCycleName].metadata[nodeID] as {x:number,y:number};
+        const size =getSizeNodePixel(subgraphNetwork.network.value.nodes[nodeID],style);
+        node.x=node.x-size.width/2;
+        node.y=node.y-size.height/2;
+    });
+    return subgraphNetwork;
+}
 
 async function forceGroupCycle(subgraphNetwork:SubgraphNetwork, groupCycleName:string,force:number=-500):Promise<SubgraphNetwork>{
 
