@@ -629,6 +629,12 @@ async function forceGroupCycle(subgraphNetwork:SubgraphNetwork, groupCycleName:s
     // get subgraph for groupCycle
     const graph =getListNodeLinksForCycleGroup(subgraphNetwork,groupCycleName,true);
 
+    // need to apply force ?
+    const nullNode= graph.nodes.filter(node=>node["fx"]==null || node["fy"]==null);
+    if (nullNode.length==0){
+        return subgraphNetwork;
+    }
+
     // get attributes for force layout
     const distanceLinks=medianLengthDistance(subgraphNetwork.network.value,false);
     const strengthManyBody=-distanceLinks*10;
