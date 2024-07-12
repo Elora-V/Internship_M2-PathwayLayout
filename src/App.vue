@@ -250,6 +250,13 @@ function callbackFunction() {
   // set subgraphNetwork
   subgraphNetwork={network:network,networkStyle:networkStyle,attributs:{},mainChains:{}};
 
+  // remove label (for screenshot)
+  Object.values(network.value.nodes).forEach(node=>{
+        node.label="";
+      })
+
+
+
   // copy network
   originalNetwork = networkCopy(network.value);
 
@@ -261,12 +268,12 @@ function callbackFunction() {
   );
 
   // set style
-  changeNodeStyles(networkStyle.value);
-  if (!(networkStyle.value.linkStyles)){
-    networkStyle.value.linkStyles={}
-  }
-  networkStyle.value.linkStyles[TypeSubgraph.MAIN_CHAIN]={strokeWidth:3,stroke:"blue"};
-  networkStyle.value.linkStyles[TypeSubgraph.CYCLEGROUP]={stroke:"red"};
+   changeNodeStyles(networkStyle.value);
+  // if (!(networkStyle.value.linkStyles)){
+  //   networkStyle.value.linkStyles={}
+  // }
+  // networkStyle.value.linkStyles[TypeSubgraph.MAIN_CHAIN]={strokeWidth:3,stroke:"blue"};
+  // networkStyle.value.linkStyles[TypeSubgraph.CYCLEGROUP]={stroke:"red"};
 
   // to test
   // const size=200;
@@ -496,7 +503,7 @@ async function allSteps(subgraphNetwork: SubgraphNetwork,sourceTypePath:SourceTy
   ).then(
     async () => {
       // Sugiyama without cycle metanodes (to get top nodes for cycles)
-      await vizLayout(subgraphNetwork, false,false,addNodes,groupOrCluster,false);
+      await vizLayout(subgraphNetwork, false,false,addNodes,groupOrCluster,false,true);
     }
   ).then(
     async () => {
@@ -623,8 +630,8 @@ function addToUserSource() {
 function changeNodeStyles(networkStyle:GraphStyleProperties):void{
 	networkStyle.nodeStyles = {
 		metabolite: {
-			width: 20,
-			height: 20,
+			width: 25,
+			height: 25,
 			fill:  '#FFFFFF',
 			shape: 'circle'
 		},
@@ -640,16 +647,17 @@ function changeNodeStyles(networkStyle:GraphStyleProperties):void{
 			fill: "grey",
 			shape: 'rect'
 		},
-		reversible : {
-			fill : "green",
-			shape:"inverseTriangle"
-		},
-		reversibleVersion:{
-			fill:"red",
-			shape: "triangle"
-		}
+		// reversible : {
+		// 	fill : "green",
+		// 	shape:"inverseTriangle"
+		// },
+		// reversibleVersion:{
+		// 	fill:"red",
+		// 	shape: "triangle"
+		// }
 
 	}
+
 }
 
 
