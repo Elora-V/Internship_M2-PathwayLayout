@@ -24,6 +24,9 @@
     <button v-on:click="subgraphAlgorithm('DAG_Dijkstra')" class="styled-button bold">
       All_steps_with_DAG_Dijkstra
     </button>
+    <button v-on:click="loopJson()" class="styled-button">
+      Metrics
+    </button>
 
   
 
@@ -186,9 +189,10 @@ import { node } from "prop-types";
 import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetwork";
 import { coordinateAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
 import func from "vue-temp/vue-editor-bridge";
-import { putDuplicatedSideCompoundAside, reinsertionSideCompounds } from "@/composables/manageSideCompounds";
+import { addSideCompoundAttributeFromList, duplicateSideCompound, putDuplicatedSideCompoundAside, reinsertionSideCompounds } from "@/composables/manageSideCompounds";
 import { getSepAttributesInches, minLengthDistance, shiftCoordToCenter } from "@/composables/calculateSize";
 import { MinMedianMax } from "@/types/Reaction";
+import { analyseAllJSON } from "@/composables/applyMetrics";
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
 
@@ -260,7 +264,15 @@ function callbackFunction() {
   // copy network
   originalNetwork = networkCopy(network.value);
 
-  // force layout
+ 
+  // duplicate side-compound 
+  addSideCompoundAttributeFromList(subgraphNetwork,"/sideCompounds.txt").then(
+    ()=>{
+    duplicateSideCompound(subgraphNetwork);
+    }
+  )
+
+   // force layout
   algoForce().then(
     ()=>{
       rescale(svgProperties);
@@ -291,7 +303,7 @@ function rescaleAfterAction(){
 onMounted(() => {
   svgProperties = initZoom();
   window.addEventListener('keydown', keydownHandler);
-  importNetworkFromURL('/pathways/Aminosugar_metabolism.json', network, networkStyle, callbackFunction); 
+  //importNetworkFromURL('/pathways/Aminosugar_metabolism.json', network, networkStyle, callbackFunction); 
   
 });
 function removeThisNode() {
@@ -503,7 +515,7 @@ async function allSteps(subgraphNetwork: SubgraphNetwork,sourceTypePath:SourceTy
   ).then(
     async () => {
       // Sugiyama without cycle metanodes (to get top nodes for cycles)
-      await vizLayout(subgraphNetwork, false,false,addNodes,groupOrCluster,false,true);
+      await vizLayout(subgraphNetwork, false,false,addNodes,groupOrCluster,false);
     }
   ).then(
     async () => {
@@ -597,7 +609,9 @@ function keydownHandler(event: KeyboardEvent) {
 }
 
 
-
+function loopJson():void{
+  analyseAllJSON("public/nameShortJSON.txt");
+}
 
 
 

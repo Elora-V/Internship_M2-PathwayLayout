@@ -1,0 +1,6 @@
+/pathways/Alanine_and_aspartate_metabolism.json
+/pathways/Alkaloid_synthesis.json
+/pathways/Aminosugar_metabolism.json
+/pathways/Androgen_and_estrogen_synthesis_and_metabolism.json
+/pathways/Arachidonic_acid_metabolism.json
+
