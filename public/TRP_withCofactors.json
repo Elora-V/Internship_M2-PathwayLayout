@@ -1,0 +1,2143 @@
+{
+    "graph": {
+        "id": "viz",
+        "type": "metabolic",
+        "directed": true,
+        "nodes": {
+            "R_r0079": {
+                "label": "r0079",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "position": {
+                        "x": 522.8267914681369,
+                        "y": 409.8720747656334
+                    }
+                }
+            },
+            "R_r0169": {
+                "label": "r0169",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 710.4957615106484,
+                        "y": -92.66897192826823
+                    }
+                }
+            },
+            "R_r0180": {
+                "label": "r0180",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 678.197892499026,
+                        "y": 830.8144066066791
+                    }
+                }
+            },
+            "R_r0238": {
+                "label": "r0238",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 753.0358569191021,
+                        "y": 102.80868814123562
+                    }
+                }
+            },
+            "R_r0239": {
+                "label": "r0239",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 653.7634716105056,
+                        "y": 95.72135361767636
+                    }
+                }
+            },
+            "R_r0391": {
+                "label": "r0391",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 543.9197584434081,
+                        "y": 256.33058099836
+                    }
+                }
+            },
+            "R_r0403": {
+                "label": "r0403",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 532.3722890285577,
+                        "y": -83.65986285408458
+                    }
+                }
+            },
+            "R_r0448": {
+                "label": "r0448",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 832.8702965643512,
+                        "y": 564.573264236326
+                    }
+                }
+            },
+            "R_r0449": {
+                "label": "r0449",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 782.2881985493962,
+                        "y": 447.3217545166175
+                    }
+                }
+            },
+            "R_r0450": {
+                "label": "r0450",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 740.4765761789021,
+                        "y": 566.4714045865212
+                    }
+                }
+            },
+            "R_r0454": {
+                "label": "r0454",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 788.8878651662272,
+                        "y": 2.583450014561734
+                    }
+                }
+            },
+            "R_r0455": {
+                "label": "r0455",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 837.5746365376774,
+                        "y": 98.90944624480119
+                    }
+                }
+            },
+            "R_r0460": {
+                "label": "r0460",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 832.8702965643512,
+                        "y": 815.4160535157463
+                    }
+                }
+            },
+            "R_r0525": {
+                "label": "r0525",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 703.0678244353683,
+                        "y": 748.778652517298
+                    }
+                }
+            },
+            "R_r0526": {
+                "label": "r0526",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 779.2936332249851,
+                        "y": 750.7184283920911
+                    }
+                }
+            },
+            "R_r0541": {
+                "label": "r0541",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 832.8702965643512,
+                        "y": 634.7564917753886
+                    }
+                }
+            },
+            "R_r0562": {
+                "label": "r0562",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 784.4448757954899,
+                        "y": 250.60058133681406
+                    }
+                }
+            },
+            "R_r0563": {
+                "label": "r0563",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 783.4448757954899,
+                        "y": 175.55842791338836
+                    }
+                }
+            },
+            "R_r0564": {
+                "label": "r0564",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 532.3722890285577,
+                        "y": 24.87033772578576
+                    }
+                }
+            },
+            "R_r0585": {
+                "label": "r0585",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "position": {
+                        "x": 546.318193417695,
+                        "y": 318.2158473338374
+                    }
+                }
+            },
+            "R_r0588": {
+                "label": "r0588",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 832.8702965643512,
+                        "y": 721.3754164947692
+                    }
+                }
+            },
+            "R_r0623": {
+                "label": "r0623",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 594.0380218923708,
+                        "y": 287.22874632657727
+                    }
+                }
+            },
+            "R_r0645": {
+                "label": "r0645",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 783.4448757954899,
+                        "y": 388.11894769159596
+                    }
+                }
+            },
+            "R_r0646": {
+                "label": "r0646",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 654.7634716105056,
+                        "y": 6.583450252980313
+                    }
+                }
+            },
+            "R_r0647": {
+                "label": "r0647",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 894.7728455577625,
+                        "y": 276.6116647746576
+                    }
+                }
+            },
+            "R_r0662": {
+                "label": "r0662",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 894.7728455577625,
+                        "y": 180.93861417481878
+                    }
+                }
+            },
+            "R_r0675": {
+                "label": "r0675",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 706.650838321655,
+                        "y": 285.7218360332824
+                    }
+                }
+            },
+            "R_r0676": {
+                "label": "r0676",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 783.4448757954899,
+                        "y": 328.11894769159596
+                    }
+                }
+            },
+            "R_r0945": {
+                "label": "r0945",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 781.6821194478337,
+                        "y": 503.99352180468543
+                    }
+                }
+            },
+            "R_r2539": {
+                "label": "r2539",
+                "metadata": {
+                    "classes": [
+                        "reaction"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "reversible": true,
+                    "position": {
+                        "x": 740.4765761789021,
+                        "y": 657.6233237160388
+                    }
+                }
+            },
+            "M_HC00273_c": {
+                "label": "2-Oxoadipate(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 782.2881985493962,
+                        "y": 475.07631599413855
+                    }
+                }
+            },
+            "M_HC00985_c": {
+                "label": "L-Formylkynurenine(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 710.4958225458047,
+                        "y": -38.99254670968608
+                    }
+                }
+            },
+            "M_HC00020_m": {
+                "label": "CoA(m)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "mitochondria",
+                    "isSideCompound": true,
+                    "position": {
+                        "x": 862.4787433439167,
+                        "y": 534.371575671033
+                    }
+                }
+            },
+            "M_HC00273_m": {
+                "label": "2-Oxoadipate(m)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "mitochondria",
+                    "position": {
+                        "x": 781.7078152486149,
+                        "y": 525.9706336210917
+                    }
+                }
+            },
+            "M_HC00024_c": {
+                "label": "NH3(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "isSideCompound": true,
+                    "position": {
+                        "x": 743.260680569142,
+                        "y": 438.69871362670403
+                    }
+                }
+            },
+            "M_HC00703_c": {
+                "label": "Nicotinate_ribonucleotide(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 553.9374549877887,
+                        "y": 285.7218360332824
+                    }
+                }
+            },
+            "M_HC00945_c": {
+                "label": "Xanthurenate(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 894.7728455577625,
+                        "y": 314.41464341854385
+                    }
+                }
+            },
+            "M_HC01230_c": {
+                "label": "2-Aminoadipate_6-semialdehyde(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 711.804633533892,
+                        "y": 635.6273933230178
+                    }
+                }
+            },
+            "M_HC00564_c": {
+                "label": "Deamido-NAD(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 546.8243638959582,
+                        "y": 367.5759941767631
+                    }
+                }
+            },
+            "M_HC00464_c": {
+                "label": "3-Hydroxyanthranilate(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 783.4449368306462,
+                        "y": 218.55842791338836
+                    }
+                }
+            },
+            "M_HC00411_m": {
+                "label": "Glutaryl-CoA(m)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "mitochondria",
+                    "position": {
+                        "x": 832.8702965643512,
+                        "y": 601.1349707792948
+                    }
+                }
+            },
+            "M_HC00686_m": {
+                "label": "(S)-3-Hydroxybutyryl-CoA(m)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "mitochondria",
+                    "position": {
+                        "x": 832.8702965643512,
+                        "y": 770.41445744521
+                    }
+                }
+            },
+            "M_HC00599_m": {
+                "label": "L-2-Aminoadipate(m)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "mitochondria",
+                    "position": {
+                        "x": 740.4765761789021,
+                        "y": 607.621218001126
+                    }
+                }
+            },
+            "M_HC01288_c": {
+                "label": "2-Amino-3-carboxymuconate_semialdehyde(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 783.4448757954899,
+                        "y": 285.7218360332824
+                    }
+                }
+            },
+            "M_HC01168_c": {
+                "label": "Quinolinate(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 648.5619287743659,
+                        "y": 285.7218360332824
+                    }
+                }
+            },
+            "M_HC01553_c": {
+                "label": "Formylanthranilate(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 654.7634716105056,
+                        "y": 59.17657931607482
+                    }
+                }
+            },
+            "M_HC00472_c": {
+                "label": "5-Hydroxy-L-tryptophan(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 532.372350063714,
+                        "y": -17.194170354061015
+                    }
+                }
+            },
+            "M_HC01186_c": {
+                "label": "2-Aminomuconate_semialdehyde(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 783.2491970845524,
+                        "y": 355.7349450060491
+                    }
+                }
+            },
+            "M_HC00363_m": {
+                "label": "Saccharopine(m)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "mitochondria",
+                    "position": {
+                        "x": 740.4765761789021,
+                        "y": 791.4594534539955
+                    }
+                }
+            },
+            "M_HC00067_c": {
+                "label": "Glutamine(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 582.2941018210535,
+                        "y": 390.3563880194885
+                    }
+                }
+            },
+            "M_HC01079_c": {
+                "label": "3-Hydroxy-L-kynurenine(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 837.5747586079899,
+                        "y": 145.4243159347426
+                    }
+                }
+            },
+            "M_HC00080_c": {
+                "label": "Tryptophan(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 618.7441336732224,
+                        "y": -147.4010256849821
+                    }
+                }
+            },
+            "M_HC00245_c": {
+                "label": "Tetrahydrobiopterin(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 491.9448239453659,
+                        "y": -115.8828045305962
+                    }
+                }
+            },
+            "M_HC00278_c": {
+                "label": "Kynurenine(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 788.8879262013835,
+                        "y": 53.03211546477189
+                    }
+                }
+            },
+            "M_HC00107_c": {
+                "label": "Anthranilate(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 696.2303295206618,
+                        "y": 141.85898078995405
+                    }
+                }
+            },
+            "M_HC00053_m": {
+                "label": "Lysine(m)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "mitochondria",
+                    "position": {
+                        "x": 591.4299841395685,
+                        "y": 830.8144066066791
+                    }
+                }
+            },
+            "M_HC00282_m": {
+                "label": "Acetoacetyl-CoA(m)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "mitochondria",
+                    "position": {
+                        "x": 832.8702965643512,
+                        "y": 863.7763531851447
+                    }
+                }
+            },
+            "M_HC00242_c": {
+                "label": "Dihydrobiopterin(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 499.52467240510805,
+                        "y": -50.25677337477195
+                    }
+                }
+            },
+            "M_HC01230_m": {
+                "label": "2-Aminoadipate_6-semialdehyde(m)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "mitochondria",
+                    "position": {
+                        "x": 740.4765761789021,
+                        "y": 705.8736333370568
+                    }
+                }
+            },
+            "M_HC00533_c": {
+                "label": "Serotonin(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 532.372350063714,
+                        "y": 76.78580155073655
+                    }
+                }
+            },
+            "M_HC00117_c": {
+                "label": "PRPP(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 572.9514962238811,
+                        "y": 237.32007196739482
+                    }
+                }
+            },
+            "M_HC00907_c": {
+                "label": "2-Aminomuconate(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 783.4448757954899,
+                        "y": 418.11894769159596
+                    }
+                }
+            },
+            "M_HC00599_c": {
+                "label": "L-2-Aminoadipate(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 710.4245378090005,
+                        "y": 681.2515453750809
+                    }
+                }
+            },
+            "M_HC00030_c": {
+                "label": "AMP(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "isSideCompound": true,
+                    "position": {
+                        "x": 499.4123477780976,
+                        "y": 440.8923808336094
+                    }
+                }
+            },
+            "M_HC01547_c": {
+                "label": "4-(2-Amino-3-hydroxyphenyl)-2,4-dioxobutanoate(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 894.7728455577625,
+                        "y": 214.91879994516472
+                    }
+                }
+            },
+            "M_HC00230_c": {
+                "label": "Nicotinate(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "position": {
+                        "x": 522.8267914681369,
+                        "y": 217.74556692704968
+                    }
+                }
+            },
+            "M_HC00572_m": {
+                "label": "Crotonyl-CoA(m)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "mitochondria",
+                    "position": {
+                        "x": 832.8702965643512,
+                        "y": 681.3302222441386
+                    }
+                }
+            },
+            "M_HC00061_c": {
+                "label": "Formate(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "isSideCompound": true,
+                    "position": {
+                        "x": 619.5282601924483,
+                        "y": 116.4083132580131
+                    }
+                }
+            },
+            "M_HC00048_c": {
+                "label": "Alanine(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "isSideCompound": true,
+                    "position": {
+                        "x": 623.7757220498469,
+                        "y": 31.8769153609068
+                    }
+                }
+            },
+            "M_HC00035_c": {
+                "label": "AKG(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "isSideCompound": true,
+                    "position": {
+                        "x": 813.3386858814887,
+                        "y": 479.5423091224566
+                    }
+                }
+            },
+            "M_HC00035_m": {
+                "label": "AKG(m)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "mitochondria",
+                    "isSideCompound": true,
+                    "position": {
+                        "x": 632.0811153746065,
+                        "y": 800.6946618611536
+                    }
+                }
+            },
+            "M_HC00034_c": {
+                "label": "Glutamate(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "isSideCompound": true,
+                    "position": {
+                        "x": 931.6234813229771,
+                        "y": 198.32521539755672
+                    }
+                }
+            },
+            "M_HC00013_c": {
+                "label": "NAD+(c)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "cytosol",
+                    "isSideCompound": true,
+                    "position": {
+                        "x": 548.5163950731334,
+                        "y": 472.67045267108585
+                    }
+                }
+            },
+            "M_HC00329_m": {
+                "label": "Ubiquinone(m)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "mitochondria",
+                    "isSideCompound": true,
+                    "position": {
+                        "x": 870.3311549045827,
+                        "y": 617.2057782958866
+                    }
+                }
+            },
+            "M_HC00324_m": {
+                "label": "Ubiquinol(m)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "mitochondria",
+                    "isSideCompound": true,
+                    "position": {
+                        "x": 869.6696187869285,
+                        "y": 653.6018213382082
+                    }
+                }
+            },
+            "M_HC00034_m": {
+                "label": "Glutamate(m)",
+                "metadata": {
+                    "classes": [
+                        "metabolite"
+                    ],
+                    "pathways": [
+                        " "
+                    ],
+                    "compartment": "mitochondria",
+                    "isSideCompound": true,
+                    "position": {
+                        "x": 718.8121207109191,
+                        "y": 544.5233719535834
+                    }
+                }
+            }
+        },
+        "edges": [
+            {
+                "source": "M_HC00273_c",
+                "target": "R_r0945",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00273_c",
+                "target": "R_r0449",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00985_c",
+                "target": "R_r0646",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00985_c",
+                "target": "R_r0454",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00020_m",
+                "target": "R_r0448",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00273_m",
+                "target": "R_r0448",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00024_c",
+                "target": "R_r0449",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00703_c",
+                "target": "R_r0623",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00703_c",
+                "target": "R_r0391",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00703_c",
+                "target": "R_r0585",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00945_c",
+                "target": "R_r0647",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC01230_c",
+                "target": "R_r2539",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00564_c",
+                "target": "R_r0079",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00464_c",
+                "target": "R_r0562",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00411_m",
+                "target": "R_r0541",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00686_m",
+                "target": "R_r0460",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00686_m",
+                "target": "R_r0588",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00599_m",
+                "target": "R_r2539",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00599_m",
+                "target": "R_r0450",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC01288_c",
+                "target": "R_r0676",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC01168_c",
+                "target": "R_r0675",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC01553_c",
+                "target": "R_r0239",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00472_c",
+                "target": "R_r0564",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC01186_c",
+                "target": "R_r0645",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00363_m",
+                "target": "R_r0525",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00363_m",
+                "target": "R_r0526",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00363_m",
+                "target": "R_r0180",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00067_c",
+                "target": "R_r0079",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC01079_c",
+                "target": "R_r0662",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC01079_c",
+                "target": "R_r0563",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00080_c",
+                "target": "R_r0403",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00080_c",
+                "target": "R_r0169",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00245_c",
+                "target": "R_r0403",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00278_c",
+                "target": "R_r0238",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "M_HC00278_c",
+                "target": "R_r0455",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0238",
+                "target": "M_HC00107_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0239",
+                "target": "M_HC00107_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0169",
+                "target": "M_HC00985_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0945",
+                "target": "M_HC00273_m",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0450",
+                "target": "M_HC00273_m",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0180",
+                "target": "M_HC00053_m",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0460",
+                "target": "M_HC00282_m",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0403",
+                "target": "M_HC00242_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r2539",
+                "target": "M_HC01230_m",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0525",
+                "target": "M_HC01230_m",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0526",
+                "target": "M_HC01230_m",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0585",
+                "target": "M_HC00564_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0563",
+                "target": "M_HC00464_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0448",
+                "target": "M_HC00411_m",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0564",
+                "target": "M_HC00533_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0623",
+                "target": "M_HC00117_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0391",
+                "target": "M_HC00117_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0645",
+                "target": "M_HC00907_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0449",
+                "target": "M_HC00907_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r2539",
+                "target": "M_HC00599_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0675",
+                "target": "M_HC01288_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0562",
+                "target": "M_HC01288_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0623",
+                "target": "M_HC01168_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0079",
+                "target": "M_HC00030_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0646",
+                "target": "M_HC01553_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0403",
+                "target": "M_HC00472_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0647",
+                "target": "M_HC01547_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0662",
+                "target": "M_HC01547_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0676",
+                "target": "M_HC01186_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0391",
+                "target": "M_HC00230_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0455",
+                "target": "M_HC01079_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0541",
+                "target": "M_HC00572_m",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0588",
+                "target": "M_HC00572_m",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0454",
+                "target": "M_HC00278_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": "false"
+                }
+            },
+            {
+                "source": "R_r0454",
+                "target": "M_HC00061_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": true
+                }
+            },
+            {
+                "source": "R_r0239",
+                "target": "M_HC00061_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": true
+                }
+            },
+            {
+                "source": "R_r0563",
+                "target": "M_HC00048_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": true
+                }
+            },
+            {
+                "source": "R_r0238",
+                "target": "M_HC00048_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": true
+                }
+            },
+            {
+                "source": "R_r0646",
+                "target": "M_HC00048_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": true
+                }
+            },
+            {
+                "source": "M_HC00035_c",
+                "target": "R_r0662",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": true
+                }
+            },
+            {
+                "source": "R_r0945",
+                "target": "M_HC00035_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": true
+                }
+            },
+            {
+                "source": "M_HC00035_m",
+                "target": "R_r0450",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": true
+                }
+            },
+            {
+                "source": "M_HC00035_m",
+                "target": "R_r0945",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": true
+                }
+            },
+            {
+                "source": "R_r0180",
+                "target": "M_HC00035_m",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": true
+                }
+            },
+            {
+                "source": "R_r0079",
+                "target": "M_HC00034_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": false
+                }
+            },
+            {
+                "source": "R_r0662",
+                "target": "M_HC00034_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": true
+                }
+            },
+            {
+                "source": "M_HC00013_c",
+                "target": "R_r0645",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": true
+                }
+            },
+            {
+                "source": "R_r0079",
+                "target": "M_HC00013_c",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": false
+                }
+            },
+            {
+                "source": "M_HC00329_m",
+                "target": "R_r0541",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": true
+                }
+            },
+            {
+                "source": "R_r0541",
+                "target": "M_HC00324_m",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": true
+                }
+            },
+            {
+                "source": "R_r0526",
+                "target": "M_HC00034_m",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": true
+                }
+            },
+            {
+                "source": "R_r0525",
+                "target": "M_HC00034_m",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": true
+                }
+            },
+            {
+                "source": "R_r0450",
+                "target": "M_HC00034_m",
+                "classes": [
+                    "classicEdge"
+                ],
+                "metadata": {
+                    "reversible": true
+                }
+            }
+        ],
+        "metadata": {
+            "style": {
+                "linkStyles": {
+                    "classicEdge": {
+                        "stroke": "black",
+                        "strokeWidth": 2
+                    }
+                },
+                "nodeStyles": {
+                    "metabolite": {
+                        "stroke": "#b2ae92",
+                        "strokeWidth": 1,
+                        "height": 14,
+                        "width": 14,
+                        "shape": "circle"
+                    },
+                    "reaction": {
+                        "stroke": "black",
+                        "strokeWidth": 1,
+                        "height": 10,
+                        "width": 10,
+                        "shape": "rect"
+                    }
+                }
+            }
+        }
+    }
+}
