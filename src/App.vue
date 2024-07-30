@@ -96,9 +96,9 @@
   <button v-on:click="sourcesChoice('source_only')" class="styled-button">
      Source_only
   </button>
-  <button v-on:click="OnlyUserSources()" class="styled-button">
+  <!--<button v-on:click="OnlyUserSources()" class="styled-button">
      Only_user_Sources
-  </button>
+  </button>-->
 </div>
 
  
@@ -157,6 +157,9 @@ import { SourceType } from "@/types/EnumArgs";
 import { TypeSubgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { PathType } from './types/EnumArgs';
+import { defaultParameters,Parameters } from "@/types/Parameters";
+import { MinMedianMax } from "@/types/Reaction";
+
 
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
@@ -177,6 +180,14 @@ import { BFSWithSources } from "@/composables/algoBFS";
 import { concatSources, getSources } from "@/composables/rankAndSources";
 import { addBoldLinkMainChain, addRedLinkcycleGroup } from "@/composables/useSubgraphs";
 import { addMainChainFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/chooseSubgraph";
+import { analyseAllJSON } from "@/composables/applyMetrics";
+import { changeNodeStyles } from "@/composables/styleGraph";
+import { getSepAttributesInches, minLengthDistance, shiftCoordToCenter } from "@/composables/calculateSize";
+import { addSideCompoundAttributeFromList, duplicateSideCompound, putDuplicatedSideCompoundAside, reinsertionSideCompounds } from "@/composables/manageSideCompounds";
+import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetwork";
+import { coordinateAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
+
+
 
 
 
@@ -186,14 +197,10 @@ import { addMainChainFromSources, getPathSourcesToTargetNode,getLongPathDFS, add
 import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
 import { node } from "prop-types";
-import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetwork";
-import { coordinateAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
 import func from "vue-temp/vue-editor-bridge";
-import { addSideCompoundAttributeFromList, duplicateSideCompound, putDuplicatedSideCompoundAside, reinsertionSideCompounds } from "@/composables/manageSideCompounds";
-import { getSepAttributesInches, minLengthDistance, shiftCoordToCenter } from "@/composables/calculateSize";
-import { MinMedianMax } from "@/types/Reaction";
-import { analyseAllJSON } from "@/composables/applyMetrics";
-import { changeNodeStyles } from "@/composables/styleGraph";
+import { allSteps } from "@/composables/useAlgo";
+
+
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
 
@@ -209,30 +216,30 @@ const networkStyle = ref<GraphStyleProperties>({
   linkStyles: {}
 });
 let svgProperties = reactive({});
-const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeThisNode},{label:'Duplicate', action:duplicateThisNode},{label:'AddToCluster', action:addToCluster},{label:'AddToSource', action:addToUserSource}])
+const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeThisNode},{label:'Duplicate', action:duplicateThisNode}]) // {label:'AddToCluster', action:addToCluster} {label:'AddToSource', action:addToUserSource}
 let undoFunction: any = reactive({});
 //let clusters : Array<Cluster> =reactive([])
 //let attributGraphViz : AttributesViz=reactive({});
 let subgraphNetwork:SubgraphNetwork;
-let sourceTypePath:SourceType=SourceType.RANK_SOURCE;
-let getSubgraph=getPathSourcesToTargetNode;
 let originalNetwork:Network;
-let merge:boolean=true;
-let pathType:PathType=PathType.ALL_LONGEST;
-let minibranch:boolean=true;
-let mainchain:boolean=true;
-let userSources:string[]=[];
-let onlyUserSources:boolean=false;
-let cycle:boolean=true;
-let allowInternalCycles:boolean=true;
-let groupOrCluster:"group"|"cluster"="cluster";
-let addNodes:boolean=true;
-let ordering:boolean=true;
-const dpi:number=72;
-const numberNodeOnEdge:number=3;
-const factorLength:number=1/2; // % of the length of the edge for cofactor edges
+//let sourceTypePath:SourceType=SourceType.RANK_SOURCE;
+//let getSubgraph=getPathSourcesToTargetNode;
+// let merge:boolean=true;
+// let pathType:PathType=PathType.ALL_LONGEST;
+// let minibranch:boolean=true;
+// let mainchain:boolean=true;
+// let userSources:string[]=[];
+// let onlyUserSources:boolean=false;
+// let cycle:boolean=true;
+// let allowInternalCycles:boolean=true;
+// let groupOrCluster:"group"|"cluster"="cluster";
+// let addNodes:boolean=true;
+// let ordering:boolean=true;
+// const dpi:number=72;
+// const numberNodeOnEdge:number=3;
+// const factorLength:number=1/2; // % of the length of the edge for cofactor edges
 
-
+let parameters: Parameters=defaultParameters;
 
 // _________________________________________________________________________________________________
 // ---------------------------------------------------------------------  Functions
@@ -339,13 +346,13 @@ function openContextMenu(Event: MouseEvent, nodeId: string) {
 
 function sourcesChoice(sourcetype:string):void{
   if (sourcetype==SourceType.RANK_ONLY){
-    sourceTypePath=SourceType.RANK_ONLY;
+    parameters.sourceTypePath=SourceType.RANK_ONLY;
   }
   else if (sourcetype==SourceType.RANK_SOURCE){
-    sourceTypePath=SourceType.RANK_SOURCE;
+    parameters.sourceTypePath=SourceType.RANK_SOURCE;
   }
   else if (sourcetype==SourceType.SOURCE_ONLY){
-    sourceTypePath=SourceType.SOURCE_ONLY;
+    parameters.sourceTypePath=SourceType.SOURCE_ONLY;
   }
   subgraphNetwork.mainChains={}; // temporaire, je reset les clusters pour pas ajouter les nouveaux aux vieux
   subgraphNetwork.secondaryChains={};
@@ -353,49 +360,49 @@ function sourcesChoice(sourcetype:string):void{
 }
 
 function mergeChoice(value:boolean) {
-    merge=value;
+  parameters.merge=value;
 }
 
 function Cycle(value:boolean) {
-    cycle=value;
+  parameters.cycle=value;
 }
 
 function Ordering(value:boolean) {
-    ordering=value;
+  parameters.ordering=value;
 }
 
 
 function setPathType(type:PathType) {
-    pathType = type;
+  parameters.pathType = type;
 }
 
 function miniBranchChoice(value: boolean) {
-  minibranch = value;
+  parameters.minibranch = value;
 }
 
 function mainChainChoice(value: boolean) {
-  mainchain = value;
+  parameters.mainchain = value;
 }
 
-function OnlyUserSources(){
-  onlyUserSources=!onlyUserSources;
-}
+// function OnlyUserSources(){
+//   onlyUserSources=!onlyUserSources;
+// }
 
-function allowInternalCycle(value:boolean){
-  allowInternalCycles=value;
-}
+// function allowInternalCycle(value:boolean){
+//   parameters.allowInternalCycles=value;
+// }
 
-function groupInsteadCluster(value:boolean){
-  if(value){
-    groupOrCluster="group";
-  }else{
-    groupOrCluster="cluster";
-  }
-}
+// function groupInsteadCluster(value:boolean){
+//   if(value){
+//     parameters.groupOrCluster="group";
+//   }else{
+//     parameters.groupOrCluster="cluster";
+//   }
+// }
 
-function addNodesViz(value:boolean){
-  addNodes=value;
-}
+// function addNodesViz(value:boolean){
+//   parameters.addNodes=value;
+//}
 
 async function subgraphAlgorithm(algorithm:string):Promise<void> {
     //console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
@@ -403,11 +410,11 @@ async function subgraphAlgorithm(algorithm:string):Promise<void> {
       subgraphNetwork=getOriginalNetwork();
 
         if (algorithm === 'DFS') {
-          getSubgraph = getLongPathDFS;
+          parameters.getSubgraph = getLongPathDFS;
         } else if (algorithm === 'DAG_Dijkstra') {
-          getSubgraph = getPathSourcesToTargetNode;
+          parameters.getSubgraph = getPathSourcesToTargetNode;
         }
-        allSteps(subgraphNetwork,sourceTypePath).then(
+        allSteps(subgraphNetwork,parameters).then(
           ()=>{
             rescale(svgProperties)
           }
@@ -415,15 +422,7 @@ async function subgraphAlgorithm(algorithm:string):Promise<void> {
         
 }
 
-function getSourcesParam(network:Network,sourceType:SourceType):string[]{
-  let sources:string[]=[];
-    if(onlyUserSources){
-      sources=userSources;
-    }else{
-      sources = concatSources(userSources as string[],getSources(network,sourceType));
-    }
-    return sources;
-}
+
 
 
 
@@ -447,123 +446,6 @@ async function algoForce():Promise<void>{
   createStaticForceLayout(network.value);
 }
 
-// algorithm pipeline : pathway layout 
-async function allSteps(subgraphNetwork: SubgraphNetwork,sourceTypePath:SourceType=SourceType.RANK_SOURCE):Promise<void> {
-
-  let network=subgraphNetwork.network.value;
-
-  console.log('_____________________________________________');
-  console.log('Parameters :');
-  console.log("Source type : "+ sourceTypePath);
-  console.log('Only user sources ? ' + String(onlyUserSources));
-  console.log("Merge ? " + String(merge));
-  console.log('Main chain ? ' + String(mainchain));
-  console.log("Add Mini branch ? " + String(minibranch));
-  console.log("Type path ? " + pathType);
-  console.log('Cycle ? ' + String(cycle));
-  console.log('Allow internal cycle ? ' + String(allowInternalCycles));
-  console.log('addNodes ' +String(addNodes));
-  if(!(!addNodes && groupOrCluster=="group")){
-    console.log('groupOrCluster '+groupOrCluster);
-  }
-  console.log('Ordering ? ' + String(ordering));
-  console.log('---------------');
-
-
-
-  await putDuplicatedSideCompoundAside(subgraphNetwork,"/sideCompounds.txt").then(
-    (subgraphNetworkModified)=>{
-        subgraphNetwork=subgraphNetworkModified;
-    }
-  ).then(
-    async () => {
-      //  get rank 0 with Sugiyama
-      await vizLayout(subgraphNetwork, true,false,addNodes,groupOrCluster,false);
-    }
-  ).then(
-    () => {
-      // duplicate reactions
-      duplicateReversibleReactions(network);
-    }
-  ).then(
-    () => {
-      // detect cycles and choose some of the reaction duplicated
-      if (cycle){
-        addDirectedCycleToSubgraphNetwork(subgraphNetwork,3);
-      }
-    }
-  ).then(
-    async () => {
-      // choose all other reversible reactions
-      const sources=getSourcesParam(network,SourceType.RANK_SOURCE_ALL);
-      subgraphNetwork=await chooseReversibleReaction(subgraphNetwork,sources,BFSWithSources);
-    }
-  ).then(
-    () => {
-      // get main chains
-      if (mainchain){
-        const sources=getSourcesParam(network,sourceTypePath);
-        addMainChainFromSources(subgraphNetwork, sources,getSubgraph, merge,pathType);
-      }
-    }
-  ).then(
-    () => {
-      // add minibranch
-      if(minibranch){
-        subgraphNetwork= addMiniBranchToMainChain(subgraphNetwork);
-      }
-    }
-  ).then(
-    async () => {
-      // Sugiyama without cycle metanodes (to get top nodes for cycles)
-      await vizLayout(subgraphNetwork, false,false,addNodes,groupOrCluster,false);
-    }
-  ).then(
-    async () => {
-      // relative coordinates for cycles
-      if (cycle){
-        await coordinateAllCycles(subgraphNetwork,allowInternalCycles);
-      }
-    }
-  ).then(
-    async () => {
-      // Sugiyama with cycle metanodes 
-      if (cycle){
-        await vizLayout(subgraphNetwork, false,true,addNodes,groupOrCluster,ordering,false,dpi,numberNodeOnEdge,rescaleAfterAction);
-      }
-    }
-  ).then(
-    () => {
-      // place the cycles
-      if (cycle){
-        drawAllCyclesGroup(subgraphNetwork);
-      }
-    }
-  ).then(
-    () => {
-      // reverse side compounds of reversed reactions
-      subgraphNetwork=reinsertionSideCompounds(subgraphNetwork,factorLength);
-    }
-  ).then(
-    () => {
-      // shift coordinates : center is at the previous coord (because of top left corner)
-      // but for cycle, as it is already done
-      shiftCoordToCenter(network,networkStyle.value);
-    }
-  ).then(
-    () => {
-      // add color to link (optional : for debug)
-      //subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
-      //subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
-    }
-  )
-  console.log('_____________________________________________');
-
-}
-
-
-
-
 
 // ______________________________________________________________________________
 // ----------------------------------------------- Events
@@ -573,24 +455,25 @@ function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
     dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
-    vizLayout(subgraphNetwork ,true,true,true,"cluster",true, false,dpi,numberNodeOnEdge,rescaleAfterAction);
+    vizLayout(subgraphNetwork ,true,true,true,"cluster",true, false,parameters.dpi,parameters.numberNodeOnEdge,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
   } else if (event.key =="n"){
     console.log(subgraphNetwork);
+    console.log(parameters);
   } else if (event.key =="c"){
     addDirectedCycleToSubgraphNetwork(subgraphNetwork);
   }else if (event.key =="r"){
     (async () => {
-      const sources=getSourcesParam(network.value,SourceType.RANK_SOURCE_ALL);
+      const sources=getSources(network.value,SourceType.RANK_SOURCE_ALL);
       subgraphNetwork= await chooseReversibleReaction(subgraphNetwork,sources,BFSWithSources);
     })();
   }else if (event.key =="p"){
-    const sources=getSourcesParam(network.value,sourceTypePath);
-    addMainChainFromSources(subgraphNetwork, sources,getSubgraph, merge,pathType);
+    const sources=getSources(network.value,parameters.sourceTypePath);
+    addMainChainFromSources(subgraphNetwork, sources,parameters.getSubgraph, parameters.merge,parameters.pathType);
     subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
   } else if (event.key == "a"){
-    allSteps(subgraphNetwork,sourceTypePath);
+    allSteps(subgraphNetwork,parameters);
   } else if (event.key == "f"){
     const sources=getSources(network.value,SourceType.RANK_ONLY);
     const {dfs,graph}=DFSsourceDAG(network.value,sources);
@@ -620,24 +503,24 @@ function loopJson():void{
 // ______________________________________________________________________________
 // ----------------------------------------------- Handmade clusters et sources
 
-function newCluster(){
-  const numberCluster=Object.keys(subgraphNetwork.mainChains).length;
-  const cluster= createSubgraph(String(numberCluster),[],[],TypeSubgraph.MAIN_CHAIN);
-  subgraphNetwork.mainChains[cluster.name]=cluster;
-}
+// function newCluster(){
+//   const numberCluster=Object.keys(subgraphNetwork.mainChains).length;
+//   const cluster= createSubgraph(String(numberCluster),[],[],TypeSubgraph.MAIN_CHAIN);
+//   subgraphNetwork.mainChains[cluster.name]=cluster;
+// }
 
-function addToCluster() {
-  let numberCluster=Object.keys(subgraphNetwork.mainChains).length;
-  if (numberCluster === 0){
-    newCluster();
-    numberCluster+=1;
-  }
-  subgraphNetwork=addNodeToSubgraph(subgraphNetwork,String(numberCluster-1),menuProps.targetElement,TypeSubgraph.MAIN_CHAIN); 
-}
+// function addToCluster() {
+//   let numberCluster=Object.keys(subgraphNetwork.mainChains).length;
+//   if (numberCluster === 0){
+//     newCluster();
+//     numberCluster+=1;
+//   }
+//   subgraphNetwork=addNodeToSubgraph(subgraphNetwork,String(numberCluster-1),menuProps.targetElement,TypeSubgraph.MAIN_CHAIN); 
+// }
 
-function addToUserSource() {
-  userSources.push(menuProps.targetElement); 
-}
+// function addToUserSource() {
+//   userSources.push(menuProps.targetElement); 
+// }
 
 
 

@@ -49,7 +49,6 @@ export function importNetworkFromFile(file: File, network: Ref<Network>, network
 			data = JSON.stringify(await sbml2json(data));
 		}
 		const networkData = readJsonGraph(data);
-		console.log(networkData);
 		networkStyle.value = networkData.networkStyle;
     loadNetwork(networkData.network, network).then(() => {
 			callbackFunction();

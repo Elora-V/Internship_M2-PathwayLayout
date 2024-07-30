@@ -97,6 +97,18 @@ export function getSources(network:Network, typeSource:SourceType):Array<string>
 
 }
 
+
+// function getSourcesParam(network:Network,sourceType:SourceType):string[]{
+//   let sources:string[]=[];
+//     if(onlyUserSources){
+//       sources=userSources;
+//     }else{
+//       sources = concatSources(userSources as string[],getSources(network,sourceType));
+//     }
+//     return sources;
+// }
+
+
 /**
  * Node has rank 0 in metadata ?
  * @param node Node
