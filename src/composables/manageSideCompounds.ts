@@ -46,7 +46,7 @@ async function getIDSideCompoundsFromFile(pathListSideCompounds:string):Promise<
     return listId;
 }
 
-async function addSideCompoundAttributeFromList(subgraphNetwork:SubgraphNetwork, pathListSideCompounds):Promise<void>{
+export async function addSideCompoundAttributeFromList(subgraphNetwork:SubgraphNetwork, pathListSideCompounds):Promise<void>{
     const listIDSideCompounds = await sideCompoundsInNetworkFromFile(subgraphNetwork,pathListSideCompounds);
     listIDSideCompounds.forEach((sideCompoundID) => {
         addSideCompoundAttribute(subgraphNetwork,sideCompoundID);
@@ -71,7 +71,7 @@ function isDuplicate(network:Network,nodeID:string):boolean{
     return Boolean(network.nodes[nodeID].classes && network.nodes[nodeID].classes.includes("duplicate"));
 }
 
-function duplicateSideCompound(subgraphNetwork:SubgraphNetwork):void{
+export function duplicateSideCompound(subgraphNetwork:SubgraphNetwork):void{
     const network = subgraphNetwork.network.value;
     const networkStyle = subgraphNetwork.networkStyle.value;
     // duplication of cofactors
