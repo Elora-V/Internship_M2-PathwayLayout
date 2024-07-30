@@ -7,16 +7,18 @@ import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStylePr
 export async function analyseAllJSON(pathListJSON: string): Promise<void> {
     const jsonFileString = await getContentFromURL(pathListJSON);
     const allJson = jsonFileString.split('\n');
-    const resultAllJSON: number[][] = [];
+    let resultAllJSON: Array<Array<number>> = [];
 
     for (const json of allJson) {
         const resultJSON= await analyseJSON(json);
-        resultAllJSON.push(resultJSON);
+        if (resultJSON !== undefined){
+            resultAllJSON.push(resultJSON);
+        }
     }
-   console.log(resultAllJSON);
+    printArray(resultAllJSON);
 }
 
-async function analyseJSON(json: string): Promise<number[]> {
+async function analyseJSON(json: string): Promise<Array<number> | undefined> {
 
     // initialize network and networkStyle
     const networkForJSON = ref<Network>({ id: '', nodes: {}, links: [] });
@@ -24,18 +26,38 @@ async function analyseJSON(json: string): Promise<number[]> {
         nodeStyles: {},
         linkStyles: {}
     });
-    const resultAnalysis:number[]=[];
+    let resultAnalysis: Array<number>;
 
     // import network from JSON, and process it
     try {
-        importNetworkFromURL(json, networkForJSON, networkStyleforJSON, () => {
-        console.log("\n\n---------------------------------------\n"+json);
-        resultAnalysis.push(Object.keys(networkForJSON.value.nodes).length);
-        resultAnalysis.push(networkForJSON.value.links.length);
-    });
+        await new Promise<void>((resolve, reject) => {
+            try {
+                importNetworkFromURL(json, networkForJSON, networkStyleforJSON, () => {
+                    resultAnalysis=applyMetrics(networkForJSON.value, networkStyleforJSON.value);                 
+                    resolve();
+                });
+            } catch (error) {
+                reject(error);
+            }
+        });
     } catch (error) {
-        console.error("error file : " + json + "\n"+ error);
+        console.error("error file : " + json + "\n" + error);
+        return undefined;
     }
 
     return resultAnalysis;
+}
+
+function printArray(data: Array<Array<number>>): void {
+    const stringData = data.map(row => row.join(',')).join('\n');
+    console.log(stringData);
+}
+
+function applyMetrics(network: Network, networkStyle: GraphStyleProperties): Array<number> {
+    const result: Array<number>=[];
+
+    result.push(Object.keys(network.nodes).length);
+    result.push(network.links.length);
+
+    return result;
 }
