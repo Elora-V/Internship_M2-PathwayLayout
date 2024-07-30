@@ -12,7 +12,7 @@ import { coordinateAllCycles, drawAllCyclesGroup } from "./drawCycle";
 import { shiftCoordToCenter } from "./calculateSize";
 import { getSources } from "./rankAndSources";
 
-export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Parameters):Promise<void> {
+export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Parameters):Promise<SubgraphNetwork> {
 
     let network=subgraphNetwork.network.value;
     let networkStyle=subgraphNetwork.networkStyle.value;
@@ -109,8 +109,9 @@ export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Param
         //subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
         //subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
       }
-    )
+    );
     console.log('_____________________________________________');
+    return subgraphNetwork;
   
 }
 

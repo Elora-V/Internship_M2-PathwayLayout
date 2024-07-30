@@ -3,9 +3,9 @@
     Rescale
   </button>
   <input type="file" accept=".json, .xml" label="File input" v-on:change="loadFile" class=" margin"/>
-  <button v-on:click="newCluster()" class="margin">
+  <!--<button v-on:click="newCluster()" class="margin">
      New_Cluster
-  </button>
+  </button>-->
 
 
   
@@ -259,6 +259,8 @@ function loadFile(event: Event) {
 function callbackFunction() {
 
   console.log('________New_graph__________');
+  // set style
+  changeNodeStyles(networkStyle.value);
   // set subgraphNetwork
   subgraphNetwork={network:network,networkStyle:networkStyle,attributs:{},mainChains:{}};
 
@@ -273,22 +275,36 @@ function callbackFunction() {
   originalNetwork = networkCopy(network.value);
 
  
+  // V1 (rapport)
   // duplicate side-compound 
-  addSideCompoundAttributeFromList(subgraphNetwork,"/sideCompounds.txt").then(
-    ()=>{
-    duplicateSideCompound(subgraphNetwork);
-    }
-  )
+  // addSideCompoundAttributeFromList(subgraphNetwork,"/sideCompounds.txt").then(()=>{
+  //   duplicateSideCompound(subgraphNetwork);
+  // });
+  
+  // // force layout
+  // algoForce().then(
+  //   ()=>{
+  //     rescale(svgProperties);
+  //   }
+  // );
+ 
 
-   // force layout
-  algoForce().then(
+
+  // V2
+  // duplicate side-compound 
+  addSideCompoundAttributeFromList(subgraphNetwork,"/sideCompounds.txt").then(()=>{
+    duplicateSideCompound(subgraphNetwork);
+  }).then(
     ()=>{
-      rescale(svgProperties);
+      algoForce();
+    }
+  ).then(
+    ()=>{
+      ///addSideCompoundAttributeFromList(subgraphNetwork,"/sideCompounds.txt")
     }
   );
-
-  // set style
-   changeNodeStyles(networkStyle.value);
+  rescale(svgProperties);
+  
   // if (!(networkStyle.value.linkStyles)){
   //   networkStyle.value.linkStyles={}
   // }
@@ -409,16 +425,18 @@ async function subgraphAlgorithm(algorithm:string):Promise<void> {
 
       subgraphNetwork=getOriginalNetwork();
 
-        if (algorithm === 'DFS') {
-          parameters.getSubgraph = getLongPathDFS;
-        } else if (algorithm === 'DAG_Dijkstra') {
-          parameters.getSubgraph = getPathSourcesToTargetNode;
-        }
-        allSteps(subgraphNetwork,parameters).then(
-          ()=>{
-            rescale(svgProperties)
-          }
-        );
+      if (algorithm === 'DFS') {
+        parameters.getSubgraph = getLongPathDFS;
+      } else if (algorithm === 'DAG_Dijkstra') {
+        parameters.getSubgraph = getPathSourcesToTargetNode;
+      }
+      
+      try {
+          subgraphNetwork = await allSteps(subgraphNetwork, parameters);
+          rescale(svgProperties);
+      } catch (error) {
+          console.error('Error executing allSteps:', error);
+      }
         
 }
 
@@ -444,6 +462,7 @@ function getOriginalNetwork():SubgraphNetwork{
 async function algoForce():Promise<void>{
   console.log('Force');
   createStaticForceLayout(network.value);
+  
 }
 
 
@@ -455,7 +474,8 @@ function keydownHandler(event: KeyboardEvent) {
   if (event.key === 'ArrowLeft') {
     dagreLayout(network.value,{}, rescaleAfterAction);
   } else if (event.key === 'ArrowRight') {
-    vizLayout(subgraphNetwork ,true,true,true,"cluster",true, false,parameters.dpi,parameters.numberNodeOnEdge,rescaleAfterAction);
+    //vizLayout(subgraphNetwork ,true,true,true,"cluster",true, false,parameters.dpi,parameters.numberNodeOnEdge,rescaleAfterAction);
+    vizLayout(subgraphNetwork, false,false,parameters.addNodes,parameters.groupOrCluster,false,false,parameters.dpi,parameters.numberNodeOnEdge,rescaleAfterAction);
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
   } else if (event.key =="n"){

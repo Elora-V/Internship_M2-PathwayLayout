@@ -6,10 +6,14 @@ import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { addSideCompoundAttributeFromList, duplicateSideCompound } from "./manageSideCompounds";
 import { changeNodeStyles } from "./styleGraph";
 import { countIntersection } from "./countIntersections";
+import { createStaticForceLayout } from "@metabohub/viz-core";
+import { Parameters,defaultParameters } from "@/types/Parameters";
+import { vizLayout } from "./useLayout";
+import { allSteps } from "./useAlgo";
+import { PathType } from "@/types/EnumArgs";
 
 
-
-export async function analyseAllJSON(pathListJSON: string,applyLayout:(subgraph: SubgraphNetwork) => SubgraphNetwork=defaultApplyLayout): Promise<void> {
+export async function analyseAllJSON(pathListJSON: string,applyLayout:(subgraph: SubgraphNetwork) => SubgraphNetwork=applyVizLayout): Promise<void> {
     const jsonFileString = await getContentFromURL(pathListJSON);
     const allJson = jsonFileString.split('\n');
     let resultAllJSON: Array<Array<number>> = [];
@@ -85,6 +89,55 @@ function printArray(data: Array<Array<number>>): void {
 
 
 
+const defaultApplyLayout = (subgraphNetwork: SubgraphNetwork): SubgraphNetwork => {
+    return subgraphNetwork;
+};
+
+const applyForceLayout = (subgraphNetwork: SubgraphNetwork): SubgraphNetwork => {
+    const network=subgraphNetwork.network.value;
+    createStaticForceLayout(network);
+    return subgraphNetwork;
+};
+
+const applyVizLayout = (subgraphNetwork: SubgraphNetwork): SubgraphNetwork => {
+    let parameters: Parameters = defaultParameters;
+
+    vizLayout(subgraphNetwork, false, false, parameters.addNodes, parameters.groupOrCluster, false, false, parameters.dpi, parameters.numberNodeOnEdge)
+        
+
+    return subgraphNetwork;
+};
+
+const applyAlgo = (subgraphNetwork: SubgraphNetwork): SubgraphNetwork => {
+    let parameters: Parameters=defaultParameters;
+    allSteps(subgraphNetwork,parameters);
+    return subgraphNetwork;
+};
+
+const applyAlgo_V0 = (subgraphNetwork: SubgraphNetwork): SubgraphNetwork => {
+    let parameters: Parameters=defaultParameters;
+    parameters.mainchain=false;
+    allSteps(subgraphNetwork,parameters);
+    return subgraphNetwork;
+};
+
+const applyAlgo_V1 = (subgraphNetwork: SubgraphNetwork): SubgraphNetwork => {
+    let parameters: Parameters=defaultParameters;
+    parameters.pathType=PathType.LONGEST;
+    allSteps(subgraphNetwork,parameters);
+    return subgraphNetwork;
+};
+
+const applyAlgo_V3 = (subgraphNetwork: SubgraphNetwork): SubgraphNetwork => {
+    let parameters: Parameters=defaultParameters;
+    parameters.pathType=PathType.ALL;
+    allSteps(subgraphNetwork,parameters);
+    return subgraphNetwork;
+};
+
+
+
+
 function applyMetrics(subgraphNetwork: SubgraphNetwork): Array<number> {
     const network=subgraphNetwork.network.value;
     const networkStyle=subgraphNetwork.networkStyle.value;
@@ -96,8 +149,3 @@ function applyMetrics(subgraphNetwork: SubgraphNetwork): Array<number> {
 
     return result;
 }
-
-
-const defaultApplyLayout = (subgraph: SubgraphNetwork): SubgraphNetwork => {
-    return subgraph;
-};
