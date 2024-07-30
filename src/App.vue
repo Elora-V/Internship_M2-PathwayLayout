@@ -193,6 +193,7 @@ import { addSideCompoundAttributeFromList, duplicateSideCompound, putDuplicatedS
 import { getSepAttributesInches, minLengthDistance, shiftCoordToCenter } from "@/composables/calculateSize";
 import { MinMedianMax } from "@/types/Reaction";
 import { analyseAllJSON } from "@/composables/applyMetrics";
+import { changeNodeStyles } from "@/composables/styleGraph";
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
 
@@ -638,41 +639,7 @@ function addToUserSource() {
   userSources.push(menuProps.targetElement); 
 }
 
-// ______________________________________________________________________________
-// ----------------------------------------------- Style
 
-function changeNodeStyles(networkStyle:GraphStyleProperties):void{
-	networkStyle.nodeStyles = {
-		metabolite: {
-			width: 25,
-			height: 25,
-			fill:  '#FFFFFF',
-			shape: 'circle'
-		},
-    sideCompound: {
-			width: 12,
-			height: 12,
-			fill:  '#f0e3e0',
-			shape: 'circle'
-		},
-		reaction: {
-			width: 15,
-			height: 15,
-			fill: "grey",
-			shape: 'rect'
-		},
-		// reversible : {
-		// 	fill : "green",
-		// 	shape:"inverseTriangle"
-		// },
-		// reversibleVersion:{
-		// 	fill:"red",
-		// 	shape: "triangle"
-		// }
-
-	}
-
-}
 
 
 </script><style>
