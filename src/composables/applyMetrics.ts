@@ -13,7 +13,7 @@ import { allSteps } from "./useAlgo";
 import { PathType } from "@/types/EnumArgs";
 
 
-export async function analyseAllJSON(pathListJSON: string,applyLayout:(subgraph: SubgraphNetwork) => SubgraphNetwork=applyVizLayout): Promise<void> {
+export async function analyseAllJSON(pathListJSON: string,applyLayout:(subgraph: SubgraphNetwork) => Promise<SubgraphNetwork>=applyAlgo_V3): Promise<void> {
     const jsonFileString = await getContentFromURL(pathListJSON);
     const allJson = jsonFileString.split('\n');
     let resultAllJSON: Array<Array<number>> = [];
@@ -30,7 +30,7 @@ export async function analyseAllJSON(pathListJSON: string,applyLayout:(subgraph:
 }
 
 
-async function analyseJSON(json: string, applyLayout:(subgraph: SubgraphNetwork) => SubgraphNetwork=defaultApplyLayout): Promise<Array<number> | undefined> {
+async function analyseJSON(json: string, applyLayout: (subgraph: SubgraphNetwork) => Promise<SubgraphNetwork> =defaultApplyLayout): Promise<Array<number> | undefined> {
 
     // initialize objects
     const networkForJSON = ref<Network>({ id: '', nodes: {}, links: [] });
@@ -58,15 +58,18 @@ async function analyseJSON(json: string, applyLayout:(subgraph: SubgraphNetwork)
                         duplicateSideCompound(subgraphNetwork);
                         }
                     ).then(
-                        ()=>{                       
+                        async ()=>{                       
                         // apply layout
-                        subgraphNetwork=applyLayout(subgraphNetwork);
-                        // then ( afaire qd on aura le layout)
+                        subgraphNetwork=await applyLayout(subgraphNetwork);
+                        }
+                    ).then(
+                        ()=>{
                         // calculate metrics on resulting layout
                         resultAnalysis=applyMetrics(subgraphNetwork);                 
                         resolve();
                         }
                     );
+                    
                 });
             } catch (error) {
                 reject(error);
@@ -89,50 +92,57 @@ function printArray(data: Array<Array<number>>): void {
 
 
 
-const defaultApplyLayout = (subgraphNetwork: SubgraphNetwork): SubgraphNetwork => {
+const defaultApplyLayout = async (subgraphNetwork: SubgraphNetwork): Promise<SubgraphNetwork> => {
     return subgraphNetwork;
 };
 
-const applyForceLayout = (subgraphNetwork: SubgraphNetwork): SubgraphNetwork => {
-    const network=subgraphNetwork.network.value;
-    createStaticForceLayout(network);
-    return subgraphNetwork;
-};
+// const applyForceLayout = (subgraphNetwork: SubgraphNetwork): SubgraphNetwork => {
+//     const network=subgraphNetwork.network.value;
+//     createStaticForceLayout(network);
+//     return subgraphNetwork;
+// };
 
-const applyVizLayout = (subgraphNetwork: SubgraphNetwork): SubgraphNetwork => {
+const applyVizLayout = async (subgraphNetwork: SubgraphNetwork): Promise<SubgraphNetwork> => {
     let parameters: Parameters = defaultParameters;
-
-    vizLayout(subgraphNetwork, false, false, parameters.addNodes, parameters.groupOrCluster, false, false, parameters.dpi, parameters.numberNodeOnEdge)
-        
-
-    return subgraphNetwork;
+    const subgraphNetworkPromise = new Promise<SubgraphNetwork>((resolve, reject) => {
+        resolve(vizLayout(subgraphNetwork, false, false, parameters.addNodes, parameters.groupOrCluster, false, false, parameters.dpi, parameters.numberNodeOnEdge))
+    })
+    return subgraphNetworkPromise;
 };
 
-const applyAlgo = (subgraphNetwork: SubgraphNetwork): SubgraphNetwork => {
+const applyAlgo = async (subgraphNetwork: SubgraphNetwork): Promise<SubgraphNetwork> => {
     let parameters: Parameters=defaultParameters;
-    allSteps(subgraphNetwork,parameters);
-    return subgraphNetwork;
+    const subgraphNetworkPromise = new Promise<SubgraphNetwork>((resolve, reject) => {
+        resolve(allSteps(subgraphNetwork,parameters));
+    })
+    return subgraphNetworkPromise;
 };
 
-const applyAlgo_V0 = (subgraphNetwork: SubgraphNetwork): SubgraphNetwork => {
+const applyAlgo_V0 = async (subgraphNetwork: SubgraphNetwork): Promise<SubgraphNetwork> => {
     let parameters: Parameters=defaultParameters;
     parameters.mainchain=false;
-    allSteps(subgraphNetwork,parameters);
-    return subgraphNetwork;
+    const subgraphNetworkPromise = new Promise<SubgraphNetwork>((resolve, reject) => {
+        resolve(allSteps(subgraphNetwork,parameters));
+    })
+    return subgraphNetworkPromise;
 };
 
-const applyAlgo_V1 = (subgraphNetwork: SubgraphNetwork): SubgraphNetwork => {
+const applyAlgo_V1 = async (subgraphNetwork: SubgraphNetwork): Promise<SubgraphNetwork> => {
     let parameters: Parameters=defaultParameters;
     parameters.pathType=PathType.LONGEST;
-    allSteps(subgraphNetwork,parameters);
-    return subgraphNetwork;
+    const subgraphNetworkPromise = new Promise<SubgraphNetwork>((resolve, reject) => {
+        resolve(allSteps(subgraphNetwork,parameters));
+    })
+    return subgraphNetworkPromise;
 };
 
-const applyAlgo_V3 = (subgraphNetwork: SubgraphNetwork): SubgraphNetwork => {
+const applyAlgo_V3 = async (subgraphNetwork: SubgraphNetwork): Promise<SubgraphNetwork> => {
     let parameters: Parameters=defaultParameters;
     parameters.pathType=PathType.ALL;
-    allSteps(subgraphNetwork,parameters);
-    return subgraphNetwork;
+    const subgraphNetworkPromise = new Promise<SubgraphNetwork>((resolve, reject) => {
+        resolve(allSteps(subgraphNetwork,parameters));
+    })
+    return subgraphNetworkPromise;
 };
 
 
