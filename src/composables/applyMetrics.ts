@@ -3,7 +3,7 @@ import { getContentFromURL, importNetworkFromURL } from "./importNetwork";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
-import { addSideCompoundAttributeFromList, duplicateSideCompound } from "./manageSideCompounds";
+import { addSideCompoundAttributeFromList, duplicateSideCompound, putDuplicatedSideCompoundAside } from "./manageSideCompounds";
 import { changeNodeStyles } from "./styleGraph";
 import { countIntersection } from "./countIntersections";
 import { createStaticForceLayout } from "@metabohub/viz-core";

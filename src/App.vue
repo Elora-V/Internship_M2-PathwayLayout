@@ -178,7 +178,7 @@ import { defaultParameters,Parameters } from "@/types/Parameters";
 
   // Composables ----------
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
-import { dagreLayout, vizLayout } from './composables/useLayout';
+import { dagreLayout, forceLayout, vizLayout } from './composables/useLayout';
 import {chooseReversibleReaction, duplicateReversibleReactions} from "./composables/duplicateReversibleReactions"
 import {importNetworkFromFile,importNetworkFromURL} from "./composables/importNetwork"
 import { networkCopy } from "@/composables/networkToGraph";
@@ -292,10 +292,9 @@ function callbackFunction() {
     }
   ).then(
     ()=>{
-      ///addSideCompoundAttributeFromList(subgraphNetwork,"/sideCompounds.txt")
+      rescale(svgProperties);
     }
   );
-  rescale(svgProperties);
   
   // if (!(networkStyle.value.linkStyles)){
   //   networkStyle.value.linkStyles={}
@@ -453,7 +452,8 @@ function getOriginalNetwork():SubgraphNetwork{
 // force algorithm : force layout
 async function algoForce():Promise<void>{
   console.log('Force');
-  createStaticForceLayout(network.value);
+  //createStaticForceLayout(network.value);
+  forceLayout(network.value);
   
 }
 

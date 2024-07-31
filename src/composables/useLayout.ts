@@ -7,6 +7,8 @@ import { JsonViz } from "@/types/JsonViz";
 import { Subgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { getSepAttributesInches } from "./calculateSize";
+import * as d3 from 'd3';
+import { reactive } from "vue";
 
 /** 
  * Take a network object and change the (x,y) position of the node with dagre lib
@@ -53,3 +55,93 @@ export async function vizLayout(subgraphNetwork:SubgraphNetwork,assignRank:boole
     });
     return subgraphNetwork;
 }
+
+
+  /**
+   * Take a network and apply a d3 force layout algorithm on WITHOUT simulation
+   * @param network Network object
+   * @returns {Network} Network object with d3 force layout apply on
+   */
+  export async function forceLayout(network: Network, autoRescale: Boolean = false): Promise<Network> {
+    const seuil = 0.04;
+    const maxiter = 1000;
+    const minMovement = 0.01; 
+    const listNodesID=Object.keys(network.nodes);
+    let svgHeight = screen.height;
+    let svgWidth = screen.width;
+
+    const simulation = d3.forceSimulation(Object.values(network.nodes))
+        .force('link', d3.forceLink()
+            .id((d: any) => d.id)
+            .links(network.links)
+        )
+        .force('charge', d3.forceManyBody())
+        .velocityDecay(0.1)
+        .force('center', d3.forceCenter(svgWidth / 2, svgHeight / 2))
+        .stop();
+
+    await sendTick();
+
+    async function sendTick() {
+        let iter=0;
+        let lastPositions = new Map(Object.values(network.nodes).map(node => [node.id, { x: node.x, y: node.y }]));
+        while (iter < maxiter) {
+            iter++;
+            simulation.tick();
+
+            let maxMovement = 0;
+            for (let nodeID of listNodesID) {
+                const node=network.nodes[nodeID];
+                const lastPos = lastPositions.get(nodeID);
+                const dx = node.x - lastPos.x;
+                const dy = node.y - lastPos.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance > maxMovement) {
+                    maxMovement = distance;
+                }
+
+                lastPositions.set(node.id, { x: node.x, y: node.y });
+            }
+
+            if (maxMovement < minMovement) {
+                console.log('Force layout converged after ' + iter + ' iterations');
+                break;
+            }else{
+                console.log(iter);
+            }
+        }
+    }
+
+    return network;
+}
+
+  
+export async function forceLayout2(network: Network, autoRescale: Boolean = false): Promise<Network> {
+    let svgHeight = screen.height;
+    let svgWidth = screen.width;
+  
+    const simulation = d3.forceSimulation(Object.values(network.nodes))
+      .force('link', d3.forceLink()
+        .id((d: any) => {
+          return d.id;
+        })
+        .links(network.links)
+      )
+      .force('charge', d3.forceManyBody())
+      .force('center', d3.forceCenter(svgWidth / 2, svgHeight / 2))
+      .alphaMin(0.4)
+      .stop();
+  
+    await sendTick();
+  
+    async function sendTick() {
+      for (let i = simulation.alpha(); i > 0.4; i = simulation.alpha()) {
+        simulation.tick();
+      }
+    }
+  
+    return network;
+  
+  }
+  
