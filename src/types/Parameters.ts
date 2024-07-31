@@ -22,6 +22,8 @@ export interface Parameters {
     numberNodeOnEdge: number; // space between two rank, with size of a node as unit (mean of all size)
     factorLengthSideCompounds: number; // % of the lenght of minimal edge to use as lenght of side compounds edges
 
+    shiftCoord?: boolean; // shift coordinates : center is at the previous coord (because of top left corner)
+
     //userSources: string[];
     //onlyUserSources: boolean;
 }
@@ -44,7 +46,9 @@ export let defaultParameters: Parameters = {
     dpi: 72,
 
     numberNodeOnEdge: 3,
-    factorLengthSideCompounds: 1 / 2
+    factorLengthSideCompounds: 1 / 2,
+
+    shiftCoord: true,
 
     //userSources: [],
     //onlyUserSources: false,

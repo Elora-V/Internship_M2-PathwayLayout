@@ -12,7 +12,7 @@ import { coordinateAllCycles, drawAllCyclesGroup } from "./drawCycle";
 import { shiftCoordToCenter } from "./calculateSize";
 import { getSources } from "./rankAndSources";
 
-export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Parameters,printNameStep:boolean=false):Promise<SubgraphNetwork> {
+export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Parameters,shiftCoord:boolean=true,printNameStep:boolean=false):Promise<SubgraphNetwork> {
 
     let network=subgraphNetwork.network.value;
     let networkStyle=subgraphNetwork.networkStyle.value;
@@ -113,9 +113,10 @@ export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Param
     ).then(
       () => {
         // shift coordinates : center is at the previous coord (because of top left corner)
-        // but for cycle, as it is already done
-        if (printNameStep) console.log('Shift coordinates nodes to have center at the old coordinates');
-        shiftCoordToCenter(network,networkStyle);
+        if (shiftCoord){
+          if (printNameStep) console.log('Shift coordinates nodes to have center at the old coordinates');
+          shiftCoordToCenter(network,networkStyle);
+        }
       }
     ).then(
       () => {
