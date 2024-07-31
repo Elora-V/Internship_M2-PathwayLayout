@@ -131,7 +131,7 @@
 </div> 
 
 
-  <h5>Number of crossings in the Network : {{ countIntersection(network,networkStyle) }}</h5>
+  <h5>Number of crossings in the Network : {{ countIntersectionEdgeNetwork(network,networkStyle,false) }}</h5>
   <h5>Number of isolated nodes : {{ countIsolatedNodes(network) }}</h5>
   
 
@@ -186,6 +186,7 @@ import { initZoom, rescale,duplicateNode,removeNode } from "@metabohub/viz-core"
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import {  addDirectedCycleToSubgraphNetwork } from "@/composables/findCycle";
 import { countIntersection } from "./composables/countIntersections";
+import { countIntersectionEdgeNetwork } from "./composables/metricsNetwork";
 import { countIsolatedNodes } from "./composables/countIsolatedNodes";
 import { DFSsourceDAG } from "@/composables/algoDFS";
 import { createStaticForceLayout } from "@metabohub/viz-core";
@@ -193,7 +194,7 @@ import { BFSWithSources } from "@/composables/algoBFS";
 import {  getSources } from "@/composables/rankAndSources";
 import { addBoldLinkMainChain, addRedLinkcycleGroup } from "@/composables/useSubgraphs";
 import { addMainChainFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/chooseSubgraph";
-import { analyseAllJSON } from "@/composables/applyMetrics";
+import { analyseAllJSON, applyMetrics } from "@/composables/applyMetrics";
 import { changeNodeStyles } from "@/composables/styleGraph";
 import { addSideCompoundAttributeFromList, duplicateSideCompound } from "@/composables/manageSideCompounds";
 
@@ -288,7 +289,7 @@ function callbackFunction() {
     duplicateSideCompound(subgraphNetwork);
   }).then(
     ()=>{
-      algoForce();
+     // algoForce();
     }
   ).then(
     ()=>{
@@ -473,6 +474,10 @@ function keydownHandler(event: KeyboardEvent) {
   } else if (event.key =="n"){
     console.log(subgraphNetwork);
     console.log(parameters);
+  }else if (event.key == "m"){
+    const nameColumn: string[] = ['nodes', 'edges', 'node overlap', 'edge node overlap', 'edge intersections'];
+    console.log(nameColumn.join(','));
+    console.log(applyMetrics(subgraphNetwork,false));
   } else if (event.key =="c"){
     addDirectedCycleToSubgraphNetwork(subgraphNetwork);
   }else if (event.key =="r"){

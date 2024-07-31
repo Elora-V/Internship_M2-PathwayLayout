@@ -224,12 +224,17 @@ function getSizeGroupCycles(subgraphNetwork:SubgraphNetwork,groupCycle:Subgraph)
     return subgraphNetwork;
 }
 
-export function shiftCoordToCenter(network:Network,style:GraphStyleProperties,moveCycleToo:boolean=true) {
+export function shiftAllCoordToCenter(network:Network,style:GraphStyleProperties,moveCycleToo:boolean=true) {
     Object.values(network.nodes).forEach(node=>{
         if( moveCycleToo || !inCycle(network,node.id)){
-            const size =getSizeNodePixel(node,style);
-            node.x-=size.width/2;
-            node.y-=size.height/2;
+            const {x,y}=AdjustCoordNodeToCenter(node,style);
+            node.x=x;
+            node.y=y;
         }
     })
+}
+
+export function AdjustCoordNodeToCenter(node:Node,style:GraphStyleProperties):{x:number,y:number}{
+    const size = getSizeNodePixel(node,style);
+    return {x:node.x-size.width/2,y:node.y-size.height/2}
 }

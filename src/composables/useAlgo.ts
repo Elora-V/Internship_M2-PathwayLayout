@@ -9,7 +9,7 @@ import { Network } from "@metabohub/viz-core/src/types/Network";
 import { BFSWithSources } from "./algoBFS";
 import { addMainChainFromSources, addMiniBranchToMainChain } from "./chooseSubgraph";
 import { coordinateAllCycles, drawAllCyclesGroup } from "./drawCycle";
-import { shiftCoordToCenter } from "./calculateSize";
+import { shiftAllCoordToCenter } from "./calculateSize";
 import { getSources } from "./rankAndSources";
 
 export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Parameters,shiftCoord:boolean=true,printNameStep:boolean=false):Promise<SubgraphNetwork> {
@@ -115,7 +115,7 @@ export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Param
         // shift coordinates : center is at the previous coord (because of top left corner)
         if (shiftCoord){
           if (printNameStep) console.log('Shift coordinates nodes to have center at the old coordinates');
-          shiftCoordToCenter(network,networkStyle);
+          shiftAllCoordToCenter(network,networkStyle);
         }
       }
     ).then(

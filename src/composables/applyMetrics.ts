@@ -11,6 +11,7 @@ import { Parameters,defaultParameters } from "@/types/Parameters";
 import { vizLayout } from "./useLayout";
 import { allSteps } from "./useAlgo";
 import { Algo, PathType } from "@/types/EnumArgs";
+import { countIntersectionEdgeNetwork, countOverlapNodeNetwork, countOverlapNodeEdgeNetwork } from "./metricsNetwork";
 
 
 export async function analyseAllJSON(pathListJSON: string,algo:Algo=Algo.DEFAULT): Promise<void> {
@@ -18,6 +19,7 @@ export async function analyseAllJSON(pathListJSON: string,algo:Algo=Algo.DEFAULT
     const allJson = jsonFileString.split('\n');
     let resultAllJSON: Array<Array<number>> = [];
     let nameFile: string[] = [];
+    const nameColumn: string[] = ['nodes', 'edges', 'node overlap', 'edge node overlap', 'edge intersections'];
 
     // which layout to apply
     let applyLayout: (subgraph: SubgraphNetwork) => Promise<SubgraphNetwork> =defaultApplyLayout;
@@ -59,7 +61,8 @@ export async function analyseAllJSON(pathListJSON: string,algo:Algo=Algo.DEFAULT
             resultAllJSON.push(resultJSON);
         }
     }  
-    printArray(resultAllJSON);
+    print1DArray(nameColumn);
+    print2DArray(resultAllJSON);
     console.warn("If apply metrics on another layout : refresh the page, else results are the same than last time (idk why)");
 }
 
@@ -99,7 +102,7 @@ async function analyseJSON(json: string, applyLayout: (subgraph: SubgraphNetwork
                     ).then(
                         ()=>{
                         // calculate metrics on resulting layout
-                        resultAnalysis=applyMetrics(subgraphNetwork);                 
+                        resultAnalysis=applyMetrics(subgraphNetwork,true);                 
                         resolve();
                         }
                     );
@@ -117,9 +120,12 @@ async function analyseJSON(json: string, applyLayout: (subgraph: SubgraphNetwork
     return resultAnalysis;
 }
 
+function print1DArray(data: Array<string|number|boolean>): void {
+    const stringData = data.join(',');
+    console.log(stringData);
+}
 
-
-function printArray(data: Array<Array<number>>): void {
+function print2DArray(data: Array<Array<string|number|boolean>>): void {
     const stringData = data.map(row => row.join(',')).join('\n');
     console.log(stringData);
 }
@@ -147,7 +153,7 @@ const applyVizLayout = async (subgraphNetwork: SubgraphNetwork): Promise<Subgrap
 const applyAlgo = async (subgraphNetwork: SubgraphNetwork): Promise<SubgraphNetwork> => {
     let parameters: Parameters=defaultParameters;
     const subgraphNetworkPromise = new Promise<SubgraphNetwork>((resolve, reject) => {
-        resolve(allSteps(subgraphNetwork,parameters));
+        resolve(allSteps(subgraphNetwork,parameters,false));
     })
     return subgraphNetworkPromise;
 };
@@ -156,7 +162,7 @@ const applyAlgo_V0 = async (subgraphNetwork: SubgraphNetwork): Promise<SubgraphN
     let parameters: Parameters=defaultParameters;
     parameters.mainchain=false;
     const subgraphNetworkPromise = new Promise<SubgraphNetwork>((resolve, reject) => {
-        resolve(allSteps(subgraphNetwork,parameters));
+        resolve(allSteps(subgraphNetwork,parameters,false));
     })
     return subgraphNetworkPromise;
 };
@@ -165,7 +171,7 @@ const applyAlgo_V1 = async (subgraphNetwork: SubgraphNetwork): Promise<SubgraphN
     let parameters: Parameters=defaultParameters;
     parameters.pathType=PathType.LONGEST;
     const subgraphNetworkPromise = new Promise<SubgraphNetwork>((resolve, reject) => {
-        resolve(allSteps(subgraphNetwork,parameters));
+        resolve(allSteps(subgraphNetwork,parameters,false));
     })
     return subgraphNetworkPromise;
 };
@@ -174,7 +180,7 @@ const applyAlgo_V3 = async (subgraphNetwork: SubgraphNetwork): Promise<SubgraphN
     let parameters: Parameters=defaultParameters;
     parameters.pathType=PathType.ALL;
     const subgraphNetworkPromise = new Promise<SubgraphNetwork>((resolve, reject) => {
-        resolve(allSteps(subgraphNetwork,parameters));
+        resolve(allSteps(subgraphNetwork,parameters,false));
     })
     return subgraphNetworkPromise;
 };
@@ -182,14 +188,21 @@ const applyAlgo_V3 = async (subgraphNetwork: SubgraphNetwork): Promise<SubgraphN
 
 
 
-function applyMetrics(subgraphNetwork: SubgraphNetwork): Array<number> {
+export function applyMetrics(subgraphNetwork: SubgraphNetwork, coordAreCenter:boolean=true): Array<number> {
     const network=subgraphNetwork.network.value;
     const networkStyle=subgraphNetwork.networkStyle.value;
     const result: Array<number>=[];
 
+    // number of nodes
     result.push(Object.keys(network.nodes).length);
+    // number of edges
     result.push(network.links.length);
-    result.push(countIntersection(network,networkStyle));
+    // number of node overlap
+    result.push(countOverlapNodeNetwork(network,networkStyle,coordAreCenter));
+    // number of edge node overlap
+    result.push(countOverlapNodeEdgeNetwork(network,networkStyle,coordAreCenter));
+    // number of edges intersections
+    result.push(countIntersectionEdgeNetwork(network,networkStyle,coordAreCenter));
 
     return result;
 }

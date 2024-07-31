@@ -1,0 +1,251 @@
+import { Link } from "@metabohub/viz-core/src/types/Link";
+import { Network } from "@metabohub/viz-core/src/types/Network";
+import { Node } from "@metabohub/viz-core/src/types/Node";
+import { AdjustCoordNodeToCenter, getSizeNodePixel } from "./calculateSize";
+import { checkIntersection } from "line-intersect";
+import { Coordinate,Size } from "@/types/CoordinatesSize";
+import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//---------------------------------------------------- Utilitary Functions -----------------------------------------------------------//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+export function getCenterNode(node: Node,networkStyle:GraphStyleProperties,coordAreCenter:boolean=false): {x:number,y:number} {
+    let nodeCenter: {x:number,y:number};
+
+    if (coordAreCenter) {
+        nodeCenter={x:node.x,y:node.y};
+    }else{
+        nodeCenter=AdjustCoordNodeToCenter(node,networkStyle);
+    }
+    return nodeCenter;
+}
+
+
+function commonNodeBetween2Links(link1: Link,link2: Link): boolean {
+    if (link1.source==link2.source || link1.source==link2.target || link1.target==link2.source || link1.target==link2.target) {
+        return true;
+    }else {
+        return false;
+    }
+} 
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//-------------------------------------------------------- Node Metrics --------------------------------------------------------------//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////////////////////////////
+// ------------------------- Node overlap
+
+
+export function countOverlapNodeNetwork(network: Network,networkStyle:GraphStyleProperties,coordAreCenter:boolean=false): number {
+    let nb=0;
+    const nodesID=Object.keys(network.nodes);
+
+    for (let i=0 ; i<nodesID.length ; i++) {
+        for (let j=i+1 ; j<nodesID.length ; j++) {
+            // node1
+            const node1=network.nodes[nodesID[i]];
+            const coordNode1=getCenterNode(node1,networkStyle,coordAreCenter);
+            const sizeNode1=getSizeNodePixel(node1,networkStyle);
+            // node2
+            const node2=network.nodes[nodesID[j]];
+            const coordNode2=getCenterNode(node2,networkStyle,coordAreCenter);
+            const sizeNode2=getSizeNodePixel(node2,networkStyle);
+
+            if (nodesOverlap(coordNode1,sizeNode1,coordNode2,sizeNode2)){
+                nb+=1;
+            }
+        }
+    }
+    return nb;
+}
+
+
+
+function nodesOverlap(coord1: Coordinate, size1: Size, coord2: Coordinate, size2: Size): boolean {
+
+    // coordinate are center
+
+    if ( !size1.width || !size1.height || !size2.width || !size2.height || !coord1.x || !coord1.y || !coord2.x || !coord2.y) {
+        // Handle null or undefined inputs appropriately
+        return false;
+    }
+
+    // rectangle 1
+    const left1 = coord1.x - size1.width / 2;
+    const right1 = coord1.x + size1.width / 2;
+    const top1 = coord1.y - size1.height / 2;
+    const bottom1 = coord1.y + size1.height / 2;
+
+    // rectangle 2
+    const left2 = coord2.x - size2.width / 2;
+    const right2 = coord2.x + size2.width / 2;
+    const top2 = coord2.y - size2.height / 2;
+    const bottom2 = coord2.y + size2.height / 2;
+
+    // overlap?
+    const overlapX = left1 < right2 && right1 > left2;
+    const overlapY = top1 < bottom2 && bottom1 > top2;
+
+    return overlapX && overlapY;
+}
+
+
+/////////////////////////////////////////////////////
+// ------------------------- Node on edge
+
+
+
+export function countOverlapNodeEdgeNetwork(network: Network,networkStyle:GraphStyleProperties,coordAreCenter:boolean=false): number {
+    let nb=0;
+    const nodesID=Object.keys(network.nodes);
+    nodesID.forEach( (nodeID) =>{
+
+        const node=network.nodes[nodeID];
+        const coordNode1=getCenterNode(node,networkStyle,coordAreCenter);
+        const sizeNode=getSizeNodePixel(node,networkStyle);
+        nb += countOverlapEdgeForNode(network,networkStyle,nodeID,coordNode1,sizeNode,coordAreCenter);
+
+    });
+
+    return nb;
+}
+
+function countOverlapEdgeForNode(network:Network,networkStyle:GraphStyleProperties,nodeID:string,coordNode:Coordinate,sizeNode:Size,coordAreCenter:boolean=false): number {
+    let nb=0;
+    network.links.forEach(link => {        
+
+        // if node not linked to the edge : check if it is on the edge
+        if(!(link.source.id==nodeID || link.target.id==nodeID)){
+
+            let coordSource=getCenterNode(link.source,networkStyle,coordAreCenter);
+            let coordTarget=getCenterNode(link.target,networkStyle,coordAreCenter);
+
+            if (nodeEdgeOverlap(coordNode,sizeNode,coordSource,coordTarget)){
+                nb+=1;
+            }
+        }
+    });
+    return nb;
+}
+
+
+function nodeEdgeOverlap(coordNode: Coordinate, sizeNode: Size, coordSource: Coordinate, coordTarget: Coordinate): boolean {
+    
+    // Treat the node as a rectangle (coordinates are center of node)
+    const rect = {
+        left: coordNode.x - sizeNode.width / 2,
+        right: coordNode.x + sizeNode.width / 2,
+        top: coordNode.y - sizeNode.height / 2,
+        bottom: coordNode.y + sizeNode.height / 2
+    };
+
+    // Check if any of the edge's endpoints is inside the rectangle
+    const isPointInsideRect = (point: Coordinate) => 
+        point.x >= rect.left && point.x <= rect.right && point.y >= rect.top && point.y <= rect.bottom;
+
+    if (isPointInsideRect(coordSource) || isPointInsideRect(coordTarget)) {
+        return true; // One of the endpoints is inside the rectangle
+    }
+
+    // Check for overlap between the edge and the sides of the rectangle
+    // Convert the sides of the rectangle into line segments
+    const rectangleEdges = [
+        { start: { x: rect.left, y: rect.top }, end: { x: rect.right, y: rect.top } }, // Top
+        { start: { x: rect.right, y: rect.top }, end: { x: rect.right, y: rect.bottom } }, // Right
+        { start: { x: rect.left, y: rect.bottom }, end: { x: rect.right, y: rect.bottom } }, // Bottom
+        { start: { x: rect.left, y: rect.top }, end: { x: rect.left, y: rect.bottom } } // Left
+    ];
+
+    // Use checkIntersection function to check if two line segments intersect
+    for (const edge of rectangleEdges) {
+        const result = checkIntersection(edge.start, edge.end, coordSource, coordTarget);
+        if (result.type === "intersecting") {
+            return true; // There is an overlap
+        }
+    }
+
+    return false; // No overlap detected
+}
+
+
+/////////////////////////////////////////////////////
+// ------------------------- Node different coordinates
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//-------------------------------------------------------- Edge Metrics --------------------------------------------------------------//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////////////////////////////
+// ------------------------- Edge intersection
+// (overlap not taken into account)
+
+
+/**
+ * Counts how many crossings are in a network
+ * @param network the network
+ * @returns the number of crossings
+ */
+export function countIntersectionEdgeNetwork(network: Network,style:GraphStyleProperties,coordAreCenter:boolean=false): number {
+    let nb: number = 0;
+    for (let i=0 ; i<network.links.length ; i++) {
+        for (let j=i+1 ; j<network.links.length ; j++) {
+            const link1=network.links[i];
+            const link2=network.links[j];
+            if (edgesIntersect(link1, link2,style,coordAreCenter)){
+                nb++;
+            }
+        }
+    }
+    return nb;
+}
+
+function edgesIntersect(link1: Link, link2: Link,style:GraphStyleProperties,coordAreCenter:boolean=false): boolean {
+
+    // Case of common node
+    if (commonNodeBetween2Links(link1,link2)) {
+        return false;
+    }
+
+    // Get center of node : where the link is attached
+    const node1Center=getCenterNode(link1.source,style,coordAreCenter);
+    const node2Center=getCenterNode(link1.target,style,coordAreCenter);
+    const node3Center=getCenterNode(link2.source,style,coordAreCenter);
+    const node4Center=getCenterNode(link2.target,style,coordAreCenter);
+
+
+    // Check intersection
+    const result = checkIntersection(node1Center.x, node1Center.y, node2Center.x, node2Center.y, node3Center.x, node3Center.y, node4Center.x, node4Center.y);
+    if (result.type == "intersecting") {
+        return true;
+    } else {
+        return false;
+    }
+    
+}
+
+/////////////////////////////////////////////////////
+// ------------------------- Edge length
+
+
+/////////////////////////////////////////////////////
+// ------------------------- Edge colinear with axis
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//-------------------------------------------------------- Domain Metrics --------------------------------------------------------------//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////
+// ------------------------- Edge direction

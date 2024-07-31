@@ -32,11 +32,7 @@ function edgesIntersectionLink(link1: Link, link2: Link,style:GraphStyleProperti
 
     // case of common node
     if (commonNodeBetween2Links(link1,link2)) {
-        if (sameAngleBetween2ConnectedLinks(link1,link2,style)) {
-            return true;
-        }else {
-            return false;
-        }
+        return false;
     }
 
     let x1: Node = link1.source;
@@ -140,7 +136,7 @@ function AdjustCoordNodeToCenter2(node:Node,nodeCoord:{x:number,y:number},style:
 function edgesIntersection(node1Link1:{x:number,y:number},node2Link1:{x:number,y:number},node1Link2:{x:number,y:number},node2Link2:{x:number,y:number}): boolean {
     // case node in common
     if (commonNodeBetween2EdgesCoord(node1Link1,node2Link1,node1Link2,node2Link2)) {
-     return intersection2ConnectedLinks(node1Link1,node2Link1,node1Link2,node2Link2);
+     return false;//intersection2ConnectedLinks(node1Link1,node2Link1,node1Link2,node2Link2);
     }
     const result = checkIntersection(node1Link1.x, node1Link1.y, node2Link1.x, node2Link1.y, node1Link2.x, node1Link2.y, node2Link2.x, node2Link2.y);
     if (result.type == "intersecting") {
@@ -384,6 +380,8 @@ export function isOverlapNodesEdges(nodesPosition: {[key:string]:{x:number,y:num
     return false;
 }
 
+
+//// CHANGE FUNCTION : COORD ARE CENTER OF NODE 
 
 function nodeEdgeOverlap(posNode: { x: number, y: number }, sizeNode: { width: number, height: number }, posLink1: { x: number, y: number }, posLink2: { x: number, y: number }): boolean {
     
