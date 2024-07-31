@@ -256,7 +256,7 @@ function sortLinksWithAllGroupCycle(subgraphNetwork:SubgraphNetwork,orderChange:
 
     // change ordre with group cycle
     if (orderChange  && subgraphNetwork.cyclesGroup){
-        console.log('Change order');
+        //console.log('Change order');
         
         // adding edge in right order for each group cycle
         Object.keys(subgraphNetwork.cyclesGroup).forEach((groupCycle) => {

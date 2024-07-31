@@ -6,7 +6,7 @@ import { keepFirstReversibleNode, renameAllIDNode } from "./duplicateReversibleR
 
 
 export function addDirectedCycleToSubgraphNetwork(subgraphNetwork:SubgraphNetwork,minsize:number=4):SubgraphNetwork{
-    console.log('add cycle');
+    //console.log('add cycle');
     if (!subgraphNetwork.cycles){
         subgraphNetwork.cycles={};
     }

@@ -38,7 +38,7 @@ export function addMainChainFromSources(subgraphNetwork:SubgraphNetwork, sources
     minHeight:number=4
 ):SubgraphNetwork{
 
-    console.log('create main chain from longest path');
+    //console.log('create main chain from longest path');
     const network=subgraphNetwork.network.value;
     
     // get sources
@@ -74,7 +74,7 @@ export function addMainChainFromSources(subgraphNetwork:SubgraphNetwork, sources
  * @returns The modified cluster network.
  */
 export function addMiniBranchToMainChain(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
-    console.log('add mini branch to main chain');
+    //console.log('add mini branch to main chain');
     const network=subgraphNetwork.network.value;
     const graph=NetworkToGDSGraph(network);  
     // for each main chain :
@@ -117,7 +117,7 @@ export function addMiniBranchToMainChain(subgraphNetwork:SubgraphNetwork):Subgra
  * @returns some node clusters with id
  */
 export function getLongPathDFS(network:Network,sources:string[]):{[key:string]:{nodes:Array<string>, height:number}}{ 
-    console.log('DFS long path');
+    //console.log('DFS long path');
     // create graph for library from network 
     const graph=NetworkToGDSGraph(network);  
     // DFS
@@ -243,7 +243,7 @@ function endPath(source:string, longestPaths:{[key:string]:{nodes:Array<string>,
  */
 export function getPathSourcesToTargetNode(network:Network, sources:string[],merge:boolean=true,pathType:PathType=PathType.ALL_LONGEST):{[key:string]:{nodes:Array<string>, height:number}}{
 
-    console.log('DAG_Dijkstra');
+    //console.log('DAG_Dijkstra');
 
     let pathsFromSources:{[key:string]:{nodes:Array<string>, height:number}}={};
 

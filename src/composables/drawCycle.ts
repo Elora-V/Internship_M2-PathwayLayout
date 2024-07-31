@@ -990,7 +990,7 @@ function nodeMedianX(subgraphNetwork: SubgraphNetwork, listNodes: string[]): str
  */
 export function drawAllCyclesGroup(subgraphNetwork:SubgraphNetwork) {
 
-    console.log('drawing cycles group');
+    //console.log('drawing cycles group');
     if (TypeSubgraph.CYCLEGROUP in subgraphNetwork){
         const cycleGroups = Object.keys(subgraphNetwork.cyclesGroup);
         cycleGroups.forEach(cycleGroup => {

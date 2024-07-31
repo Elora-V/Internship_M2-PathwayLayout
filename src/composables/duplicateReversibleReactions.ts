@@ -27,7 +27,7 @@ function addMetadataReversible(network:Network):void{
  */
 export async function duplicateReversibleReactions(network: Network,suffix:string="_rev"):Promise<void> {
 
-  console.log('Duplicate');
+  //console.log('Duplicate');
 
   // add metadata "reversible" to nodes
   addMetadataReversible(network);

@@ -12,18 +12,20 @@ import { coordinateAllCycles, drawAllCyclesGroup } from "./drawCycle";
 import { shiftCoordToCenter } from "./calculateSize";
 import { getSources } from "./rankAndSources";
 
-export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Parameters):Promise<SubgraphNetwork> {
+export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Parameters,printNameStep:boolean=false):Promise<SubgraphNetwork> {
 
     let network=subgraphNetwork.network.value;
     let networkStyle=subgraphNetwork.networkStyle.value;
   
-    console.log('_____________________________________________');
-    console.log('Parameters :');
-    console.log(parameters);
-    console.log('---------------');
+    if (printNameStep){
+      console.log('_____________________________________________');
+      console.log('Parameters :');
+      console.log(parameters);
+      console.log('---------------');
+    }
   
   
-  
+    if (printNameStep) console.log('SideCompound aside');
     await putDuplicatedSideCompoundAside(subgraphNetwork,"/sideCompounds.txt").then(
       (subgraphNetworkModified)=>{
           subgraphNetwork=subgraphNetworkModified;
@@ -31,23 +33,27 @@ export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Param
     ).then(
       async () => {
         //  get rank 0 with Sugiyama
+        if (printNameStep) console.log('First Viz (get ranks)');
         await vizLayout(subgraphNetwork, true,false,parameters.addNodes,parameters.groupOrCluster,false);
       }
     ).then(
       () => {
         // duplicate reactions
+        if (printNameStep) console.log('Duplicate reversible reactions');
         duplicateReversibleReactions(network);
       }
     ).then(
       () => {
         // detect cycles and choose some of the reaction duplicated
         if (parameters.cycle){
+          if (printNameStep) console.log('Find directed cycles');
           addDirectedCycleToSubgraphNetwork(subgraphNetwork,3);
         }
       }
     ).then(
       async () => {
         // choose all other reversible reactions
+        if (printNameStep) console.log('Choose reversible reactions');
         const sources=getSources(network,SourceType.RANK_SOURCE_ALL);
         subgraphNetwork=await chooseReversibleReaction(subgraphNetwork,sources,BFSWithSources);
       }
@@ -55,6 +61,7 @@ export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Param
       () => {
         // get main chains
         if (parameters.mainchain){
+          if (printNameStep) console.log('Find main chain');
           const sources=getSources(network,parameters.sourceTypePath);
           addMainChainFromSources(subgraphNetwork, sources,parameters.getSubgraph, parameters.merge,parameters.pathType);
         }
@@ -63,18 +70,21 @@ export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Param
       () => {
         // add minibranch
         if(parameters.mainchain && parameters.minibranch){
+          if (printNameStep) console.log('Add minibranch');
           subgraphNetwork= addMiniBranchToMainChain(subgraphNetwork);
         }
       }
     ).then(
       async () => {
         // Sugiyama without cycle metanodes (to get top nodes for cycles)
+        if (printNameStep) console.log('Second Viz (get top nodes if cycles, else final viz)');
         await vizLayout(subgraphNetwork, false,false,parameters.addNodes,parameters.groupOrCluster,false);
       }
     ).then(
       async () => {
         // relative coordinates for cycles
         if (parameters.cycle){
+          if (printNameStep) console.log('Coordinate directed cycles');
           await coordinateAllCycles(subgraphNetwork,parameters.allowInternalCycles);
         }
       }
@@ -82,6 +92,7 @@ export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Param
       async () => {
         // Sugiyama with cycle metanodes 
         if (parameters.cycle){
+          if (printNameStep) console.log('Third Viz (metanodes for directed cycles)');
           await vizLayout(subgraphNetwork, false,true,parameters.addNodes,parameters.groupOrCluster,parameters.ordering,false,parameters.dpi,parameters.numberNodeOnEdge);
         }
       }
@@ -89,18 +100,21 @@ export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Param
       () => {
         // place the cycles
         if (parameters.cycle){
+          if (printNameStep) console.log('Place directed cycles');
           drawAllCyclesGroup(subgraphNetwork);
         }
       }
     ).then(
       () => {
         // reverse side compounds of reversed reactions
+        if (printNameStep) console.log('Insert side compounds');
         subgraphNetwork=reinsertionSideCompounds(subgraphNetwork,parameters.factorLengthSideCompounds);
       }
     ).then(
       () => {
         // shift coordinates : center is at the previous coord (because of top left corner)
         // but for cycle, as it is already done
+        if (printNameStep) console.log('Shift coordinates nodes to have center at the old coordinates');
         shiftCoordToCenter(network,networkStyle);
       }
     ).then(
@@ -110,7 +124,6 @@ export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Param
         //subgraphNetwork=addRedLinkcycleGroup(subgraphNetwork);
       }
     );
-    console.log('_____________________________________________');
     return subgraphNetwork;
   
 }
