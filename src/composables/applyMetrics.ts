@@ -10,14 +10,47 @@ import { createStaticForceLayout } from "@metabohub/viz-core";
 import { Parameters,defaultParameters } from "@/types/Parameters";
 import { vizLayout } from "./useLayout";
 import { allSteps } from "./useAlgo";
-import { PathType } from "@/types/EnumArgs";
+import { Algo, PathType } from "@/types/EnumArgs";
 
 
-export async function analyseAllJSON(pathListJSON: string,applyLayout:(subgraph: SubgraphNetwork) => Promise<SubgraphNetwork>=applyAlgo_V3): Promise<void> {
+export async function analyseAllJSON(pathListJSON: string,algo:Algo=Algo.DEFAULT): Promise<void> {
     const jsonFileString = await getContentFromURL(pathListJSON);
     const allJson = jsonFileString.split('\n');
     let resultAllJSON: Array<Array<number>> = [];
     let nameFile: string[] = [];
+
+    // which layout to apply
+    let applyLayout: (subgraph: SubgraphNetwork) => Promise<SubgraphNetwork> =defaultApplyLayout;
+    switch (algo) {
+        // case Algo.FORCE:
+        //     console.log('apply Force');
+        //     applyLayout = applyForceLayout;
+        //     break;
+        case Algo.VIZ:
+            console.log('apply Viz');
+            applyLayout = applyVizLayout;
+            break;
+        case Algo.ALGO:
+            console.log('applyAlgo : default');
+            applyLayout = applyAlgo;
+            break;
+        case Algo.ALGO_V0:
+            console.log('applyAlgo_V0: no main chain');
+            applyLayout = applyAlgo_V0;
+            break;
+        case Algo.ALGO_V1:
+            console.log('applyAlgo_V1 : longuest');
+            applyLayout = applyAlgo_V1;
+            break;
+        case Algo.ALGO_V3:
+            console.log('applyAlgo_V3 : all');
+            applyLayout = applyAlgo_V3;
+            break;
+        default:
+            console.log('no change');
+            applyLayout = defaultApplyLayout;
+            break;
+    }
 
     for (const json of allJson) {
         const resultJSON= await analyseJSON(json,applyLayout);
@@ -25,8 +58,9 @@ export async function analyseAllJSON(pathListJSON: string,applyLayout:(subgraph:
             nameFile.push(json);
             resultAllJSON.push(resultJSON);
         }
-    }
+    }  
     printArray(resultAllJSON);
+    console.warn("If apply metrics on another layout : refresh the page, else results are the same than last time (idk why)");
 }
 
 

@@ -12,3 +12,13 @@ export enum PathType {
     ALL_LONGEST='all_longest',
     ALL='all'
 }
+
+export enum Algo{
+    DEFAULT,
+    FORCE,
+    VIZ,
+    ALGO,
+    ALGO_V0,
+    ALGO_V1,
+    ALGO_V3
+}

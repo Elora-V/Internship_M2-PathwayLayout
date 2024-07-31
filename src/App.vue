@@ -13,19 +13,34 @@
     ForceAlgo
   </button>
 
-  <button v-on:click="getOriginalNetwork()" class="styled-button">
+  <!--<button v-on:click="getOriginalNetwork()" class="styled-button">
       originalLayout
-    </button>
+    </button>-->
 
 
-    <button v-on:click="subgraphAlgorithm('DFS')" class="styled-button">
+    <!--<button v-on:click="subgraphAlgorithm('DFS')" class="styled-button">
       All_steps_with_DFS
-    </button>
+    </button>-->
     <button v-on:click="subgraphAlgorithm('DAG_Dijkstra')" class="styled-button bold">
       All_steps_with_DAG_Dijkstra
     </button>
-    <button v-on:click="loopJson()" class="styled-button">
-      Metrics
+    <button v-on:click="loopJson(Algo.FORCE)" class="styled-button">
+      Metrics Force
+    </button>
+    <button v-on:click="loopJson(Algo.VIZ)" class="styled-button">
+      Metrics Viz
+    </button>
+    <button v-on:click="loopJson(Algo.ALGO)" class="styled-button">
+      Metrics Algo
+    </button>
+    <button v-on:click="loopJson(Algo.ALGO_V0)" class="styled-button">
+      Metrics Algo V0 
+    </button>
+    <button v-on:click="loopJson(Algo.ALGO_V1)" class="styled-button">
+      Metrics Algo V1
+    </button>
+    <button v-on:click="loopJson(Algo.ALGO_V3)" class="styled-button">
+      Metrics Algo V3
     </button>
 
   
@@ -153,12 +168,10 @@ import { ref, reactive, onMounted } from "vue";
 
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
-import { SourceType } from "@/types/EnumArgs";
+import { Algo, PathType, SourceType } from "@/types/EnumArgs";
 import { TypeSubgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
-import { PathType } from './types/EnumArgs';
 import { defaultParameters,Parameters } from "@/types/Parameters";
-import { MinMedianMax } from "@/types/Reaction";
 
 
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
@@ -177,15 +190,12 @@ import { countIsolatedNodes } from "./composables/countIsolatedNodes";
 import { DFSsourceDAG } from "@/composables/algoDFS";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 import { BFSWithSources } from "@/composables/algoBFS";
-import { concatSources, getSources } from "@/composables/rankAndSources";
+import {  getSources } from "@/composables/rankAndSources";
 import { addBoldLinkMainChain, addRedLinkcycleGroup } from "@/composables/useSubgraphs";
 import { addMainChainFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/chooseSubgraph";
 import { analyseAllJSON } from "@/composables/applyMetrics";
 import { changeNodeStyles } from "@/composables/styleGraph";
-import { getSepAttributesInches, minLengthDistance, shiftCoordToCenter } from "@/composables/calculateSize";
-import { addSideCompoundAttributeFromList, duplicateSideCompound, putDuplicatedSideCompoundAside, reinsertionSideCompounds } from "@/composables/manageSideCompounds";
-import { addNodeToSubgraph, createSubgraph } from "@/composables/UseSubgraphNetwork";
-import { coordinateAllCycles, drawAllCyclesGroup } from "@/composables/drawCycle";
+import { addSideCompoundAttributeFromList, duplicateSideCompound } from "@/composables/manageSideCompounds";
 
 
 
@@ -219,26 +229,8 @@ let svgProperties = reactive({});
 const menuProps=UseContextMenu.defineMenuProps([{label:'Remove',action:removeThisNode},{label:'Duplicate', action:duplicateThisNode}]) // {label:'AddToCluster', action:addToCluster} {label:'AddToSource', action:addToUserSource}
 let undoFunction: any = reactive({});
 //let clusters : Array<Cluster> =reactive([])
-//let attributGraphViz : AttributesViz=reactive({});
 let subgraphNetwork:SubgraphNetwork;
 let originalNetwork:Network;
-//let sourceTypePath:SourceType=SourceType.RANK_SOURCE;
-//let getSubgraph=getPathSourcesToTargetNode;
-// let merge:boolean=true;
-// let pathType:PathType=PathType.ALL_LONGEST;
-// let minibranch:boolean=true;
-// let mainchain:boolean=true;
-// let userSources:string[]=[];
-// let onlyUserSources:boolean=false;
-// let cycle:boolean=true;
-// let allowInternalCycles:boolean=true;
-// let groupOrCluster:"group"|"cluster"="cluster";
-// let addNodes:boolean=true;
-// let ordering:boolean=true;
-// const dpi:number=72;
-// const numberNodeOnEdge:number=3;
-// const factorLength:number=1/2; // % of the length of the edge for cofactor edges
-
 let parameters: Parameters=defaultParameters;
 
 // _________________________________________________________________________________________________
@@ -513,8 +505,8 @@ function keydownHandler(event: KeyboardEvent) {
 }
 
 
-function loopJson():void{
-  analyseAllJSON("public/nameShortJSON.txt");
+function loopJson(algo?:Algo):void{
+  analyseAllJSON("public/nameShortJSON.txt",algo);
 }
 
 
