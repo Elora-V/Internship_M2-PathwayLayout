@@ -1,7 +1,7 @@
 import { Link } from "@metabohub/viz-core/src/types/Link";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { Node } from "@metabohub/viz-core/src/types/Node";
-import { AdjustCoordNodeToCenter, getSizeNodePixel } from "./calculateSize";
+import { getTopLeftCoordFromCenter, getSizeNodePixel, getCenterCoordFromTopLeft } from "./calculateSize";
 import { checkIntersection } from "line-intersect";
 import { Coordinate,Size } from "@/types/CoordinatesSize";
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
@@ -11,13 +11,13 @@ import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStylePr
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-export function getCenterNode(node: Node,networkStyle:GraphStyleProperties,coordAreCenter:boolean=false): {x:number,y:number} {
+export function getCenterNode(node: Node,networkStyle:GraphStyleProperties,coordAreCenter:boolean=false): Coordinate {
     let nodeCenter: {x:number,y:number};
 
     if (coordAreCenter) {
         nodeCenter={x:node.x,y:node.y};
     }else{
-        nodeCenter=AdjustCoordNodeToCenter(node,networkStyle);
+        nodeCenter=getCenterCoordFromTopLeft(node,networkStyle);
     }
     return nodeCenter;
 }
@@ -146,8 +146,8 @@ export function countOverlapNodeEdgeNetwork(network: Network,networkStyle:GraphS
 
 function countOverlapEdgeForNode(network:Network,networkStyle:GraphStyleProperties,nodeID:string,coordNode:Coordinate,sizeNode:Size,coordAreCenter:boolean=false): number {
     let nb=0;
-    network.links.forEach(link => {        
 
+    network.links.forEach(link => {        
         // if node not linked to the edge : check if it is on the edge
         if(!(link.source.id==nodeID || link.target.id==nodeID)){
 
@@ -163,7 +163,7 @@ function countOverlapEdgeForNode(network:Network,networkStyle:GraphStyleProperti
 }
 
 
-function nodeEdgeOverlap(coordNode: Coordinate, sizeNode: Size, coordSource: Coordinate, coordTarget: Coordinate): boolean {
+function nodeEdgeOverlap(coordNode: Coordinate, sizeNode: Size, coordSource: Coordinate, coordTarget: Coordinate): boolean { // CORRIGER !!!!!
     
     // Treat the node as a rectangle (coordinates are center of node)
     const rect = {
@@ -173,7 +173,7 @@ function nodeEdgeOverlap(coordNode: Coordinate, sizeNode: Size, coordSource: Coo
         bottom: coordNode.y + sizeNode.height / 2
     };
 
-    // Check if any of the edge's endpoints is inside the rectangle
+    // Check if any of the edge's endpoints is inside the rectangle => same as node overlap (to suppress ?)
     const isPointInsideRect = (point: Coordinate) => 
         point.x >= rect.left && point.x <= rect.right && point.y >= rect.top && point.y <= rect.bottom;
 
@@ -285,8 +285,46 @@ function edgesIntersect(link1: Link, link2: Link,style:GraphStyleProperties,coor
 // ------------------------- Edge length
 
 
+export function coefficientOfVariationEdgeLength(network: Network,style:GraphStyleProperties,coordAreCenter:boolean=false,includeSideCompounds:boolean=true): number {
+
+    let links = network.links;
+
+    if (!includeSideCompounds) {
+        links = links.filter(link => 
+            !(link.source.metadata && link.source.metadata["isSideCompound"]) && 
+            !(link.target.metadata && link.target.metadata["isSideCompound"])
+        );
+    }
+
+    if (links.length === 0) {
+        return 0; // Handle case with no edge 
+    }
+
+    const lengths = links.map(link => edgeLength(link, style, coordAreCenter));
+    
+    const mean = lengths.reduce((a, b) => a + b, 0) / lengths.length;
+    if (mean === 0) {
+        return 0; // Handle case with no edge lengths
+    }
+    const variance = lengths.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / lengths.length;
+    const stdDeviation = Math.sqrt(variance);
+    const coefVariation = stdDeviation / mean;
+    return parseFloat(coefVariation.toFixed(3));
+}
+
+function edgeLength(link: Link,style:GraphStyleProperties,coordAreCenter:boolean=false): number {
+    const sourceCenter=getCenterNode(link.source,style,coordAreCenter);
+    const targetCenter=getCenterNode(link.target,style,coordAreCenter);
+
+    const dx = sourceCenter.x - targetCenter.x;
+    const dy = sourceCenter.y - targetCenter.y;
+    return Math.sqrt(dx * dx + dy * dy);
+}
+
+
+
 /////////////////////////////////////////////////////
-// ------------------------- Edge colinear with axis
+// ------------------------- Edge colinear with axis 
 
 
 

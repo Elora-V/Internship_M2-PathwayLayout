@@ -11,15 +11,17 @@ import { Parameters,defaultParameters } from "@/types/Parameters";
 import { vizLayout } from "./useLayout";
 import { allSteps } from "./useAlgo";
 import { Algo, PathType } from "@/types/EnumArgs";
-import { countIntersectionEdgeNetwork, countOverlapNodeNetwork, countOverlapNodeEdgeNetwork, countDifferentCoordinatesNodeNetwork, countNodes, countEdges } from "./metricsNetwork";
+import { countIntersectionEdgeNetwork, countOverlapNodeNetwork, countOverlapNodeEdgeNetwork, countDifferentCoordinatesNodeNetwork, countNodes, countEdges, coefficientOfVariationEdgeLength } from "./metricsNetwork";
+import { TypeSubgraph } from "@/types/Subgraph";
+import { NetworkToGDSGraph } from "./networkToGraph";
 
 
-export async function analyseAllJSON(pathListJSON: string,algo:Algo=Algo.DEFAULT): Promise<void> {
+export async function analyseAllJSON(pathListJSON: string,algo:Algo=Algo.DEFAULT,metricGraph:boolean=true): Promise<void> {
     const jsonFileString = await getContentFromURL(pathListJSON);
     const allJson = jsonFileString.split('\n');
-    let resultAllJSON: Array<Array<number>> = [];
+    let resultGraphAllJSON: Array<Array<number>> = [];
+    let resultLayoutAllJSON: Array<Array<number>> = [];
     let nameFile: string[] = [];
-    const nameColumn: string[] = ['nodes', 'node not side compound','edges', 'node overlap', 'edge node overlap', 'different x (not SD)' ,'different y (not SD)','edge intersections'];
 
     // which layout to apply
     let applyLayout: (subgraph: SubgraphNetwork) => Promise<SubgraphNetwork> =defaultApplyLayout;
@@ -53,22 +55,31 @@ export async function analyseAllJSON(pathListJSON: string,algo:Algo=Algo.DEFAULT
             applyLayout = defaultApplyLayout;
             break;
     }
-
+    let firstJson=true;
     for (const json of allJson) {
-        const resultJSON= await analyseJSON(json,applyLayout);
-        if (resultJSON !== undefined){
-            nameFile.push(json);
-            resultAllJSON.push(resultJSON);
+        console.log(json);
+        const resultJSON= await analyseJSON(json,metricGraph,applyLayout,firstJson);
+        if (resultJSON.graph !== undefined){
+            resultGraphAllJSON.push(resultJSON.graph);
         }
+        if (resultJSON.layout !== undefined){
+            nameFile.push(json);
+            resultLayoutAllJSON.push(resultJSON.layout);
+        }
+        firstJson=false;
     }  
-    print1DArray(nameColumn);
-    print2DArray(resultAllJSON);
+
+    if (metricGraph){
+        print2DArray(resultGraphAllJSON);
+    }
+    print2DArray(resultLayoutAllJSON);
+
     console.warn("If apply metrics on another layout : refresh the page, else results are the same than last time (idk why)");
-    console.warn('Number of different coordinates are calculated without side compounds');
+    console.warn('Some metrics are calculated without side compounds');
 }
 
 
-async function analyseJSON(json: string, applyLayout: (subgraph: SubgraphNetwork) => Promise<SubgraphNetwork> =defaultApplyLayout): Promise<Array<number> | undefined> {
+async function analyseJSON(json: string, metricGraph:boolean=true, applyLayout: (subgraph: SubgraphNetwork) => Promise<SubgraphNetwork> =defaultApplyLayout,printColumnName:boolean=true): Promise<{graph:number[],layout:number[]} | undefined> {
 
     // initialize objects
     const networkForJSON = ref<Network>({ id: '', nodes: {}, links: [] });
@@ -77,7 +88,7 @@ async function analyseJSON(json: string, applyLayout: (subgraph: SubgraphNetwork
         linkStyles: {}
     });
     let subgraphNetwork:SubgraphNetwork;
-    let resultAnalysis: Array<number>;
+    let resultAnalysis: {graph:number[],layout:number[]}= {graph:[],layout:[]};
 
     // import network from JSON, and process it
     try {
@@ -96,6 +107,13 @@ async function analyseJSON(json: string, applyLayout: (subgraph: SubgraphNetwork
                         duplicateSideCompound(subgraphNetwork);
                         }
                     ).then(
+                        ()=>{
+                        // calculate metrics of graph 
+                        if (metricGraph) {
+                            resultAnalysis.graph=applyMetricsGraph(subgraphNetwork.network.value,printColumnName);
+                        }
+                        }
+                    ).then(
                         async ()=>{                       
                         // apply layout
                         subgraphNetwork=await applyLayout(subgraphNetwork);
@@ -103,7 +121,7 @@ async function analyseJSON(json: string, applyLayout: (subgraph: SubgraphNetwork
                     ).then(
                         ()=>{
                         // calculate metrics on resulting layout
-                        resultAnalysis=applyMetrics(subgraphNetwork,true);                 
+                        resultAnalysis.layout=applyMetricsLayout(subgraphNetwork,true,printColumnName);                 
                         resolve();
                         }
                     );
@@ -127,7 +145,7 @@ function print1DArray(data: Array<string|number|boolean>): void {
 }
 
 function print2DArray(data: Array<Array<string|number|boolean>>): void {
-    const stringData = data.map(row => row.join(',')).join('\n');
+    const stringData = data.map(row => row.join('\t')).join('\n');
     console.log(stringData);
 }
 
@@ -189,10 +207,12 @@ const applyAlgo_V3 = async (subgraphNetwork: SubgraphNetwork): Promise<SubgraphN
 
 
 
-export function applyMetrics(subgraphNetwork: SubgraphNetwork, coordAreCenter:boolean=true): Array<number> {
-    const network=subgraphNetwork.network.value;
-    const networkStyle=subgraphNetwork.networkStyle.value;
+export function applyMetricsGraph(network: Network,printColumnName:boolean=true): Array<number> {
+    const networkGDS=NetworkToGDSGraph(network);
     const result: Array<number>=[];
+
+    const nameColumnGraph: string[] = ['nodes', 'node not side compound','edges','edge  not side compound', 'hasDirectedCycle' ];
+    if (printColumnName) print1DArray(nameColumnGraph);
 
     // number of nodes
     result.push(countNodes(network,true));
@@ -200,7 +220,25 @@ export function applyMetrics(subgraphNetwork: SubgraphNetwork, coordAreCenter:bo
     result.push(countNodes(network,false));
     // number of edges
     result.push(countEdges(network,true));
-    // number of node overlap
+    // number of edges not side compounds
+    result.push(countEdges(network,false));
+    // has directed cycle
+    result.push(Number(networkGDS.hasCycle()));
+
+    return result;
+}
+
+export function applyMetricsLayout(subgraphNetwork: SubgraphNetwork, coordAreCenter:boolean=true, printColumnName:boolean=true): Array<number> {
+    const network=subgraphNetwork.network.value;
+    const networkStyle=subgraphNetwork.networkStyle.value;
+    const networkGDS=NetworkToGDSGraph(network);
+    const result: Array<number>=[];
+
+    const nameColumnLayout: string[] = ['node overlap', 'edge node overlap', 'different x (not SD)' ,'different y (not SD)','edge intersections','coef var edge length'];
+    if (printColumnName) print1DArray(nameColumnLayout);
+
+
+    //number of node overlap
     result.push(countOverlapNodeNetwork(network,networkStyle,coordAreCenter));
     // number of edge node overlap
     result.push(countOverlapNodeEdgeNetwork(network,networkStyle,coordAreCenter));
@@ -210,6 +248,8 @@ export function applyMetrics(subgraphNetwork: SubgraphNetwork, coordAreCenter:bo
     result.push(countDiffCoord.y);
     // number of edges intersections
     result.push(countIntersectionEdgeNetwork(network,networkStyle,coordAreCenter));
+    // variance edge length (without side compounds?)
+    result.push(coefficientOfVariationEdgeLength(network,networkStyle,coordAreCenter,false));
 
 
     return result;

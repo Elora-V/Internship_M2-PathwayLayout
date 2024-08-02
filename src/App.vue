@@ -194,7 +194,7 @@ import { BFSWithSources } from "@/composables/algoBFS";
 import {  getSources } from "@/composables/rankAndSources";
 import { addBoldLinkMainChain, addRedLinkcycleGroup } from "@/composables/useSubgraphs";
 import { addMainChainFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/chooseSubgraph";
-import { analyseAllJSON, applyMetrics } from "@/composables/applyMetrics";
+import { analyseAllJSON, applyMetrics, applyMetricsGraph, applyMetricsLayout } from "@/composables/applyMetrics";
 import { changeNodeStyles } from "@/composables/styleGraph";
 import { addSideCompoundAttributeFromList, duplicateSideCompound } from "@/composables/manageSideCompounds";
 
@@ -475,9 +475,8 @@ function keydownHandler(event: KeyboardEvent) {
     console.log(subgraphNetwork);
     console.log(parameters);
   }else if (event.key == "m"){
-    const nameColumn: string[] = ['nodes', 'edges', 'node overlap', 'edge node overlap', 'edge intersections'];
-    console.log(nameColumn.join(','));
-    console.log(applyMetrics(subgraphNetwork,false));
+    console.log(applyMetricsGraph(network.value));
+    console.log(applyMetricsLayout(subgraphNetwork,false));
   } else if (event.key =="c"){
     addDirectedCycleToSubgraphNetwork(subgraphNetwork);
   }else if (event.key =="r"){
@@ -511,7 +510,7 @@ function keydownHandler(event: KeyboardEvent) {
 
 
 function loopJson(algo?:Algo):void{
-  analyseAllJSON("public/nameShortJSON.txt",algo);
+  analyseAllJSON("public/nameJSON.txt",algo);
 }
 
 

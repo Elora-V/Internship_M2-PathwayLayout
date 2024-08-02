@@ -4,6 +4,7 @@ import { Node } from "@metabohub/viz-core/src/types/Node";
 import { getNodesPlacedInGroupCycle, inCycle } from "./drawCycle";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { Subgraph } from "@/types/Subgraph";
+import { Coordinate } from "@/types/CoordinatesSize";
 
 
 /**
@@ -224,17 +225,22 @@ function getSizeGroupCycles(subgraphNetwork:SubgraphNetwork,groupCycle:Subgraph)
     return subgraphNetwork;
 }
 
-export function shiftAllCoordToCenter(network:Network,style:GraphStyleProperties,moveCycleToo:boolean=true) {
+export function shiftAllToGetTopLeftCoord(network:Network,style:GraphStyleProperties,moveCycleToo:boolean=true) {
     Object.values(network.nodes).forEach(node=>{
         if( moveCycleToo || !inCycle(network,node.id)){
-            const {x,y}=AdjustCoordNodeToCenter(node,style);
+            const {x,y}=getTopLeftCoordFromCenter(node,style);
             node.x=x;
             node.y=y;
         }
     })
 }
 
-export function AdjustCoordNodeToCenter(node:Node,style:GraphStyleProperties):{x:number,y:number}{
+export function getTopLeftCoordFromCenter(node:Node,style:GraphStyleProperties):Coordinate{
     const size = getSizeNodePixel(node,style);
     return {x:node.x-size.width/2,y:node.y-size.height/2}
+}
+
+export function getCenterCoordFromTopLeft(node:Node,style:GraphStyleProperties):Coordinate{
+    const size = getSizeNodePixel(node,style);
+    return {x:node.x+size.width/2,y:node.y+size.height/2}
 }
