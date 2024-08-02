@@ -46,7 +46,7 @@ export let defaultParameters: Parameters = {
     dpi: 72,
 
     numberNodeOnEdge: 3,
-    factorLengthSideCompounds: 1 / 2,
+    factorLengthSideCompounds: 2 / 3,
 
     shiftCoord: true,
 

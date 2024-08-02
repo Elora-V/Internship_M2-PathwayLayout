@@ -81,6 +81,7 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
                 const sizeNode= getSizeNodePixel(node,subgraphNetwork.networkStyle.value);
                 attributes.height=pixelsToInches(sizeNode.height);
                 attributes.width=pixelsToInches(sizeNode.width);
+                attributes.fixedsize=true;
                 // if main chain : add group attribut
                 if (groupOrCluster==="group"){
                     if (node.metadata && node.metadata[TypeSubgraph.MAIN_CHAIN]){
@@ -139,7 +140,7 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
             if(orderChange){
                 ordering=cycle.ordering;
             }
-            graphViz.nodes.push({name:cycle.name, attributes:{height:height,width:width,ordering:ordering}});
+            graphViz.nodes.push({name:cycle.name, attributes:{height:height,width:width,ordering:ordering,fixedsize:true}});
         });
     }
     return graphViz;
