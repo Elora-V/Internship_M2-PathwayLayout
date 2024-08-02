@@ -11,7 +11,7 @@ import { Parameters,defaultParameters } from "@/types/Parameters";
 import { vizLayout } from "./useLayout";
 import { allSteps } from "./useAlgo";
 import { Algo, PathType } from "@/types/EnumArgs";
-import { countIntersectionEdgeNetwork, countOverlapNodeNetwork, countOverlapNodeEdgeNetwork } from "./metricsNetwork";
+import { countIntersectionEdgeNetwork, countOverlapNodeNetwork, countOverlapNodeEdgeNetwork, countDifferentCoordinatesNodeNetwork, countNodes, countEdges } from "./metricsNetwork";
 
 
 export async function analyseAllJSON(pathListJSON: string,algo:Algo=Algo.DEFAULT): Promise<void> {
@@ -19,7 +19,7 @@ export async function analyseAllJSON(pathListJSON: string,algo:Algo=Algo.DEFAULT
     const allJson = jsonFileString.split('\n');
     let resultAllJSON: Array<Array<number>> = [];
     let nameFile: string[] = [];
-    const nameColumn: string[] = ['nodes', 'edges', 'node overlap', 'edge node overlap', 'edge intersections'];
+    const nameColumn: string[] = ['nodes', 'node not side compound','edges', 'node overlap', 'edge node overlap', 'different x (not SD)' ,'different y (not SD)','edge intersections'];
 
     // which layout to apply
     let applyLayout: (subgraph: SubgraphNetwork) => Promise<SubgraphNetwork> =defaultApplyLayout;
@@ -64,6 +64,7 @@ export async function analyseAllJSON(pathListJSON: string,algo:Algo=Algo.DEFAULT
     print1DArray(nameColumn);
     print2DArray(resultAllJSON);
     console.warn("If apply metrics on another layout : refresh the page, else results are the same than last time (idk why)");
+    console.warn('Number of different coordinates are calculated without side compounds');
 }
 
 
@@ -194,15 +195,22 @@ export function applyMetrics(subgraphNetwork: SubgraphNetwork, coordAreCenter:bo
     const result: Array<number>=[];
 
     // number of nodes
-    result.push(Object.keys(network.nodes).length);
+    result.push(countNodes(network,true));
+    // number of nodes not side compounds
+    result.push(countNodes(network,false));
     // number of edges
-    result.push(network.links.length);
+    result.push(countEdges(network,true));
     // number of node overlap
     result.push(countOverlapNodeNetwork(network,networkStyle,coordAreCenter));
     // number of edge node overlap
     result.push(countOverlapNodeEdgeNetwork(network,networkStyle,coordAreCenter));
+    // number of different x and y coordinates (without side compounds)
+    const countDiffCoord=countDifferentCoordinatesNodeNetwork(network,networkStyle,coordAreCenter,false);
+    result.push(countDiffCoord.x);
+    result.push(countDiffCoord.y);
     // number of edges intersections
     result.push(countIntersectionEdgeNetwork(network,networkStyle,coordAreCenter));
+
 
     return result;
 }

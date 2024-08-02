@@ -31,6 +31,35 @@ function commonNodeBetween2Links(link1: Link,link2: Link): boolean {
     }
 } 
 
+export function countNodes(network: Network, countSideCompound: boolean = true): number {
+    if (countSideCompound) {
+        return Object.keys(network.nodes).length;
+    } else {
+        let nodes = 0;
+        Object.keys(network.nodes).forEach((nodeID) => {
+            const node = network.nodes[nodeID];
+            if (!(node.metadata && node.metadata["isSideCompound"])) {
+                nodes += 1;
+            }
+        });
+        return nodes;
+    }
+}
+
+export function countEdges(network: Network, countSideCompound: boolean = true): number {
+    if (countSideCompound) {
+        return network.links.length;
+    } else {
+        let links = 0;
+        network.links.forEach(link => {
+            if (!(link.source.metadata && link.source.metadata["isSideCompound"]) && !(link.target.metadata && link.target.metadata["isSideCompound"])) {
+                links += 1;
+            }
+        });
+        return links;
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //-------------------------------------------------------- Node Metrics --------------------------------------------------------------//
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -176,7 +205,27 @@ function nodeEdgeOverlap(coordNode: Coordinate, sizeNode: Size, coordSource: Coo
 /////////////////////////////////////////////////////
 // ------------------------- Node different coordinates
 
+export function countDifferentCoordinatesNodeNetwork(network: Network, networkStyle: GraphStyleProperties, coordAreCenter: boolean = false, countSideCompound:boolean=true,roundAt: number = 2): { x: number, y: number } {
+    let uniqueX = new Set<number>();
+    let uniqueY = new Set<number>();
 
+    Object.keys(network.nodes).forEach((nodeID) => {
+        const node = network.nodes[nodeID];
+        // Do not count side compounds if countSideCompound is false
+        if (countSideCompound ||  !(node.metadata && node.metadata["isSideCompound"])) {
+            const coordNode = getCenterNode(node, networkStyle, coordAreCenter);
+            
+            // Round the coordinates based on roundAt
+            const roundedX = parseFloat(coordNode.x.toFixed(roundAt));
+            const roundedY = parseFloat(coordNode.y.toFixed(roundAt));
+            
+            uniqueX.add(roundedX);
+            uniqueY.add(roundedY);
+        }
+    });
+
+    return { x: uniqueX.size, y: uniqueY.size };
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //-------------------------------------------------------- Edge Metrics --------------------------------------------------------------//
