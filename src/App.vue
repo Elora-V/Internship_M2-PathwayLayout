@@ -510,7 +510,7 @@ function keydownHandler(event: KeyboardEvent) {
 
 
 function loopJson(algo?:Algo):void{
-  analyseAllJSON("public/nameJSON.txt",algo);
+  analyseAllJSON("public/nameShortJSON.txt",algo);
 }
 
 
