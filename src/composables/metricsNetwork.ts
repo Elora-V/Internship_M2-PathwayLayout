@@ -163,14 +163,14 @@ function countOverlapEdgeForNode(network:Network,networkStyle:GraphStyleProperti
 }
 
 
-function nodeEdgeOverlap(coordNode: Coordinate, sizeNode: Size, coordSource: Coordinate, coordTarget: Coordinate): boolean { // CORRIGER !!!!!
+function nodeEdgeOverlap(centerCoordNode: Coordinate, sizeNode: Size, coordSource: Coordinate, coordTarget: Coordinate): boolean { // CORRIGER !!!!!
     
     // Treat the node as a rectangle (coordinates are center of node)
     const rect = {
-        left: coordNode.x - sizeNode.width / 2,
-        right: coordNode.x + sizeNode.width / 2,
-        top: coordNode.y - sizeNode.height / 2,
-        bottom: coordNode.y + sizeNode.height / 2
+        left: centerCoordNode.x - sizeNode.width / 2,
+        right: centerCoordNode.x + sizeNode.width / 2,
+        top: centerCoordNode.y - sizeNode.height / 2,
+        bottom: centerCoordNode.y + sizeNode.height / 2
     };
 
     // Check if any of the edge's endpoints is inside the rectangle => same as node overlap (to suppress ?)
@@ -192,7 +192,7 @@ function nodeEdgeOverlap(coordNode: Coordinate, sizeNode: Size, coordSource: Coo
 
     // Use checkIntersection function to check if two line segments intersect
     for (const edge of rectangleEdges) {
-        const result = checkIntersection(edge.start, edge.end, coordSource, coordTarget);
+        const result = checkIntersection(edge.start.x,edge.start.y, edge.end.x,edge.end.y, coordSource.x, coordSource.y,coordTarget.x,coordTarget.y);
         if (result.type === "intersecting") {
             return true; // There is an overlap
         }
