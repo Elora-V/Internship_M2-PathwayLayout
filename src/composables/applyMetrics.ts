@@ -158,8 +158,14 @@ async function analyseJSON(json: string, metricGraph:boolean=true, applyLayout: 
         console.error("error file : " + json + "\n" + error);
         return undefined;
     }
-
-    return resultAnalysis;
+    // add execution time of layout only (not duplication side compounds)
+    const executionTime = parseFloat((endTime - startTime).toFixed(3));
+    if (executionTime) {
+        resultLayout.result.push(executionTime);
+        resultLayout.nameMetrics.push('execution time (ms)');
+    }
+    
+    return {graph:resultGraph,layout:resultLayout};
 }
 
 function print1DArray(data: Array<string|number|boolean>): void {
