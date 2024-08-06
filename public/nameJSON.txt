@@ -85,6 +85,7 @@
 /pathways/Tyrosine_metabolism.json
 /pathways/Ubiquinone_synthesis.json
 /pathways/Urea_cycle.json
+/pathways/Valine__leucine__and_isoleucine_metabolism.json
 /pathways/Vitamin_A_metabolism.json
 /pathways/Vitamin_B12_metabolism.json
 /pathways/Vitamin_B2_metabolism.json
