@@ -20,6 +20,7 @@ export async function analyseAllJSON(pathListJSON: string,algo:Algo=Algo.DEFAULT
     const allJson = jsonFileString.split('\n');
     let resultGraphAllJSON: Array<Array<number>> = [];
     let resultLayoutAllJSON: Array<Array<number>> = [];
+    let nameMetrics:{graph:string[],layout:string[]}= {graph:[],layout:[]};
     let nameFile: string[] = [];
 
     // which layout to apply
@@ -54,23 +55,30 @@ export async function analyseAllJSON(pathListJSON: string,algo:Algo=Algo.DEFAULT
             applyLayout = defaultApplyLayout;
             break;
     }
-    let firstJson=true;
+    let firstJSON=true;
     for (const json of allJson) {
         console.log(json);
-        const resultJSON= await analyseJSON(json,metricGraph,applyLayout,firstJson);
+        const resultJSON= await analyseJSON(json,metricGraph,applyLayout,false);
+        if (firstJSON){
+            nameMetrics.graph=resultJSON.graph.nameMetrics;
+            nameMetrics.layout=resultJSON.layout.nameMetrics;
+            firstJSON=false;
+        }
         if (resultJSON.graph !== undefined){
-            resultGraphAllJSON.push(resultJSON.graph);
+            resultGraphAllJSON.push(resultJSON.graph.result);
         }
         if (resultJSON.layout !== undefined){
             nameFile.push(json);
-            resultLayoutAllJSON.push(resultJSON.layout);
+            resultLayoutAllJSON.push(resultJSON.layout.result);
         }
-        firstJson=false;
+       
     }  
 
     if (metricGraph){
+        print1DArray(nameMetrics.graph);
         print2DArray(resultGraphAllJSON);
     }
+    print1DArray(nameMetrics.layout);
     print2DArray(resultLayoutAllJSON);
 
     console.warn("If apply metrics on another layout : refresh the page, else results are the same than last time (idk why)");
@@ -78,7 +86,8 @@ export async function analyseAllJSON(pathListJSON: string,algo:Algo=Algo.DEFAULT
 }
 
 
-async function analyseJSON(json: string, metricGraph:boolean=true, applyLayout: (subgraph: SubgraphNetwork) => Promise<SubgraphNetwork> =defaultApplyLayout,printColumnName:boolean=true): Promise<{graph:number[],layout:number[]} | undefined> {
+async function analyseJSON(json: string, metricGraph:boolean=true, applyLayout: (subgraph: SubgraphNetwork) => Promise<SubgraphNetwork> =defaultApplyLayout,printColumnName:boolean=true):
+ Promise<{graph:{nameMetrics:string[],result:number[]},layout:{nameMetrics:string[],result:number[]}} | undefined> {
 
     // initialize objects
     const networkForJSON = ref<Network>({ id: '', nodes: {}, links: [] });
@@ -86,8 +95,11 @@ async function analyseJSON(json: string, metricGraph:boolean=true, applyLayout: 
         nodeStyles: {},
         linkStyles: {}
     });
+    let startTime:number;
+    let endTime:number;
     let subgraphNetwork:SubgraphNetwork;
-    let resultAnalysis: {graph:number[],layout:number[]}= {graph:[],layout:[]};
+    let resultGraph: {nameMetrics:string[],result:number[]}= {nameMetrics:[],result:[]};
+    let resultLayout:{nameMetrics:string[],result:number[]}= {nameMetrics:[],result:[]};
 
     // import network from JSON, and process it
     try {
@@ -109,8 +121,14 @@ async function analyseJSON(json: string, metricGraph:boolean=true, applyLayout: 
                         ()=>{
                         // calculate metrics of graph 
                         if (metricGraph) {
-                            resultAnalysis.graph=applyMetricsGraph(subgraphNetwork.network.value,printColumnName);
+                            const metricsGraph=applyMetricsGraph(subgraphNetwork.network.value,printColumnName); 
+                            resultGraph.result=metricsGraph.metrics
+                            resultGraph.nameMetrics=metricsGraph.nameMetrics;
                         }
+                        }
+                    ).then(
+                         ()=>{                       
+                            startTime = performance.now();
                         }
                     ).then(
                         async ()=>{                       
@@ -118,9 +136,15 @@ async function analyseJSON(json: string, metricGraph:boolean=true, applyLayout: 
                         subgraphNetwork=await applyLayout(subgraphNetwork);
                         }
                     ).then(
+                         ()=>{                       
+                            endTime = performance.now();
+                        }
+                    ).then(
                         ()=>{
                         // calculate metrics on resulting layout
-                        resultAnalysis.layout=applyMetricsLayout(subgraphNetwork,true,printColumnName);                 
+                        const metricsLayout=applyMetricsLayout(subgraphNetwork,true,printColumnName);     
+                        resultLayout.result= metricsLayout.metrics; 
+                        resultLayout.nameMetrics=metricsLayout.nameMetrics;          
                         resolve();
                         }
                     );
@@ -206,9 +230,9 @@ const applyAlgo_V3 = async (subgraphNetwork: SubgraphNetwork): Promise<SubgraphN
 
 
 
-export function applyMetricsGraph(network: Network,printColumnName:boolean=true): Array<number> {
+export function applyMetricsGraph(network: Network,printColumnName:boolean=true): {nameMetrics:string[],metrics:number[]} {
     const networkGDS=NetworkToGDSGraph(network);
-    const result: Array<number>=[];
+    const result: number[]=[];
 
     const nameColumnGraph: string[] = ['nodes', 'node not side compound','edges','edge  not side compound', 'hasDirectedCycle' ];
     if (printColumnName) print1DArray(nameColumnGraph);
@@ -224,14 +248,14 @@ export function applyMetricsGraph(network: Network,printColumnName:boolean=true)
     // has directed cycle
     result.push(Number(networkGDS.hasCycle()));
 
-    return result;
+    return {nameMetrics:nameColumnGraph,metrics:result};
 }
 
-export function applyMetricsLayout(subgraphNetwork: SubgraphNetwork, coordAreCenter:boolean=true, printColumnName:boolean=true): Array<number> {
+export function applyMetricsLayout(subgraphNetwork: SubgraphNetwork, coordAreCenter:boolean=true, printColumnName:boolean=true): {nameMetrics:string[],metrics:number[]} {
     const network=subgraphNetwork.network.value;
     const networkStyle=subgraphNetwork.networkStyle.value;
     const networkGDS=NetworkToGDSGraph(network);
-    const result: Array<number>=[];
+    const result: number[]=[];
 
     const nameColumnLayout: string[] = ['node overlap', 'edge node overlap', 'different x (not SD)' ,'different y (not SD)','edge intersections','coef var edge length','% colineat axis (not SD)', 'coef var vect dir (not SD)'];
     if (printColumnName) print1DArray(nameColumnLayout);
@@ -254,5 +278,5 @@ export function applyMetricsLayout(subgraphNetwork: SubgraphNetwork, coordAreCen
     result.push(resultDirection.colinearAxis)
     result.push(resultDirection.coefVariation)
 
-    return result;
+    return {nameMetrics:nameColumnLayout,metrics:result};
 }
