@@ -5,13 +5,12 @@ import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStylePr
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { addSideCompoundAttributeFromList, duplicateSideCompound, putDuplicatedSideCompoundAside } from "./manageSideCompounds";
 import { changeNodeStyles } from "./styleGraph";
-import { countIntersection } from "./countIntersections";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 import { Parameters,defaultParameters } from "@/types/Parameters";
 import { vizLayout } from "./useLayout";
 import { allSteps } from "./useAlgo";
 import { Algo, PathType } from "@/types/EnumArgs";
-import { countIntersectionEdgeNetwork, countOverlapNodeNetwork, countOverlapNodeEdgeNetwork, countDifferentCoordinatesNodeNetwork, countNodes, countEdges, coefficientOfVariationEdgeLength } from "./metricsNetwork";
+import { countIntersectionEdgeNetwork, countOverlapNodeNetwork, countOverlapNodeEdgeNetwork, countDifferentCoordinatesNodeNetwork, countNodes, countEdges, coefficientOfVariationEdgeLength, calculateNormalizedDirectionVectors, analyseDirectorVector } from "./metricsNetwork";
 import { TypeSubgraph } from "@/types/Subgraph";
 import { NetworkToGDSGraph } from "./networkToGraph";
 
@@ -234,7 +233,7 @@ export function applyMetricsLayout(subgraphNetwork: SubgraphNetwork, coordAreCen
     const networkGDS=NetworkToGDSGraph(network);
     const result: Array<number>=[];
 
-    const nameColumnLayout: string[] = ['node overlap', 'edge node overlap', 'different x (not SD)' ,'different y (not SD)','edge intersections','coef var edge length'];
+    const nameColumnLayout: string[] = ['node overlap', 'edge node overlap', 'different x (not SD)' ,'different y (not SD)','edge intersections','coef var edge length','% colineat axis (not SD)', 'coef var vect dir (not SD)'];
     if (printColumnName) print1DArray(nameColumnLayout);
 
 
@@ -250,7 +249,10 @@ export function applyMetricsLayout(subgraphNetwork: SubgraphNetwork, coordAreCen
     result.push(countIntersectionEdgeNetwork(network,networkStyle,coordAreCenter));
     // variance edge length (without side compounds?)
     result.push(coefficientOfVariationEdgeLength(network,networkStyle,coordAreCenter,false));
-
+    // direction edge : % of edge colinear to axis and coef of variaton of angle
+    const resultDirection=analyseDirectorVector(network,networkStyle,coordAreCenter,true,false);
+    result.push(resultDirection.colinearAxis)
+    result.push(resultDirection.coefVariation)
 
     return result;
 }

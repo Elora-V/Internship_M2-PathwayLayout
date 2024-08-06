@@ -60,6 +60,31 @@ export function countEdges(network: Network, countSideCompound: boolean = true):
     }
 }
 
+function getNormalizedDirectorVector(link: Link, style: GraphStyleProperties, coordAreCenter: boolean = false): Coordinate {
+
+    const sourceCenter = getCenterNode(link.source, style, coordAreCenter);
+    const targetCenter = getCenterNode(link.target, style, coordAreCenter);
+
+    const dx = targetCenter.x - sourceCenter.x;
+    const dy = targetCenter.y - sourceCenter.y;
+
+    const length = edgeLength(link, style, coordAreCenter);
+
+    if (length === 0) {
+        return { x: 0, y: 0 }; // Handle case with zero length
+    }
+
+    return {
+        x: parseFloat((dx / length).toFixed(2)),
+        y:  parseFloat((dy / length).toFixed(2))
+    };
+}
+
+function linkOfSideCompound(link:Link):boolean{
+    return (link.source.metadata && (link.source.metadata["isSideCompound"]) as boolean) || (link.target.metadata && (link.target.metadata["isSideCompound"]) as boolean);
+}
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //-------------------------------------------------------- Node Metrics --------------------------------------------------------------//
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -325,8 +350,43 @@ function edgeLength(link: Link,style:GraphStyleProperties,coordAreCenter:boolean
 
 /////////////////////////////////////////////////////
 // ------------------------- Edge colinear with axis 
+// => function used with edge direction
 
+function calculateNormalizedDirectorVectors(links: Link[], style: GraphStyleProperties, coordAreCenter: boolean = false,includeSideCompounds:boolean=true): Coordinate[] {
+    const vectors: Coordinate[] = [];
 
+    links.forEach(link => {
+        if (includeSideCompounds || !linkOfSideCompound(link)){
+            const normalizedVector = getNormalizedDirectorVector(link, style, coordAreCenter);
+            vectors.push(normalizedVector);
+        }
+       
+    });
+
+    return vectors;
+}
+
+function isColinearAxisNetwork(vector:Coordinate): boolean {
+        return vector.x === 0 || vector.y === 0;
+}
+
+function countEdgeColinearAxisNetwork(vectors:Coordinate[], pourcentage:boolean=false): number {
+
+    if (vectors.length === 0) {
+        return 0;
+    }
+
+    let count = 0;
+    vectors.forEach(vector => {
+        if (isColinearAxisNetwork(vector)) {
+            count += 1;
+        }
+    });
+    if (pourcentage) {
+        return parseFloat((count / vectors.length).toFixed(2));
+    }
+    return count;
+}
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -334,5 +394,54 @@ function edgeLength(link: Link,style:GraphStyleProperties,coordAreCenter:boolean
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+// WHEN CLEAN : fonction that said if sidecompound or not
+
 /////////////////////////////////////////////////////
 // ------------------------- Edge direction
+
+export function analyseDirectorVector(network: Network, style: GraphStyleProperties, coordAreCenter: boolean = false, pourcentageColinearAxis:boolean=false, includeSideCompounds:boolean=true):{colinearAxis:number,coefVariation:number} { 
+    
+    const result: { colinearAxis: number, coefVariation: number } = { colinearAxis: undefined, coefVariation: undefined };
+
+    let links = network.links;
+
+    if (!includeSideCompounds) {
+        links = links.filter(link => 
+            !(link.source.metadata && link.source.metadata["isSideCompound"]) && 
+            !(link.target.metadata && link.target.metadata["isSideCompound"])
+        );
+    }
+    
+    // get all normalized director vectors
+    const vectors = calculateNormalizedDirectorVectors(links, style, coordAreCenter,includeSideCompounds);
+
+    // count colinear with axis
+    result.colinearAxis = countEdgeColinearAxisNetwork(vectors,pourcentageColinearAxis);
+
+    // coeficient of variation of angle
+
+     // calculate angles of vectors
+     const angles = vectors.map(vector => Math.atan2(vector.y, vector.x));
+
+     // calculate mean of angles
+     const mean = angles.reduce((a, b) => a + b, 0) / angles.length;
+     if (mean === 0) {
+         result.coefVariation = 0; // Handle case with no angles
+         return result;
+     }
+ 
+     // calculate variance of angles
+     const variance = angles.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / angles.length;
+ 
+     // calculate standard deviation
+     const stdDeviation = Math.sqrt(variance);
+ 
+     // calculate coefficient of variation
+     const coefVariation = stdDeviation / mean;
+     result.coefVariation = parseFloat(coefVariation.toFixed(2));
+ 
+     return result;
+
+}
+
+
