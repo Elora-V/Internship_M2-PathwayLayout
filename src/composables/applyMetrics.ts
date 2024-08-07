@@ -174,7 +174,7 @@ function print1DArray(data: Array<string|number|boolean>): void {
 }
 
 function print2DArray(data: Array<Array<string|number|boolean>>): void {
-    const stringData = data.map(row => row.join('\t')).join('\n');
+    const stringData = data.map(row => row.join(',')).join('\n');
     console.log(stringData);
 }
 
@@ -263,7 +263,7 @@ export function applyMetricsLayout(subgraphNetwork: SubgraphNetwork, coordAreCen
     const networkGDS=NetworkToGDSGraph(network);
     const result: number[]=[];
 
-    const nameColumnLayout: string[] = ['node overlap', 'edge node overlap', 'different x (not SD)' ,'different y (not SD)','edge intersections','coef var edge length','% colineat axis (not SD)', 'coef var vect dir (not SD)'];
+    const nameColumnLayout: string[] = ['node overlap', 'edge node overlap', 'different x (not SD)' ,'different y (not SD)','edge intersections','coef var edge length (no SD)','% colineat axis (not SD)', 'coef var vect dir (not SD)'];
     if (printColumnName) print1DArray(nameColumnLayout);
 
 

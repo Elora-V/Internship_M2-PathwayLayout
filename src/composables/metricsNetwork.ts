@@ -414,6 +414,7 @@ export function analyseDirectorVector(network: Network, style: GraphStylePropert
     
     // get all normalized director vectors
     const vectors = calculateNormalizedDirectorVectors(links, style, coordAreCenter,includeSideCompounds);
+    if (vectors.length==0) return { colinearAxis: 0, coefVariation: 0 }
 
     // count colinear with axis
     result.colinearAxis = countEdgeColinearAxisNetwork(vectors,pourcentageColinearAxis);

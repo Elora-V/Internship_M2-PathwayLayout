@@ -21,6 +21,7 @@
 /pathways/D_alanine_metabolism.json
 /pathways/Dietary_fiber_binding.json
 /pathways/Eicosanoid_metabolism.json
+/pathways/Exchange_demand_reaction.json
 /pathways/Fatty_acid_synthesis.json
 /pathways/Folate_metabolism.json
 /pathways/Fructose_and_mannose_metabolism.json
