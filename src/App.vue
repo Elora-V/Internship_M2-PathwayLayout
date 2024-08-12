@@ -454,7 +454,7 @@ function getOriginalNetwork():SubgraphNetwork{
 async function algoForce():Promise<void>{
   console.log('Force');
   //createStaticForceLayout(network.value);
-  forceLayout(network.value);
+  forceLayout(network.value,networkStyle.value,true);
   
 }
 

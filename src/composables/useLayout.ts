@@ -6,11 +6,13 @@ import { changeNetworkFromCytoscape, changeNetworkFromDagre, changeNetworkFromVi
 import { JsonViz } from "@/types/JsonViz";
 import { Subgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
-import { getSepAttributesInches } from "./calculateSize";
+import { getSepAttributesInches, shiftAllToGetTopLeftCoord } from "./calculateSize";
 import * as d3 from 'd3';
 import { reactive } from "vue";
 import cytoscape from 'cytoscape';
 import fcose from 'cytoscape-fcose';
+import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
+import { getMeanNodesSizePixel } from "./calculateSize";
 
 /** 
  * Take a network object and change the (x,y) position of the node with dagre lib
@@ -148,23 +150,41 @@ export async function forceLayout2(network: Network, autoRescale: Boolean = fals
   }
 
 
-  export async function forceLayout(network: Network): Promise<Network> {
+export async function forceLayout(network: Network, networkStyle:GraphStyleProperties, shiftCoord: boolean = false): Promise<Network> {
 
-    cytoscape.use( fcose );
+    cytoscape.use(fcose);
+
+    const size=getMeanNodesSizePixel(Object.values(network.nodes), networkStyle,false);
+    const edgeFactor=3;
+    const edgeLength = Math.max(size.height, size.width) * edgeFactor;
+
+    const layout = {
+        name: 'fcose',
+        animate: false,
+        randomize: true,
+        idealEdgeLength: edge => edgeLength,
+        //edgeElasticity: edge => 0.1,
+        //nodeRepulsion: node => 3000,
+        gravity: 0.005,
+    };
 
     let cyto = networkToCytoscape(network);
 
     await new Promise<void>((resolve) => {
         cyto.ready(function () {
             setTimeout(function () {
-                cyto.elements().layout({ name: 'fcose',animate: false }).run();
+                cyto.elements().layout(layout).run();
                 resolve();
             }, 5000);
         });
     });
 
+    if (shiftCoord) {
+        shiftAllToGetTopLeftCoord(network, networkStyle);
+    }
+
     const json = cyto.json();
-    changeNetworkFromCytoscape(json,network);
+    changeNetworkFromCytoscape(json, network);
 
     return network;
 }

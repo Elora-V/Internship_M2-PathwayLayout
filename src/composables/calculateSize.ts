@@ -4,7 +4,7 @@ import { Node } from "@metabohub/viz-core/src/types/Node";
 import { getNodesPlacedInGroupCycle, inCycle } from "./drawCycle";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { Subgraph } from "@/types/Subgraph";
-import { Coordinate } from "@/types/CoordinatesSize";
+import { Coordinate, Size } from "@/types/CoordinatesSize";
 
 
 /**
@@ -38,7 +38,7 @@ export function getSepAttributesPixel(network:Network,styleNetwork:GraphStylePro
  * @param styleNetwork - The style properties of the graph.
  * @returns An object containing the height and width of the node in pixels.
  */
-export function getSizeNodePixel(node:Node,styleNetwork:GraphStyleProperties):{height:number,width:number}{
+export function getSizeNodePixel(node:Node,styleNetwork:GraphStyleProperties):Size{
     let height:number;
     let width:number;
     if (node.classes && styleNetwork.nodeStyles){
@@ -60,15 +60,20 @@ export function getSizeNodePixel(node:Node,styleNetwork:GraphStyleProperties):{h
  * @param styleNetwork - The style properties of the graph.
  * @returns An object containing the mean height and width of the nodes in pixels.
  */
-export function getMeanNodesSizePixel(nodes:Node[],styleNetwork:GraphStyleProperties):{height:number,width:number}{
+export function getMeanNodesSizePixel(nodes:Node[],styleNetwork:GraphStyleProperties,includeSideCompounds:boolean=true):Size{
     let height:number = 0;
     let width:number = 0;
+    let n:number = 0;
     nodes.forEach((node)=>{
-        let size = getSizeNodePixel(node,styleNetwork);
-        height += size.height;
-        width += size.width;
+        if (includeSideCompounds ||  !(node.metadata && node.metadata["isSideCompound"])) {
+            let size = getSizeNodePixel(node,styleNetwork);
+            height += size.height;
+            width += size.width;
+            n+=1;
+        }
+        
     });
-    return {height:height/nodes.length,width:width/nodes.length};
+    return {height:height/n,width:width/n};
 }
 
 /**

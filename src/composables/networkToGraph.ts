@@ -14,7 +14,7 @@ import { s } from 'vitest/dist/reporters-1evA5lom';
 import { getSizeNodePixel, pixelsToInches } from './calculateSize';
 import { get } from 'http';
 
-import cytoscape, { ElementDefinition } from 'cytoscape';
+import cytoscape, { ElementDefinition,Stylesheet } from 'cytoscape';
 
 
 /** 
@@ -53,7 +53,6 @@ export function networkToCytoscape(network: Network): cytoscape.Core {
     const nodes: ElementDefinition[] = Object.values(network.nodes).map(node => ({
       data: {
         id: node.id,
-        count: 100,
       },
       position: {
         x: node.x,
@@ -73,23 +72,11 @@ export function networkToCytoscape(network: Network): cytoscape.Core {
       });
     });
 
-    // Style
-    // const stylesheet =
-    //     [
-    //         {
-    //             selector: 'node',
-    //             style: {
-    //                 width: 100,
-    //                 height: 100
-    //             }
-    //         }
-    //     ];
   
     // Create Cytoscape instance
     return cytoscape({
       container: undefined, 
       elements: {nodes:nodes, edges:edges},
-      //style: stylesheet
     });
   }
 

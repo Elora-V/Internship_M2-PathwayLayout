@@ -1,4 +1,5 @@
 import { JsonViz } from '@/types/JsonViz';
+import { Coordinate } from '@/types/CoordinatesSize';
 import { Network } from '@metabohub/viz-core/src/types/Network';
 import type { Node } from "@metabohub/viz-core/src/types/Node";
 import  dagre  from 'dagrejs/dist/dagre.js';
@@ -10,6 +11,7 @@ import { getSizeNodePixel } from './calculateSize';
 import { GraphStyleProperties } from '@metabohub/viz-core/src/types/GraphStyleProperties';
 
 
+import cytoscape, { ElementDefinition } from 'cytoscape';
 
 
 /**
@@ -145,7 +147,7 @@ export function dagreToNetwork(graph: dagre.graphlib.Graph): Network{
 
 }
 
-export function changeNetworkFromCytoscape(jsonCytoscape: any, network:Network) : void {
+export function changeNetworkFromCytoscape(jsonCytoscape: {elements:  { nodes:ElementDefinition[] } }, network:Network) : void {
 
     jsonCytoscape.elements.nodes.forEach((node: any) => {
         const idNode= node.data.id;
