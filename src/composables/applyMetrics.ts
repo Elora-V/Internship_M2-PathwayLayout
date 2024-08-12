@@ -7,7 +7,7 @@ import { addSideCompoundAttributeFromList, duplicateSideCompound, putDuplicatedS
 import { changeNodeStyles } from "./styleGraph";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 import { Parameters,defaultParameters } from "@/types/Parameters";
-import { vizLayout } from "./useLayout";
+import { forceLayout, vizLayout } from "./useLayout";
 import { allSteps } from "./useAlgo";
 import { Algo, PathType } from "@/types/EnumArgs";
 import { countIntersectionEdgeNetwork, countOverlapNodeNetwork, countOverlapNodeEdgeNetwork, countDifferentCoordinatesNodeNetwork, countNodes, countEdges, coefficientOfVariationEdgeLength, calculateNormalizedDirectionVectors, analyseDirectorVector } from "./metricsNetwork";
@@ -26,10 +26,11 @@ export async function analyseAllJSON(pathListJSON: string,algo:Algo=Algo.DEFAULT
     // which layout to apply
     let applyLayout: (subgraph: SubgraphNetwork) => Promise<SubgraphNetwork> =defaultApplyLayout;
     switch (algo) {
-        // case Algo.FORCE:
-        //     console.log('apply Force');
-        //     applyLayout = applyForceLayout;
-        //     break;
+        case Algo.FORCE:
+            console.log('apply Force');
+            applyLayout = applyForceLayout;
+            console.warn('Use of timeout so exec time is not accurate (no comparison possible)');
+            break;
         case Algo.VIZ:
             console.log('apply Viz');
             applyLayout = applyVizLayout;
@@ -184,11 +185,19 @@ const defaultApplyLayout = async (subgraphNetwork: SubgraphNetwork): Promise<Sub
     return subgraphNetwork;
 };
 
-// const applyForceLayout = (subgraphNetwork: SubgraphNetwork): SubgraphNetwork => {
-//     const network=subgraphNetwork.network.value;
-//     createStaticForceLayout(network);
-//     return subgraphNetwork;
-// };
+const applyForceLayout = (subgraphNetwork: SubgraphNetwork): Promise<SubgraphNetwork> => {
+    const network=subgraphNetwork.network.value;
+    const styleNetwork= subgraphNetwork.networkStyle.value;
+    const subgraphNetworkPromise = new Promise<SubgraphNetwork>(async (resolve, reject) => {
+        try {
+            await forceLayout(network, styleNetwork, false);
+            resolve(subgraphNetwork);
+        } catch (error) {
+            reject(error);
+        }
+    });
+    return subgraphNetworkPromise;
+};
 
 const applyVizLayout = async (subgraphNetwork: SubgraphNetwork): Promise<SubgraphNetwork> => {
     let parameters: Parameters = defaultParameters;

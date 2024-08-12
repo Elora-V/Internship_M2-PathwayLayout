@@ -333,7 +333,7 @@ export function coefficientOfVariationEdgeLength(network: Network,style:GraphSty
     }
     const variance = lengths.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / lengths.length;
     const stdDeviation = Math.sqrt(variance);
-    const coefVariation = stdDeviation / mean;
+    const coefVariation = stdDeviation / Math.abs(mean);
     return parseFloat(coefVariation.toFixed(3));
 }
 

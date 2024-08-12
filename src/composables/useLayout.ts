@@ -161,7 +161,8 @@ export async function forceLayout(network: Network, networkStyle:GraphStylePrope
     const layout = {
         name: 'fcose',
         animate: false,
-        randomize: true,
+        randomize: false,
+        //quality:"proof",  // ?? if randomize is set to false, then quality option must be "proof"
         idealEdgeLength: edge => edgeLength,
         //edgeElasticity: edge => 0.1,
         //nodeRepulsion: node => 3000,
