@@ -15,6 +15,7 @@ import { getSizeNodePixel, pixelsToInches } from './calculateSize';
 import { get } from 'http';
 
 import cytoscape, { ElementDefinition,Stylesheet } from 'cytoscape';
+import { layout } from 'dagrejs';
 
 
 /** 
@@ -49,16 +50,17 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
 
   
 export function networkToCytoscape(network: Network): cytoscape.Core {
+
     // Convert nodes
     const nodes: ElementDefinition[] = Object.values(network.nodes).map(node => ({
-      data: {
-        id: node.id,
-      },
-      position: {
-        x: node.x,
-        y: node.y,
-      }
-    }));
+        data: {
+          id: node.id,
+        },
+        position: {
+          x: node.x,
+          y: node.y,
+        },
+      }));
   
     // Convert links
     const edges: ElementDefinition[] = [];
@@ -77,6 +79,9 @@ export function networkToCytoscape(network: Network): cytoscape.Core {
     return cytoscape({
       container: undefined, 
       elements: {nodes:nodes, edges:edges},
+      layout: { 
+        name: 'preset', // to initialize the position of the nodes
+      },
     });
   }
 
