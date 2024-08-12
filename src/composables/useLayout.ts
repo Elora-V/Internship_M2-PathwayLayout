@@ -11,6 +11,7 @@ import * as d3 from 'd3';
 import { reactive } from "vue";
 import cytoscape from 'cytoscape';
 import fcose from 'cytoscape-fcose';
+import cosebilkent from 'cytoscape-cose-bilkent';
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 import { getMeanNodesSizePixel } from "./calculateSize";
 
@@ -152,24 +153,25 @@ export async function forceLayout2(network: Network, autoRescale: Boolean = fals
 
 export async function forceLayout(network: Network, networkStyle:GraphStyleProperties, shiftCoord: boolean = false): Promise<Network> {
 
-    cytoscape.use(fcose);
+    //cytoscape.use(fcose);
+    cytoscape.use(cosebilkent);
 
     const size=getMeanNodesSizePixel(Object.values(network.nodes), networkStyle,false);
     const edgeFactor=3;
     const edgeLength = Math.max(size.height, size.width) * edgeFactor;
 
-    const layout = {
-        name: 'fcose',
+    const layout ={
+        name:"cose-bilkent", //fcose
         animate: false,
         randomize: false,
-        //quality:"proof",  // ?? if randomize is set to false, then quality option must be "proof"
-        idealEdgeLength: edge => edgeLength,
-        //edgeElasticity: edge => 0.1,
-        //nodeRepulsion: node => 3000,
-        gravity: 0.005,
-    };
+        idealEdgeLength: edgeLength,
+        nodeRepulsion: 70000, // high number if randomize = false
+        gravity : 0.001,
+        numIter: 3000
 
-    let cyto = networkToCytoscape(network);
+    }
+
+    let cyto = networkToCytoscape(network,true);
 
     await new Promise<void>((resolve) => {
         cyto.ready(function () {

@@ -49,7 +49,7 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
 
 
   
-export function networkToCytoscape(network: Network): cytoscape.Core {
+export function networkToCytoscape(network: Network, initialPosition:boolean=false): cytoscape.Core {
 
     // Convert nodes
     const nodes: ElementDefinition[] = Object.values(network.nodes).map(node => ({
@@ -74,16 +74,22 @@ export function networkToCytoscape(network: Network): cytoscape.Core {
       });
     });
 
-  
-    // Create Cytoscape instance
-    return cytoscape({
-      container: undefined, 
-      elements: {nodes:nodes, edges:edges},
-      layout: { 
-        name: 'preset', // to initialize the position of the nodes
-      },
+
+    if (initialPosition){
+        return cytoscape({
+            container: undefined, 
+            elements: {nodes:nodes, edges:edges},
+            layout: { 
+              name: 'preset', // to initialize the position of the nodes
+            },
     });
+    }else{
+        return cytoscape({
+        container: undefined, 
+        elements: {nodes:nodes, edges:edges},
+        });
   }
+}
 
 
 /**
