@@ -10,6 +10,7 @@ import { getSepAttributesInches } from "./calculateSize";
 import * as d3 from 'd3';
 import { reactive } from "vue";
 import cytoscape from 'cytoscape';
+import fcose from 'cytoscape-fcose';
 
 /** 
  * Take a network object and change the (x,y) position of the node with dagre lib
@@ -148,12 +149,15 @@ export async function forceLayout2(network: Network, autoRescale: Boolean = fals
 
 
   export async function forceLayout(network: Network): Promise<Network> {
+
+    cytoscape.use( fcose );
+
     let cyto = networkToCytoscape(network);
 
     await new Promise<void>((resolve) => {
         cyto.ready(function () {
             setTimeout(function () {
-                cyto.elements().layout({ name: 'circle' }).run();
+                cyto.elements().layout({ name: 'fcose',animate: false }).run();
                 resolve();
             }, 5000);
         });
