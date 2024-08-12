@@ -14,6 +14,8 @@ import { s } from 'vitest/dist/reporters-1evA5lom';
 import { getSizeNodePixel, pixelsToInches } from './calculateSize';
 import { get } from 'http';
 
+import cytoscape, { ElementDefinition } from 'cytoscape';
+
 
 /** 
  * Take a network object and return a dagre.graphlib.Graph object containing the same nodes and edge 
@@ -43,6 +45,53 @@ export function NetworkToDagre(network: Network,graphAttributes={}): dagre.graph
     return g;
 
 }
+
+
+  
+export function networkToCytoscape(network: Network): cytoscape.Core {
+    // Convert nodes
+    const nodes: ElementDefinition[] = Object.values(network.nodes).map(node => ({
+      data: {
+        id: node.id,
+        count: 100,
+      },
+      position: {
+        x: node.x,
+        y: node.y,
+      }
+    }));
+  
+    // Convert links
+    const edges: ElementDefinition[] = [];
+    network.links.forEach(link => {
+        edges.push({
+        data: {
+          id: link.id,
+          source: link.source.id,
+          target: link.target.id,
+        }
+      });
+    });
+
+    // Style
+    // const stylesheet =
+    //     [
+    //         {
+    //             selector: 'node',
+    //             style: {
+    //                 width: 100,
+    //                 height: 100
+    //             }
+    //         }
+    //     ];
+  
+    // Create Cytoscape instance
+    return cytoscape({
+      container: undefined, 
+      elements: {nodes:nodes, edges:edges},
+      //style: stylesheet
+    });
+  }
 
 
 /**

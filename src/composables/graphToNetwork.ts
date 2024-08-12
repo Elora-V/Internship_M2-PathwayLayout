@@ -145,5 +145,16 @@ export function dagreToNetwork(graph: dagre.graphlib.Graph): Network{
 
 }
 
+export function changeNetworkFromCytoscape(jsonCytoscape: any, network:Network) : void {
+
+    jsonCytoscape.elements.nodes.forEach((node: any) => {
+        const idNode= node.data.id;
+        if (Object.keys(network.nodes).includes(idNode)) {
+            network.nodes[idNode].x = node.position.x;
+            network.nodes[idNode].y = node.position.y;
+        }
+    });
+}
+
 
 

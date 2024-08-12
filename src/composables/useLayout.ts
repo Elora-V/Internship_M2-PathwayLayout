@@ -1,14 +1,15 @@
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import dagre from 'dagrejs';
 import { Graph, instance } from "@viz-js/viz";
-import { NetworkToDagre, NetworkToDot, NetworkToViz } from './networkToGraph';
-import { changeNetworkFromDagre, changeNetworkFromViz, dagreToNetwork } from './graphToNetwork';
+import { networkToCytoscape, NetworkToDagre, NetworkToDot, NetworkToViz } from './networkToGraph';
+import { changeNetworkFromCytoscape, changeNetworkFromDagre, changeNetworkFromViz, dagreToNetwork } from './graphToNetwork';
 import { JsonViz } from "@/types/JsonViz";
 import { Subgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { getSepAttributesInches } from "./calculateSize";
 import * as d3 from 'd3';
 import { reactive } from "vue";
+import cytoscape from 'cytoscape';
 
 /** 
  * Take a network object and change the (x,y) position of the node with dagre lib
@@ -62,7 +63,7 @@ export async function vizLayout(subgraphNetwork:SubgraphNetwork,assignRank:boole
    * @param network Network object
    * @returns {Network} Network object with d3 force layout apply on
    */
-  export async function forceLayout(network: Network, autoRescale: Boolean = false): Promise<Network> {
+  export async function forceLayout3(network: Network, autoRescale: Boolean = false): Promise<Network> {
     const seuil = 0.04;
     const maxiter = 1000;
     const minMovement = 0.01; 
@@ -144,4 +145,24 @@ export async function forceLayout2(network: Network, autoRescale: Boolean = fals
     return network;
   
   }
+
+
+  export async function forceLayout(network: Network): Promise<Network> {
+    let cyto = networkToCytoscape(network);
+
+    await new Promise<void>((resolve) => {
+        cyto.ready(function () {
+            setTimeout(function () {
+                cyto.elements().layout({ name: 'circle' }).run();
+                resolve();
+            }, 5000);
+        });
+    });
+
+    const json = cyto.json();
+    changeNetworkFromCytoscape(json,network);
+
+    return network;
+}
+  
   
