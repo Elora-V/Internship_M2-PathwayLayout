@@ -78,7 +78,7 @@ export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Param
       async () => {
         // Sugiyama without cycle metanodes (to get top nodes for cycles)
         if (printNameStep) console.log('Second Viz (get top nodes if cycles, else final viz)');
-        await vizLayout(subgraphNetwork, false,false,parameters.addNodes,parameters.groupOrCluster,false);
+        await vizLayout(subgraphNetwork, false,false,parameters.addNodes,parameters.groupOrCluster,false,false,parameters.dpi,parameters.numberNodeOnEdge);
       }
     ).then(
       async () => {

@@ -427,7 +427,6 @@ function undoIfOverlap(subgraphNetwork:SubgraphNetwork,groupCycleName:string,pos
 
 function isOverlapCycles(subgraphNetwork:SubgraphNetwork,groupCycleName:string):boolean{
     const graph =getListNodeLinksForCycleGroupAsObject(subgraphNetwork,groupCycleName);
-
     // intersection of edges :
     const intersectionEdges=isIntersectionGraph(graph.nodes ,graph.links,subgraphNetwork.network.value,subgraphNetwork.networkStyle.value);
     if (intersectionEdges){
@@ -909,7 +908,7 @@ function getNodesAssociatedMinY(subgraphNetwork: SubgraphNetwork, associatedList
     let minNodes: number[] = [];
     associatedListNodes.forEach((listNodes,i) => {
         listNodes.forEach(node => {
-            if (network.nodes[node] && network.nodes[node].y) {
+            if (network.nodes[node] && network.nodes[node].y!==undefined && network.nodes[node].y!==null) {
                 if (network.nodes[node].y < minY) {
                     minY = network.nodes[node].y;
                     minNodes = [i];
@@ -935,7 +934,7 @@ function getNodesAssociatedMaxY(subgraphNetwork: SubgraphNetwork, associatedList
     let maxNodes:number[]=[];
     associatedListNodes.forEach((listNodes,i) => {
         listNodes.forEach(node => {
-            if (network.nodes[node] && network.nodes[node].y) {
+            if (network.nodes[node] && network.nodes[node].y!==undefined && network.nodes[node].y!==null) {
                 if (network.nodes[node].y > maxY) {
                     maxY = network.nodes[node].y;
                     maxNodes = [i];
@@ -963,7 +962,7 @@ function nodeMedianX(subgraphNetwork: SubgraphNetwork, listNodes: string[]): str
     let midIndex :number;
     // if even number of nodes
     if (xValues.length % 2 === 0) {
-        midIndex = (xValues.length / 2)-1; // the lowest x of the two median
+        midIndex = (xValues.length / 2)+1; // the highest x of the two median
     } else { // odd number of nodes
         midIndex = Math.floor(xValues.length / 2);  
     }

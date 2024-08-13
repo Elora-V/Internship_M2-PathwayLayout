@@ -170,43 +170,43 @@ function commonNodeBetween2EdgesCoord(node1Link1:{x:number,y:number},node2Link1:
 }
 
 function sameNode(node1: {x:number,y:number},node2: {x:number,y:number}): boolean {
-    if (!node1 || !node2 || !node1.x || !node1.y || !node2.x || !node2.y) {
+    if (!node1 || !node2 || node1.x==undefined || node1.x==null || node1.y==undefined || node1.y==null || node2.x==undefined || node2.x==null || node2.y==undefined || node2.y==null) {
         return false;
     }
-    return node1.x==node2.x && node1.y==node2.y;
+    return node1.x===node2.x && node1.y===node2.y;
 }
 
-function intersection2ConnectedLinks(node1Link1:{x:number,y:number},node2Link1:{x:number,y:number},node1Link2:{x:number,y:number},node2Link2:{x:number,y:number}): boolean {
+// function intersection2ConnectedLinks(node1Link1:{x:number,y:number},node2Link1:{x:number,y:number},node1Link2:{x:number,y:number},node2Link2:{x:number,y:number}): boolean {
 
-    // get nodes information
-    let commonNode: {x:number,y:number};
-    let node1: {x:number,y:number}; // node from link 1 that is not in link 2
-    let node2: {x:number,y:number}; // node from link 2 that is not in link 1
+//     // get nodes information
+//     let commonNode: {x:number,y:number};
+//     let node1: {x:number,y:number}; // node from link 1 that is not in link 2
+//     let node2: {x:number,y:number}; // node from link 2 that is not in link 1
 
-    // if link 1 node 1 is the common node :
-    if (sameNode(node1Link1,node1Link2) || sameNode(node1Link1,node2Link2)){
-        commonNode=node1Link1;
-        node1=node2Link1;
-    // if link 1 node 2 is the common node :
-    }else if (sameNode(node2Link1,node1Link2) || sameNode(node2Link1,node2Link2)){
-        commonNode=node2Link1;
-        node1=node1Link1;
-    }
-    // get node 2
-    if (sameNode(node1Link2,commonNode)){
-        node2=node2Link2;
-    }else{
-        node2=node1Link2;
-    }
+//     // if link 1 node 1 is the common node :
+//     if (sameNode(node1Link1,node1Link2) || sameNode(node1Link1,node2Link2)){
+//         commonNode=node1Link1;
+//         node1=node2Link1;
+//     // if link 1 node 2 is the common node :
+//     }else if (sameNode(node2Link1,node1Link2) || sameNode(node2Link1,node2Link2)){
+//         commonNode=node2Link1;
+//         node1=node1Link1;
+//     }
+//     // get node 2
+//     if (sameNode(node1Link2,commonNode)){
+//         node2=node2Link2;
+//     }else{
+//         node2=node1Link2;
+//     }
 
-    // get angle between the 2 edges
-    const angle1=adjustAngle(Math.atan2(node1.y-commonNode.y,node1.x-commonNode.x));
-    const angle2=adjustAngle(Math.atan2(node2.y-commonNode.y,node2.x-commonNode.x));
+//     // get angle between the 2 edges
+//     const angle1=adjustAngle(Math.atan2(node1.y-commonNode.y,node1.x-commonNode.x));
+//     const angle2=adjustAngle(Math.atan2(node2.y-commonNode.y,node2.x-commonNode.x));
     
-    // same angles ?
-    return angle1==angle2;
+//     // same angles ?
+//     return angle1==angle2;
 
-}
+// }
 
 export function countIntersectionGraph(nodes: {[key:string]:{x:number,y:number}},links:{source:string,target:string}[],network:Network,style:GraphStyleProperties): number {
     let nb: number = 0;
@@ -301,8 +301,10 @@ export function isOverlapNodes(nodesPosition: {[key:string]:Coordinate},network:
 }
 
 function nodeOverlap(coord1: Coordinate, size1: Size, coord2: Coordinate, size2: Size): boolean {
-    if (!coord1 || !size1 || !coord2 || !size2 || !size1.width || !size1.height || !size2.width
-         || !size2.height || !coord1.x || !coord1.y || !coord2.x || !coord2.y) {
+    if ( !coord1 || !size1 || !coord2 || !size2 || size1.width == null || size1.height == null || size2.width == null
+        || size2.height == null || coord1.x == null || coord1.y == null || coord2.x == null || coord2.y == null ||
+        size1.width == undefined || size1.height == undefined || size2.width == undefined || size2.height == undefined ||
+        coord1.x == undefined || coord1.y == undefined || coord2.x == undefined || coord2.y == undefined) {
         // Handle null or undefined inputs appropriately
         return false;
     }

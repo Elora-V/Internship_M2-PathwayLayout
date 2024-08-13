@@ -319,7 +319,7 @@ function rescaleAfterAction(){
 onMounted(() => {
   svgProperties = initZoom();
   window.addEventListener('keydown', keydownHandler);
-  importNetworkFromURL('public/Alanine_and_aspartate_metabolism.json', network, networkStyle, callbackFunction); 
+  //importNetworkFromURL('public/pathways/Bile_acid_synthesis.json', network, networkStyle, callbackFunction); 
   
 });
 function removeThisNode() {
