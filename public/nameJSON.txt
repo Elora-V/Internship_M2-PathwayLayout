@@ -62,7 +62,6 @@
 /pathways/Purine_synthesis.json
 /pathways/Pyrimidine_catabolism.json
 /pathways/Pyrimidine_synthesis.json
-/pathways/Pyruvate_metabolism.json
 /pathways/R_group_synthesis.json
 /pathways/ROS_detoxification.json
 /pathways/Selenoamino_acid_metabolism.json
@@ -86,7 +85,6 @@
 /pathways/Tyrosine_metabolism.json
 /pathways/Ubiquinone_synthesis.json
 /pathways/Urea_cycle.json
-/pathways/Valine__leucine__and_isoleucine_metabolism.json
 /pathways/Vitamin_A_metabolism.json
 /pathways/Vitamin_B12_metabolism.json
 /pathways/Vitamin_B2_metabolism.json

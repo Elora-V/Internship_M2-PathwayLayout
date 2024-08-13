@@ -149,7 +149,7 @@ export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork,factorL
 
 function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string,factorLength:number=1/2):SubgraphNetwork{
     // initialize reaction stamp
-    const reaction=initializeReactionSideCompounds(subgraphNetwork,reactionID);
+    let reaction=initializeReactionSideCompounds(subgraphNetwork,reactionID);
     // find intervals between reactants and products
     reaction.sideCompoundIntervals=findCofactorIntervals(reaction);
     // find the biggest interval

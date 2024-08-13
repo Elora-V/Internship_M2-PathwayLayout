@@ -63,6 +63,7 @@
     "@vue/tsconfig": "^0.5.1",
     "cypress": "^13.6.4",
     "cytoscape": "^3.30.2",
+    "cytoscape-cose-bilkent": "^3.0.0",
     "cytoscape-fcose": "^2.2.0",
     "dagrejs": "^0.2.1",
     "eslint": "^8.56.0",

@@ -109,11 +109,13 @@ export function minLengthDistance(network: Network,cycleInclude:boolean=true,def
             const dx = link.source.x - link.target.x;
             const dy = link.source.y - link.target.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
-            minDistance = Math.min(minDistance, distance);
+            if (distance !==null && distance !== undefined && !isNaN(distance)){
+                minDistance = Math.min(minDistance, distance);
+            }
         }
     });
     minDistance= parseFloat(minDistance.toFixed(2));
-    if(minDistance === Infinity){
+    if(minDistance === Infinity || !minDistance){
         return defaultMinLength;
     }
     return minDistance;

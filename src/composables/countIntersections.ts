@@ -170,7 +170,7 @@ function commonNodeBetween2EdgesCoord(node1Link1:{x:number,y:number},node2Link1:
 }
 
 function sameNode(node1: {x:number,y:number},node2: {x:number,y:number}): boolean {
-    if (!node1 || !node2 || node1.x==undefined || node1.x==null || node1.y==undefined || node1.y==null || node2.x==undefined || node2.x==null || node2.y==undefined || node2.y==null) {
+    if (!node1 || !node2 ||  node1.x==null ||  node1.y==null  || node2.x==null || node2.y==null) {
         return false;
     }
     return node1.x===node2.x && node1.y===node2.y;

@@ -962,7 +962,7 @@ function nodeMedianX(subgraphNetwork: SubgraphNetwork, listNodes: string[]): str
     let midIndex :number;
     // if even number of nodes
     if (xValues.length % 2 === 0) {
-        midIndex = (xValues.length / 2)+1; // the highest x of the two median
+        midIndex = (xValues.length / 2)-1; // the lowest x of the two median
     } else { // odd number of nodes
         midIndex = Math.floor(xValues.length / 2);  
     }
