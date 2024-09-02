@@ -1,6 +1,10 @@
 
+/**
+ * This file contains the types for the Reaction : use to apply side compound motif
+ */
+
 export enum MetaboliteType {
-    REACTANT='reactif',
+    REACTANT='reactant',
     PRODUCT='product',
 }
 
@@ -12,11 +16,11 @@ export enum MinMedianMax {
 
 export interface Reaction {
     id:string
-    reactantSideCompounds: Array<string>
-    productSideCompounds:Array<string>
-    angleMetabolites:{[key:string]:{angle:number,type:MetaboliteType}}
-    medianMinMaxLengthLink?:{median:number,min:number,max:number}
-    sideCompoundIntervals?: ReactionInterval[]
+    sideCompoundsReactants: Array<string>
+    sideCompoundsProducts:Array<string>
+    metabolitesAngles:{[key:string]:{angle:number,type:MetaboliteType}}
+    linkMedianMinMaxLength?:{median:number,min:number,max:number}
+    intervalsAvailables?: ReactionInterval[]
     angleSpacingReactant?:number
     angleSpacingProduct?:number
 }

@@ -17,8 +17,8 @@ export enum Algo{
     DEFAULT,
     FORCE,
     VIZ,
-    ALGO,
-    ALGO_V0,
-    ALGO_V1,
-    ALGO_V3
+    ALGO, // default : main chain with all longest
+    ALGO_V0, // no main chain
+    ALGO_V1, // main chain with longest
+    ALGO_V3 // main chain with all paths
 }

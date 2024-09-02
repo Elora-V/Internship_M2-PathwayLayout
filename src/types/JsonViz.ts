@@ -1,4 +1,7 @@
 
+/**
+ * This file contains the types for the Json object return by the viz API
+ */
 
 export interface JsonViz {
     directed?: boolean,

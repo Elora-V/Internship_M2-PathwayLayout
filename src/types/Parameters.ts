@@ -2,6 +2,11 @@ import { Network } from "@metabohub/viz-core/src/types/Network";
 import { PathType, SourceType } from "./EnumArgs";
 import { getPathSourcesToTargetNode } from "@/composables/chooseSubgraph";
 
+/**
+ * This file contains the types for the Parameters object : all parameters for the algorithm
+ */
+
+
 export interface Parameters {
     mainchain: boolean; // do the step main chain ?
     getSubgraph : (network: Network, sources: Array<string>,merge?:boolean,pathType?:PathType) => {[key:string]:{nodes:Array<string>, height:number}}; // function to get subgraph (main chain)

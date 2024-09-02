@@ -18,13 +18,13 @@ export interface Subgraph {
     nodes: Array<string>;
     type?: TypeSubgraph;
     // if subgraph associated with another subgraph (like secondary chain associated with a main chain)
-    forSubgraph?: {name:string,type:TypeSubgraph}; // the "parent" subgraph
-    associatedSubgraphs?: Array<{name:string,type:TypeSubgraph}>; // the "children" subgraphs
+    parentSubgraph?: {name:string,type:TypeSubgraph}; // the "parent" subgraph
+    childrenSubgraphs?: Array<{name:string,type:TypeSubgraph}>; // the "children" subgraphs
     rank?:string;
     width?:number;
     height?:number;
     position?:{x:number,y:number};
-    originCoordinates?:{x:number,y:number}; // if metanode : the metanode center not well positionned (precalulated position)
+    originalPosition?:{x:number,y:number}; // if metanode : the metanode center not well positionned (precalulated position)
     ordering?:Ordering;
     metadata?: {[key: string]: string | number| boolean | {[key: string]: string | number} | Array<string>};
 }

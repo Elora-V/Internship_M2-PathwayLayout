@@ -9,7 +9,7 @@ export interface SubgraphNetwork {
 	networkStyle: Ref<GraphStyleProperties>;
 	stats?:{[key:string]:number}
 	attributs?: AttributesViz;
-	mainChains: {
+	mainChains?: {
 		[key: string]: Subgraph
 	}
 	secondaryChains?:{
@@ -22,7 +22,6 @@ export interface SubgraphNetwork {
 	cyclesGroup?:{
 		[key:string]:Subgraph
 	}
-
 	sideCompounds?:{
 		[key:string]:{reactants:Array<Node>,products:Array<Node>}
 	}
