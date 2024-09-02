@@ -209,7 +209,7 @@ import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
 import { node } from "prop-types";
 import func from "vue-temp/vue-editor-bridge";
-import { allSteps } from "@/composables/useAlgo";
+import { algorithmOnNetwork, allSteps } from "@/composables/useAlgo";
 
 
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
@@ -253,19 +253,19 @@ function callbackFunction() {
 
   console.log('________New_graph__________');
   // set style
-  changeNodeStyles(networkStyle.value);
+  //changeNodeStyles(networkStyle.value);
   // set subgraphNetwork
-  subgraphNetwork={network:network,networkStyle:networkStyle,attributs:{},mainChains:{}};
+  //subgraphNetwork={network:network,networkStyle:networkStyle,attributs:{},mainChains:{}};
 
   // remove label (for screenshot)
-  Object.values(network.value.nodes).forEach(node=>{
-        node.label="";
-      })
+  // Object.values(network.value.nodes).forEach(node=>{
+  //       node.label="";
+  //     })
 
 
 
   // copy network
-  originalNetwork = networkCopy(network.value);
+  //originalNetwork = networkCopy(network.value);
 
  
   // V1 (rapport)
@@ -285,17 +285,17 @@ function callbackFunction() {
 
   // V2
   // duplicate side-compound 
-  addSideCompoundAttributeFromList(subgraphNetwork,"/sideCompounds.txt").then(()=>{
-    duplicateSideCompound(subgraphNetwork);
-  }).then(
-    ()=>{
-     // algoForce();
-    }
-  ).then(
-    ()=>{
-      rescale(svgProperties);
-    }
-  );
+  // addSideCompoundAttributeFromList(subgraphNetwork,"/sideCompounds.txt").then(()=>{
+  //   duplicateSideCompound(subgraphNetwork);
+  // }).then(
+  //   ()=>{
+  //    // algoForce();
+  //   }
+  // ).then(
+  //   ()=>{
+  //     rescale(svgProperties);
+  //   }
+  // );
   
   // if (!(networkStyle.value.linkStyles)){
   //   networkStyle.value.linkStyles={}
@@ -354,13 +354,13 @@ function openContextMenu(Event: MouseEvent, nodeId: string) {
 
 function sourcesChoice(sourcetype:string):void{
   if (sourcetype==SourceType.RANK_ONLY){
-    parameters.sourceTypePath=SourceType.RANK_ONLY;
+    parameters.startNodeTypeMainChain=SourceType.RANK_ONLY;
   }
   else if (sourcetype==SourceType.RANK_SOURCE){
-    parameters.sourceTypePath=SourceType.RANK_SOURCE;
+    parameters.startNodeTypeMainChain=SourceType.RANK_SOURCE;
   }
   else if (sourcetype==SourceType.SOURCE_ONLY){
-    parameters.sourceTypePath=SourceType.SOURCE_ONLY;
+    parameters.startNodeTypeMainChain=SourceType.SOURCE_ONLY;
   }
   subgraphNetwork.mainChains={}; // temporaire, je reset les clusters pour pas ajouter les nouveaux aux vieux
   subgraphNetwork.secondaryChains={};
@@ -372,7 +372,7 @@ function mergeChoice(value:boolean) {
 }
 
 function Cycle(value:boolean) {
-  parameters.cycle=value;
+  parameters.doCycle=value;
 }
 
 function Ordering(value:boolean) {
@@ -385,11 +385,11 @@ function setPathType(type:PathType) {
 }
 
 function miniBranchChoice(value: boolean) {
-  parameters.minibranch = value;
+  parameters.doMiniBranch = value;
 }
 
 function mainChainChoice(value: boolean) {
-  parameters.mainchain = value;
+  parameters.doMainChain = value;
 }
 
 // function OnlyUserSources(){
@@ -415,7 +415,7 @@ function mainChainChoice(value: boolean) {
 async function subgraphAlgorithm(algorithm:string):Promise<void> {
     //console.log(originalNetwork); ////////////////// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
 
-      subgraphNetwork=getOriginalNetwork();
+      //subgraphNetwork=getOriginalNetwork();
 
       if (algorithm === 'DFS') {
         parameters.getSubgraph = getLongPathDFS;
@@ -424,7 +424,8 @@ async function subgraphAlgorithm(algorithm:string):Promise<void> {
       }
       
       try {
-          subgraphNetwork = await allSteps(subgraphNetwork, parameters);
+          //subgraphNetwork = await allSteps(subgraphNetwork, parameters);
+          await algorithmOnNetwork(network,networkStyle,parameters);
           rescale(svgProperties);
       } catch (error) {
           console.error('Error executing allSteps:', error);
@@ -442,13 +443,13 @@ async function subgraphAlgorithm(algorithm:string):Promise<void> {
 // ----------------------------------------------- Layouts
 
 // no layout 
-function getOriginalNetwork():SubgraphNetwork{
-  //console.log(originalNetwork); ///// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
+// function getOriginalNetwork():SubgraphNetwork{
+//   //console.log(originalNetwork); ///// MARCHE PAS CAR CA PRINT PAS L'ORIGINAL ALORS QUE JE L4AI PAS CHANGE
 
-  subgraphNetwork.mainChains={};
-  network.value=networkCopy(originalNetwork); 
-  return subgraphNetwork;
-}
+//   subgraphNetwork.mainChains={};
+//   network.value=networkCopy(originalNetwork); 
+//   return subgraphNetwork;
+// }
 
 // force algorithm : force layout
 async function algoForce():Promise<void>{
@@ -485,7 +486,7 @@ function keydownHandler(event: KeyboardEvent) {
       subgraphNetwork= await chooseReversibleReaction(subgraphNetwork,sources,BFSWithSources);
     })();
   }else if (event.key =="p"){
-    const sources=getSources(network.value,parameters.sourceTypePath);
+    const sources=getSources(network.value,parameters.startNodeTypeMainChain);
     addMainChainFromSources(subgraphNetwork, sources,parameters.getSubgraph, parameters.merge,parameters.pathType);
     subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
   } else if (event.key == "a"){

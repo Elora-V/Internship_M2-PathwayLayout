@@ -217,7 +217,7 @@ const applyAlgo = async (subgraphNetwork: SubgraphNetwork): Promise<SubgraphNetw
 
 const applyAlgo_V0 = async (subgraphNetwork: SubgraphNetwork): Promise<SubgraphNetwork> => {
     let parameters: Parameters=defaultParameters;
-    parameters.mainchain=false;
+    parameters.doMainChain=false;
     const subgraphNetworkPromise = new Promise<SubgraphNetwork>((resolve, reject) => {
         resolve(allSteps(subgraphNetwork,parameters,false));
     })

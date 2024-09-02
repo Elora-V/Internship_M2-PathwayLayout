@@ -8,15 +8,21 @@ import { getPathSourcesToTargetNode } from "@/composables/chooseSubgraph";
 
 
 export interface Parameters {
-    mainchain: boolean; // do the step main chain ?
+
+    doDuplicateSideCompounds: boolean; // do the step duplicate side compounds ?
+    doPutAsideSideCompounds: boolean; // do the step put aside side compounds ?
+
+    doReactionReversible: boolean; // do the step duplication and choice of reaction reversible ?
+
+    doMainChain: boolean; // do the step main chain ?
     getSubgraph : (network: Network, sources: Array<string>,merge?:boolean,pathType?:PathType) => {[key:string]:{nodes:Array<string>, height:number}}; // function to get subgraph (main chain)
-    sourceTypePath: SourceType; // for the main chain step : which are the start nodes?
+    startNodeTypeMainChain: SourceType; // for the main chain step : which are the start nodes?
     pathType: PathType; // main chain step : longest path , all longest paths or all paths
     merge: boolean; // merging main chain ? If not : nodes can be in several clusters
-    minibranch: boolean; // adding minibranch for main chains ?
+    doMiniBranch: boolean; // adding minibranch for main chains ?
     groupOrCluster: "group" | "cluster"; //main chain as group or cluster in DOT
 
-    cycle: boolean; // do the step cycle ?
+    doCycle: boolean; // do the step cycle ?
     allowInternalCycles: boolean; // allow internal cycles for tangent one ?
 
     addNodes: boolean; // adding node at the beginning of the DOT ?
@@ -34,15 +40,20 @@ export interface Parameters {
 }
 
 export let defaultParameters: Parameters = {
-    mainchain: true,
+    doDuplicateSideCompounds: true,
+    doPutAsideSideCompounds: true,
+
+    doReactionReversible: true,
+
+    doMainChain: true,
     getSubgraph : getPathSourcesToTargetNode,
-    sourceTypePath: SourceType.RANK_SOURCE,
+    startNodeTypeMainChain: SourceType.RANK_SOURCE,
     pathType: PathType.ALL_LONGEST,
     merge: true,
-    minibranch: true,
+    doMiniBranch: true,
     groupOrCluster: "cluster",
 
-    cycle: true,
+    doCycle: true,
     allowInternalCycles: false,
    
     addNodes: true,

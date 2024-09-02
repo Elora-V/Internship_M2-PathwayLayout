@@ -11,16 +11,22 @@ import { getMeanNodesSizePixel, getSepAttributesPixel, inchesToPixels, minLength
 //___________________________________________________Remove side compounds____________________________________________________
 
 
-export async function putDuplicatedSideCompoundAside(subgraphNetwork:SubgraphNetwork, pathListSideCompounds:string):Promise<SubgraphNetwork>{
+export async function putDuplicatedSideCompoundAside(subgraphNetwork:SubgraphNetwork, doDuplicateSideCompounds:boolean,doPutAsideSideCompounds:boolean, addSideCompoundAttribute:boolean=true, pathListSideCompounds:string):Promise<SubgraphNetwork>{
 
     return new Promise(async (resolve, reject) => {
         try {
             // finding side compounds in network
-            await addSideCompoundAttributeFromList(subgraphNetwork,pathListSideCompounds);
+            if (addSideCompoundAttribute){
+                await addSideCompoundAttributeFromList(subgraphNetwork,pathListSideCompounds);
+            }
             // duplication of side compounds
-            duplicateSideCompound(subgraphNetwork);
+            if (doDuplicateSideCompounds){
+                duplicateSideCompound(subgraphNetwork);
+            }
             // remove side compounds from network, they are keeped aside in subgraphNetwork.sideCompounds
+            if (doPutAsideSideCompounds){
             subgraphNetwork=removeSideCompoundsFromNetwork(subgraphNetwork);
+            }
             resolve(subgraphNetwork);
         } catch (error) {
             reject(error);
@@ -125,7 +131,7 @@ function removeSideCompoundsFromNetwork(subgraphNetwork:SubgraphNetwork):Subgrap
 //___________________________________________________Reinsert side compounds____________________________________________________
 
 
-export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork,factorLength:number=1/2):SubgraphNetwork{
+export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork,factorLength:number=1/2,doReactionReversible:boolean):SubgraphNetwork{
     if(subgraphNetwork.sideCompounds){
         const network = subgraphNetwork.network.value;
         // get min length distance for stats
@@ -137,7 +143,9 @@ export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork,factorL
         const minLength=minLengthDistance(subgraphNetwork.network.value,false,minLengthDefault);
         subgraphNetwork.stats["minLengthPixel"]=minLength;
         // update side compounds for reversed reactions
-        subgraphNetwork=updateSideCompoundsReversibleReaction(subgraphNetwork);
+        if (doReactionReversible){
+            subgraphNetwork=updateSideCompoundsReversibleReaction(subgraphNetwork);
+        }
         // for each reaction, apply motif stamp
         Object.keys(subgraphNetwork.sideCompounds).forEach((reactionID)=>{
             subgraphNetwork=motifStampSideCompound(subgraphNetwork,reactionID,factorLength);
