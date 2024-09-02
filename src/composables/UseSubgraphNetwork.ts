@@ -17,8 +17,8 @@ export function createSubgraph(name: string, nodes: Array<string>, classes: Arra
         classes,
         nodes,
         type,
-        forSubgraph,
-        associatedSubgraphs
+        parentSubgraph: forSubgraph,
+        childrenSubgraphs: associatedSubgraphs
     };
 }
 
@@ -32,7 +32,7 @@ export function addNewSubgraph(subgraphNetwork:SubgraphNetwork,subgraph:Subgraph
             updateNodeMetadataSubgraph(subgraphNetwork.network.value, node, subgraph.name, type);
         });
         // if subgraph associated with another subgraph : add to associatedSubgraphs of the "parent" subgraph
-        if (subgraph.forSubgraph){
+        if (subgraph.parentSubgraph){
           subgraphNetwork=updateParentSubgraphOf(subgraphNetwork,subgraph);
         }
     }else{
@@ -43,14 +43,14 @@ export function addNewSubgraph(subgraphNetwork:SubgraphNetwork,subgraph:Subgraph
 }
 
 export function updateParentSubgraphOf(subgraphNetwork:SubgraphNetwork,subgraph:Subgraph):SubgraphNetwork{
-    if (subgraph.forSubgraph){
-        const nameParent=subgraph.forSubgraph.name;
-        const typeParent=subgraph.forSubgraph.type;
+    if (subgraph.parentSubgraph){
+        const nameParent=subgraph.parentSubgraph.name;
+        const typeParent=subgraph.parentSubgraph.type;
         if (nameParent in subgraphNetwork[typeParent]){
-            if (!subgraphNetwork[typeParent][nameParent].associatedSubgraphs){
-                subgraphNetwork[typeParent][nameParent].associatedSubgraphs=[];
+            if (!subgraphNetwork[typeParent][nameParent].childrenSubgraphs){
+                subgraphNetwork[typeParent][nameParent].childrenSubgraphs=[];
             }
-            subgraphNetwork[typeParent][nameParent].associatedSubgraphs.push({name:subgraph.name,type:subgraph.type});
+            subgraphNetwork[typeParent][nameParent].childrenSubgraphs.push({name:subgraph.name,type:subgraph.type});
         }else{
             console.error("parent subgraph not in subgraphNetwork");
         }

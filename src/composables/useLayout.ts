@@ -46,8 +46,8 @@ export function dagreLayout(network: Network,graphAttributes={},callbackFunction
  */
 export async function vizLayout(subgraphNetwork:SubgraphNetwork,assignRank:boolean=false, cycle:boolean=true,addNodes:boolean=true,
     groupOrCluster:"group"|"cluster"="cluster",orderChange:boolean=false,printDot:boolean=false,dpi:number=72,factorLenghtEdge:number=3,callbackFunction = () => {}): Promise<SubgraphNetwork> {
-    //console.log('Viz');
-    await instance().then( async viz => {
+
+        await instance().then( async viz => {
         // attributes for viz
         const sep =getSepAttributesInches(subgraphNetwork.network.value,subgraphNetwork.networkStyle.value,factorLenghtEdge);
         subgraphNetwork.attributs={rankdir: "BT" , newrank:true, compound:true,splines:false,ranksep:sep.rankSep,nodesep:sep.nodeSep,dpi:dpi};

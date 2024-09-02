@@ -41,7 +41,7 @@ export async function coordinateAllCycles(subgraphNetwork:SubgraphNetwork,allowI
         subgraphNetwork=addNewCycleGroup(subgraphNetwork,groupName);
 
         // Find the first cycle to draw : it shouldn't have a 'forgraph' of type cycle as it should be a parent -------------------
-        const parentCycles = cycles.filter(cycle => !cycle.forSubgraph || cycle.forSubgraph.type !== TypeSubgraph.CYCLE);
+        const parentCycles = cycles.filter(cycle => !cycle.parentSubgraph || cycle.parentSubgraph.type !== TypeSubgraph.CYCLE);
         if (parentCycles.length === 0) {
             console.error("No cycle found without a forSubgraph of type cycle");
             return;
@@ -592,7 +592,7 @@ async function updateGroupCycles(remainingCycles: Subgraph[], subgraphNetwork: S
         const {width, height, center} = rectangleSize(listCoord as {x: number, y: number}[]);
         subgraphNetwork.cyclesGroup[groupCycleName].width = width;
         subgraphNetwork.cyclesGroup[groupCycleName].height = height;
-        subgraphNetwork.cyclesGroup[groupCycleName].originCoordinates = center;
+        subgraphNetwork.cyclesGroup[groupCycleName].originalPosition = center;
 
         // change group
         group += 1;
@@ -1007,7 +1007,7 @@ export function drawAllCyclesGroup(subgraphNetwork:SubgraphNetwork) {
  */
 function drawCycleGroup(cycleGroup:string,subgraphNetwork:SubgraphNetwork):void{
     const metanodePosition=subgraphNetwork.cyclesGroup[cycleGroup].position;
-    const currentCenterPosition=subgraphNetwork.cyclesGroup[cycleGroup].originCoordinates;
+    const currentCenterPosition=subgraphNetwork.cyclesGroup[cycleGroup].originalPosition;
     const dx=metanodePosition.x-currentCenterPosition.x;
     const dy=metanodePosition.y-currentCenterPosition.y;
     const listNode = Object.entries(subgraphNetwork.cyclesGroup[cycleGroup].metadata)

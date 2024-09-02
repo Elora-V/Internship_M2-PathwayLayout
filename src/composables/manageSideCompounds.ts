@@ -151,10 +151,10 @@ function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:strin
     // initialize reaction stamp
     let reaction=initializeReactionSideCompounds(subgraphNetwork,reactionID);
     // find intervals between reactants and products
-    reaction.sideCompoundIntervals=findCofactorIntervals(reaction);
+    reaction.intervalsAvailables=findCofactorIntervals(reaction);
     // find the biggest interval
     const biggest=biggestInterval(reaction);
-    reaction.sideCompoundIntervals=[biggest.interval];
+    reaction.intervalsAvailables=[biggest.interval];
     // find spacing between side compounds
     const spacing=findSpacingSideCompounds(reaction,biggest.size);
     reaction.angleSpacingReactant=spacing.reactant;
@@ -205,9 +205,9 @@ function initializeReactionSideCompounds(subgraphNetwork:SubgraphNetwork,idReact
         //const medianMinMaxLinks=medianMinMaxLinksReaction(x,y,network,metaboliteIds);
         return {
             id:idReaction,
-            reactantSideCompounds:reactantSideCompounds,
-            productSideCompounds:productSideCompounds,
-            angleMetabolites:angleMetabolites,
+            sideCompoundsReactants:reactantSideCompounds,
+            sideCompoundsProducts:productSideCompounds,
+            metabolitesAngles:angleMetabolites,
            // medianMinMaxLengthLink:medianMinMaxLinks,
         };
     }else{
@@ -261,7 +261,7 @@ function angleRadianSegment(x1:number,y1:number,x2:number,y2:number,clockwise:bo
 function findCofactorIntervals(reaction: Reaction): ReactionInterval[] {
     let intervals: ReactionInterval[] = [];
     // sort metabolites by angle
-    const sortedMetabolites = Object.entries(reaction.angleMetabolites)
+    const sortedMetabolites = Object.entries(reaction.metabolitesAngles)
         .map(([id, {angle, type}]) => ({id, angle, type}))
         .sort((a, b) => a.angle - b.angle);
 
@@ -320,7 +320,7 @@ function findCofactorIntervals(reaction: Reaction): ReactionInterval[] {
 
 function createInterval(reaction:Reaction,id1:string,type1:MetaboliteType,id2:string,type2:MetaboliteType,firstInterval:boolean=false):ReactionInterval{
     let typeInterval:number;
-    const angles=reaction.angleMetabolites;
+    const angles=reaction.metabolitesAngles;
     const reactant= type1 === MetaboliteType.REACTANT ? id1 : id2;
     const product= type1 === MetaboliteType.REACTANT ? id2 : id1; 
 
@@ -341,7 +341,7 @@ function createInterval(reaction:Reaction,id1:string,type1:MetaboliteType,id2:st
 
 
 function biggestInterval(reaction: Reaction): {interval:ReactionInterval,size:number} {
-    const intervals = reaction.sideCompoundIntervals;
+    const intervals = reaction.intervalsAvailables;
     if (intervals.length === 0) {
         throw new Error("Empty intervals");
     }
@@ -356,8 +356,8 @@ function biggestInterval(reaction: Reaction): {interval:ReactionInterval,size:nu
 
 
 function sizeInterval(reaction:Reaction,intervalIndex:number):number{
-    const angles=reaction.angleMetabolites;
-    const interval=reaction.sideCompoundIntervals[intervalIndex];
+    const angles=reaction.metabolitesAngles;
+    const interval=reaction.intervalsAvailables[intervalIndex];
     // if reactant and product null : return 2*PI 
     if (interval.reactant===null || interval.product===null) return Math.PI*2;
     if (interval.typeInterval===0 || interval.typeInterval===1){
@@ -371,8 +371,8 @@ function sizeInterval(reaction:Reaction,intervalIndex:number):number{
 
 
 function findSpacingSideCompounds(reaction:Reaction,sizeInterval):{reactant:number,product:number}{
-    const reactantNumber=reaction.reactantSideCompounds.length;
-    const productNumber=reaction.productSideCompounds.length;
+    const reactantNumber=reaction.sideCompoundsReactants.length;
+    const productNumber=reaction.sideCompoundsProducts.length;
     return {
         reactant: reactantNumber === 0 ? undefined : sizeInterval / (2 * (reactantNumber+1)),
         product: productNumber === 0 ? undefined : sizeInterval / (2 * (productNumber+1))
@@ -392,11 +392,11 @@ function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reac
     const sideCompounds=subgraphNetwork.sideCompounds[reaction.id];
     const reactionCoord=subgraphNetwork.network.value.nodes[reaction.id];
     // Reactants Placement
-    const startReactant= reaction.sideCompoundIntervals[0].reactant;
-    let startAngle=startReactant?reaction.angleMetabolites[startReactant].angle:0;
+    const startReactant= reaction.intervalsAvailables[0].reactant;
+    let startAngle=startReactant?reaction.metabolitesAngles[startReactant].angle:0;
     sideCompounds.reactants.forEach((sideCompoundNode,i)=>{
         let direction:number;
-        const typeInterval=reaction.sideCompoundIntervals[0].typeInterval;
+        const typeInterval=reaction.intervalsAvailables[0].typeInterval;
         if (typeInterval===0 || typeInterval===3){
             direction=-1; // go left
         } else if (typeInterval===1 || typeInterval===2){
@@ -407,11 +407,11 @@ function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reac
         sideCompoundNode=giveCoordSideCompound(sideCompoundNode,angle,reactionCoord,distance);
     });
     // Products Placement
-    const startProduct= reaction.sideCompoundIntervals[0].product;
-    startAngle=startProduct?reaction.angleMetabolites[startProduct].angle:0;
+    const startProduct= reaction.intervalsAvailables[0].product;
+    startAngle=startProduct?reaction.metabolitesAngles[startProduct].angle:0;
     sideCompounds.products.forEach((sideCompoundNode,i)=>{
         let direction:number;
-        const typeInterval=reaction.sideCompoundIntervals[0].typeInterval;
+        const typeInterval=reaction.intervalsAvailables[0].typeInterval;
         if (typeInterval===0 || typeInterval===3){
             direction=1; // go right
         } else if (typeInterval===1 || typeInterval===2){
@@ -437,11 +437,11 @@ function insertAllSideCompoundsInNetwork(subgraphNetwork:SubgraphNetwork,reactio
     const network = subgraphNetwork.network.value;
     const sideCompounds=subgraphNetwork.sideCompounds[reaction.id];
     // Reactants
-    Object.keys(reaction.reactantSideCompounds).forEach((reactant)=>{
+    Object.keys(reaction.sideCompoundsReactants).forEach((reactant)=>{
         insertSideCompoundInNetwork(subgraphNetwork,reaction.id,sideCompounds.reactants[reactant],MetaboliteType.REACTANT);
     });
     // Products
-    Object.keys(reaction.productSideCompounds).forEach((product)=>{
+    Object.keys(reaction.sideCompoundsProducts).forEach((product)=>{
         insertSideCompoundInNetwork(subgraphNetwork,reaction.id,sideCompounds.products[product],MetaboliteType.PRODUCT);
     });
 }

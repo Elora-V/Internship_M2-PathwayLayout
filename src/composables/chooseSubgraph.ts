@@ -40,6 +40,7 @@ export function addMainChainFromSources(subgraphNetwork:SubgraphNetwork, sources
 
     //console.log('create main chain from longest path');
     const network=subgraphNetwork.network.value;
+    subgraphNetwork[TypeSubgraph.MAIN_CHAIN]={};
     
     // get sources
     if (!Array.isArray(sources)){

@@ -227,7 +227,7 @@ function getSizeGroupCycles(subgraphNetwork:SubgraphNetwork,groupCycle:Subgraph)
         const {width,height,center}=rectangleSize(listCoordinates,listID,subgraphNetwork);
         groupCycle.width=width;
         groupCycle.height=height;
-        groupCycle.originCoordinates=center;
+        groupCycle.originalPosition=center;
     }
     return subgraphNetwork;
 }

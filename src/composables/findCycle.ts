@@ -60,17 +60,17 @@ export function addDirectedCycleToSubgraphNetwork(subgraphNetwork:SubgraphNetwor
                const sizeCommonCycle= networkCycles[i].nodes.length;
                // add information of 'parent' (bigger cycle) and 'child' (smaller cycle) cycle 
                if (sizeCycle<=sizeCommonCycle){ // if sorting worked : it is always the case
-                    subgraphNetwork.cycles[cycle[0]].forSubgraph={name:networkCycles[i].name,type:TypeSubgraph.CYCLE};
-                    if(! subgraphNetwork.cycles[networkCycles[i].name].associatedSubgraphs){
-                        subgraphNetwork.cycles[networkCycles[i].name].associatedSubgraphs=[];
+                    subgraphNetwork.cycles[cycle[0]].parentSubgraph={name:networkCycles[i].name,type:TypeSubgraph.CYCLE};
+                    if(! subgraphNetwork.cycles[networkCycles[i].name].childrenSubgraphs){
+                        subgraphNetwork.cycles[networkCycles[i].name].childrenSubgraphs=[];
                     }
-                    subgraphNetwork.cycles[networkCycles[i].name].associatedSubgraphs.push({name:cycle[0],type:TypeSubgraph.CYCLE});
+                    subgraphNetwork.cycles[networkCycles[i].name].childrenSubgraphs.push({name:cycle[0],type:TypeSubgraph.CYCLE});
                 }else{
-                    subgraphNetwork.cycles[networkCycles[i].name].forSubgraph={name:cycle[0],type:TypeSubgraph.CYCLE};
-                    if(! subgraphNetwork.cycles[cycle[0]].associatedSubgraphs){
-                        subgraphNetwork.cycles[cycle[0]].associatedSubgraphs=[];
+                    subgraphNetwork.cycles[networkCycles[i].name].parentSubgraph={name:cycle[0],type:TypeSubgraph.CYCLE};
+                    if(! subgraphNetwork.cycles[cycle[0]].childrenSubgraphs){
+                        subgraphNetwork.cycles[cycle[0]].childrenSubgraphs=[];
                     }
-                    subgraphNetwork.cycles[cycle[0]].associatedSubgraphs.push({name:networkCycles[i].name,type:TypeSubgraph.CYCLE});
+                    subgraphNetwork.cycles[cycle[0]].childrenSubgraphs.push({name:networkCycles[i].name,type:TypeSubgraph.CYCLE});
                 }
             }
                       

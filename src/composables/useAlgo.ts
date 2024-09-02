@@ -1,4 +1,4 @@
-import { Parameters } from "@/types/Parameters";
+import { defaultParameters,Parameters } from "@/types/Parameters";
 import { PathType, SourceType } from "@/types/EnumArgs";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { putDuplicatedSideCompoundAside, reinsertionSideCompounds } from "./manageSideCompounds";
@@ -11,6 +11,25 @@ import { addMainChainFromSources, addMiniBranchToMainChain } from "./chooseSubgr
 import { coordinateAllCycles, drawAllCyclesGroup } from "./drawCycle";
 import { shiftAllToGetTopLeftCoord } from "./calculateSize";
 import { getSources } from "./rankAndSources";
+import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
+import { Ref } from "vue";
+
+
+export async function algorithmOnNetwork(networkRef:Ref<Network>,networkStyleRef:Ref<GraphStyleProperties>,parameters?:Parameters):Promise<void>{
+
+  // initialize the subgraphNetwork and parameters if necessary
+    let subgraphNetwork:SubgraphNetwork={
+      network:networkRef,
+      networkStyle:networkStyleRef,
+    }
+    if (!parameters){
+      parameters=defaultParameters;
+    }
+
+    // change coordinates of the network with the algorithm
+    await allSteps(subgraphNetwork,parameters,true,true);
+}
+
 
 export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Parameters,shiftCoord:boolean=true,printNameStep:boolean=false):Promise<SubgraphNetwork> {
 
@@ -25,7 +44,8 @@ export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Param
     }
   
   
-    if (printNameStep) console.log('SideCompound aside');
+    // duplicate side compounds and put them aside
+    if (printNameStep) console.log('SideCompound duplication and put aside');
     await putDuplicatedSideCompoundAside(subgraphNetwork,"/sideCompounds.txt").then(
       (subgraphNetworkModified)=>{
           subgraphNetwork=subgraphNetworkModified;

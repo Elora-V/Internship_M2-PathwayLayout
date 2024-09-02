@@ -143,7 +143,6 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
         });
     }
     
-    
     // order of edge changed :
     let links:Link[]=[];
     links=sortLinksWithAllGroupCycle(subgraphNetwork,orderChange);
@@ -166,7 +165,7 @@ export function NetworkToViz(subgraphNetwork:SubgraphNetwork,cycle:boolean=true,
         
 
     // insert mainChain cluster 
-    if (groupOrCluster==="cluster"){
+    if (groupOrCluster==="cluster" && Object.keys(subgraphNetwork).includes(TypeSubgraph.MAIN_CHAIN)){
         Object.keys(subgraphNetwork.mainChains).sort((a, b) => subgraphNetwork.mainChains[b].nodes.length - subgraphNetwork.mainChains[a].nodes.length) // sort depending on size : bigger first
             .forEach((nameMainChain) => {
                 graphViz=addMainChainClusterViz(graphViz,nameMainChain,subgraphNetwork,cycle);
@@ -418,8 +417,8 @@ function cycleMetanodeLink(link:Link, subgraphNetwork:SubgraphNetwork,cycle:bool
 }
 
 export function inBiggerCycle(cycleName:string,subgraphNetwork:SubgraphNetwork):string{
-    if (subgraphNetwork.cycles[cycleName].forSubgraph && subgraphNetwork.cycles[cycleName].forSubgraph.type==TypeSubgraph.CYCLE){
-            return subgraphNetwork.cycles[cycleName].forSubgraph.name;
+    if (subgraphNetwork.cycles[cycleName].parentSubgraph && subgraphNetwork.cycles[cycleName].parentSubgraph.type==TypeSubgraph.CYCLE){
+            return subgraphNetwork.cycles[cycleName].parentSubgraph.name;
     }else{ 
         return cycleName;
     }
