@@ -17,8 +17,9 @@ import { shiftAllToGetTopLeftCoord } from "./calculateSize";
 import { getSources } from "./rankAndSources";
 
 // General imports
-import { Ref } from "vue";
+import { ref } from "vue";
 import { TypeSubgraph } from "@/types/Subgraph";
+import { resolve } from "path";
 
 
 /*******************************************************************************************************************************************************
@@ -34,24 +35,40 @@ import { TypeSubgraph } from "@/types/Subgraph";
 
 /**
  * Change the nodes coordinates of network 
- * @param networkRef a ref of the network to change (ref to type Network)
- * @param networkStyleRef a ref of the style of the network to change (ref to type GraphStyleProperties)
+ * @param network a ref of the network to change (ref to type Network)
+ * @param networkStyle a ref of the style of the network to change (ref to type GraphStyleProperties)
  * @param parameters parameters for the algorithm
  */
-export async function algorithmOnNetwork(networkRef:Ref<Network>,networkStyleRef:Ref<GraphStyleProperties>,parameters:Parameters=defaultParameters):Promise<void>{
+export async function algorithmOnNetwork(network:Network,networkStyle:GraphStyleProperties,parameters:Parameters=defaultParameters):Promise<Network>{
 
-  // initialize the subgraphNetwork and parameters if necessary
-    let subgraphNetwork:SubgraphNetwork={
-      network:networkRef,
-      networkStyle:networkStyleRef,
-    }
+  // check if the network is not empty
+  if ( !network || Object.keys(network.nodes).length===0){
+    console.warn('The network is not defined or has no nodes : the algorithm will not be executed');
+    throw new Error('The network is not defined or has no nodes : the algorithm will not be executed');
+  }
 
-    // change coordinates of the network with the algorithm
-    try {
-      await allSteps(subgraphNetwork,parameters,true,true);
-    } catch(err){
-      console.log(" Error during execution of algorithm : " + err);
-    }
+  // check if the networkStyle is not empty
+  if ( !networkStyle || Object.keys(networkStyle).length===0){
+    console.warn('The networkStyle is not defined or has no properties : the algorithm will not be executed');
+    throw new Error('The networkStyle is not defined or has no properties : the algorithm will not be executed');
+  }
+
+  // initialize the subgraphNetwork object
+  let subgraphNetwork:SubgraphNetwork={
+    network:ref<Network>(network),
+    networkStyle:ref<GraphStyleProperties>(networkStyle)
+  }
+
+  // change coordinates of the network with the algorithm
+  try {
+    await allSteps(subgraphNetwork,parameters,true,true);
+    return subgraphNetwork.network.value;
+    
+  } catch(err){
+    console.log(" Error during execution of algorithm : " + err);
+    throw err;
+  }
+  
 }
 
 

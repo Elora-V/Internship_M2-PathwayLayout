@@ -8,11 +8,11 @@ import { changeNodeStyles } from "./styleGraph";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 import { Parameters,defaultParameters } from "@/types/Parameters";
 import { forceLayout, vizLayout } from "./useLayout";
-import { allSteps } from "./useAlgo";
 import { Algo, PathType } from "@/types/EnumArgs";
-import { countIntersectionEdgeNetwork, countOverlapNodeNetwork, countOverlapNodeEdgeNetwork, countDifferentCoordinatesNodeNetwork, countNodes, countEdges, coefficientOfVariationEdgeLength, calculateNormalizedDirectionVectors, analyseDirectorVector } from "./metricsNetwork";
+import { countIntersectionEdgeNetwork, countOverlapNodeNetwork, countOverlapNodeEdgeNetwork, countDifferentCoordinatesNodeNetwork, countNodes, countEdges, coefficientOfVariationEdgeLength, analyseDirectorVector } from "./metricsNetwork";
 import { TypeSubgraph } from "@/types/Subgraph";
 import { NetworkToGDSGraph } from "./networkToGraph";
+import { allSteps } from "./useAlgo";
 
 
 export async function analyseAllJSON(pathListJSON: string,algo:Algo=Algo.DEFAULT,metricGraph:boolean=true): Promise<void> {

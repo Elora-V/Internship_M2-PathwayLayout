@@ -185,7 +185,6 @@ import { networkCopy } from "@/composables/networkToGraph";
 import { initZoom, rescale,duplicateNode,removeNode } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import {  addDirectedCycleToSubgraphNetwork } from "@/composables/findCycle";
-import { countIntersection } from "./composables/countIntersections";
 import { countIntersectionEdgeNetwork } from "./composables/metricsNetwork";
 import { countIsolatedNodes } from "./composables/countIsolatedNodes";
 import { DFSsourceDAG } from "@/composables/algoDFS";
@@ -194,7 +193,7 @@ import { BFSWithSources } from "@/composables/algoBFS";
 import {  getSources } from "@/composables/rankAndSources";
 import { addBoldLinkMainChain, addRedLinkcycleGroup } from "@/composables/useSubgraphs";
 import { addMainChainFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/chooseSubgraph";
-import { analyseAllJSON, applyMetrics, applyMetricsGraph, applyMetricsLayout } from "@/composables/applyMetrics";
+import { analyseAllJSON, applyMetricsGraph, applyMetricsLayout } from "@/composables/applyMetrics";
 import { changeNodeStyles } from "@/composables/styleGraph";
 import { addSideCompoundAttributeFromList, duplicateSideCompound } from "@/composables/manageSideCompounds";
 
@@ -425,7 +424,7 @@ async function subgraphAlgorithm(algorithm:string):Promise<void> {
       
       try {
           //subgraphNetwork = await allSteps(subgraphNetwork, parameters);
-          await algorithmOnNetwork(network,networkStyle,parameters);
+          network.value=await algorithmOnNetwork(network.value,networkStyle.value,parameters);
           rescale(svgProperties);
       } catch (error) {
           console.error('Error executing allSteps:', error);
@@ -473,7 +472,8 @@ function keydownHandler(event: KeyboardEvent) {
   } else if (event.key === "d") {
     duplicateReversibleReactions(network.value);
   } else if (event.key =="n"){
-    console.log(subgraphNetwork);
+    //console.log(subgraphNetwork);
+    console.log(network.value);
     console.log(parameters);
   }else if (event.key == "m"){
     console.log(applyMetricsGraph(network.value));
