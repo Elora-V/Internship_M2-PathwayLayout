@@ -1,4 +1,4 @@
-export enum SourceType {
+export enum StartNodesType {
     SOURCE_ONLY = "source_only",
     SOURCE_ALL="source_all",
     RANK_ONLY = "rank_only",
@@ -11,6 +11,12 @@ export enum PathType {
     LONGEST='longest',
     ALL_LONGEST='all_longest',
     ALL='all'
+}
+
+export enum Ordering {
+    DEFAULT = "",
+    IN = "in",
+    OUT = "out"
 }
 
 export enum Algo{

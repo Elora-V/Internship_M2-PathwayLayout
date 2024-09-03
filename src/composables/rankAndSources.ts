@@ -1,5 +1,5 @@
-import { SourceType } from "@/types/EnumArgs";
-import { NetworkToGDSGraph } from "./networkToGraph";
+import { StartNodesType } from "@/types/EnumArgs";
+import { NetworkToGDSGraph } from "./ConvertFromNetwork";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { Node } from "@metabohub/viz-core/src/types/Node";
 
@@ -62,10 +62,10 @@ export function assignRankOrder(network: Network, unique_y: Array<number>):void 
  * RANK_SOURCE_ALL : sources are node of rank 0, then topological sources, then all the other nodes
  * @returns the id of the sources
  */
-export function getSources(network:Network, typeSource:SourceType):Array<string>{
+export function getSources(network:Network, typeSource:StartNodesType):Array<string>{
 
     // if all nodes as source
-    if (typeSource==SourceType.ALL){
+    if (typeSource==StartNodesType.ALL){
         return Object.keys(network.nodes);
     }
 
@@ -123,8 +123,8 @@ function hasRank0(node:Node):boolean{
  * @param sourcetype 
  * @returns boolean
  */
-function needRank(sourcetype:SourceType):boolean{
-    return [SourceType.RANK_ONLY,SourceType.RANK_SOURCE,SourceType.RANK_SOURCE_ALL].includes(sourcetype);
+function needRank(sourcetype:StartNodesType):boolean{
+    return [StartNodesType.RANK_ONLY,StartNodesType.RANK_SOURCE,StartNodesType.RANK_SOURCE_ALL].includes(sourcetype);
 }
 
 /**
@@ -132,8 +132,8 @@ function needRank(sourcetype:SourceType):boolean{
  * @param sourcetype 
  * @returns boolean
  */
-function needSource(sourcetype:SourceType):boolean{
-    return [SourceType.SOURCE_ONLY,SourceType.SOURCE_ALL,SourceType.RANK_SOURCE,SourceType.RANK_SOURCE_ALL].includes(sourcetype);
+function needSource(sourcetype:StartNodesType):boolean{
+    return [StartNodesType.SOURCE_ONLY,StartNodesType.SOURCE_ALL,StartNodesType.RANK_SOURCE,StartNodesType.RANK_SOURCE_ALL].includes(sourcetype);
 }
 
 /**
@@ -141,8 +141,8 @@ function needSource(sourcetype:SourceType):boolean{
  * @param sourcetype 
  * @returns boolean
  */
-function needAll(sourcetype:SourceType):boolean{
-    return [SourceType.ALL,SourceType.SOURCE_ALL,SourceType.RANK_SOURCE_ALL].includes(sourcetype);
+function needAll(sourcetype:StartNodesType):boolean{
+    return [StartNodesType.ALL,StartNodesType.SOURCE_ALL,StartNodesType.RANK_SOURCE_ALL].includes(sourcetype);
 }
 
 /**

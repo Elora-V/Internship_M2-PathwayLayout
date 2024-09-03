@@ -2,7 +2,7 @@ import { Network } from '@metabohub/viz-core/src/types/Network';
 import  dagre  from 'dagrejs/dist/dagre.js';
 import { Graph } from "@viz-js/viz";
 import { addMainChainClusterViz } from './useSubgraphs';
-import { Ordering, Subgraph, TypeSubgraph } from '@/types/Subgraph';
+import { Subgraph, TypeSubgraph } from '@/types/Subgraph';
 import { addClusterDot } from './useSubgraphs';
 import * as GDS from 'graph-data-structure';
 import { SubgraphNetwork } from '@/types/SubgraphNetwork';
@@ -16,6 +16,45 @@ import { get } from 'http';
 
 import cytoscape, { ElementDefinition,Stylesheet } from 'cytoscape';
 import { layout } from 'dagrejs';
+import { LinkLayout, NetworkLayout, NodeLayout } from '@/types/NetworkLayout';
+import { Ordering } from '@/types/EnumArgs';
+
+
+/**
+ * Convert a network object into a network layout object (network with information to calculate layout)
+ * @param network the network object to convert
+ * @returns the new network layout object
+ */
+export function NetworktoNetworkLayout(network: Network): NetworkLayout {
+
+    const defaultClassesLayout: Array<string> = [];
+  const defaultMetadataLayout: {[key: string]: string | number | {[key: string]: string | number} | Array<string> | boolean} = {};
+
+  // Convert nodes 
+  const nodes: { [key: string]: NodeLayout } = Object.keys(network.nodes).reduce(
+    (acc, key) => {
+    const node = network.nodes[key];
+    acc[key] = {
+      ...node,
+      classesLayout: defaultClassesLayout, 
+      metadataLayout: defaultMetadataLayout 
+    };
+    return acc;
+  }, {} as { [key: string]: NodeLayout });
+
+  // Convert links 
+  const links: Array<LinkLayout> = network.links.map(link => ({
+    ...link,
+    classesLayout: defaultClassesLayout, 
+    metadataLayout: defaultMetadataLayout 
+  }));
+
+  return {
+    ...network,
+    nodes,
+    links
+  };
+}
 
 
 /** 

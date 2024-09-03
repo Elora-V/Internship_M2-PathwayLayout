@@ -11,7 +11,7 @@ import { forceLayout, vizLayout } from "./useLayout";
 import { Algo, PathType } from "@/types/EnumArgs";
 import { countIntersectionEdgeNetwork, countOverlapNodeNetwork, countOverlapNodeEdgeNetwork, countDifferentCoordinatesNodeNetwork, countNodes, countEdges, coefficientOfVariationEdgeLength, analyseDirectorVector } from "./metricsNetwork";
 import { TypeSubgraph } from "@/types/Subgraph";
-import { NetworkToGDSGraph } from "./networkToGraph";
+import { NetworkToGDSGraph } from "./ConvertFromNetwork";
 import { allSteps } from "./useAlgo";
 
 

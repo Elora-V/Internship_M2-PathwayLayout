@@ -1,9 +1,9 @@
 import { Network } from '@metabohub/viz-core/src/types/Network';
 import { Node } from '@metabohub/viz-core/src/types/Node';
-import { NetworkToGDSGraph, NetworkToSerialized } from './networkToGraph';
+import { NetworkToGDSGraph, NetworkToSerialized } from './ConvertFromNetwork';
 import { Serialized} from 'graph-data-structure';
 import Graph from "graph-data-structure";
-import { SourceType } from '@/types/EnumArgs';
+import { StartNodesType } from '@/types/EnumArgs';
 import { getSources } from './rankAndSources';
 
 /**
@@ -19,7 +19,7 @@ import { getSources } from './rankAndSources';
  * 
  * @returns dfs result
  */
-export function DFSWithSources(network:Network, sources:Array<string>|SourceType):Array<string>{
+export function DFSWithSources(network:Network, sources:Array<string>|StartNodesType):Array<string>{
 
     console.log('DFS');
 

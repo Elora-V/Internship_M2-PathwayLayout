@@ -1,3 +1,4 @@
+
 export interface JsonStyle {
     biosource?: {[key:string]:string|number},
     generalStyle?:{[key:string]:string|number|boolean},

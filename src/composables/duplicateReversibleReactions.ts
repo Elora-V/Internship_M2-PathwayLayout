@@ -2,9 +2,9 @@ import { Link } from "@metabohub/viz-core/src/types/Link";
 import { Node } from "@metabohub/viz-core/src/types/Node";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { removeAllSelectedNodes } from "@metabohub/viz-core";
-import { DFSWithSources } from "./algoDFS";
-import { SourceType } from "@/types/EnumArgs";
-import { BFSWithSources } from "./algoBFS";
+import { DFSWithSources } from "./AlgorithmDFS";
+import { StartNodesType } from "@/types/EnumArgs";
+import { BFSWithSources } from "./AlgorithmBFS";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { TypeSubgraph } from "@/types/Subgraph";
 import { updateNodeMetadataSubgraph } from "./UseSubgraphNetwork";
@@ -167,8 +167,8 @@ export function pushUniqueString(object:Array<string>, value: string): Array<str
  */
 export async function chooseReversibleReaction(
   subgraphNetwork:SubgraphNetwork,
-  sources: Array<string> | SourceType,
-  nodeOrderFunction: (network: Network, sources: Array<string> | SourceType) => string[] =BFSWithSources
+  sources: Array<string> | StartNodesType,
+  nodeOrderFunction: (network: Network, sources: Array<string> | StartNodesType) => string[] =BFSWithSources
 ): Promise<SubgraphNetwork> {
   let nodeOrder: string[] = [];
   const network = subgraphNetwork.network.value;

@@ -1,6 +1,6 @@
 // Type imports
 import { defaultParameters,Parameters } from "@/types/Parameters";
-import { SourceType } from "@/types/EnumArgs";
+import { StartNodesType } from "@/types/EnumArgs";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
@@ -10,7 +10,7 @@ import { putDuplicatedSideCompoundAside, reinsertionSideCompounds } from "./mana
 import { vizLayout } from "./useLayout";
 import { chooseReversibleReaction, duplicateReversibleReactions } from "./duplicateReversibleReactions";
 import { addDirectedCycleToSubgraphNetwork } from "./findCycle";
-import { BFSWithSources } from "./algoBFS";
+import { BFSWithSources } from "./AlgorithmBFS";
 import { addMainChainFromSources, addMiniBranchToMainChain } from "./chooseSubgraph";
 import { coordinateAllCycles, drawAllCyclesGroup } from "./drawCycle";
 import { shiftAllToGetTopLeftCoord } from "./calculateSize";
@@ -20,6 +20,9 @@ import { getSources } from "./rankAndSources";
 import { ref } from "vue";
 import { TypeSubgraph } from "@/types/Subgraph";
 import { resolve } from "path";
+import { NetworkLayout } from "@/types/NetworkLayout";
+import { NetworktoNetworkLayout } from "./ConvertFromNetwork";
+import { NetworkLayoutToNetwork } from "./ConvertToNetwork";
 
 
 /*******************************************************************************************************************************************************
@@ -53,22 +56,27 @@ export async function algorithmOnNetwork(network:Network,networkStyle:GraphStyle
     throw new Error('The networkStyle is not defined or has no properties : the algorithm will not be executed');
   }
 
+  // convert network to networkLayout
+  let networkLayout:NetworkLayout=NetworktoNetworkLayout(network);
+
   // initialize the subgraphNetwork object
   let subgraphNetwork:SubgraphNetwork={
     network:ref<Network>(network),
     networkStyle:ref<GraphStyleProperties>(networkStyle)
   }
 
-  // change coordinates of the network with the algorithm
+ 
   try {
+     // change coordinates of the network with the algorithm
     await allSteps(subgraphNetwork,parameters,true,true);
-    return subgraphNetwork.network.value;
+    // convert networkLayout to network
+    return NetworkLayoutToNetwork(subgraphNetwork.network.value);
     
   } catch(err){
     console.log(" Error during execution of algorithm : " + err);
     throw err;
   }
-  
+
 }
 
 
@@ -136,7 +144,7 @@ export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Param
         if (parameters.doReactionReversible){
           // choose all other reversible reactions
           if (printNameStep) console.log('Choose reversible reactions');
-          const sources=getSources(network,SourceType.RANK_SOURCE_ALL);
+          const sources=getSources(network,StartNodesType.RANK_SOURCE_ALL);
           subgraphNetwork=await chooseReversibleReaction(subgraphNetwork,sources,BFSWithSources);
         }
       }

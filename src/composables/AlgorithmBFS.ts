@@ -1,7 +1,7 @@
-import { SourceType } from "@/types/EnumArgs";
+import { StartNodesType } from "@/types/EnumArgs";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { getSources } from "./rankAndSources";
-import { NetworkToAdjacentObject } from "./networkToGraph";
+import { NetworkToAdjacentObject } from "./ConvertFromNetwork";
 
 
 
@@ -49,7 +49,7 @@ export function BFS(adjacency: { [key: string]: string[] }, source: string, bloc
  * RANK_SOURCE_ALL : sources are node of rank 0, then topological sources, then all the other nodes
  * @returns An array of nodes visited in BFS order, a node can appear several time if it is a descendant of several sources.
  */
-export function BFSWithSources(network:Network, sources:Array<string>|SourceType):Array<string>{
+export function BFSWithSources(network:Network, sources:Array<string>|StartNodesType):Array<string>{
     //console.log('BFS');
     let bfsAllSources:string[] =[];
 

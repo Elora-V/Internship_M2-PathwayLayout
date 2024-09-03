@@ -1,8 +1,8 @@
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import dagre from 'dagrejs';
 import { Graph, instance } from "@viz-js/viz";
-import { networkToCytoscape, NetworkToDagre, NetworkToDot, NetworkToViz } from './networkToGraph';
-import { changeNetworkFromCytoscape, changeNetworkFromDagre, changeNetworkFromViz, dagreToNetwork } from './graphToNetwork';
+import { networkToCytoscape, NetworkToDagre, NetworkToDot, NetworkToViz } from './ConvertFromNetwork';
+import { changeNetworkFromCytoscape, changeNetworkFromDagre, changeNetworkFromViz, dagreToNetwork } from './ConvertToNetwork';
 import { JsonViz } from "@/types/JsonViz";
 import { Subgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";

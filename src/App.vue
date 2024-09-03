@@ -168,7 +168,7 @@ import { ref, reactive, onMounted } from "vue";
 
   // Types ----------------
 import type { Network } from "@metabohub/viz-core/src/types/Network";
-import { Algo, PathType, SourceType } from "@/types/EnumArgs";
+import { Algo, PathType, StartNodesType } from "@/types/EnumArgs";
 import { TypeSubgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { defaultParameters,Parameters } from "@/types/Parameters";
@@ -181,19 +181,19 @@ import { defaultParameters,Parameters } from "@/types/Parameters";
 import { dagreLayout, forceLayout, vizLayout } from './composables/useLayout';
 import {chooseReversibleReaction, duplicateReversibleReactions} from "./composables/duplicateReversibleReactions"
 import {importNetworkFromFile,importNetworkFromURL} from "./composables/importNetwork"
-import { networkCopy } from "@/composables/networkToGraph";
+import { networkCopy } from "@/composables/ConvertFromNetwork";
 import { initZoom, rescale,duplicateNode,removeNode } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import {  addDirectedCycleToSubgraphNetwork } from "@/composables/findCycle";
 import { countIntersectionEdgeNetwork } from "./composables/metricsNetwork";
 import { countIsolatedNodes } from "./composables/countIsolatedNodes";
-import { DFSsourceDAG } from "@/composables/algoDFS";
+import { DFSsourceDAG } from "@/composables/AlgorithmDFS";
 import { createStaticForceLayout } from "@metabohub/viz-core";
-import { BFSWithSources } from "@/composables/algoBFS";
+import { BFSWithSources } from "@/composables/AlgorithmBFS";
 import {  getSources } from "@/composables/rankAndSources";
 import { addBoldLinkMainChain, addRedLinkcycleGroup } from "@/composables/useSubgraphs";
 import { addMainChainFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/chooseSubgraph";
-import { analyseAllJSON, applyMetricsGraph, applyMetricsLayout } from "@/composables/applyMetrics";
+import { analyseAllJSON, applyMetricsGraph, applyMetricsLayout } from "@/composables/MetricsApplication";
 import { changeNodeStyles } from "@/composables/styleGraph";
 import { addSideCompoundAttributeFromList, duplicateSideCompound } from "@/composables/manageSideCompounds";
 
@@ -352,14 +352,14 @@ function openContextMenu(Event: MouseEvent, nodeId: string) {
 // }
 
 function sourcesChoice(sourcetype:string):void{
-  if (sourcetype==SourceType.RANK_ONLY){
-    parameters.startNodeTypeMainChain=SourceType.RANK_ONLY;
+  if (sourcetype==StartNodesType.RANK_ONLY){
+    parameters.startNodeTypeMainChain=StartNodesType.RANK_ONLY;
   }
-  else if (sourcetype==SourceType.RANK_SOURCE){
-    parameters.startNodeTypeMainChain=SourceType.RANK_SOURCE;
+  else if (sourcetype==StartNodesType.RANK_SOURCE){
+    parameters.startNodeTypeMainChain=StartNodesType.RANK_SOURCE;
   }
-  else if (sourcetype==SourceType.SOURCE_ONLY){
-    parameters.startNodeTypeMainChain=SourceType.SOURCE_ONLY;
+  else if (sourcetype==StartNodesType.SOURCE_ONLY){
+    parameters.startNodeTypeMainChain=StartNodesType.SOURCE_ONLY;
   }
   subgraphNetwork.mainChains={}; // temporaire, je reset les clusters pour pas ajouter les nouveaux aux vieux
   subgraphNetwork.secondaryChains={};
@@ -482,7 +482,7 @@ function keydownHandler(event: KeyboardEvent) {
     addDirectedCycleToSubgraphNetwork(subgraphNetwork);
   }else if (event.key =="r"){
     (async () => {
-      const sources=getSources(network.value,SourceType.RANK_SOURCE_ALL);
+      const sources=getSources(network.value,StartNodesType.RANK_SOURCE_ALL);
       subgraphNetwork= await chooseReversibleReaction(subgraphNetwork,sources,BFSWithSources);
     })();
   }else if (event.key =="p"){
@@ -492,12 +492,12 @@ function keydownHandler(event: KeyboardEvent) {
   } else if (event.key == "a"){
     allSteps(subgraphNetwork,parameters);
   } else if (event.key == "f"){
-    const sources=getSources(network.value,SourceType.RANK_ONLY);
+    const sources=getSources(network.value,StartNodesType.RANK_ONLY);
     const {dfs,graph}=DFSsourceDAG(network.value,sources);
     console.log(dfs);
   }
   else if (event.key == "b"){
-    const sources=getSources(network.value,SourceType.RANK_ONLY);
+    const sources=getSources(network.value,StartNodesType.RANK_ONLY);
     const bfs=BFSWithSources(network.value,sources);
     bfs.forEach(node=>{
       console.log(network.value.nodes[node].label);

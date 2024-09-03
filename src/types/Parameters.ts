@@ -1,9 +1,10 @@
 import { Network } from "@metabohub/viz-core/src/types/Network";
-import { PathType, SourceType } from "./EnumArgs";
+import { PathType, StartNodesType } from "./EnumArgs";
 import { getPathSourcesToTargetNode } from "@/composables/chooseSubgraph";
 
 /**
- * This file contains the types for the Parameters object : all parameters for the algorithm
+ * This file contains the types for the Parameters object : all parameters for the algorithm.
+ * And an default object for the parameters.
  */
 
 
@@ -16,7 +17,7 @@ export interface Parameters {
 
     doMainChain: boolean; // do the step main chain ?
     getSubgraph : (network: Network, sources: Array<string>,merge?:boolean,pathType?:PathType) => {[key:string]:{nodes:Array<string>, height:number}}; // function to get subgraph (main chain)
-    startNodeTypeMainChain: SourceType; // for the main chain step : which are the start nodes?
+    startNodeTypeMainChain: StartNodesType; // for the main chain step : which are the start nodes?
     pathType: PathType; // main chain step : longest path , all longest paths or all paths
     merge: boolean; // merging main chain ? If not : nodes can be in several clusters
     doMiniBranch: boolean; // adding minibranch for main chains ?
@@ -47,7 +48,7 @@ export let defaultParameters: Parameters = {
 
     doMainChain: true, // user can change this parameter
     getSubgraph : getPathSourcesToTargetNode,
-    startNodeTypeMainChain: SourceType.RANK_SOURCE, // usefull to allow user to change this parameter with RANK_ONLY or SOURCE_ONLY ? (if source-only, put source_all for reaction rev and no first viz)
+    startNodeTypeMainChain: StartNodesType.RANK_SOURCE, // usefull to allow user to change this parameter with RANK_ONLY or SOURCE_ONLY ? (if source-only, put source_all for reaction rev and no first viz)
     pathType: PathType.ALL_LONGEST, // user can change this parameter
     merge: true, // no choice for now, but when edit of algo, add option where no merge and keep the largest subgraph
     doMiniBranch: true, // usefull choice ? run metrix to see if it's usefull

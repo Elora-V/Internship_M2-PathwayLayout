@@ -1,3 +1,10 @@
+import { Ordering } from "./EnumArgs";
+
+/**
+ * This file contains the types for the Subgraph object : main chain, secondary chain, cycle and cycle group.
+ * A subgraph can be considered as a metanode in the network. Its width and height are the width and height of the rectangle containing the metanode.
+ * Its position is the center of the rectangle, and the originalPosition is the position of the center of the metanode before the layout (when coordinates precalculated).
+ */
 
 export enum TypeSubgraph {
     MAIN_CHAIN = "mainChains",
@@ -6,26 +13,24 @@ export enum TypeSubgraph {
     CYCLEGROUP="cyclesGroup"
 }
 
-export enum Ordering {
-    DEFAULT = "",
-    IN = "in",
-    OUT = "out"
-}
-
 export interface Subgraph {
     name: string;
     classes?: Array<string>;
     nodes: Array<string>;
     type?: TypeSubgraph;
-    // if subgraph associated with another subgraph (like secondary chain associated with a main chain)
+
+    // if subgraph associated with another subgraph (like secondary chain associated with a main chain) :
     parentSubgraph?: {name:string,type:TypeSubgraph}; // the "parent" subgraph
     childrenSubgraphs?: Array<{name:string,type:TypeSubgraph}>; // the "children" subgraphs
+
     rank?:string;
+    ordering?:Ordering;
+
     width?:number;
     height?:number;
     position?:{x:number,y:number};
     originalPosition?:{x:number,y:number}; // if metanode : the metanode center not well positionned (precalulated position)
-    ordering?:Ordering;
+    
     metadata?: {[key: string]: string | number| boolean | {[key: string]: string | number} | Array<string>};
 }
 

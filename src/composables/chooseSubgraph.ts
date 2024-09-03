@@ -1,10 +1,10 @@
-import { PathType, SourceType } from "@/types/EnumArgs";
-import { DFSWithSources, DFSsourceDAG } from "./algoDFS";
-import { NetworkToGDSGraph } from "./networkToGraph";
+import { PathType, StartNodesType } from "@/types/EnumArgs";
+import { DFSWithSources, DFSsourceDAG } from "./AlgorithmDFS";
+import { NetworkToGDSGraph } from "./ConvertFromNetwork";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { getSources } from "./rankAndSources";
 import { Network } from "@metabohub/viz-core/src/types/Network";
-import { BFS } from "./algoBFS";
+import { BFS } from "./AlgorithmBFS";
 import {TypeSubgraph, type Subgraph} from "@/types/Subgraph";
 import { addNewSubgraph, addNodeToSubgraph, createSubgraph, updateNodeMetadataSubgraph } from './UseSubgraphNetwork';
 
@@ -31,7 +31,7 @@ import { addNewSubgraph, addNodeToSubgraph, createSubgraph, updateNodeMetadataSu
  * @param minHeight minimum size of a cluster to be added
  * @returns the clusterNetwork with more cluster
  */
-export function addMainChainFromSources(subgraphNetwork:SubgraphNetwork, sources:Array<string> | SourceType, 
+export function addMainChainFromSources(subgraphNetwork:SubgraphNetwork, sources:Array<string> | StartNodesType, 
     getMainChains:(network: Network, sources: Array<string>,merge?:boolean,pathType?:PathType) => {[key:string]:{nodes:Array<string>, height:number}}=getPathSourcesToTargetNode,
     merge:boolean=true,
     pathType:PathType=PathType.ALL_LONGEST,

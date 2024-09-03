@@ -1,4 +1,4 @@
-import { JsonViz } from '@/types/JsonViz';
+import { JsonViz } from '@/types/FormatJsonViz';
 import { Coordinate } from '@/types/CoordinatesSize';
 import { Network } from '@metabohub/viz-core/src/types/Network';
 import type { Node } from "@metabohub/viz-core/src/types/Node";
@@ -12,6 +12,28 @@ import { GraphStyleProperties } from '@metabohub/viz-core/src/types/GraphStylePr
 
 
 import cytoscape, { ElementDefinition } from 'cytoscape';
+import { NetworkLayout } from '@/types/NetworkLayout';
+
+
+/**
+ * Convert a network layout object (network with information to calculate layout) into a network object
+ * @param networkLayout the network layout object
+ * @returns the new network object
+ */
+export function NetworkLayoutToNetwork(networkLayout: NetworkLayout): Network {
+
+  Object.values(networkLayout.nodes).forEach((nodeLayout) => {
+    delete nodeLayout.classesLayout; 
+    delete nodeLayout.metadataLayout;
+  });
+
+  networkLayout.links.forEach((linkLayout) => {
+    delete linkLayout.classesLayout; 
+    delete linkLayout.metadataLayout; 
+  });
+
+  return networkLayout as Network;
+}
 
 
 /**
