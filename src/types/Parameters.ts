@@ -40,20 +40,20 @@ export interface Parameters {
 }
 
 export let defaultParameters: Parameters = {
-    doDuplicateSideCompounds: true,
-    doPutAsideSideCompounds: true,
+    doDuplicateSideCompounds: true, // user can change this parameter
+    doPutAsideSideCompounds: true, // user can change this parameter
 
-    doReactionReversible: true,
+    doReactionReversible: true, // user can change this parameter
 
-    doMainChain: true,
+    doMainChain: true, // user can change this parameter
     getSubgraph : getPathSourcesToTargetNode,
-    startNodeTypeMainChain: SourceType.RANK_SOURCE,
-    pathType: PathType.ALL_LONGEST,
-    merge: true,
-    doMiniBranch: true,
+    startNodeTypeMainChain: SourceType.RANK_SOURCE, // usefull to allow user to change this parameter with RANK_ONLY or SOURCE_ONLY ? (if source-only, put source_all for reaction rev and no first viz)
+    pathType: PathType.ALL_LONGEST, // user can change this parameter
+    merge: true, // no choice for now, but when edit of algo, add option where no merge and keep the largest subgraph
+    doMiniBranch: true, // usefull choice ? run metrix to see if it's usefull
     groupOrCluster: "cluster",
 
-    doCycle: true,
+    doCycle: true, // user can change this parameter
     allowInternalCycles: false,
    
     addNodes: true,
@@ -61,8 +61,8 @@ export let defaultParameters: Parameters = {
 
     dpi: 72,
 
-    numberNodeOnEdge: 3,
-    factorLengthSideCompounds: 1/2,
+    numberNodeOnEdge: 3, // user can change this parameter, but doesn't work for cycle edge length
+    factorLengthSideCompounds: 1/2, // user can change this parameter
 
     shiftCoord: true,
 

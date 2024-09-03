@@ -104,11 +104,14 @@ export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Param
         if (parameters.doCycle){
           if (printNameStep) console.log('Find directed cycles');
           addDirectedCycleToSubgraphNetwork(subgraphNetwork,3);
-          // if no cycle, we don't need to do the cycle step
-          if (subgraphNetwork[TypeSubgraph.CYCLE] && Object.keys(subgraphNetwork[TypeSubgraph.CYCLE]).length===0){
-            parameters.doCycle=false;
-            console.warn('doCycle is true but no cycle found : doCycle set to false');
-          }
+        }
+      }
+    ).then(
+      () => {
+        // if no cycle, we don't need to do the cycle step
+        if (parameters.doCycle && subgraphNetwork[TypeSubgraph.CYCLE] && Object.keys(subgraphNetwork[TypeSubgraph.CYCLE]).length===0){
+          parameters.doCycle=false;
+          console.warn('doCycle is true but no cycle found : doCycle set to false');
         }
       }
     ).then(
@@ -176,7 +179,7 @@ export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Param
           if (printNameStep) console.log('Insert side compounds');
           subgraphNetwork=reinsertionSideCompounds(subgraphNetwork,parameters.factorLengthSideCompounds,parameters.doReactionReversible);
         }else if (!parameters.doDuplicateSideCompounds && parameters.doPutAsideSideCompounds){
-          console.warn('doPutAsideSideCompounds is true but doDuplicateSideCompounds is false : side compounds will not be inserted with the motif (original position keeped)');
+          console.warn('doPutAsideSideCompounds is true but doDuplicateSideCompounds is false : side compounds will not be inserted ');
         }
       }
     ).then(
