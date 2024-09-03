@@ -1,80 +1,68 @@
-import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
+// Type imports
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { Node } from "@metabohub/viz-core/src/types/Node";
-import { getNodesPlacedInGroupCycle, inCycle } from "./drawCycle";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { Subgraph } from "@/types/Subgraph";
 import { Coordinate, Size } from "@/types/CoordinatesSize";
 
-
-/**
- * Calculate the rank separation and node separation in inches depending on node size : 
- * rank separation = mean height node * factor
- * node separation = mean width node * factor
- * @param network contains nodes
- * @param styleNetwork contains informations of nodes size
- * @param factor number of mean size node for the sep attributes
- * @returns rank separation and node separation in inches
- */
-export function getSepAttributesInches(network:Network,styleNetwork:GraphStyleProperties,factor:number=1):{rankSep:number,nodeSep:number}{
-    const meanSizeNode=getMeanNodesSizePixel(Object.values(network.nodes),styleNetwork);
-    const rankSep = pixelsToInches(meanSizeNode.height * factor);
-    const nodeSep = pixelsToInches(meanSizeNode.width * factor);
-    return { rankSep, nodeSep };
-}
-
-export function getSepAttributesPixel(network:Network,styleNetwork:GraphStyleProperties,factor:number=1):{rankSep:number,nodeSep:number}{
-    const meanSizeNode=getMeanNodesSizePixel(Object.values(network.nodes),styleNetwork);
-    const rankSep = meanSizeNode.height * factor;
-    const nodeSep = meanSizeNode.width *factor;
-    return { rankSep, nodeSep };
-}
+// Composable imports
+import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
+import { inCycle } from "./LayoutDrawCycle";
 
 
 
 /**
- * Calculates the size of a node in pixels based on its style properties.
- * @param node - The node for which to calculate the size.
- * @param styleNetwork - The style properties of the graph.
- * @returns An object containing the height and width of the node in pixels.
- */
-export function getSizeNodePixel(node:Node,styleNetwork:GraphStyleProperties):Size{
-    let height:number;
-    let width:number;
-    if (node.classes && styleNetwork.nodeStyles){
-        node.classes.forEach((classe)=>{
-            if (classe in styleNetwork.nodeStyles){;
-                const style=styleNetwork.nodeStyles[classe];
-                height = style.height? style.height:height;
-                width = style.width? style.width:width;
-            }
-        });
-    }
-    return {height:height,width:width};
-}
-
-/**
- * Calculates the mean size of nodes in pixels.
+ * This file contains functions to calculate the size of nodes, edges and subgraphs. Anf function to shift coordinates depending on node size.
  * 
- * @param nodes - An array of nodes.
- * @param styleNetwork - The style properties of the graph.
- * @returns An object containing the mean height and width of the nodes in pixels.
+ * *********************************
+ * 0.  Nodes
+ * 
+ * -> pixelsToInches :
+ *          Converts pixels to inches based on the given DPI (dots per inch).
+ * 
+ * -> inchesToPixels :
+ *         Converts inches to pixels based on the given DPI (dots per inch).
+ * 
+ * -> getSizeNodePixel :
+ *        Calculates the size of a node in pixels based on its style properties.
+ * 
+ * -> getMeanNodesSizePixel :
+ *       Calculates the mean size of nodes in pixels.
+ * 
+ * -> getSepAttributesInches :
+ *      Calculate the rank separation and node separation in inches depending on node size.
+ * 
+ * -> getSepAttributesPixel :
+ *     Calculate the rank separation and node separation in pixels depending on node size.
+ * 
+ * 
+ * *********************************
+ * 1.  Edges
+ * 
+ * -> minEdgeLength :
+ *     Calculates the minimum edge length between nodes in a network.
+ * 
+ * -> medianLengthDistance :
+ *    Calculates the median edge length between nodes in a network.
+ * 
+ * 
+ * *********************************
+ * 2.  Subgraphs
+ * 
+ * 
+ * *********************************
+ * 3.  Shift coordinates depending on size
+ * 
  */
-export function getMeanNodesSizePixel(nodes:Node[],styleNetwork:GraphStyleProperties,includeSideCompounds:boolean=true):Size{
-    let height:number = 0;
-    let width:number = 0;
-    let n:number = 0;
-    nodes.forEach((node)=>{
-        if (includeSideCompounds ||  !(node.metadata && node.metadata["isSideCompound"])) {
-            let size = getSizeNodePixel(node,styleNetwork);
-            height += size.height;
-            width += size.width;
-            n+=1;
-        }
-        
-    });
-    return {height:height/n,width:width/n};
-}
+
+
+/*******************************************************************************************************************************************************/
+//___________________________________________________0.  Nodes __________________________________________________________________________
+
+
+const defaultHeightNode = 25;
+const defaultWidthNode = 25;
+
 
 /**
  * Converts pixels to inches based on the given DPI (dots per inch).
@@ -97,12 +85,106 @@ export function inchesToPixels(inches: number, dpi: number = 72): number {
 }
 
 /**
- * Calculates the minimum length distance between nodes in a network.
+ * Calculates the size of a node in pixels based on its style properties.
+ * @param node - The node for which to calculate the size.
+ * @param styleNetwork - The style properties of the graph.
+ * @returns An object containing the height and width of the node in pixels.
+ */
+export function getSizeNodePixel(node:Node,styleNetwork:GraphStyleProperties):Size{
+    let height:number;
+    let width:number;
+    if (node.classes && styleNetwork.nodeStyles){
+        node.classes.forEach((classe)=>{
+            if (classe in styleNetwork.nodeStyles){;
+                const style=styleNetwork.nodeStyles[classe];
+                height = style.height? style.height:height;
+                width = style.width? style.width:width;
+            }
+        });
+    }
+    if (!height || !width){
+        height = defaultHeightNode;
+        width = defaultWidthNode;
+    }
+
+    return {height:height,width:width};
+}
+
+/**
+ * Calculates the mean size of nodes in pixels.
+ * 
+ * @param nodes - An array of nodes.
+ * @param styleNetwork - The style properties of the graph.
+ * @returns An object containing the mean height and width of the nodes in pixels.
+ */
+export function getMeanNodesSizePixel(nodes:Node[],styleNetwork:GraphStyleProperties,includeSideCompounds:boolean=true):Size{
+    let height:number = 0;
+    let width:number = 0;
+    let n:number = 0;
+    nodes.forEach((node)=>{
+        if (includeSideCompounds ||  !(node.metadata && node.metadata["isSideCompound"])) {
+            let size = getSizeNodePixel(node,styleNetwork);
+            height += size.height;
+            width += size.width;
+            n+=1;
+        }
+    });
+
+    if (n===0){
+        return {height:defaultHeightNode,width:defaultWidthNode};
+    }
+
+    return {height:height/n,width:width/n};
+}
+
+
+/**
+ * Calculate the rank separation and node separation in inches depending on node size : 
+ * rank separation = mean height node * factor
+ * node separation = mean width node * factor
+ * @param network contains nodes
+ * @param styleNetwork contains informations of nodes size
+ * @param factor number of mean size node for the sep attributes
+ * @returns rank separation and node separation in inches
+ */
+export function getSepAttributesInches(network:Network,styleNetwork:GraphStyleProperties,factor:number=1):{rankSep:number,nodeSep:number}{
+    const meanSizeNode=getMeanNodesSizePixel(Object.values(network.nodes),styleNetwork);
+    const rankSep = pixelsToInches(meanSizeNode.height * factor);
+    const nodeSep = pixelsToInches(meanSizeNode.width * factor);
+    return { rankSep, nodeSep };
+}
+
+/**
+ * Calculate the rank separation and node separation in pixels depending on node size : 
+ * rank separation = mean height node * factor
+ * node separation = mean width node * factor
+ * @param network contains nodes
+ * @param styleNetwork contains informations of nodes size
+ * @param factor number of mean size node for the sep attributes
+ * @returns rank separation and node separation in pixels
+ */
+export function getSepAttributesPixel(network:Network,styleNetwork:GraphStyleProperties,factor:number=1):{rankSep:number,nodeSep:number}{
+    const meanSizeNode=getMeanNodesSizePixel(Object.values(network.nodes),styleNetwork);
+    const rankSep = meanSizeNode.height * factor;
+    const nodeSep = meanSizeNode.width *factor;
+    return { rankSep, nodeSep };
+}
+
+
+/*******************************************************************************************************************************************************/
+//___________________________________________________1.  Edges __________________________________________________________________________
+
+
+const defaultMinEdgeLength = 25;
+
+
+/**
+ * Calculates the minimum edge length between nodes in a network.
  * 
  * @param network - The network object containing nodes.
- * @returns The minimum length distance between nodes.
+ * @returns The minimum edge length between nodes.
  */
-export function minLengthDistance(network: Network,cycleInclude:boolean=true,defaultMinLength:number=0): number {
+export function minEdgeLength(network: Network,cycleInclude:boolean=true,defaultValue:number=defaultMinEdgeLength): number {
     let minDistance = Infinity;
     network.links.forEach((link) => {
         if (cycleInclude || (!inCycle(network,link.target.id) || !inCycle(network,link.source.id)) ){
@@ -116,19 +198,20 @@ export function minLengthDistance(network: Network,cycleInclude:boolean=true,def
     });
     minDistance= parseFloat(minDistance.toFixed(2));
     if(minDistance === Infinity || !minDistance){
-        return defaultMinLength;
+        console.warn('Minimal edge length by default');
+        return defaultValue;
     }
     return minDistance;
 }
 
 /**
- * Calculates the median length distance between nodes in a network.
+ * Calculates the median edge length between nodes in a network.
  * 
  * @param network - The network object containing nodes.
  * @param cycleInclude - Flag to include or exclude links in cycles.
  * @returns The median length distance between nodes.
  */
-export function medianLengthDistance(network: Network, cycleInclude: boolean = true): number {
+export function medianEdgeLength(network: Network, cycleInclude: boolean = true): number {
     const distances: number[] = [];
     network.links.forEach((link) => {
         if (cycleInclude || (!inCycle(network, link.target.id) || !inCycle(network, link.source.id))) {
@@ -153,6 +236,11 @@ export function medianLengthDistance(network: Network, cycleInclude: boolean = t
     // If odd number of distances, median is middle number
     return parseFloat(distances[mid].toFixed(2));
 }
+
+
+/*******************************************************************************************************************************************************/
+//___________________________________________________2.  Subgraphs __________________________________________________________________________
+
 
 /**
  * Calculates the size and center coordinates of a rectangle based on a list of coordinates.
@@ -231,6 +319,11 @@ function getSizeGroupCycles(subgraphNetwork:SubgraphNetwork,groupCycle:Subgraph)
     }
     return subgraphNetwork;
 }
+
+
+/*******************************************************************************************************************************************************/
+//___________________________________________________3.  Shift coordinates depending on size ____________________________________________________________
+
 
 export function shiftAllToGetTopLeftCoord(network:Network,style:GraphStyleProperties,moveCycleToo:boolean=true) {
     Object.values(network.nodes).forEach(node=>{

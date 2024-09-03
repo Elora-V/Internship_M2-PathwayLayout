@@ -4,7 +4,7 @@ import { checkIntersection } from 'line-intersect';
 import { Link } from '@metabohub/viz-core/src/types/Link';
 import { c } from 'vite/dist/node/types.d-aGj9QkWt';
 import { GraphStyleProperties } from '@metabohub/viz-core/src/types/GraphStyleProperties';
-import { getSizeNodePixel } from './calculateSize';
+import { getSizeNodePixel } from './CalculateSize';
 import { link } from 'fs';
 import { Coordinate, Size } from '@/types/CoordinatesSize';
 

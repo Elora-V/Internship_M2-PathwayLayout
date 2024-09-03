@@ -8,11 +8,11 @@ export enum MetaboliteType {
     PRODUCT='product',
 }
 
-export enum MinMedianMax {
-    MEDIAN='median',
-    MIN='min',
-    MAX='max'
-}
+// export enum MinMedianMax {
+//     MEDIAN='median',
+//     MIN='min',
+//     MAX='max'
+// }
 
 export interface Reaction {
     id:string

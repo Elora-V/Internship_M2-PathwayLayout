@@ -1,16 +1,169 @@
+// Type imports
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
-import { getContentFromURL } from "./importNetwork";
-import { removeAllSelectedNodes , duplicateAllNodesByAttribut} from "@metabohub/viz-core";
-import { S } from "vitest/dist/reporters-1evA5lom";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { Node } from "@metabohub/viz-core/src/types/Node";
-import { MetaboliteType, MinMedianMax, Reaction, ReactionInterval } from "@/types/Reaction";
-import { getMeanNodesSizePixel, getSepAttributesPixel, inchesToPixels, minLengthDistance as minLengthDistance, pixelsToInches } from "./calculateSize";
+import { MetaboliteType, Reaction, ReactionInterval } from "@/types/Reaction";
+import { VizArgs } from "@/types/EnumArgs";
 
-//-----------------------------------------------------------------------------------------------------------------------------------
-//___________________________________________________Remove side compounds____________________________________________________
+// Composable imports
+import { getContentFromURL } from "./importNetwork";
+import { removeAllSelectedNodes , duplicateAllNodesByAttribut} from "@metabohub/viz-core";
+import { getMeanNodesSizePixel, inchesToPixels, minEdgeLength as minEdgeLength, pixelsToInches } from "./CalculateSize";
 
 
+// General imports
+import { S } from "vitest/dist/reporters-1evA5lom";
+
+
+
+/*******************************************************************************************************************************************************
+ * 
+ * This file contains the functions to manage side compounds.
+ * 
+ * *********************************
+ * 
+ * 0. Declare side compounds
+ * 
+ * -> isSideCompound : 
+ *      return if the node is declare as side compound
+ * 
+ * -> addSideCompoundAttributeFromList :
+ *       add attribute of side compound to all nodes in network from a list
+ * 
+ * -> getIDSideCompoundsInNetworkFromFile :
+ *      return the list of id of side compounds in the network
+ * 
+ * -> getIDSideCompoundsFromFile :
+ *      return the list of id of side compounds from a file
+ * 
+ * -> addSideCompoundAttribute :
+ *     adding side compound attribute to a node
+ * 
+ **********************************
+ * 
+ * 
+ * 1. Duplicate and remove side compounds
+ * 
+ * 
+ * -> putDuplicatedSideCompoundAside :
+ *      duplicate and put aside side compounds in the network
+ * 
+ * -> isDuplicate :
+ *       return if the node is a duplicate
+ * 
+ * -> duplicateSideCompound :
+ *       duplicate the side compounds in the given subgraph network
+ * 
+ * -> sideCompoundAttributeOnDuplicate :
+ *       adds side compound attribute to nodes in the network that are duplicates
+ * 
+ * -> removeSideCompoundsFromNetwork :
+ *       removes side compounds from the network, and put them aside in sideCompounds
+ * 
+ * 
+ * *********************************
+ * 
+ * 
+ * 2. Reinsert side compounds
+ * 
+ *      
+ * *******************************************************************************************************************************************************/
+
+
+
+
+
+/*******************************************************************************************************************************************************/
+//___________________________________________________0.  Declare side compounds__________________________________________________________________________
+
+
+const sideCompoundAttribute="isSideCompound";
+
+/**
+ * Return if the node is declare as side compound
+ * @param network 
+ * @param nodeID id of the node
+ * @returns node is a side compound ?
+ */
+function isSideCompound(network:Network,nodeID:string):boolean{
+    return Boolean(network.nodes[nodeID].metadata && network.nodes[nodeID].metadata[sideCompoundAttribute]);
+}
+
+/**
+ * Add attribute of side compound to all nodes in network from a list 
+ * @param network 
+ * @param pathListSideCompounds path to the list of id of side compounds
+ */
+export async function addSideCompoundAttributeFromList(subgraphNetwork:SubgraphNetwork, pathListSideCompounds):Promise<void>{
+    const listIDSideCompounds = await getIDSideCompoundsInNetworkFromFile(subgraphNetwork,pathListSideCompounds);
+    listIDSideCompounds.forEach((sideCompoundID) => {
+        addSideCompoundAttribute(subgraphNetwork,sideCompoundID);
+    });
+}
+
+/**
+ * Return the list of id of side compounds in the network
+ * @param subgraphNetwork 
+ * @param pathListSideCompounds path to the list of id of side compounds
+ * @returns list of id of side compounds in the network
+ */
+async function getIDSideCompoundsInNetworkFromFile(subgraphNetwork:SubgraphNetwork,pathListSideCompounds:string):Promise<string[]>{
+    let listIDSideCompounds:string[]=[];
+    const network = subgraphNetwork.network.value;
+    try {
+        listIDSideCompounds = await getIDSideCompoundsFromFile(pathListSideCompounds);
+    } catch (error) {
+        console.error(error);
+    }
+    return Object.keys(network.nodes).filter(id => listIDSideCompounds.includes(id));
+}
+
+/**
+ * Return the list of id of side compounds from a file
+ * @param pathListSideCompounds path to the list of id of side compounds
+ * @returns list of id of side compounds
+ */
+async function getIDSideCompoundsFromFile(pathListSideCompounds:string):Promise<string[]>{
+    const sideCompoundsFile=pathListSideCompounds;
+    const sideCompoundsString = await getContentFromURL(sideCompoundsFile);
+    const lines = sideCompoundsString.split('\n');
+    const listId: Array<string> = [];
+    lines.forEach((line: string) => {
+      listId.push(line.split('\t')[0]);
+    })
+    return listId;
+}
+
+/**
+ * Adding side compound attribute to a node
+ * @param subgraphNetwork 
+ * @param sideCompoundID  id of node
+ */
+function addSideCompoundAttribute(subgraphNetwork:SubgraphNetwork,sideCompoundID:string):void{
+    const network = subgraphNetwork.network.value;
+    // add attribute isSideCompound to the node
+    if(!network.nodes[sideCompoundID].metadata) network.nodes[sideCompoundID].metadata={};
+    network.nodes[sideCompoundID].metadata[sideCompoundAttribute]=true;
+}
+
+
+
+
+/*******************************************************************************************************************************************************/
+//___________________________________________________1.  Duplicate and remove side compounds__________________________________________________________________________
+
+
+const classDuplicate="duplicate";
+
+/**
+ * Duplicate and put aside side compounds in the network
+ * @param subgraphNetwork contains network with sideCompounds
+ * @param doDuplicateSideCompounds do duplication ?
+ * @param doPutAsideSideCompounds  put aside ?
+ * @param addSideCompoundAttribute  add attribut of side compound with a list?
+ * @param pathListSideCompounds path to the list of id of side compounds
+ * @returns subgraphNetwork with updated network and sideCompounds
+ */
 export async function putDuplicatedSideCompoundAside(subgraphNetwork:SubgraphNetwork, doDuplicateSideCompounds:boolean,doPutAsideSideCompounds:boolean, addSideCompoundAttribute:boolean=true, pathListSideCompounds:string):Promise<SubgraphNetwork>{
 
     return new Promise(async (resolve, reject) => {
@@ -29,63 +182,45 @@ export async function putDuplicatedSideCompoundAside(subgraphNetwork:SubgraphNet
             }
             resolve(subgraphNetwork);
         } catch (error) {
+            console.error(error);
             reject(error);
         }
     });
-
 }
 
-async function sideCompoundsInNetworkFromFile(subgraphNetwork:SubgraphNetwork,pathListSideCompounds:string):Promise<string[]>{
-    const listIDSideCompounds = await getIDSideCompoundsFromFile(pathListSideCompounds);
-    const network = subgraphNetwork.network.value;
-    return Object.keys(network.nodes).filter(id => listIDSideCompounds.includes(id));
-}
 
-async function getIDSideCompoundsFromFile(pathListSideCompounds:string):Promise<string[]>{
-    const sideCompoundsFile=pathListSideCompounds;
-    const sideCompoundsString = await getContentFromURL(sideCompoundsFile);
-    const lines = sideCompoundsString.split('\n');
-    const listId: Array<string> = [];
-    lines.forEach((line: string) => {
-      listId.push(line.split('\t')[0]);
-    })
-    return listId;
-}
 
-export async function addSideCompoundAttributeFromList(subgraphNetwork:SubgraphNetwork, pathListSideCompounds):Promise<void>{
-    const listIDSideCompounds = await sideCompoundsInNetworkFromFile(subgraphNetwork,pathListSideCompounds);
-    listIDSideCompounds.forEach((sideCompoundID) => {
-        addSideCompoundAttribute(subgraphNetwork,sideCompoundID);
-    });
-}
-
-function addSideCompoundAttribute(subgraphNetwork:SubgraphNetwork,sideCompoundID:string):void{
-    const network = subgraphNetwork.network.value;
-    // add attribute isSideCompound to the node
-    if(!network.nodes[sideCompoundID].metadata) network.nodes[sideCompoundID].metadata={};
-    network.nodes[sideCompoundID].metadata["isSideCompound"]=true;
-    // add sideCompound to classes
-    if(!network.nodes[sideCompoundID].classes) network.nodes[sideCompoundID].classes=[];
-    network.nodes[sideCompoundID].classes.push("sideCompound");
-}
-
-function isSideCompound(network:Network,nodeID:string):boolean{
-    return Boolean(network.nodes[nodeID].metadata && network.nodes[nodeID].metadata.isSideCompound);
-}
-
+/**
+ * Checks if a node in the network is a duplicate.
+ * @param network - The network object.
+ * @param nodeID - The ID of the node to check.
+ * @returns A boolean indicating whether the node is a duplicate.
+ */
 function isDuplicate(network:Network,nodeID:string):boolean{
-    return Boolean(network.nodes[nodeID].classes && network.nodes[nodeID].classes.includes("duplicate"));
+    return Boolean(network.nodes[nodeID].classes && network.nodes[nodeID].classes.includes(classDuplicate));
 }
 
+/**
+ * Duplicates the side compounds in the given subgraph network.
+ * 
+ * @param subgraphNetwork - The subgraph network containing the side compounds to be duplicated.
+ * @returns void
+ */
 export function duplicateSideCompound(subgraphNetwork:SubgraphNetwork):void{
     const network = subgraphNetwork.network.value;
     const networkStyle = subgraphNetwork.networkStyle.value;
-    // duplication of cofactors
-    duplicateAllNodesByAttribut(network, networkStyle, "isSideCompound");
+    // duplication of side compounds
+    duplicateAllNodesByAttribut(network, networkStyle, sideCompoundAttribute);
     // add attributes to side compounds duplicates
     sideCompoundAttributeOnDuplicate(subgraphNetwork);
 }
 
+/**
+ * Adds side compound attribute to nodes in the network that are duplicates.
+ * 
+ * @param subgraphNetwork - The subgraph network containing the nodes.
+ * @returns void
+ */
 function sideCompoundAttributeOnDuplicate(subgraphNetwork:SubgraphNetwork):void{
     const network = subgraphNetwork.network.value;
     Object.keys(network.nodes).forEach((nodeID)=>{
@@ -95,6 +230,14 @@ function sideCompoundAttributeOnDuplicate(subgraphNetwork:SubgraphNetwork):void{
     });
 }
 
+
+
+/**
+ * Removes side compounds from the network, and put them aside in sideCompounds.
+ * 
+ * @param subgraphNetwork - The subgraph network from which side compounds will be removed.
+ * @returns The updated subgraph network with side compounds removed.
+ */
 function removeSideCompoundsFromNetwork(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
 
     const network = subgraphNetwork.network.value;
@@ -127,35 +270,72 @@ function removeSideCompoundsFromNetwork(subgraphNetwork:SubgraphNetwork):Subgrap
     return subgraphNetwork;
 }
 
-//-----------------------------------------------------------------------------------------------------------------------------------
-//___________________________________________________Reinsert side compounds____________________________________________________
+/*******************************************************************************************************************************************************/
+//___________________________________________________2.  Reinsert side compounds__________________________________________________________________________
 
 
-export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork,factorLength:number=1/2,doReactionReversible:boolean):SubgraphNetwork{
+/**
+ * Reinsert side compounds in the network
+ * @param subgraphNetwork 
+ * @param factorMinEdgeLength factor of the minimal length of edge to calculate side compounds edge length
+ * @param doReactionReversible do reaction reversible ?
+ * @returns subgraphNetwork with updated network and sideCompounds
+ */
+export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork,factorMinEdgeLength:number=1/2,doReactionReversible:boolean):SubgraphNetwork{
     if(subgraphNetwork.sideCompounds){
         const network = subgraphNetwork.network.value;
-        // get min length distance for stats
+        const networkStyle = subgraphNetwork.networkStyle.value;
+        // get minimal length of edge to calculate side compounds edge length
         if (!subgraphNetwork.stats) subgraphNetwork.stats={};
-        const rankSep=subgraphNetwork.attributs["ranksep"]?inchesToPixels(subgraphNetwork.attributs["ranksep"] as number):0;
-        const nodeSep=subgraphNetwork.attributs["nodesep"]?inchesToPixels(subgraphNetwork.attributs["nodesep"] as number):0;
-        const invFactor=factorLength===0?1:1/factorLength;
-        const minLengthDefault=(nodeSep+rankSep)/2*invFactor; // min lenght if there is no link in the network (when side compounds are removed)
-        const minLength=minLengthDistance(subgraphNetwork.network.value,false,minLengthDefault);
-        subgraphNetwork.stats["minLengthPixel"]=minLength;
+            // get the default value : min lenght if there is no link in the network (when side compounds are removed) :
+        const meanSize=getMeanNodesSizePixel(Object.values(network.nodes),networkStyle, false);
+        const defaultSep=(meanSize.height+meanSize.width)/2;
+        const rankSep=subgraphNetwork.attributs[VizArgs.RANKSEP]?inchesToPixels(subgraphNetwork.attributs[VizArgs.RANKSEP] as number):defaultSep;
+        const nodeSep=subgraphNetwork.attributs[VizArgs.NODESEP]?inchesToPixels(subgraphNetwork.attributs[VizArgs.NODESEP] as number):defaultSep;
+        //const invFactor=factorMinEdgeLength===0?1:1/factorMinEdgeLength;
+        const minEdgeLengthDefault=(nodeSep+rankSep)/2*factorMinEdgeLength; 
+            // get the min length of edge in the network (if not, use default value)
+        const minLength=minEdgeLength(subgraphNetwork.network.value,false,minEdgeLengthDefault);
+        subgraphNetwork.stats.minEdgeLengthPixel=minLength;
         // update side compounds for reversed reactions
         if (doReactionReversible){
             subgraphNetwork=updateSideCompoundsReversibleReaction(subgraphNetwork);
         }
         // for each reaction, apply motif stamp
         Object.keys(subgraphNetwork.sideCompounds).forEach((reactionID)=>{
-            subgraphNetwork=motifStampSideCompound(subgraphNetwork,reactionID,factorLength);
+            subgraphNetwork=motifStampSideCompound(subgraphNetwork,reactionID,factorMinEdgeLength);
         });       
     }
     return subgraphNetwork;
 
 }
 
-function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string,factorLength:number=1/2):SubgraphNetwork{
+// MODIFICATION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+function updateSideCompoundsReversibleReaction(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
+    const network = subgraphNetwork.network.value;
+    console.warn('modifier updateSideCompoundsReversibleReaction avec nouveau attribut');
+    Object.keys(subgraphNetwork.sideCompounds).forEach((reactionID)=>{
+        // if reaction has been reversed : exchange products and reactants
+        if(reactionID in network.nodes && "classes" in network.nodes[reactionID] && network.nodes[reactionID].classes.includes("reversibleVersion")){
+            const products=subgraphNetwork.sideCompounds[reactionID].products;
+            const reactants=subgraphNetwork.sideCompounds[reactionID].reactants;
+            subgraphNetwork.sideCompounds[reactionID].products=reactants;
+            subgraphNetwork.sideCompounds[reactionID].reactants=products;
+        }
+    });
+    return subgraphNetwork;
+}
+
+
+/**
+ * Applies a motif stamp to place side compound for a reaction.
+ * 
+ * @param subgraphNetwork
+ * @param reactionID - The ID of the reaction.
+ * @param factorMinEdgeLength - The factor length for the side compounds. Default value is 1/2.
+ * @returns The subgraphNetwork with the motif stamp applied for the reaction.
+ */
+function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string,factorMinEdgeLength:number=1/2):SubgraphNetwork{
     // initialize reaction stamp
     let reaction=initializeReactionSideCompounds(subgraphNetwork,reactionID);
     // find intervals between reactants and products
@@ -168,26 +348,12 @@ function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:strin
     reaction.angleSpacingReactant=spacing.reactant;
     reaction.angleSpacingProduct=spacing.product;
     // give coordinates to all side compounds
-    subgraphNetwork=giveCoordAllSideCompounds(subgraphNetwork,reaction,factorLength);
+    subgraphNetwork=giveCoordAllSideCompounds(subgraphNetwork,reaction,factorMinEdgeLength);
     // insert side compounds in network
     insertAllSideCompoundsInNetwork(subgraphNetwork,reaction);
     return subgraphNetwork;
 }
 
-
-function updateSideCompoundsReversibleReaction(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
-    const network = subgraphNetwork.network.value;
-    Object.keys(subgraphNetwork.sideCompounds).forEach((reactionID)=>{
-        // if reaction has been reversed : exchange products and reactants
-        if(reactionID in network.nodes && "classes" in network.nodes[reactionID] && network.nodes[reactionID].classes.includes("reversibleVersion")){
-            const products=subgraphNetwork.sideCompounds[reactionID].products;
-            const reactants=subgraphNetwork.sideCompounds[reactionID].reactants;
-            subgraphNetwork.sideCompounds[reactionID].products=reactants;
-            subgraphNetwork.sideCompounds[reactionID].reactants=products;
-        }
-    });
-    return subgraphNetwork;
-}
 
 function initializeReactionSideCompounds(subgraphNetwork:SubgraphNetwork,idReaction:string):Reaction{
     const network = subgraphNetwork.network.value;
@@ -390,8 +556,8 @@ function findSpacingSideCompounds(reaction:Reaction,sizeInterval):{reactant:numb
 function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reaction,factorLength:number=1/2):SubgraphNetwork{
     //const distance=reaction.medianMinMaxLengthLink[medianMinMax]* factorLength;
     let baseLengthPixel:number;
-    if (subgraphNetwork.stats["minLengthPixel"]){
-        baseLengthPixel=subgraphNetwork.stats["minLengthPixel"];
+    if (subgraphNetwork.stats["minEdgeLengthPixel"]){
+        baseLengthPixel=subgraphNetwork.stats["minEdgeLengthPixel"];
     }else{
         console.error("stats minLength not found, use default value 1 inche");
         baseLengthPixel=pixelsToInches(1);

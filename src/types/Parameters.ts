@@ -1,6 +1,6 @@
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { PathType, StartNodesType } from "./EnumArgs";
-import { getPathSourcesToTargetNode } from "@/composables/chooseSubgraph";
+import { getPathSourcesToTargetNode } from "@/composables/LayoutMainChain";
 
 /**
  * This file contains the types for the Parameters object : all parameters for the algorithm.

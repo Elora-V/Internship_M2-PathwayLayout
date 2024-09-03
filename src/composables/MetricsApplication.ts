@@ -3,16 +3,15 @@ import { getContentFromURL, importNetworkFromURL } from "./importNetwork";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
-import { addSideCompoundAttributeFromList, duplicateSideCompound, putDuplicatedSideCompoundAside } from "./manageSideCompounds";
-import { changeNodeStyles } from "./styleGraph";
+import { addSideCompoundAttributeFromList, duplicateSideCompound, putDuplicatedSideCompoundAside } from "./LayoutManageSideCompounds";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 import { Parameters,defaultParameters } from "@/types/Parameters";
-import { forceLayout, vizLayout } from "./useLayout";
+import { forceLayout, vizLayout } from "./LayoutSugiyamaForce";
 import { Algo, PathType } from "@/types/EnumArgs";
-import { countIntersectionEdgeNetwork, countOverlapNodeNetwork, countOverlapNodeEdgeNetwork, countDifferentCoordinatesNodeNetwork, countNodes, countEdges, coefficientOfVariationEdgeLength, analyseDirectorVector } from "./metricsNetwork";
+import { countIntersectionEdgeNetwork, countOverlapNodeNetwork, countOverlapNodeEdgeNetwork, countDifferentCoordinatesNodeNetwork, countNodes, countEdges, coefficientOfVariationEdgeLength, analyseDirectorVector } from "./MetricsCalculation";
 import { TypeSubgraph } from "@/types/Subgraph";
 import { NetworkToGDSGraph } from "./ConvertFromNetwork";
-import { allSteps } from "./useAlgo";
+import { allSteps } from "./LayoutMain";
 
 
 export async function analyseAllJSON(pathListJSON: string,algo:Algo=Algo.DEFAULT,metricGraph:boolean=true): Promise<void> {
@@ -167,6 +166,39 @@ async function analyseJSON(json: string, metricGraph:boolean=true, applyLayout: 
     }
     
     return {graph:resultGraph,layout:resultLayout};
+}
+
+
+function changeNodeStyles(networkStyle:GraphStyleProperties):void{
+	networkStyle.nodeStyles = {
+		metabolite: {
+			width: 25,
+			height: 25,
+			fill:  '#FFFFFF',
+			shape: 'circle'
+		},
+    sideCompound: {
+			width: 12,
+			height: 12,
+			fill:  '#f0e3e0',
+			shape: 'circle'
+		},
+		reaction: {
+			width: 15,
+			height: 15,
+			fill: "grey",
+			shape: 'rect'
+		},
+		// reversible : {
+		// 	fill : "green",
+		// 	shape:"inverseTriangle"
+		// },
+		// reversibleVersion:{
+		// 	fill:"red",
+		// 	shape: "triangle"
+		// }
+
+	}
 }
 
 function print1DArray(data: Array<string|number|boolean>): void {

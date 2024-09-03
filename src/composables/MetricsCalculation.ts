@@ -1,7 +1,7 @@
 import { Link } from "@metabohub/viz-core/src/types/Link";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { Node } from "@metabohub/viz-core/src/types/Node";
-import { getTopLeftCoordFromCenter, getSizeNodePixel, getCenterCoordFromTopLeft } from "./calculateSize";
+import { getTopLeftCoordFromCenter, getSizeNodePixel, getCenterCoordFromTopLeft } from "./CalculateSize";
 import { checkIntersection } from "line-intersect";
 import { Coordinate,Size } from "@/types/CoordinatesSize";
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";

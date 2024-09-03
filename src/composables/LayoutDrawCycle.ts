@@ -9,7 +9,7 @@ import { Link } from "@metabohub/viz-core/src/types/Link";
 import { Node } from "@metabohub/viz-core/src/types/Node";
 import { link } from "fs";
 import { emit } from "process";
-import { getMeanNodesSizePixel, getSizeAllGroupCycles, getSizeNodePixel, medianLengthDistance, rectangleSize } from "./calculateSize";
+import { getMeanNodesSizePixel, getSizeAllGroupCycles, getSizeNodePixel, medianEdgeLength, rectangleSize } from "./CalculateSize";
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 import { countIntersectionGraph, countOverlapNodes, isIntersectionGraph, isOverlapNodes, isOverlapNodesEdges } from "./countIntersections";
 
@@ -622,7 +622,7 @@ async function forceGroupCycle(subgraphNetwork:SubgraphNetwork, groupCycleName:s
     }
 
     // get attributes for force layout
-    const distanceLinks=medianLengthDistance(subgraphNetwork.network.value,false);
+    const distanceLinks=medianEdgeLength(subgraphNetwork.network.value,false);
     const strengthManyBody=-distanceLinks*10;
    
     // applying force layout

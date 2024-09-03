@@ -2,7 +2,7 @@ import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { addNewSubgraph, createSubgraph, updateNodeMetadataSubgraph } from "./UseSubgraphNetwork";
 import { TypeSubgraph } from "@/types/Subgraph";
-import { keepFirstReversibleNode, renameAllIDNode } from "./duplicateReversibleReactions";
+import { keepFirstReversibleNode, renameAllIDNode } from "./LayoutReversibleReactions";
 
 
 export function addDirectedCycleToSubgraphNetwork(subgraphNetwork:SubgraphNetwork,minsize:number=4):SubgraphNetwork{

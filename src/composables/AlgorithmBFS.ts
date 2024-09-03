@@ -1,6 +1,6 @@
 import { StartNodesType } from "@/types/EnumArgs";
 import { Network } from "@metabohub/viz-core/src/types/Network";
-import { getSources } from "./rankAndSources";
+import { getSources } from "./CalculateStartNodes";
 import { NetworkToAdjacentObject } from "./ConvertFromNetwork";
 
 

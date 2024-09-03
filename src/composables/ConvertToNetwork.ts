@@ -4,10 +4,10 @@ import { Network } from '@metabohub/viz-core/src/types/Network';
 import type { Node } from "@metabohub/viz-core/src/types/Node";
 import  dagre  from 'dagrejs/dist/dagre.js';
 import { type } from 'os';
-import { assignRankOrder } from './rankAndSources';
+import { assignRankOrder } from './CalculateStartNodes';
 import { SubgraphNetwork } from '@/types/SubgraphNetwork';
 import { TypeSubgraph } from '@/types/Subgraph';
-import { getSizeNodePixel } from './calculateSize';
+import { getSizeNodePixel } from './CalculateSize';
 import { GraphStyleProperties } from '@metabohub/viz-core/src/types/GraphStyleProperties';
 
 
@@ -23,12 +23,10 @@ import { NetworkLayout } from '@/types/NetworkLayout';
 export function NetworkLayoutToNetwork(networkLayout: NetworkLayout): Network {
 
   Object.values(networkLayout.nodes).forEach((nodeLayout) => {
-    delete nodeLayout.classesLayout; 
     delete nodeLayout.metadataLayout;
   });
 
   networkLayout.links.forEach((linkLayout) => {
-    delete linkLayout.classesLayout; 
     delete linkLayout.metadataLayout; 
   });
 

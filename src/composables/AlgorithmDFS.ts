@@ -4,7 +4,7 @@ import { NetworkToGDSGraph, NetworkToSerialized } from './ConvertFromNetwork';
 import { Serialized} from 'graph-data-structure';
 import Graph from "graph-data-structure";
 import { StartNodesType } from '@/types/EnumArgs';
-import { getSources } from './rankAndSources';
+import { getSources } from './CalculateStartNodes';
 
 /**
  * Take a network and sources, return the dfs result (that is an array of string of node ID)

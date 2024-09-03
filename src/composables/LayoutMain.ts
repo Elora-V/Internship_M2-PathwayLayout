@@ -2,27 +2,27 @@
 import { defaultParameters,Parameters } from "@/types/Parameters";
 import { StartNodesType } from "@/types/EnumArgs";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
+import { TypeSubgraph } from "@/types/Subgraph";
 import { Network } from "@metabohub/viz-core/src/types/Network";
+import { NetworkLayout } from "@/types/NetworkLayout";
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
 // Composable imports
-import { putDuplicatedSideCompoundAside, reinsertionSideCompounds } from "./manageSideCompounds";
-import { vizLayout } from "./useLayout";
-import { chooseReversibleReaction, duplicateReversibleReactions } from "./duplicateReversibleReactions";
-import { addDirectedCycleToSubgraphNetwork } from "./findCycle";
+import { putDuplicatedSideCompoundAside, reinsertionSideCompounds } from "./LayoutManageSideCompounds";
+import { vizLayout } from "./LayoutSugiyamaForce";
+import { chooseReversibleReaction, duplicateReversibleReactions } from "./LayoutReversibleReactions";
+import { addDirectedCycleToSubgraphNetwork } from "./LayoutFindCycle";
 import { BFSWithSources } from "./AlgorithmBFS";
-import { addMainChainFromSources, addMiniBranchToMainChain } from "./chooseSubgraph";
-import { coordinateAllCycles, drawAllCyclesGroup } from "./drawCycle";
-import { shiftAllToGetTopLeftCoord } from "./calculateSize";
-import { getSources } from "./rankAndSources";
+import { addMainChainFromSources, addMiniBranchToMainChain } from "./LayoutMainChain";
+import { coordinateAllCycles, drawAllCyclesGroup } from "./LayoutDrawCycle";
+import { shiftAllToGetTopLeftCoord } from "./CalculateSize";
+import { getSources } from "./CalculateStartNodes";
+import { NetworktoNetworkLayout } from "./ConvertFromNetwork";
+import { NetworkLayoutToNetwork } from "./ConvertToNetwork";
 
 // General imports
 import { ref } from "vue";
-import { TypeSubgraph } from "@/types/Subgraph";
-import { resolve } from "path";
-import { NetworkLayout } from "@/types/NetworkLayout";
-import { NetworktoNetworkLayout } from "./ConvertFromNetwork";
-import { NetworkLayoutToNetwork } from "./ConvertToNetwork";
+
 
 
 /*******************************************************************************************************************************************************
@@ -61,7 +61,7 @@ export async function algorithmOnNetwork(network:Network,networkStyle:GraphStyle
 
   // initialize the subgraphNetwork object
   let subgraphNetwork:SubgraphNetwork={
-    network:ref<Network>(network),
+    network:ref<NetworkLayout>(networkLayout),
     networkStyle:ref<GraphStyleProperties>(networkStyle)
   }
 

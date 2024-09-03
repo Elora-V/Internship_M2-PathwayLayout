@@ -8,10 +8,10 @@ import * as GDS from 'graph-data-structure';
 import { SubgraphNetwork } from '@/types/SubgraphNetwork';
 import { h } from 'vue';
 import { Link } from '@metabohub/viz-core/src/types/Link';
-import { getNodesIDPlacedInGroupCycle, inCycle, neighborsGroupCycle } from './drawCycle';
+import { getNodesIDPlacedInGroupCycle, inCycle, neighborsGroupCycle } from './LayoutDrawCycle';
 import { link } from 'fs';
 import { s } from 'vitest/dist/reporters-1evA5lom';
-import { getSizeNodePixel, pixelsToInches } from './calculateSize';
+import { getSizeNodePixel, pixelsToInches } from './CalculateSize';
 import { get } from 'http';
 
 import cytoscape, { ElementDefinition,Stylesheet } from 'cytoscape';
@@ -26,35 +26,38 @@ import { Ordering } from '@/types/EnumArgs';
  * @returns the new network layout object
  */
 export function NetworktoNetworkLayout(network: Network): NetworkLayout {
-
-    const defaultClassesLayout: Array<string> = [];
-  const defaultMetadataLayout: {[key: string]: string | number | {[key: string]: string | number} | Array<string> | boolean} = {};
-
-  // Convert nodes 
-  const nodes: { [key: string]: NodeLayout } = Object.keys(network.nodes).reduce(
-    (acc, key) => {
-    const node = network.nodes[key];
-    acc[key] = {
-      ...node,
-      classesLayout: defaultClassesLayout, 
-      metadataLayout: defaultMetadataLayout 
-    };
-    return acc;
-  }, {} as { [key: string]: NodeLayout });
-
-  // Convert links 
-  const links: Array<LinkLayout> = network.links.map(link => ({
-    ...link,
-    classesLayout: defaultClassesLayout, 
-    metadataLayout: defaultMetadataLayout 
-  }));
-
-  return {
-    ...network,
-    nodes,
-    links
-  };
-}
+    const defaultMetadataLayout: { [key: string]: string | number | { [key: string]: string | number } | Array<string> | boolean } = {};
+  
+    // Convert nodes
+    const nodes: { [key: string]: NodeLayout } = Object.keys(network.nodes).reduce(
+      (acc, key) => {
+        const node = network.nodes[key];
+        acc[key] = {
+          ...node,
+          metadataLayout: defaultMetadataLayout
+        };
+        return acc;
+      },
+      {} as { [key: string]: NodeLayout }
+    );
+  
+    // Convert links
+    const links: Array<LinkLayout> = network.links.map(link => ({
+      ...link,
+      source: nodes[link.source.id], // update of pointer
+      target: nodes[link.target.id], // update of pointer
+      metadataLayout: defaultMetadataLayout
+    }));
+  
+    // Convert network to network layout
+    const networkLayout: NetworkLayout = {
+      ...network,
+      nodes,
+      links,
+    } as NetworkLayout;
+  
+    return networkLayout;
+  }
 
 
 /** 

@@ -28,3 +28,8 @@ export enum Algo{
     ALGO_V1, // main chain with longest
     ALGO_V3 // main chain with all paths
 }
+
+export enum VizArgs{
+    RANKSEP="ranksep",
+    NODESEP="nodesep",
+}

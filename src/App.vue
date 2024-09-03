@@ -178,24 +178,24 @@ import { defaultParameters,Parameters } from "@/types/Parameters";
 
   // Composables ----------
 // import { createStaticForceLayout, createForceLayout } from './composables/UseCreateForceLayout';
-import { dagreLayout, forceLayout, vizLayout } from './composables/useLayout';
-import {chooseReversibleReaction, duplicateReversibleReactions} from "./composables/duplicateReversibleReactions"
+import { dagreLayout, forceLayout, vizLayout } from './composables/LayoutSugiyamaForce';
+import {chooseReversibleReaction, duplicateReversibleReactions} from "./composables/LayoutReversibleReactions"
 import {importNetworkFromFile,importNetworkFromURL} from "./composables/importNetwork"
 import { networkCopy } from "@/composables/ConvertFromNetwork";
 import { initZoom, rescale,duplicateNode,removeNode } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
-import {  addDirectedCycleToSubgraphNetwork } from "@/composables/findCycle";
-import { countIntersectionEdgeNetwork } from "./composables/metricsNetwork";
+import {  addDirectedCycleToSubgraphNetwork } from "@/composables/LayoutFindCycle";
+import { countIntersectionEdgeNetwork } from "./composables/MetricsCalculation";
 import { countIsolatedNodes } from "./composables/countIsolatedNodes";
 import { DFSsourceDAG } from "@/composables/AlgorithmDFS";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 import { BFSWithSources } from "@/composables/AlgorithmBFS";
-import {  getSources } from "@/composables/rankAndSources";
+import {  getSources } from "@/composables/CalculateStartNodes";
 import { addBoldLinkMainChain, addRedLinkcycleGroup } from "@/composables/useSubgraphs";
-import { addMainChainFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/chooseSubgraph";
+import { addMainChainFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/LayoutMainChain";
 import { analyseAllJSON, applyMetricsGraph, applyMetricsLayout } from "@/composables/MetricsApplication";
 import { changeNodeStyles } from "@/composables/styleGraph";
-import { addSideCompoundAttributeFromList, duplicateSideCompound } from "@/composables/manageSideCompounds";
+import { addSideCompoundAttributeFromList, duplicateSideCompound } from "@/composables/LayoutManageSideCompounds";
 
 
 
@@ -208,7 +208,7 @@ import { NetworkComponent } from "@metabohub/viz-core";
 import { ContextMenu } from "@metabohub/viz-context-menu";
 import { node } from "prop-types";
 import func from "vue-temp/vue-editor-bridge";
-import { algorithmOnNetwork, allSteps } from "@/composables/useAlgo";
+import { algorithmOnNetwork, allSteps } from "@/composables/LayoutMain";
 
 
 //import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
@@ -257,9 +257,9 @@ function callbackFunction() {
   //subgraphNetwork={network:network,networkStyle:networkStyle,attributs:{},mainChains:{}};
 
   // remove label (for screenshot)
-  // Object.values(network.value.nodes).forEach(node=>{
-  //       node.label="";
-  //     })
+  Object.values(network.value.nodes).forEach(node=>{
+        node.label="";
+      })
 
 
 

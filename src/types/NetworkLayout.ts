@@ -16,11 +16,9 @@ export interface NetworkLayout extends Network {
 
 
 export interface NodeLayout extends Node {
-    classesLayout?: Array<string>;
     metadataLayout?: {[key: string]: string | number | {[key: string]: string | number} | Array<string> | boolean};
 }
   
 export interface LinkLayout extends Link {
-    classesLayout?: Array<string>;
     metadataLayout?: {[key: string]: string | number | {[key: string]: string | number} | Array<string> | boolean};
 }

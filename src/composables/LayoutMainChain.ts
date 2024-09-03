@@ -2,7 +2,7 @@ import { PathType, StartNodesType } from "@/types/EnumArgs";
 import { DFSWithSources, DFSsourceDAG } from "./AlgorithmDFS";
 import { NetworkToGDSGraph } from "./ConvertFromNetwork";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
-import { getSources } from "./rankAndSources";
+import { getSources } from "./CalculateStartNodes";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { BFS } from "./AlgorithmBFS";
 import {TypeSubgraph, type Subgraph} from "@/types/Subgraph";

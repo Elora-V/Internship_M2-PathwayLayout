@@ -3,17 +3,17 @@ import dagre from 'dagrejs';
 import { Graph, instance } from "@viz-js/viz";
 import { networkToCytoscape, NetworkToDagre, NetworkToDot, NetworkToViz } from './ConvertFromNetwork';
 import { changeNetworkFromCytoscape, changeNetworkFromDagre, changeNetworkFromViz, dagreToNetwork } from './ConvertToNetwork';
-import { JsonViz } from "@/types/JsonViz";
+import { JsonViz } from "@/types/FormatJsonViz";
 import { Subgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
-import { getSepAttributesInches, shiftAllToGetTopLeftCoord } from "./calculateSize";
+import { getSepAttributesInches, shiftAllToGetTopLeftCoord } from "./CalculateSize";
 import * as d3 from 'd3';
 import { reactive } from "vue";
 import cytoscape from 'cytoscape';
 import fcose from 'cytoscape-fcose';
 import cosebilkent from 'cytoscape-cose-bilkent';
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
-import { getMeanNodesSizePixel } from "./calculateSize";
+import { getMeanNodesSizePixel } from "./CalculateSize";
 
 /** 
  * Take a network object and change the (x,y) position of the node with dagre lib
