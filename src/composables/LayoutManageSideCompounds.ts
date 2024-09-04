@@ -9,10 +9,11 @@ import { VizArgs } from "@/types/EnumArgs";
 import { getContentFromURL } from "./importNetwork";
 import { removeAllSelectedNodes , duplicateAllNodesByAttribut} from "@metabohub/viz-core";
 import { getMeanNodesSizePixel, inchesToPixels, minEdgeLength as minEdgeLength, pixelsToInches } from "./CalculateSize";
-
+import { getAttributSideCompounds, isDuplicate, isSideCompound, setAsSideCompound } from "./GetSetAttributsNodes";
 
 // General imports
 import { S } from "vitest/dist/reporters-1evA5lom";
+import { c } from "vite/dist/node/types.d-aGj9QkWt";
 
 
 
@@ -24,9 +25,6 @@ import { S } from "vitest/dist/reporters-1evA5lom";
  * 
  * 0. Declare side compounds
  * 
- * -> isSideCompound : 
- *      return if the node is declare as side compound
- * 
  * -> addSideCompoundAttributeFromList :
  *       add attribute of side compound to all nodes in network from a list
  * 
@@ -36,8 +34,6 @@ import { S } from "vitest/dist/reporters-1evA5lom";
  * -> getIDSideCompoundsFromFile :
  *      return the list of id of side compounds from a file
  * 
- * -> addSideCompoundAttribute :
- *     adding side compound attribute to a node
  * 
  **********************************
  * 
@@ -47,9 +43,6 @@ import { S } from "vitest/dist/reporters-1evA5lom";
  * 
  * -> putDuplicatedSideCompoundAside :
  *      duplicate and put aside side compounds in the network
- * 
- * -> isDuplicate :
- *       return if the node is a duplicate
  * 
  * -> duplicateSideCompound :
  *       duplicate the side compounds in the given subgraph network
@@ -77,17 +70,7 @@ import { S } from "vitest/dist/reporters-1evA5lom";
 //___________________________________________________0.  Declare side compounds__________________________________________________________________________
 
 
-const sideCompoundAttribute="isSideCompound";
 
-/**
- * Return if the node is declare as side compound
- * @param network 
- * @param nodeID id of the node
- * @returns node is a side compound ?
- */
-function isSideCompound(network:Network,nodeID:string):boolean{
-    return Boolean(network.nodes[nodeID].metadata && network.nodes[nodeID].metadata[sideCompoundAttribute]);
-}
 
 /**
  * Add attribute of side compound to all nodes in network from a list 
@@ -97,7 +80,7 @@ function isSideCompound(network:Network,nodeID:string):boolean{
 export async function addSideCompoundAttributeFromList(subgraphNetwork:SubgraphNetwork, pathListSideCompounds):Promise<void>{
     const listIDSideCompounds = await getIDSideCompoundsInNetworkFromFile(subgraphNetwork,pathListSideCompounds);
     listIDSideCompounds.forEach((sideCompoundID) => {
-        addSideCompoundAttribute(subgraphNetwork,sideCompoundID);
+        setAsSideCompound(subgraphNetwork.network.value,sideCompoundID);
     });
 }
 
@@ -134,26 +117,11 @@ async function getIDSideCompoundsFromFile(pathListSideCompounds:string):Promise<
     return listId;
 }
 
-/**
- * Adding side compound attribute to a node
- * @param subgraphNetwork 
- * @param sideCompoundID  id of node
- */
-function addSideCompoundAttribute(subgraphNetwork:SubgraphNetwork,sideCompoundID:string):void{
-    const network = subgraphNetwork.network.value;
-    // add attribute isSideCompound to the node
-    if(!network.nodes[sideCompoundID].metadata) network.nodes[sideCompoundID].metadata={};
-    network.nodes[sideCompoundID].metadata[sideCompoundAttribute]=true;
-}
-
-
-
 
 /*******************************************************************************************************************************************************/
 //___________________________________________________1.  Duplicate and remove side compounds__________________________________________________________________________
 
 
-const classDuplicate="duplicate";
 
 /**
  * Duplicate and put aside side compounds in the network
@@ -191,16 +159,6 @@ export async function putDuplicatedSideCompoundAside(subgraphNetwork:SubgraphNet
 
 
 /**
- * Checks if a node in the network is a duplicate.
- * @param network - The network object.
- * @param nodeID - The ID of the node to check.
- * @returns A boolean indicating whether the node is a duplicate.
- */
-function isDuplicate(network:Network,nodeID:string):boolean{
-    return Boolean(network.nodes[nodeID].classes && network.nodes[nodeID].classes.includes(classDuplicate));
-}
-
-/**
  * Duplicates the side compounds in the given subgraph network.
  * 
  * @param subgraphNetwork - The subgraph network containing the side compounds to be duplicated.
@@ -210,7 +168,7 @@ export function duplicateSideCompound(subgraphNetwork:SubgraphNetwork):void{
     const network = subgraphNetwork.network.value;
     const networkStyle = subgraphNetwork.networkStyle.value;
     // duplication of side compounds
-    duplicateAllNodesByAttribut(network, networkStyle, sideCompoundAttribute);
+    duplicateAllNodesByAttribut(network, networkStyle, getAttributSideCompounds());
     // add attributes to side compounds duplicates
     sideCompoundAttributeOnDuplicate(subgraphNetwork);
 }
@@ -225,7 +183,7 @@ function sideCompoundAttributeOnDuplicate(subgraphNetwork:SubgraphNetwork):void{
     const network = subgraphNetwork.network.value;
     Object.keys(network.nodes).forEach((nodeID)=>{
         if(isDuplicate(network,nodeID)){
-            addSideCompoundAttribute(subgraphNetwork,nodeID);
+            setAsSideCompound(subgraphNetwork.network.value,nodeID);
         }
     });
 }
@@ -285,6 +243,7 @@ export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork,factorM
     if(subgraphNetwork.sideCompounds){
         const network = subgraphNetwork.network.value;
         const networkStyle = subgraphNetwork.networkStyle.value;
+
         // get minimal length of edge to calculate side compounds edge length
         if (!subgraphNetwork.stats) subgraphNetwork.stats={};
             // get the default value : min lenght if there is no link in the network (when side compounds are removed) :
@@ -297,10 +256,12 @@ export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork,factorM
             // get the min length of edge in the network (if not, use default value)
         const minLength=minEdgeLength(subgraphNetwork.network.value,false,minEdgeLengthDefault);
         subgraphNetwork.stats.minEdgeLengthPixel=minLength;
+
         // update side compounds for reversed reactions
         if (doReactionReversible){
             subgraphNetwork=updateSideCompoundsReversibleReaction(subgraphNetwork);
         }
+
         // for each reaction, apply motif stamp
         Object.keys(subgraphNetwork.sideCompounds).forEach((reactionID)=>{
             subgraphNetwork=motifStampSideCompound(subgraphNetwork,reactionID,factorMinEdgeLength);
@@ -336,25 +297,38 @@ function updateSideCompoundsReversibleReaction(subgraphNetwork:SubgraphNetwork):
  * @returns The subgraphNetwork with the motif stamp applied for the reaction.
  */
 function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string,factorMinEdgeLength:number=1/2):SubgraphNetwork{
-    // initialize reaction stamp
-    let reaction=initializeReactionSideCompounds(subgraphNetwork,reactionID);
-    // find intervals between reactants and products
-    reaction.intervalsAvailables=findCofactorIntervals(reaction);
-    // find the biggest interval
-    const biggest=biggestInterval(reaction);
-    reaction.intervalsAvailables=[biggest.interval];
-    // find spacing between side compounds
-    const spacing=findSpacingSideCompounds(reaction,biggest.size);
-    reaction.angleSpacingReactant=spacing.reactant;
-    reaction.angleSpacingProduct=spacing.product;
-    // give coordinates to all side compounds
-    subgraphNetwork=giveCoordAllSideCompounds(subgraphNetwork,reaction,factorMinEdgeLength);
-    // insert side compounds in network
-    insertAllSideCompoundsInNetwork(subgraphNetwork,reaction);
+    try {
+        // initialize reaction stamp
+        let reaction=initializeReactionSideCompounds(subgraphNetwork,reactionID);
+        // find intervals between reactants and products
+        reaction.intervalsAvailables=findCofactorIntervals(reaction);
+        // find the biggest interval
+        const biggest=biggestInterval(reaction);
+        reaction.intervalsAvailables=[biggest.interval];
+        // find spacing between side compounds
+        const spacing=findSpacingSideCompounds(reaction,biggest.size);
+        reaction.angleSpacingReactant=spacing.reactant;
+        reaction.angleSpacingProduct=spacing.product;
+        // give coordinates to all side compounds
+        subgraphNetwork=giveCoordAllSideCompounds(subgraphNetwork,reaction,factorMinEdgeLength);
+        // insert side compounds in network
+        insertAllSideCompoundsInNetwork(subgraphNetwork,reaction);
+    } catch (error) {
+        console.error("Error in motifStampSideCompound for reaction "+reactionID);
+        console.error(error);
+    }
     return subgraphNetwork;
 }
 
 
+/**
+ * Initializes a reaction for side compounds motif
+ * 
+ * @param subgraphNetwork - The subgraph network containing the reaction and side compounds.
+ * @param idReaction - The ID of the reaction.
+ * @returns The initialized Reaction object with side compounds and metabolite angles.
+ * @throws Error if the reaction is not found in the network.
+ */
 function initializeReactionSideCompounds(subgraphNetwork:SubgraphNetwork,idReaction:string):Reaction{
     const network = subgraphNetwork.network.value;
     if (network.nodes[idReaction] && subgraphNetwork.sideCompounds && subgraphNetwork.sideCompounds[idReaction]){
@@ -374,21 +348,24 @@ function initializeReactionSideCompounds(subgraphNetwork:SubgraphNetwork,idReact
             const angle=angleRadianSegment(x,y,xMetabolite,yMetabolite);
             angleMetabolites[metabolite.id]={angle:angle,type:metabolite.type};
         });
-        // median size of links
-        //const metaboliteIds = metabolitesReaction.map(metabolite => metabolite.id);
-        //const medianMinMaxLinks=medianMinMaxLinksReaction(x,y,network,metaboliteIds);
         return {
             id:idReaction,
             sideCompoundsReactants:reactantSideCompounds,
             sideCompoundsProducts:productSideCompounds,
             metabolitesAngles:angleMetabolites,
-           // medianMinMaxLengthLink:medianMinMaxLinks,
         };
-    }else{
-        return null;
+    }else if (!network.nodes[idReaction]){
+        throw new Error("Reaction not found");
     }
 }
 
+/**
+ * Retrieves the metabolites associated with a given reaction in a subgraph network.
+ * 
+ * @param subgraphNetwork - The subgraph network containing the reaction and metabolites.
+ * @param idReaction - The ID of the reaction.
+ * @returns An array of objects representing the metabolites, each containing an ID and a type.
+ */
 function getMetaboliteFromReaction(subgraphNetwork: SubgraphNetwork, idReaction: string): { id: string; type: MetaboliteType }[] {
     const network = subgraphNetwork.network.value;
     return network.links
@@ -399,37 +376,38 @@ function getMetaboliteFromReaction(subgraphNetwork: SubgraphNetwork, idReaction:
         }));
 }
 
+/**
+ * Calculates the angle in radians between two points.
+ * 
+ * @param x1 The x-coordinate of the first point.
+ * @param y1 The y-coordinate of the first point.
+ * @param x2 The x-coordinate of the second point.
+ * @param y2 The y-coordinate of the second point.
+ * @param clockwise Determines whether the angle should be calculated in the clockwise direction. Default is true.
+ * @returns The angle in radians between the two points.
+ */
 function angleRadianSegment(x1:number,y1:number,x2:number,y2:number,clockwise:boolean=true):number{
+    if (!isFinite(x1) || !isFinite(y1) || !isFinite(x2) || !isFinite(y2)) {
+        console.error("Invalid coordinates for angle : one or more coordinates are not finite numbers.");
+        return NaN; 
+    }
+
+    const angle = Math.atan2(y2 - y1, x2 - x1);
+    if (isNaN(angle)) {
+        console.error("Calculation angle resulted in NaN.");
+        return NaN;
+    }
+
     // angle in the anti-clockwise direction from the positive x-axis to the line segment from (x1,y1) to (x2,y2) :
-    if (!clockwise) {return  2*Math.PI-(Math.atan2(y2-y1,x2-x1)+2*Math.PI)%(2*Math.PI);}
+    if (!clockwise) {
+        return 2 * Math.PI - (angle + 2 * Math.PI) % (2 * Math.PI);
+    }
     // angle in the clockwise direction from the positive x-axis to the line segment from (x1,y1) to (x2,y2) :
-    else{return (Math.atan2(y2-y1,x2-x1)+2*Math.PI)%(2*Math.PI);}
+    else {
+        return (angle + 2 * Math.PI) % (2 * Math.PI);
+    }
 }
 
-// function medianMinMaxLinksReaction(xReaction: number, yReaction: number, network: Network, metabolites: string[]): {min:number,max:number,median:number} {
-//     if (metabolites.length === 0) return null;
-
-//     const distances = metabolites.map(metabolite => {
-//         const metaboliteNode = network.nodes[metabolite];
-//         if (!metaboliteNode) return null;
-//         const dx = xReaction - metaboliteNode.x;
-//         const dy = yReaction - metaboliteNode.y;
-//         return Math.sqrt(dx * dx + dy * dy);
-//     }).filter(distance => distance !== null);
-
-//     if (distances.length === 0) return null;
-
-//     distances.sort((a, b) => a - b);
-//     let medianMinMax ={min:distances[0],max:distances[distances.length - 1],median:undefined};
-
-//     const midIndex = Math.floor(distances.length / 2);
-//     if (distances.length % 2 === 0) {
-//         medianMinMax["median"] =(distances[midIndex - 1] + distances[midIndex]) / 2;
-//     } else {
-//         medianMinMax["median"]= distances[midIndex];
-//     }
-//     return medianMinMax;
-// }
 
 
 function findCofactorIntervals(reaction: Reaction): ReactionInterval[] {

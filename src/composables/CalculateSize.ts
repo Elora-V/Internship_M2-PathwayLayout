@@ -2,12 +2,15 @@
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { Node } from "@metabohub/viz-core/src/types/Node";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
-import { Subgraph } from "@/types/Subgraph";
+import { Subgraph, TypeSubgraph } from "@/types/Subgraph";
 import { Coordinate, Size } from "@/types/CoordinatesSize";
 
 // Composable imports
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
-import { inCycle } from "./LayoutDrawCycle";
+import { inCycle } from "./GetSetAttributsNodes";
+
+// General imports
+import { e } from "vitest/dist/reporters-1evA5lom";
 
 
 
@@ -49,9 +52,27 @@ import { inCycle } from "./LayoutDrawCycle";
  * *********************************
  * 2.  Subgraphs
  * 
+ * -> rectangleSize :
+ *      Calculates the size and center coordinates of a rectangle based on a list of coordinates.
+ * 
+ * -> getSizeAllGroupCycles :
+ *      Calculates the size of all group cycles.
+ * 
+ * -> getSizeGroupCycles :
+ *      Calculates the size of a group cycle.
+ * 
  * 
  * *********************************
  * 3.  Shift coordinates depending on size
+ * 
+ * -> shiftAllToGetTopLeftCoord :
+ *       Shifts all nodes in the network to get the top left coordinate based on the given style.
+ * 
+ * -> getTopLeftCoordFromCenter :
+*        Calculates the top left coordinate of a node based on its center coordinate and size.
+ * 
+ * -> getCenterCoordFromTopLeft :
+ *       Calculates the center coordinates of a node based on its top-left coordinates and size.
  * 
  */
 
@@ -102,8 +123,10 @@ export function getSizeNodePixel(node:Node,styleNetwork:GraphStyleProperties):Si
             }
         });
     }
-    if (!height || !width){
+    if (!height){
         height = defaultHeightNode;
+    }
+    if (!width){
         width = defaultWidthNode;
     }
 
@@ -244,10 +267,10 @@ export function medianEdgeLength(network: Network, cycleInclude: boolean = true)
 
 /**
  * Calculates the size and center coordinates of a rectangle based on a list of coordinates.
- * @param listCoordinates - The list of coordinates representing the corners of the rectangle.
+ * @param listCoordinates - The list of coordinates in the rectangle.
  * @returns An object containing the width, height, and center coordinates of the rectangle.
  */
-export function rectangleSize(listCoordinates:{x:number,y:number}[],listID?:string[],subgraphNetwork?:SubgraphNetwork):{width:number,height:number,center:{x:number,y:number}}{
+export function rectangleSize(listCoordinates:Coordinate[],listID?:string[],subgraphNetwork?:SubgraphNetwork):{width:number,height:number,center:Coordinate}{
 
     // get the x and y coordinates
     const xCoordinates=listCoordinates.map(coord=>coord.x);
@@ -268,22 +291,42 @@ export function rectangleSize(listCoordinates:{x:number,y:number}[],listID?:stri
 
     // if nodes ID : take into account its size
     if (listID && subgraphNetwork){
+
         // min x
-        const minXNode = listID[minXIndex];
-        const sizeMinXNode = getSizeNodePixel(subgraphNetwork.network.value.nodes[minXNode],subgraphNetwork.networkStyle.value);
-        minX = minX - sizeMinXNode.width/2;
+        if (minXIndex === -1){
+            minX = -defaultWidthNode/2;
+        } else {
+            const minXNode = listID[minXIndex];
+            const sizeMinXNode = getSizeNodePixel(subgraphNetwork.network.value.nodes[minXNode],subgraphNetwork.networkStyle.value);
+            minX = minX - sizeMinXNode.width/2;
+        }
+
         // max x
-        const maxXNode = listID[maxXIndex];
-        const sizeMaxXNode = getSizeNodePixel(subgraphNetwork.network.value.nodes[maxXNode],subgraphNetwork.networkStyle.value);
-        maxX = maxX + sizeMaxXNode.width/2;
+        if (maxXIndex === -1){
+            maxX = defaultWidthNode/2;
+        }else {
+            const maxXNode = listID[maxXIndex];
+            const sizeMaxXNode = getSizeNodePixel(subgraphNetwork.network.value.nodes[maxXNode],subgraphNetwork.networkStyle.value);
+            maxX = maxX + sizeMaxXNode.width/2;
+        }
+
         // min y
-        const minYNode = listID[minYIndex];
-        const sizeMinYNode = getSizeNodePixel(subgraphNetwork.network.value.nodes[minYNode],subgraphNetwork.networkStyle.value);
-        minY = minY - sizeMinYNode.height/2;
+        if (minYIndex === -1){
+            minY = -defaultHeightNode/2;
+        } else {
+            const minYNode = listID[minYIndex];
+            const sizeMinYNode = getSizeNodePixel(subgraphNetwork.network.value.nodes[minYNode],subgraphNetwork.networkStyle.value);
+            minY = minY - sizeMinYNode.height/2;
+        }
+
         // max y
-        const maxYNode = listID[maxYIndex];
-        const sizeMaxYNode = getSizeNodePixel(subgraphNetwork.network.value.nodes[maxYNode],subgraphNetwork.networkStyle.value);
-        maxY = maxY + sizeMaxYNode.height/2;
+        if (maxYIndex === -1){
+            maxY = defaultHeightNode/2;
+        } else {
+            const maxYNode = listID[maxYIndex];
+            const sizeMaxYNode = getSizeNodePixel(subgraphNetwork.network.value.nodes[maxYNode],subgraphNetwork.networkStyle.value);
+            maxY = maxY + sizeMaxYNode.height/2;
+        }
     }
 
     return {
@@ -296,17 +339,33 @@ export function rectangleSize(listCoordinates:{x:number,y:number}[],listID?:stri
     };
 }
 
+
+
+/**
+ * Calculates the size of all group cycles 
+ * 
+ * @param subgraphNetwork - The subgraph network to calculate the size for.
+ * @returns The subgraphNetwork with the size of all group cycles calculated.
+ */
 export function getSizeAllGroupCycles(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
-    Object.values(subgraphNetwork.cyclesGroup).forEach(groupCycle => {
+    Object.values(subgraphNetwork[TypeSubgraph.CYCLEGROUP]).forEach(groupCycle => {
         subgraphNetwork=getSizeGroupCycles(subgraphNetwork,groupCycle);
     });
 
     return subgraphNetwork;
 }
 
+/**
+ * Calculates the size of a group cycle.
+ * 
+ * @param subgraphNetwork - The subgraph network to calculate the size for.
+ * @param groupCycle - The group cycle to calculate the size for.
+ * @returns The subgraphNetwork with the size of the group cycle calculated.
+ */
 function getSizeGroupCycles(subgraphNetwork:SubgraphNetwork,groupCycle:Subgraph):SubgraphNetwork{
     if (groupCycle.metadata){
         // get all nodes with x and y coordinates
+        console.warn('modifier getSizeGroupCycle avec nouveau attribut position');
         const listNodesMetadata = Object.entries(groupCycle.metadata)
                         .filter(([_,item]) => item["x"] !== undefined && item["y"] !== undefined);
         const listCoordinates = listNodesMetadata.map(([_,item]) => {return {x:item["x"],y:item["y"]}});
@@ -325,6 +384,13 @@ function getSizeGroupCycles(subgraphNetwork:SubgraphNetwork,groupCycle:Subgraph)
 //___________________________________________________3.  Shift coordinates depending on size ____________________________________________________________
 
 
+/**
+ * Shifts all nodes in the network to get the top left coordinate based on the given style.
+ * 
+ * @param network - The network object containing the nodes.
+ * @param style - The style properties used to calculate the top left coordinate.
+ * @param moveCycleToo - Optional parameter indicating whether to move nodes in cycles as well. Defaults to true.
+ */
 export function shiftAllToGetTopLeftCoord(network:Network,style:GraphStyleProperties,moveCycleToo:boolean=true) {
     Object.values(network.nodes).forEach(node=>{
         if( moveCycleToo || !inCycle(network,node.id)){
@@ -335,11 +401,25 @@ export function shiftAllToGetTopLeftCoord(network:Network,style:GraphStyleProper
     })
 }
 
+/**
+ * Calculates the top left coordinate of a node based on its center coordinate and size.
+ * 
+ * @param node - The node for which to calculate the top left coordinate.
+ * @param style - The style properties of the node.
+ * @returns The top left coordinate of the node.
+ */
 export function getTopLeftCoordFromCenter(node:Node,style:GraphStyleProperties):Coordinate{
     const size = getSizeNodePixel(node,style);
     return {x:node.x-size.width/2,y:node.y-size.height/2}
 }
 
+/**
+ * Calculates the center coordinates of a node based on its top-left coordinates and size.
+ * 
+ * @param node - The node for which to calculate the center coordinates.
+ * @param style - The style properties of the node.
+ * @returns The center coordinates of the node.
+ */
 export function getCenterCoordFromTopLeft(node:Node,style:GraphStyleProperties):Coordinate{
     const size = getSizeNodePixel(node,style);
     return {x:node.x+size.width/2,y:node.y+size.height/2}

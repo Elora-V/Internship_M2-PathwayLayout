@@ -8,7 +8,7 @@ import * as GDS from 'graph-data-structure';
 import { SubgraphNetwork } from '@/types/SubgraphNetwork';
 import { h } from 'vue';
 import { Link } from '@metabohub/viz-core/src/types/Link';
-import { getNodesIDPlacedInGroupCycle, inCycle, neighborsGroupCycle } from './LayoutDrawCycle';
+import { getNodesIDPlacedInGroupCycle, neighborsGroupCycle } from './LayoutDrawCycle';
 import { link } from 'fs';
 import { s } from 'vitest/dist/reporters-1evA5lom';
 import { getSizeNodePixel, pixelsToInches } from './CalculateSize';
@@ -18,6 +18,7 @@ import cytoscape, { ElementDefinition,Stylesheet } from 'cytoscape';
 import { layout } from 'dagrejs';
 import { LinkLayout, NetworkLayout, NodeLayout } from '@/types/NetworkLayout';
 import { Ordering } from '@/types/EnumArgs';
+import { inCycle } from './GetSetAttributsNodes';
 
 
 /**

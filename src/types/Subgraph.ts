@@ -1,3 +1,4 @@
+import { Coordinate } from "./CoordinatesSize";
 import { Ordering } from "./EnumArgs";
 
 /**
@@ -28,8 +29,10 @@ export interface Subgraph {
 
     width?:number;
     height?:number;
-    position?:{x:number,y:number};
-    originalPosition?:{x:number,y:number}; // if metanode : the metanode center not well positionned (precalulated position)
+    position?:Coordinate;
+    originalPosition?:Coordinate; // if metanode : the metanode center not well positionned (precalulated position)
+
+    precalculatedNodesPosition: {[key: string]: Coordinate}; // if metanode : the position of the nodes in the metanode
     
     metadata?: {[key: string]: string | number| boolean | {[key: string]: string | number} | Array<string>};
 }

@@ -19,7 +19,7 @@ export interface Reaction {
     sideCompoundsReactants: Array<string>
     sideCompoundsProducts:Array<string>
     metabolitesAngles:{[key:string]:{angle:number,type:MetaboliteType}}
-    linkMedianMinMaxLength?:{median:number,min:number,max:number}
+    //linkMedianMinMaxLength?:{median:number,min:number,max:number}
     intervalsAvailables?: ReactionInterval[]
     angleSpacingReactant?:number
     angleSpacingProduct?:number

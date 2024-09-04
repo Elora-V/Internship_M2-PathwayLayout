@@ -35,12 +35,14 @@ import { ref } from "vue";
  * *******************************************************************************************************************************************************/
 
 
-
 /**
- * Change the nodes coordinates of network 
- * @param network a ref of the network to change (ref to type Network)
- * @param networkStyle a ref of the style of the network to change (ref to type GraphStyleProperties)
- * @param parameters parameters for the algorithm
+ * Executes the layout algorithm on a network with the given network style and parameters.
+ * 
+ * @param network - The network to apply the algorithm on.
+ * @param networkStyle - The style properties for the network.
+ * @param parameters - The optional parameters for the algorithm.
+ * @returns A promise that resolves to the modified network after applying the algorithm.
+ * @throws An error if the network or networkStyle is not defined or empty.
  */
 export async function algorithmOnNetwork(network:Network,networkStyle:GraphStyleProperties,parameters:Parameters=defaultParameters):Promise<Network>{
 

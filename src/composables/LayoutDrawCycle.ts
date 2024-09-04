@@ -1,17 +1,24 @@
+// Type imports
 import { Subgraph, TypeSubgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { Network } from "@metabohub/viz-core/src/types/Network";
+import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
+import { Link } from "@metabohub/viz-core/src/types/Link";
+import { Node } from "@metabohub/viz-core/src/types/Node";
+
+// Composable imports
+import { getMeanNodesSizePixel, medianEdgeLength, rectangleSize } from "./CalculateSize";
+import { isIntersectionGraph, isOverlapNodes, isOverlapNodesEdges } from "./countIntersections";
+import { inCycle } from "./GetSetAttributsNodes";
+
+
+// General imports
 import { group } from "console";
 import { start } from "repl";
 import { a } from "vitest/dist/suite-ghspeorC";
 import * as d3 from 'd3';
-import { Link } from "@metabohub/viz-core/src/types/Link";
-import { Node } from "@metabohub/viz-core/src/types/Node";
 import { link } from "fs";
 import { emit } from "process";
-import { getMeanNodesSizePixel, getSizeAllGroupCycles, getSizeNodePixel, medianEdgeLength, rectangleSize } from "./CalculateSize";
-import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
-import { countIntersectionGraph, countOverlapNodes, isIntersectionGraph, isOverlapNodes, isOverlapNodesEdges } from "./countIntersections";
 
 
 
@@ -688,26 +695,6 @@ function isRemainingCycleIndepOfDrawing(remainingCycles:Subgraph[], subgraphNetw
 //__________________________________ Utility functions______________________________________________________
 //------------------------------------------------------------------------------------------------------------
 
-
-
-
-
-/**
- * Checks if a node is part of a cycle in the network.
- * @param network - The network object.
- * @param idNode - The ID of the node to check.
- * @returns A boolean indicating whether the node is in a cycle or not.
- */
-export function inCycle(network: Network, idNode: string): boolean {
-    // no metadata or no cycle metadata or empty cycle metadata : that is, not in a cycle
-    let inCycle:boolean=false;
-    if (idNode in network.nodes && "metadata" in network.nodes[idNode] 
-        && TypeSubgraph.CYCLE in network.nodes[idNode].metadata){
-            const cycles=network.nodes[idNode].metadata[TypeSubgraph.CYCLE] as string[];
-            if (cycles.length>0) inCycle=true;
-    }
-    return inCycle;
-}
 
 
 /**
