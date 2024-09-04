@@ -4,6 +4,8 @@ import { Network } from "@metabohub/viz-core/src/types/Network";
 import { Node } from "@metabohub/viz-core/src/types/Node";
 import { MetaboliteType, Reaction, ReactionInterval } from "@/types/Reaction";
 import { VizArgs } from "@/types/EnumArgs";
+import { Coordinate } from "@/types/CoordinatesSize";
+import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
 
 // Composable imports
 import { getContentFromURL } from "./importNetwork";
@@ -14,6 +16,9 @@ import { getAttributSideCompounds, isDuplicate, isSideCompound, setAsSideCompoun
 // General imports
 import { S } from "vitest/dist/reporters-1evA5lom";
 import { c } from "vite/dist/node/types.d-aGj9QkWt";
+import { resolve } from "path";
+
+
 
 
 
@@ -58,6 +63,68 @@ import { c } from "vite/dist/node/types.d-aGj9QkWt";
  * 
  * 
  * 2. Reinsert side compounds
+ * 
+ * -> reinsertionSideCompounds :
+ *      reinsert side compounds in the network
+ * 
+ * -> minEdgeLengthDefault :
+ *     calculates the default minimum edge length based on the given subgraph network and a factor
+ * 
+ * -> updateSideCompoundsReversibleReaction :
+ *      updates side compounds for reversed reactions
+ * 
+ * -> motifStampSideCompound :
+ *       applies a motif stamp to place side compound for a reaction
+ * 
+ * -> initializeReactionSideCompounds :
+ *      initializes a reaction for side compounds motif
+ * 
+ * -> getMetaboliteFromReaction :
+ *      retrieves the metabolites associated with a given reaction in a subgraph network
+ * 
+ * -> angleRadianSegment :
+ *      calculates the angle in radians between two points
+ * 
+ * -> addSideCompoundsIntervals :
+ *      finds the cofactor intervals for a given reaction
+ * 
+ * -> addIntervalsBetweenMetabolites :
+ *      finds intervals between metabolites in a reaction
+ * 
+ * -> addInterval :
+ *      creates a reaction interval based on the given parameters
+ * 
+ * -> biggestInterval :
+ *      finds the biggest interval (between two metabolites) in all intervals of a reaction
+ * 
+ * -> sizeInterval :
+ *      calculates the size of an interval (between two metabolites) in a reaction
+ * 
+ * -> findSpacingSideCompounds :
+ *      finds spacing between side compounds
+ * 
+ * -> giveCoordAllSideCompounds :
+ *      calculates the coordinates for all side compounds in a subgraph network
+ * 
+ * -> calculateDistance :
+ *      calculates the distance between two points
+ * 
+ * -> placeSideCompounds :
+ *     places a type of side compounds (reactants or products) around a reaction
+ * 
+ * -> determineDirection :
+ *     determines the direction of the angle of the side compound
+ * 
+ * -> giveCoordSideCompound :
+ *     calculates the coordinates for a side compound 
+ * 
+ * -> insertAllSideCompoundsInNetwork :
+ *      inserts all side compounds in the network
+ * 
+ * -> insertSideCompoundInNetwork :
+ *      inserts a side compound in the network
+ * 
+ * 
  * 
  *      
  * *******************************************************************************************************************************************************/
@@ -146,7 +213,7 @@ export async function putDuplicatedSideCompoundAside(subgraphNetwork:SubgraphNet
             }
             // remove side compounds from network, they are keeped aside in subgraphNetwork.sideCompounds
             if (doPutAsideSideCompounds){
-            subgraphNetwork=removeSideCompoundsFromNetwork(subgraphNetwork);
+                subgraphNetwork= removeSideCompoundsFromNetwork(subgraphNetwork);
             }
             resolve(subgraphNetwork);
         } catch (error) {
@@ -196,7 +263,7 @@ function sideCompoundAttributeOnDuplicate(subgraphNetwork:SubgraphNetwork):void{
  * @param subgraphNetwork - The subgraph network from which side compounds will be removed.
  * @returns The updated subgraph network with side compounds removed.
  */
-function removeSideCompoundsFromNetwork(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
+function removeSideCompoundsFromNetwork(subgraphNetwork:SubgraphNetwork): SubgraphNetwork{
 
     const network = subgraphNetwork.network.value;
     subgraphNetwork.sideCompounds={};
@@ -241,34 +308,48 @@ function removeSideCompoundsFromNetwork(subgraphNetwork:SubgraphNetwork):Subgrap
  */
 export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork,factorMinEdgeLength:number=1/2,doReactionReversible:boolean):SubgraphNetwork{
     if(subgraphNetwork.sideCompounds){
-        const network = subgraphNetwork.network.value;
-        const networkStyle = subgraphNetwork.networkStyle.value;
-
-        // get minimal length of edge to calculate side compounds edge length
+        // get information for length of edge for side compounds :
+        // get the min length of edge in the network (if not, use default value)
+        let minLength=minEdgeLength(subgraphNetwork.network.value,false);
+        // get the default value : min lenght if there is no link in the network (when side compounds are removed) :
+        if (isNaN(minLength)){
+            console.warn('Minimal edge length by default');
+            minLength=minEdgeLengthDefault(subgraphNetwork,factorMinEdgeLength);
+        } 
+        // add information in subgraphNetwork.stats
         if (!subgraphNetwork.stats) subgraphNetwork.stats={};
-            // get the default value : min lenght if there is no link in the network (when side compounds are removed) :
-        const meanSize=getMeanNodesSizePixel(Object.values(network.nodes),networkStyle, false);
-        const defaultSep=(meanSize.height+meanSize.width)/2;
-        const rankSep=subgraphNetwork.attributs[VizArgs.RANKSEP]?inchesToPixels(subgraphNetwork.attributs[VizArgs.RANKSEP] as number):defaultSep;
-        const nodeSep=subgraphNetwork.attributs[VizArgs.NODESEP]?inchesToPixels(subgraphNetwork.attributs[VizArgs.NODESEP] as number):defaultSep;
-        //const invFactor=factorMinEdgeLength===0?1:1/factorMinEdgeLength;
-        const minEdgeLengthDefault=(nodeSep+rankSep)/2*factorMinEdgeLength; 
-            // get the min length of edge in the network (if not, use default value)
-        const minLength=minEdgeLength(subgraphNetwork.network.value,false,minEdgeLengthDefault);
         subgraphNetwork.stats.minEdgeLengthPixel=minLength;
 
         // update side compounds for reversed reactions
         if (doReactionReversible){
-            subgraphNetwork=updateSideCompoundsReversibleReaction(subgraphNetwork);
+            subgraphNetwork= updateSideCompoundsReversibleReaction(subgraphNetwork);
         }
 
         // for each reaction, apply motif stamp
         Object.keys(subgraphNetwork.sideCompounds).forEach((reactionID)=>{
-            subgraphNetwork=motifStampSideCompound(subgraphNetwork,reactionID,factorMinEdgeLength);
+            subgraphNetwork= motifStampSideCompound(subgraphNetwork,reactionID,factorMinEdgeLength);
         });       
     }
     return subgraphNetwork;
 
+}
+
+/**
+ * Calculates the default minimum edge length based on the given subgraph network and a factor.
+ * 
+ * @param subgraphNetwork - The subgraph network object.
+ * @param factorMinEdgeLength - The factor to multiply the calculated minimum edge length by.
+ * @returns The calculated minimum edge length.
+ */
+function minEdgeLengthDefault(subgraphNetwork:SubgraphNetwork,factorMinEdgeLength:number):number{
+    const network = subgraphNetwork.network.value;
+    const networkStyle = subgraphNetwork.networkStyle.value;
+    const meanSize=getMeanNodesSizePixel(Object.values(network.nodes),networkStyle, false);
+    const defaultSep=(meanSize.height+meanSize.width)/2;
+    const rankSep=subgraphNetwork.attributs[VizArgs.RANKSEP]?inchesToPixels(subgraphNetwork.attributs[VizArgs.RANKSEP] as number):defaultSep;
+    const nodeSep=subgraphNetwork.attributs[VizArgs.NODESEP]?inchesToPixels(subgraphNetwork.attributs[VizArgs.NODESEP] as number):defaultSep;
+    //const invFactor=factorMinEdgeLength===0?1:1/factorMinEdgeLength;
+    return (nodeSep+rankSep)/2*factorMinEdgeLength; 
 }
 
 // MODIFICATION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -299,9 +380,9 @@ function updateSideCompoundsReversibleReaction(subgraphNetwork:SubgraphNetwork):
 function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string,factorMinEdgeLength:number=1/2):SubgraphNetwork{
     try {
         // initialize reaction stamp
-        let reaction=initializeReactionSideCompounds(subgraphNetwork,reactionID);
+        let reaction= initializeReactionSideCompounds(subgraphNetwork,reactionID);
         // find intervals between reactants and products
-        reaction.intervalsAvailables=findCofactorIntervals(reaction);
+        reaction = addSideCompoundsIntervals(reaction);
         // find the biggest interval
         const biggest=biggestInterval(reaction);
         reaction.intervalsAvailables=[biggest.interval];
@@ -319,6 +400,10 @@ function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:strin
     }
     return subgraphNetwork;
 }
+
+
+/***********************************************************************/
+//______________2.1  Stamp motif : initialization
 
 
 /**
@@ -408,69 +493,94 @@ function angleRadianSegment(x1:number,y1:number,x2:number,y2:number,clockwise:bo
     }
 }
 
+/***********************************************************************/
+//______________2.2  Stamp motif : find intervals
 
 
-function findCofactorIntervals(reaction: Reaction): ReactionInterval[] {
-    let intervals: ReactionInterval[] = [];
-    // sort metabolites by angle
+
+/**
+ * Finds the cofactor intervals for a given reaction. If possible, the intervals are found between reactants and products.
+ * 
+ * @param reaction - The reaction object.
+ * @returns An array of ReactionInterval objects representing the cofactor intervals.
+ */
+function addSideCompoundsIntervals(reaction: Reaction): Reaction {
+
+    // Sort metabolites by angle
     const sortedMetabolites = Object.entries(reaction.metabolitesAngles)
-        .map(([id, {angle, type}]) => ({id, angle, type}))
-        .sort((a, b) => a.angle - b.angle);
-
-    // initialisation
-    const lastIndex=sortedMetabolites.length-1;
-    let previousType = sortedMetabolites[lastIndex]?.type;
-    let previousId = sortedMetabolites[lastIndex]?.id;
-    let firstInterval=false;
-
-    // Process sorted metabolites to find intervals between reactants and products
-    sortedMetabolites.forEach((currentMetabolite, i) => {
-        if (currentMetabolite.type !== previousType) {
-            // is it the interval between the last and the first metabolite ? (special case for calculations)
-            if (i === 0) {
-                firstInterval=true;
-            }else{
-                firstInterval=false;
-            }
-            // Change of type, we have a new interval
-            const interval= createInterval(reaction,previousId,previousType,currentMetabolite.id,currentMetabolite.type,firstInterval);
-            intervals.push(interval);
-        }
-        // Update previous values
-        previousType = currentMetabolite.type;
-        previousId = currentMetabolite.id;
+    .map(([id, {angle, type}]) => ({id, angle, type}))
+    .sort((a, b) => {
+        if (isNaN(a.angle)) return 1; // Place `a` after `b` if `a.angle` is `NaN`
+        if (isNaN(b.angle)) return -1; // Place `b` after `a` if `b.angle` is `NaN`
+        return a.angle - b.angle; // Normal comparison if both angles are numbers
     });
 
-    // if no interval between reactants and products :
-    previousId = sortedMetabolites[lastIndex]?.id;
-    if (intervals.length === 0) {
-        sortedMetabolites.forEach((currentMetabolite, i) => {
-                // is it the interval between the last and the first metabolite ? (special case for calculations)
-                if (i === 0) {
-                    firstInterval=true;
-                }else{
-                    firstInterval=false;
-                }
-                // new interval
-                const interval= createInterval(reaction,previousId,currentMetabolite.type,currentMetabolite.id,currentMetabolite.type,firstInterval);
-                intervals.push(interval);
-                // update
-                previousId= currentMetabolite.id;
-        });
+    // Initialisation
+    if (!sortedMetabolites || sortedMetabolites.length === 0) {
+        throw new Error("No sorted metabolite for side compounds insertion");
     }
 
+    const lastIndex = sortedMetabolites.length - 1;
+    let previousType = sortedMetabolites[lastIndex]?.type;
+    let previousId = sortedMetabolites[lastIndex]?.id;
 
-    if (intervals.length===0) {
-        intervals.push({
+    // Process sorted metabolites to find intervals between reactants and products
+    reaction = addIntervalsBetweenMetabolites(reaction,sortedMetabolites, previousId, previousType,true);
+
+    // If no interval between reactants and products
+    if (reaction.intervalsAvailables.length === 0) {
+        reaction = addIntervalsBetweenMetabolites(reaction,sortedMetabolites, previousId, previousType,false);
+    }
+
+    // If still no intervals, add a default interval
+    if (reaction.intervalsAvailables.length === 0) {
+        reaction.intervalsAvailables =[{
             typeInterval: 0, 
             reactant: null,
             product: null,
-        })
-    };
-    return intervals;
+        }];
+    }
+
+    return reaction;
 }
 
-function createInterval(reaction:Reaction,id1:string,type1:MetaboliteType,id2:string,type2:MetaboliteType,firstInterval:boolean=false):ReactionInterval{
+    
+/**
+ * Finds intervals between metabolites in a reaction.
+ * 
+ * @param reaction - The reaction to add intervals to.
+ * @param sortedMetabolites - An array of sorted metabolites.
+ * @param firstPreviousID - The ID of the first previous metabolite.
+ * @param firstPreviousType - The type of the first previous metabolite.
+ * @param checkChangeType - Optional. Specifies whether to ask for a change in metabolite type to be considered as an interval. Defaults to true.
+ * @returns The reaction with added intervals.
+ */
+function addIntervalsBetweenMetabolites(reaction:Reaction,sortedMetabolites: {id: string, angle: number, type: MetaboliteType}[], firstPreviousID: string, firstPreviousType: MetaboliteType, checkChangeType: boolean = true):Reaction {
+    let firstInterval = false;
+    sortedMetabolites.forEach((currentMetabolite, i) => {
+        if ( !checkChangeType || (currentMetabolite.type !== firstPreviousType)) {
+            firstInterval = (i === 0);
+            reaction = addInterval(reaction, firstPreviousID, firstPreviousType, currentMetabolite.id, firstInterval);
+        }
+        firstPreviousType = currentMetabolite.type;
+        firstPreviousID = currentMetabolite.id;
+    });
+    return reaction;
+}
+
+/**
+ * Creates a reaction interval based on the given parameters.
+ * Type of interval is 1 if reactant then product, 0 if product then reactant,
+ * or special case if the x-axis is between the two metabolites : 3 if reactant is the smaller angle, 2 if product is the smaller angle.
+ * 
+ * @param reaction - The reaction object.
+ * @param id1 - The first metabolite ID.
+ * @param type1 - The type of the first metabolite.
+ * @param id2 - The second metabolite ID.
+ * @param firstInterval - Optional. Indicates if it's the first interval. Defaults to false.
+ * @returns The created reaction interval.
+ */
+function addInterval(reaction:Reaction,id1:string,type1:MetaboliteType,id2:string,firstInterval:boolean=false):Reaction{
     let typeInterval:number;
     const angles=reaction.metabolitesAngles;
     const reactant= type1 === MetaboliteType.REACTANT ? id1 : id2;
@@ -484,18 +594,23 @@ function createInterval(reaction:Reaction,id1:string,type1:MetaboliteType,id2:st
         typeInterval=0+2*Number(firstInterval);
     }
 
-    return{
-        typeInterval: typeInterval, 
-        reactant: reactant,
-        product: product,
-    }
+    // add interval in reaction
+    if(!reaction.intervalsAvailables) reaction.intervalsAvailables=[];
+    reaction.intervalsAvailables.push({typeInterval: typeInterval, reactant: reactant, product: product});
+    return reaction;
 }
 
-
+/**
+ * Find the biggest interval (between two metabolites) in all intervals of a reaction.
+ * @param reaction 
+ * @returns the biggest interval and its size
+ */
 function biggestInterval(reaction: Reaction): {interval:ReactionInterval,size:number} {
     const intervals = reaction.intervalsAvailables;
     if (intervals.length === 0) {
         throw new Error("Empty intervals");
+    }else if (intervals.length === 1) {
+        return {interval:intervals[0],size:sizeInterval(reaction,0)};
     }
     // size of intervals
     const sizes = intervals.map((_, index) => sizeInterval(reaction, index));
@@ -503,15 +618,28 @@ function biggestInterval(reaction: Reaction): {interval:ReactionInterval,size:nu
     const maxValue = Math.max(...sizes);
     // Return interval associated
     const maxIndex = sizes.indexOf(maxValue);
+    if(maxIndex===-1) throw new Error("No interval of max size found");
     return {interval:intervals[maxIndex],size:maxValue};
 }
 
 
+/**
+ * Calculates the size of an interval (between two metabolites) in a reaction, depending on the type of interval.
+ * Type of interval is 1 if reactant then product, 0 if product then reactant,
+ * or special case if the x-axis is between the two metabolites : 3 if reactant is the smaller angle, 2 if product is the smaller angle.
+ * 
+ * @param reaction - The reaction object.
+ * @param intervalIndex - The index of the interval to process, in all the intervals of the reaction .
+ * @returns The size of the interval in radians.
+ * @throws {Error} If the angles or interval are undefined.
+ */
 function sizeInterval(reaction:Reaction,intervalIndex:number):number{
     const angles=reaction.metabolitesAngles;
+    if (angles===undefined) throw new Error("No angles");
     const interval=reaction.intervalsAvailables[intervalIndex];
-    // if reactant and product null : return 2*PI 
-    if (interval.reactant===null || interval.product===null) return Math.PI*2;
+    if (interval===undefined) throw new Error("No interval");
+    // if reactant or product null : return 2*PI 
+    if (!interval.reactant || !interval.product) return Math.PI*2;
     if (interval.typeInterval===0 || interval.typeInterval===1){
         // |angle1-angle2|
         return Math.abs(angles[interval.product].angle-angles[interval.reactant].angle);
@@ -521,8 +649,11 @@ function sizeInterval(reaction:Reaction,intervalIndex:number):number{
     }
 }
 
+/***********************************************************************/
+//______________2.3  Stamp motif : find spacing
 
-function findSpacingSideCompounds(reaction:Reaction,sizeInterval):{reactant:number,product:number}{
+
+function findSpacingSideCompounds(reaction:Reaction,sizeInterval:number):{reactant:number,product:number}{
     const reactantNumber=reaction.sideCompoundsReactants.length;
     const productNumber=reaction.sideCompoundsProducts.length;
     return {
@@ -531,62 +662,131 @@ function findSpacingSideCompounds(reaction:Reaction,sizeInterval):{reactant:numb
     };
 }
 
+/***********************************************************************/
+//______________2.4  Stamp motif : give coordinates
+
+
+/**
+ * Calculates the coordinates for all side compounds in a subgraph network.
+ * 
+ * @param subgraphNetwork - The subgraph network containing the side compounds.
+ * @param reaction - The reaction for which the side compounds are being calculated.
+ * @param factorLength - The factor length used for edge length of side compounds. Default value is 1/2.
+ * @returns The updated subgraph network with the calculated coordinates for the side compounds.
+ */
 function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reaction,factorLength:number=1/2):SubgraphNetwork{
-    //const distance=reaction.medianMinMaxLengthLink[medianMinMax]* factorLength;
-    let baseLengthPixel:number;
-    if (subgraphNetwork.stats["minEdgeLengthPixel"]){
-        baseLengthPixel=subgraphNetwork.stats["minEdgeLengthPixel"];
-    }else{
-        console.error("stats minLength not found, use default value 1 inche");
-        baseLengthPixel=pixelsToInches(1);
-    }
-    const distance=baseLengthPixel*factorLength;
+
+    const distance=calculateDistance(subgraphNetwork, factorLength);
     const sideCompounds=subgraphNetwork.sideCompounds[reaction.id];
     const reactionCoord=subgraphNetwork.network.value.nodes[reaction.id];
     // Reactants Placement
-    const startReactant= reaction.intervalsAvailables[0].reactant;
-    let startAngle=startReactant?reaction.metabolitesAngles[startReactant].angle:0;
-    sideCompounds.reactants.forEach((sideCompoundNode,i)=>{
-        let direction:number;
-        const typeInterval=reaction.intervalsAvailables[0].typeInterval;
-        if (typeInterval===0 || typeInterval===3){
-            direction=-1; // go left
-        } else if (typeInterval===1 || typeInterval===2){
-            direction=1; // go right
-        }
-        const angle:number=startAngle + direction * (i+1) *reaction.angleSpacingReactant;
-
-        sideCompoundNode=giveCoordSideCompound(sideCompoundNode,angle,reactionCoord,distance);
-    });
+    if (sideCompounds.reactants && sideCompounds.reactants.length>0){
+        placeSideCompounds(sideCompounds.reactants, reaction, reactionCoord, distance, true);
+    }
     // Products Placement
-    const startProduct= reaction.intervalsAvailables[0].product;
-    startAngle=startProduct?reaction.metabolitesAngles[startProduct].angle:0;
-    sideCompounds.products.forEach((sideCompoundNode,i)=>{
-        let direction:number;
-        const typeInterval=reaction.intervalsAvailables[0].typeInterval;
-        if (typeInterval===0 || typeInterval===3){
-            direction=1; // go right
-        } else if (typeInterval===1 || typeInterval===2){
-            direction=-1; // go left
-        }
-        const angle:number=startAngle+ direction * (i+1) *reaction.angleSpacingProduct;
-        sideCompoundNode=giveCoordSideCompound(sideCompoundNode,angle,reactionCoord,distance);
-        
-    });
+    if (sideCompounds.products && sideCompounds.products.length>0){
+        placeSideCompounds(sideCompounds.products, reaction, reactionCoord, distance, false);
+    }
    
     return subgraphNetwork;
 }
 
+/**
+ * Calculates the distance based on the given subgraph network and factor length.
+ * If the minimum edge length of the graph is available in the statistics,
+ * it uses that value : minimum edge length * factor . Otherwise, it uses a default value of 1 inch * factor.
+ * 
+ * @param subgraphNetwork - The subgraph network to calculate the distance for.
+ * @param factorLength - The factor length to multiply the base length by.
+ * @returns The calculated distance.
+ */
+function calculateDistance(subgraphNetwork: SubgraphNetwork, factorLength: number): number {
+    let baseLengthPixel: number;
+    if (subgraphNetwork.stats.minEdgeLengthPixel) {
+        baseLengthPixel = subgraphNetwork.stats.minEdgeLengthPixel;
+    } else {
+        console.error("stats minEdgeLengthPixel not found, use default value 1 inch");
+        baseLengthPixel = pixelsToInches(1);
+    }
+    return baseLengthPixel * factorLength;
+}
 
 
+/**
+ * Places a type of side compounds (reactants or products) around a reaction.
+ * 
+ * @param sideCompounds - An array of side compounds (node) to be placed.
+ * @param reaction - The reaction object.
+ * @param reactionCoord - The coordinates of the reaction.
+ * @param distance - The distance from the reaction to place the side compounds.
+ * @param placeReactants - A boolean indicating whether to place reactants or products.
+ */
+function placeSideCompounds(sideCompounds: Array<Node>, reaction: Reaction, reactionCoord: Coordinate, distance: number, placeReactants: boolean): void {
+    const startSideCompound = placeReactants ? reaction.intervalsAvailables[0].reactant : reaction.intervalsAvailables[0].product;
+    if (!startSideCompound) {
+        console.error("No start side compound found");
+        return;
+    }
+    let startAngle = startSideCompound ? reaction.metabolitesAngles[startSideCompound].angle : 0;
+    const angleSpacing = placeReactants ? reaction.angleSpacingReactant : reaction.angleSpacingProduct;
+    if (!isFinite(angleSpacing)) {
+        console.error("No angle spacing found");
+        return;
+    }
+
+    sideCompounds.forEach((sideCompoundNode, i) => {
+        const direction = determineDirection(reaction.intervalsAvailables[0].typeInterval, placeReactants);
+        const angle = startAngle + direction * (i + 1) * angleSpacing;
+        sideCompoundNode = giveCoordSideCompound(sideCompoundNode, angle, reactionCoord, distance);
+    });
+}
+
+/**
+ * Determines the direction based on the type interval and whether to place reactants.
+ * Type of interval is 1 if reactant then product, 0 if product then reactant,
+ * or special case if the x-axis is between the two metabolites : 3 if reactant is the smaller angle, 2 if product is the smaller angle.
+ * 
+ * @param typeInterval - The type interval value.
+ * @param placeReactants - A boolean indicating whether to place reactants.
+ * @returns The direction value (-1 or 1).
+ */
+function determineDirection(typeInterval: number, placeReactants: boolean): number {
+    if (placeReactants) {
+        return (typeInterval === 0 || typeInterval === 3) ? -1 : 1;
+    } else {
+        return (typeInterval === 0 || typeInterval === 3) ? 1 : -1;
+    }
+}
+
+/**
+ * Calculates the coordinates of a side compound from a reaction based on the given parameters.
+ * A reaction node is considered the center of the circle where the side compound is added.
+ * 
+ * @param sideCompound - The side compound node.
+ * @param angle - The angle in radians to place side compound in the circle.
+ * @param center - The center of the circle (coordinates of reaction).
+ * @param distance - The distance from the center.
+ * @returns The side compound node with updated coordinates.
+ */
 function giveCoordSideCompound(sideCompound:Node,angle:number,center:{x:number,y:number},distance:number):Node{
     sideCompound.x = center.x + distance * Math.cos(angle);
     sideCompound.y = center.y + distance * Math.sin(angle);
     return sideCompound;
 }
 
+
+/***********************************************************************/
+//______________2.4  Stamp motif : insertion in network
+
+
+/**
+ * Inserts all side compounds of a reaction into the network.
+ * 
+ * @param subgraphNetwork - The subgraph network to insert the side compounds into.
+ * @param reaction - The reaction containing the side compounds.
+ * @returns void
+ */
 function insertAllSideCompoundsInNetwork(subgraphNetwork:SubgraphNetwork,reaction:Reaction):void{
-    const network = subgraphNetwork.network.value;
     const sideCompounds=subgraphNetwork.sideCompounds[reaction.id];
     // Reactants
     Object.keys(reaction.sideCompoundsReactants).forEach((reactant)=>{
@@ -598,6 +798,14 @@ function insertAllSideCompoundsInNetwork(subgraphNetwork:SubgraphNetwork,reactio
     });
 }
 
+/**
+ * Inserts a side compound into the network.
+ * 
+ * @param subgraphNetwork - The subgraph network to insert the side compound into.
+ * @param reactionID - The ID of the reaction.
+ * @param sideCompound - Node : The side compound to insert.
+ * @param typeSideCompound - The type of the side compound (reactant or product).
+ */
 function insertSideCompoundInNetwork(subgraphNetwork:SubgraphNetwork,reactionID:string,sideCompound:Node,typeSideCompound:MetaboliteType):void{
     const network = subgraphNetwork.network.value;
     // insert node

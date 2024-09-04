@@ -207,7 +207,7 @@ const defaultMinEdgeLength = 25;
  * @param network - The network object containing nodes.
  * @returns The minimum edge length between nodes.
  */
-export function minEdgeLength(network: Network,cycleInclude:boolean=true,defaultValue:number=defaultMinEdgeLength): number {
+export function minEdgeLength(network: Network,cycleInclude:boolean=true): number {
     let minDistance = Infinity;
     network.links.forEach((link) => {
         if (cycleInclude || (!inCycle(network,link.target.id) || !inCycle(network,link.source.id)) ){
@@ -221,8 +221,7 @@ export function minEdgeLength(network: Network,cycleInclude:boolean=true,default
     });
     minDistance= parseFloat(minDistance.toFixed(2));
     if(minDistance === Infinity || !minDistance){
-        console.warn('Minimal edge length by default');
-        return defaultValue;
+        return NaN;
     }
     return minDistance;
 }

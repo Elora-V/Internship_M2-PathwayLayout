@@ -32,7 +32,7 @@ export interface Subgraph {
     position?:Coordinate;
     originalPosition?:Coordinate; // if metanode : the metanode center not well positionned (precalulated position)
 
-    precalculatedNodesPosition: {[key: string]: Coordinate}; // if metanode : the position of the nodes in the metanode
+    precalculatedNodesPosition?: {[key: string]: Coordinate}; // if metanode : the position of the nodes in the metanode
     
     metadata?: {[key: string]: string | number| boolean | {[key: string]: string | number} | Array<string>};
 }
