@@ -322,12 +322,12 @@ onMounted(() => {
   
 });
 function removeThisNode() {
-  removeNode(menuProps.targetElement, network.value);
+  removeNode(menuProps.targetElement.id, network.value);
   originalNetwork=networkCopy(network.value);
 
 }
 function duplicateThisNode() {
-  duplicateNode(menuProps.targetElement, network.value, networkStyle.value);
+  duplicateNode(menuProps.targetElement.id, network.value, networkStyle.value);
   originalNetwork=networkCopy(network.value);
 }
 
