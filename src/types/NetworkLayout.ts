@@ -19,6 +19,8 @@ export interface NodeLayout extends Node {
     metadataLayout?: {[key: string]: string | number | {[key: string]: string | number} | Array<string> | boolean};
 }
   
+// reversibleVersion : string;
+
 export interface LinkLayout extends Link {
     metadataLayout?: {[key: string]: string | number | {[key: string]: string | number} | Array<string> | boolean};
 }

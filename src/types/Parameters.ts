@@ -46,7 +46,7 @@ export let defaultParameters: Parameters = {
 
     doReactionReversible: true, // user can change this parameter
 
-    doMainChain: true, // user can change this parameter
+    doMainChain: false, // user can change this parameter
     getSubgraph : getPathSourcesToTargetNode,
     startNodeTypeMainChain: StartNodesType.RANK_SOURCE, // usefull to allow user to change this parameter with RANK_ONLY or SOURCE_ONLY ? (if source-only, put source_all for reaction rev and no first viz)
     pathType: PathType.ALL_LONGEST, // user can change this parameter
@@ -54,7 +54,7 @@ export let defaultParameters: Parameters = {
     doMiniBranch: true, // usefull choice ? run metrix to see if it's usefull
     groupOrCluster: "cluster",
 
-    doCycle: true, // user can change this parameter
+    doCycle: false, // user can change this parameter
     allowInternalCycles: false,
    
     addNodes: true,

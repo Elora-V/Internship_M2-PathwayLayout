@@ -1,6 +1,10 @@
 // Type imports
+import { NetworkLayout } from "@/types/NetworkLayout";
 import { TypeSubgraph } from "@/types/Subgraph";
+import { Node } from "@metabohub/viz-core/src/types/Node";
 import { Network } from "@metabohub/viz-core/src/types/Network";
+import { link } from "fs";
+import { Link } from "@metabohub/viz-core/src/types/Link";
 
 /**
  * This file contains functions to check if a node has a specific attribute
@@ -29,6 +33,13 @@ import { Network } from "@metabohub/viz-core/src/types/Network";
  * 
  * *********************************
  * 2. Reversible
+ * 
+ * 
+ * 
+ * *********************************
+ * 3.  Cycle
+ * 
+ * 
  */
 
 
@@ -99,6 +110,107 @@ export function getClassDuplicate():string{
 /*******************************************************************************************************************************************************/
 //___________________________________________________2.  Reversible __________________________________________________________________________
 
+const classReversible="reversible";
+const reversibleAttribute="reversible";
+const reactionClass="reaction";
+
+/**
+ * Checks if a node in the network is reversible by checking its classes.
+ * => done for my type of file, not necessaty if reversible information already in the metadata
+ * @param network - The network object.
+ */
+export async function addMetadataReversibleWithClass(network:Network):Promise<void>{
+    Object.values(network.nodes).forEach((node) => {
+      if(node.classes && node.classes.includes(classReversible)){
+        addReversibleNetwork(network,node.id);
+      }
+    });
+  }
+
+
+/**
+ * Adds the reversible attribute to the given node in the network.
+ * 
+ * @param network - The network object.
+ * @param node - The node to add the reversible attribute to.
+ */
+export function addReversibleNetwork(network:Network,nodeID:string):void{
+    if (!network.nodes[nodeID]){
+        throw new Error("Node not found to set as reversible ");
+    }
+    if(!network.nodes[nodeID].metadata){
+        network.nodes[nodeID].metadata={};
+    }
+    network.nodes[nodeID].metadata[reversibleAttribute]=true;
+}
+
+/**
+ * Adds the reversible attribute to the given node.
+ * 
+ * @param node - The node to add the reversible attribute to.
+ * @returns The modified node with the reversible attribute added.
+ */
+export function addReversible(node:Node):Node{
+    if(!node.metadata){
+        node.metadata={};
+    }
+    node.metadata[reversibleAttribute]=true;
+    return node;
+}
+
+/**
+ * Adds a class to the given node's classes array in a reversible manner.
+ * If the node does not have a classes array, it creates one.
+ * @param node - The node to add the class to.
+ * @returns The modified node with the added class.
+ */
+export function addLinkClassReversible(link:Link):Link{
+    if(!link.classes){
+        link.classes=[];
+    }
+    link.classes=pushUniqueString(link.classes,classReversible);
+    return link;
+}
+
+/**
+ * Adds a unique string value to an array if it does not already exist.
+ * 
+ * @param object - The array to add the value to.
+ * @param value - The string value to add.
+ * @returns The updated array with the added value, if it was not already present.
+ */
+export function pushUniqueString(object:Array<string>, value: string): Array<string> {
+    if (!object.includes(value)) {
+        object.push(value);
+    }
+    return object;
+  }
+
+
+/**
+ * Checks if a node in the network is reversible.
+ * 
+ * @param {Network} network - The network object.
+ * @param {string} nodeID - The ID of the node to check.
+ * @returns {boolean} - Returns true if the node is reversible, otherwise false.
+ * @throws {Error} - Throws an error if the node is not found.
+ */
+export function isReversible(network:Network,nodeID:string):boolean{
+    if (!network.nodes[nodeID]){
+        throw new Error("Node not found to check if reversible");
+    }
+    return Boolean(network.nodes[nodeID].metadata && network.nodes[nodeID].metadata[reversibleAttribute]);
+}
+
+/**
+ * Checks if a given node is a reaction.
+ * 
+ * @param node - The node to check.
+ * @returns A boolean indicating whether the node is a reaction.
+ */
+export function isReaction(node:Node):boolean{
+    return Boolean(node.classes && node.classes.includes(reactionClass));
+}
 
 
 /*******************************************************************************************************************************************************/
