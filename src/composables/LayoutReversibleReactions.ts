@@ -53,12 +53,15 @@ export async function duplicateReversibleReactions(networkLayout:NetworkLayout):
           ////// Duplication of the reaction node
 
           // get nodes class : we only want to duplicate class "reaction"
-          let newReactionNode: NodeLayout;
-          let reactionIsSource: boolean= linkReversible.sourceIsReversible;
+          //let newReactionNode: NodeLayout;
+          let nodeToDuplicate: NodeLayout;
+          const reactionIsSource: boolean= linkReversible.sourceIsReversible;
 
           if (reactionIsSource) {
-            newReactionNode = await duplicateNodeReactionReversible(networkLayout,link.source);
-            console.log(networkLayout.nodes[link.source.id].metadataLayout);
+            nodeToDuplicate=link.source;
+            //newReactionNode = await duplicateNodeReactionReversible(networkLayout,link.source);
+            // console.log(link.source.id);
+            // console.log(networkLayout.nodes[link.source.id].metadataLayout);
             // // duplicate source node
             // newReactionNode = reversibleNodeReaction(link.source);
             // // add attribut reversible to original reaction
@@ -69,7 +72,11 @@ export async function duplicateReversibleReactions(networkLayout:NetworkLayout):
             // }
             // network.nodes[link.source.id].metadata.reversibleVersion=newReactionNode.id;
           } else {
-            newReactionNode = await duplicateNodeReactionReversible(networkLayout,link.target);
+            nodeToDuplicate=link.target;
+            //newReactionNode = await duplicateNodeReactionReversible(networkLayout,link.target);
+            // console.log(link.target.id);
+            // console.log(networkLayout.nodes[link.target.id].metadataLayout);
+
             // // duplicate target node
             // newReactionNode = reversibleNodeReaction(link.target);
             // // add attribut reversible to original reaction
@@ -81,11 +88,12 @@ export async function duplicateReversibleReactions(networkLayout:NetworkLayout):
             // network.nodes[link.target.id].metadata.reversibleVersion=newReactionNode.id;
           }
           //console.log(newReactionNode);
-          // adding new reaction node if not already the case
-          if (newReactionNode && !networkLayout.nodes[newReactionNode.id]) {
-            networkLayout.nodes[newReactionNode.id] = newReactionNode;
-          }
-
+          
+         await duplicateNodeReactionReversible(networkLayout,link.source).then((newReactionNode) => {
+            // adding new reaction node if not already the case
+            if (newReactionNode && !networkLayout.nodes[newReactionNode.id]) {
+              networkLayout.nodes[newReactionNode.id] = newReactionNode;
+            }
 
           //////// Adding link to new reaction node in reverse (target become source and source become target)
           if (reactionIsSource) {
@@ -95,7 +103,10 @@ export async function duplicateReversibleReactions(networkLayout:NetworkLayout):
             const source = link.source;
             newLinks.push(reversibleLink(networkLayout,link,source.id,newReactionNode.id,));      
           }
-    }
+         });
+
+        }
+
     });
 
     newLinks.forEach((link) => {
@@ -140,14 +151,14 @@ async function duplicateNodeReactionReversible(networkLayout:NetworkLayout,nodeR
     // add attribut reversible to original reaction
     //networkLayout.nodes[nodeReaction.id].classes=pushUniqueString(network.nodes[link.target.id].classes,"reversible");
     // add metadata of reversibleVersion for original reaction
-    
-    // if(!networkLayout.nodes[nodeReaction.id].metadata){ // TO remove
-    //   networkLayout.nodes[nodeReaction.id].metadata={};
-    // }
+
+    if(!networkLayout.nodes[nodeReaction.id].metadata){ // TO remove
+      networkLayout.nodes[nodeReaction.id].metadata={};
+    }
     if(!networkLayout.nodes[nodeReaction.id].metadataLayout){
       networkLayout.nodes[nodeReaction.id].metadataLayout={};
     }
-    //networkLayout.nodes[nodeReaction.id].metadata["reversibleVersion"]=newReactionNode.id; // TO remove
+    networkLayout.nodes[nodeReaction.id].metadata["reversibleVersion"]=newReactionNode.id; // TO remove
     networkLayout.nodes[nodeReaction.id].metadataLayout.reversibleVersion=newReactionNode.id;
 
     return newReactionNode;
@@ -186,8 +197,6 @@ async function reversibleNodeReaction(node: NodeLayout, suffix: string = "_rev")
     metadata: {...node.metadata, reversibleVersion: id},  // to remove : doest work
     metadataLayout: {reversibleVersion:id},
   };
-  //addReversible(newNode);
-
   return newNode;
 }
 

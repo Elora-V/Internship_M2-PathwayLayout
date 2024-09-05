@@ -118,11 +118,11 @@ export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Param
         }
       }
     ).then(
-      () => {
+      async () => {
         if (parameters.doReactionReversible){
           // duplicate reactions
           if (printNameStep) console.log('Duplicate reversible reactions');
-          duplicateReversibleReactions(network);
+          await duplicateReversibleReactions(network);
         }
       }
     ).then(
