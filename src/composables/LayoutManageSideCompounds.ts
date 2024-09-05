@@ -14,7 +14,7 @@ import { getMeanNodesSizePixel, inchesToPixels, minEdgeLength as minEdgeLength, 
 import { getAttributSideCompounds, isDuplicate, isSideCompound, setAsSideCompound } from "./GetSetAttributsNodes";
 
 // General imports
-import { S } from "vitest/dist/reporters-1evA5lom";
+import { e, S } from "vitest/dist/reporters-1evA5lom";
 import { c } from "vite/dist/node/types.d-aGj9QkWt";
 import { resolve } from "path";
 
@@ -417,28 +417,32 @@ function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:strin
 function initializeReactionSideCompounds(subgraphNetwork:SubgraphNetwork,idReaction:string):Reaction{
     const network = subgraphNetwork.network.value;
     if (network.nodes[idReaction] && subgraphNetwork.sideCompounds && subgraphNetwork.sideCompounds[idReaction]){
-        // position of reaction
-        const x=network.nodes[idReaction].x;
-        const y=network.nodes[idReaction].y;
-        // reactant side compounds
-        const reactantSideCompounds=subgraphNetwork.sideCompounds[idReaction].reactants.map((node)=>node.id);
-        // product side compounds
-        const productSideCompounds=subgraphNetwork.sideCompounds[idReaction].products.map((node)=>node.id);
-        // angle metabolites (but side compounds) associated with the reaction
-        const angleMetabolites:{[key:string]:{angle:number,type:MetaboliteType}}={};
-        const metabolitesReaction=getMetaboliteFromReaction(subgraphNetwork,idReaction);
-        metabolitesReaction.forEach((metabolite)=>{
-            const xMetabolite=network.nodes[metabolite.id].x;
-            const yMetabolite=network.nodes[metabolite.id].y;
-            const angle=angleRadianSegment(x,y,xMetabolite,yMetabolite);
-            angleMetabolites[metabolite.id]={angle:angle,type:metabolite.type};
-        });
-        return {
-            id:idReaction,
-            sideCompoundsReactants:reactantSideCompounds,
-            sideCompoundsProducts:productSideCompounds,
-            metabolitesAngles:angleMetabolites,
-        };
+        try {
+            // position of reaction
+            const x=network.nodes[idReaction].x;
+            const y=network.nodes[idReaction].y;
+            // reactant side compounds
+            const reactantSideCompounds=subgraphNetwork.sideCompounds[idReaction].reactants.map((node)=>node.id);
+            // product side compounds
+            const productSideCompounds=subgraphNetwork.sideCompounds[idReaction].products.map((node)=>node.id);
+            // angle metabolites (but side compounds) associated with the reaction
+            const angleMetabolites:{[key:string]:{angle:number,type:MetaboliteType}}={};
+            const metabolitesReaction=getMetaboliteFromReaction(subgraphNetwork,idReaction);
+            metabolitesReaction.forEach((metabolite)=>{
+                const xMetabolite=network.nodes[metabolite.id].x;
+                const yMetabolite=network.nodes[metabolite.id].y;
+                const angle=angleRadianSegment(x,y,xMetabolite,yMetabolite);
+                angleMetabolites[metabolite.id]={angle:angle,type:metabolite.type};
+            });
+            return {
+                id:idReaction,
+                sideCompoundsReactants:reactantSideCompounds,
+                sideCompoundsProducts:productSideCompounds,
+                metabolitesAngles:angleMetabolites,
+            };
+        } catch (error) {
+            throw error;
+        }       
     }else if (!network.nodes[idReaction]){
         throw new Error("Reaction not found");
     }
@@ -473,8 +477,8 @@ function getMetaboliteFromReaction(subgraphNetwork: SubgraphNetwork, idReaction:
  */
 function angleRadianSegment(x1:number,y1:number,x2:number,y2:number,clockwise:boolean=true):number{
     if (!isFinite(x1) || !isFinite(y1) || !isFinite(x2) || !isFinite(y2)) {
-        console.error("Invalid coordinates for angle : one or more coordinates are not finite numbers.");
-        return NaN; 
+        //console.error("Invalid coordinates for angle : one or more coordinates are not finite numbers.");
+        throw new Error("Invalid coordinates for angle : one or more coordinates are not finite numbers."); 
     }
 
     const angle = Math.atan2(y2 - y1, x2 - x1);
