@@ -7,7 +7,7 @@ import { Coordinate, Size } from "@/types/CoordinatesSize";
 
 // Composable imports
 import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStyleProperties";
-import { inCycle } from "./GetSetAttributsNodes";
+import { inCycle, isSideCompound } from "./GetSetAttributsNodes";
 
 // General imports
 import { e } from "vitest/dist/reporters-1evA5lom";
@@ -92,6 +92,7 @@ const defaultWidthNode = 25;
  * @returns The converted value in inches.
  */
 export function pixelsToInches(pixels: number, dpi: number = 72): number {
+    if (!pixels) throw new Error("No pixels to convert to inches");
     return parseFloat((pixels / dpi).toFixed(2));
 }
 
@@ -102,6 +103,7 @@ export function pixelsToInches(pixels: number, dpi: number = 72): number {
  * @returns The converted value in pixels.
  */
 export function inchesToPixels(inches: number, dpi: number = 72): number {
+    if (!inches) throw new Error("No inches to convert to pixels");
     return parseFloat((inches * dpi).toFixed(2));
 }
 
@@ -140,12 +142,12 @@ export function getSizeNodePixel(node:Node,styleNetwork:GraphStyleProperties):Si
  * @param styleNetwork - The style properties of the graph.
  * @returns An object containing the mean height and width of the nodes in pixels.
  */
-export function getMeanNodesSizePixel(nodes:Node[],styleNetwork:GraphStyleProperties,includeSideCompounds:boolean=true):Size{
+export async function getMeanNodesSizePixel(nodes:Node[],styleNetwork:GraphStyleProperties,includeSideCompounds:boolean=true):Promise<Size>{
     let height:number = 0;
     let width:number = 0;
     let n:number = 0;
     nodes.forEach((node)=>{
-        if (includeSideCompounds ||  !(node.metadata && node.metadata["isSideCompound"])) {
+        if (includeSideCompounds ||  !isSideCompound(node) ){ 
             let size = getSizeNodePixel(node,styleNetwork);
             height += size.height;
             width += size.width;
@@ -170,8 +172,8 @@ export function getMeanNodesSizePixel(nodes:Node[],styleNetwork:GraphStyleProper
  * @param factor number of mean size node for the sep attributes
  * @returns rank separation and node separation in inches
  */
-export function getSepAttributesInches(network:Network,styleNetwork:GraphStyleProperties,factor:number=1):{rankSep:number,nodeSep:number}{
-    const meanSizeNode=getMeanNodesSizePixel(Object.values(network.nodes),styleNetwork);
+export async function getSepAttributesInches(network:Network,styleNetwork:GraphStyleProperties,factor:number=1):Promise<{rankSep:number,nodeSep:number}>{
+    const meanSizeNode= await getMeanNodesSizePixel(Object.values(network.nodes),styleNetwork);
     const rankSep = pixelsToInches(meanSizeNode.height * factor);
     const nodeSep = pixelsToInches(meanSizeNode.width * factor);
     return { rankSep, nodeSep };
@@ -186,8 +188,8 @@ export function getSepAttributesInches(network:Network,styleNetwork:GraphStylePr
  * @param factor number of mean size node for the sep attributes
  * @returns rank separation and node separation in pixels
  */
-export function getSepAttributesPixel(network:Network,styleNetwork:GraphStyleProperties,factor:number=1):{rankSep:number,nodeSep:number}{
-    const meanSizeNode=getMeanNodesSizePixel(Object.values(network.nodes),styleNetwork);
+export async function getSepAttributesPixel(network:Network,styleNetwork:GraphStyleProperties,factor:number=1):Promise<{rankSep:number,nodeSep:number}>{
+    const meanSizeNode= await getMeanNodesSizePixel(Object.values(network.nodes),styleNetwork);
     const rankSep = meanSizeNode.height * factor;
     const nodeSep = meanSizeNode.width *factor;
     return { rankSep, nodeSep };
@@ -220,7 +222,7 @@ export function minEdgeLength(network: Network,cycleInclude:boolean=true): numbe
         }
     });
     minDistance= parseFloat(minDistance.toFixed(2));
-    if(minDistance === Infinity || !minDistance){
+    if(!isFinite(minDistance)){
         return NaN;
     }
     return minDistance;

@@ -56,8 +56,8 @@ const sideCompoundAttribute="isSideCompound";
  * @param nodeID id of the node
  * @returns node is a side compound ?
  */
-export function isSideCompound(network:Network,nodeID:string):boolean{
-    return Boolean(network.nodes[nodeID].metadata && network.nodes[nodeID].metadata[sideCompoundAttribute]);
+export function isSideCompound(node:Node):boolean{
+    return Boolean(node.metadata && node.metadata[sideCompoundAttribute]);
 }
 
 /**
@@ -94,6 +94,7 @@ const classDuplicate="duplicate";
  * @returns A boolean indicating whether the node is a duplicate.
  */
 export function isDuplicate(network:Network,nodeID:string):boolean{
+    if(!network.nodes[nodeID]) throw new Error("Node not found");
     return Boolean(network.nodes[nodeID].classes && network.nodes[nodeID].classes.includes(classDuplicate));
 }
 
@@ -225,11 +226,13 @@ export function isReaction(node:Node):boolean{
  * @returns A boolean indicating whether the node is in a cycle or not.
  */
 export function inCycle(network: Network, idNode: string): boolean {
+    if (!(idNode in network.nodes)) {
+        throw new Error("Node not found in network");
+    }
     // no metadata or no cycle metadata or empty cycle metadata : that is, not in a cycle
     console.warn("change matadatlayout inCycle");
     let inCycle:boolean=false;
-    if (idNode in network.nodes && "metadata" in network.nodes[idNode] 
-        && TypeSubgraph.CYCLE in network.nodes[idNode].metadata){
+    if ("metadata" in network.nodes[idNode] && TypeSubgraph.CYCLE in network.nodes[idNode].metadata){
             const cycles=network.nodes[idNode].metadata[TypeSubgraph.CYCLE] as string[];
             if (cycles.length>0) inCycle=true;
     }

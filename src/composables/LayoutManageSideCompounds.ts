@@ -158,14 +158,15 @@ export async function addSideCompoundAttributeFromList(subgraphNetwork:SubgraphN
  * @returns list of id of side compounds in the network
  */
 async function getIDSideCompoundsInNetworkFromFile(subgraphNetwork:SubgraphNetwork,pathListSideCompounds:string):Promise<string[]>{
-    let listIDSideCompounds:string[]=[];
+    let listIDSideCompounds:string[];
     const network = subgraphNetwork.network.value;
     try {
         listIDSideCompounds = await getIDSideCompoundsFromFile(pathListSideCompounds);
+        const sideCompoundInNetwork = Object.keys(network.nodes).filter(id => listIDSideCompounds.includes(id));
+        return sideCompoundInNetwork;
     } catch (error) {
-        console.error(error);
-    }
-    return Object.keys(network.nodes).filter(id => listIDSideCompounds.includes(id));
+        throw error;
+    }   
 }
 
 /**
@@ -174,14 +175,18 @@ async function getIDSideCompoundsInNetworkFromFile(subgraphNetwork:SubgraphNetwo
  * @returns list of id of side compounds
  */
 async function getIDSideCompoundsFromFile(pathListSideCompounds:string):Promise<string[]>{
-    const sideCompoundsFile=pathListSideCompounds;
-    const sideCompoundsString = await getContentFromURL(sideCompoundsFile);
-    const lines = sideCompoundsString.split('\n');
-    const listId: Array<string> = [];
-    lines.forEach((line: string) => {
-      listId.push(line.split('\t')[0]);
-    })
-    return listId;
+    try {
+        const sideCompoundsFile=pathListSideCompounds;
+        const sideCompoundsString = await getContentFromURL(sideCompoundsFile);
+        const lines = sideCompoundsString.split('\n');
+        const listId: Array<string> = [];
+        lines.forEach((line: string) => {
+        listId.push(line.split('\t')[0]);
+        })
+        return listId;
+    }catch (error) {
+        throw error;
+    }
 }
 
 
@@ -200,27 +205,23 @@ async function getIDSideCompoundsFromFile(pathListSideCompounds:string):Promise<
  * @returns subgraphNetwork with updated network and sideCompounds
  */
 export async function putDuplicatedSideCompoundAside(subgraphNetwork:SubgraphNetwork, doDuplicateSideCompounds:boolean,doPutAsideSideCompounds:boolean, addSideCompoundAttribute:boolean=true, pathListSideCompounds:string):Promise<SubgraphNetwork>{
-
-    return new Promise(async (resolve, reject) => {
-        try {
-            // finding side compounds in network
-            if (addSideCompoundAttribute){
-                await addSideCompoundAttributeFromList(subgraphNetwork,pathListSideCompounds);
-            }
-            // duplication of side compounds
-            if (doDuplicateSideCompounds){
-                duplicateSideCompound(subgraphNetwork);
-            }
-            // remove side compounds from network, they are keeped aside in subgraphNetwork.sideCompounds
-            if (doPutAsideSideCompounds){
-                subgraphNetwork= removeSideCompoundsFromNetwork(subgraphNetwork);
-            }
-            resolve(subgraphNetwork);
-        } catch (error) {
-            console.error(error);
-            reject(error);
+    try {
+        // finding side compounds in network
+        if (addSideCompoundAttribute){
+            await addSideCompoundAttributeFromList(subgraphNetwork,pathListSideCompounds);
         }
-    });
+        // duplication of side compounds
+        if (doDuplicateSideCompounds){
+            await duplicateSideCompound(subgraphNetwork);
+        }
+        // remove side compounds from network, they are keeped aside in subgraphNetwork.sideCompounds
+        if (doPutAsideSideCompounds){
+            return removeSideCompoundsFromNetwork(subgraphNetwork);
+        }
+        return subgraphNetwork;
+    } catch (error) {
+        throw error;
+    }
 }
 
 
@@ -231,7 +232,7 @@ export async function putDuplicatedSideCompoundAside(subgraphNetwork:SubgraphNet
  * @param subgraphNetwork - The subgraph network containing the side compounds to be duplicated.
  * @returns void
  */
-export function duplicateSideCompound(subgraphNetwork:SubgraphNetwork):void{
+export async function duplicateSideCompound(subgraphNetwork:SubgraphNetwork):Promise<void>{
     const network = subgraphNetwork.network.value;
     const networkStyle = subgraphNetwork.networkStyle.value;
     // duplication of side compounds
@@ -272,7 +273,7 @@ function removeSideCompoundsFromNetwork(subgraphNetwork:SubgraphNetwork): Subgra
     // for each link, see if the source or target is in the list of side compounds : add information in subgraphNetwork.sideCompounds
     network.links.forEach((link) => {
         // if source is side compound
-        if (isSideCompound(network,link.source.id)) {
+        if (isSideCompound(link.source)) {
             if(!(link.target.id in subgraphNetwork.sideCompounds)){
                 subgraphNetwork.sideCompounds[link.target.id]={reactants:[],products:[]};
             }
@@ -280,7 +281,7 @@ function removeSideCompoundsFromNetwork(subgraphNetwork:SubgraphNetwork): Subgra
             listIDCoftactors.push(link.source.id);
         }
         // if target is side compound
-        if (isSideCompound(network,link.target.id)) {
+        if (isSideCompound(link.target)) {
             if(!(link.source.id in subgraphNetwork.sideCompounds)){
                 subgraphNetwork.sideCompounds[link.source.id]={reactants:[],products:[]};
             }
@@ -306,7 +307,7 @@ function removeSideCompoundsFromNetwork(subgraphNetwork:SubgraphNetwork): Subgra
  * @param doReactionReversible do reaction reversible ?
  * @returns subgraphNetwork with updated network and sideCompounds
  */
-export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork,factorMinEdgeLength:number=1/2,doReactionReversible:boolean):SubgraphNetwork{
+export async function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork,factorMinEdgeLength:number=1/2,doReactionReversible:boolean):Promise<SubgraphNetwork>{
     if(subgraphNetwork.sideCompounds){
         // get information for length of edge for side compounds :
         // get the min length of edge in the network (if not, use default value)
@@ -314,7 +315,7 @@ export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork,factorM
         // get the default value : min lenght if there is no link in the network (when side compounds are removed) :
         if (isNaN(minLength)){
             console.warn('Minimal edge length by default');
-            minLength=minEdgeLengthDefault(subgraphNetwork,factorMinEdgeLength);
+            minLength=await minEdgeLengthDefault(subgraphNetwork,factorMinEdgeLength);
         } 
         // add information in subgraphNetwork.stats
         if (!subgraphNetwork.stats) subgraphNetwork.stats={};
@@ -322,12 +323,12 @@ export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork,factorM
 
         // update side compounds for reversed reactions
         if (doReactionReversible){
-            subgraphNetwork= updateSideCompoundsReversibleReaction(subgraphNetwork);
+            subgraphNetwork= await updateSideCompoundsReversibleReaction(subgraphNetwork);
         }
 
         // for each reaction, apply motif stamp
-        Object.keys(subgraphNetwork.sideCompounds).forEach((reactionID)=>{
-            subgraphNetwork= motifStampSideCompound(subgraphNetwork,reactionID,factorMinEdgeLength);
+        Object.keys(subgraphNetwork.sideCompounds).forEach( async (reactionID)=>{
+            subgraphNetwork= await motifStampSideCompound(subgraphNetwork,reactionID,factorMinEdgeLength);
         });       
     }
     return subgraphNetwork;
@@ -341,10 +342,10 @@ export function reinsertionSideCompounds(subgraphNetwork:SubgraphNetwork,factorM
  * @param factorMinEdgeLength - The factor to multiply the calculated minimum edge length by.
  * @returns The calculated minimum edge length.
  */
-function minEdgeLengthDefault(subgraphNetwork:SubgraphNetwork,factorMinEdgeLength:number):number{
+async function minEdgeLengthDefault(subgraphNetwork:SubgraphNetwork,factorMinEdgeLength:number):Promise<number>{
     const network = subgraphNetwork.network.value;
     const networkStyle = subgraphNetwork.networkStyle.value;
-    const meanSize=getMeanNodesSizePixel(Object.values(network.nodes),networkStyle, false);
+    const meanSize=await getMeanNodesSizePixel(Object.values(network.nodes),networkStyle, false);
     const defaultSep=(meanSize.height+meanSize.width)/2;
     const rankSep=subgraphNetwork.attributs[VizArgs.RANKSEP]?inchesToPixels(subgraphNetwork.attributs[VizArgs.RANKSEP] as number):defaultSep;
     const nodeSep=subgraphNetwork.attributs[VizArgs.NODESEP]?inchesToPixels(subgraphNetwork.attributs[VizArgs.NODESEP] as number):defaultSep;
@@ -353,7 +354,7 @@ function minEdgeLengthDefault(subgraphNetwork:SubgraphNetwork,factorMinEdgeLengt
 }
 
 // MODIFICATION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-function updateSideCompoundsReversibleReaction(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
+async function updateSideCompoundsReversibleReaction(subgraphNetwork:SubgraphNetwork):Promise<SubgraphNetwork>{
     const network = subgraphNetwork.network.value;
     console.warn('modifier updateSideCompoundsReversibleReaction avec nouveau attribut');
     Object.keys(subgraphNetwork.sideCompounds).forEach((reactionID)=>{
@@ -377,26 +378,25 @@ function updateSideCompoundsReversibleReaction(subgraphNetwork:SubgraphNetwork):
  * @param factorMinEdgeLength - The factor length for the side compounds. Default value is 1/2.
  * @returns The subgraphNetwork with the motif stamp applied for the reaction.
  */
-function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string,factorMinEdgeLength:number=1/2):SubgraphNetwork{
+async function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string,factorMinEdgeLength:number=1/2):Promise<SubgraphNetwork>{
     try {
         // initialize reaction stamp
-        let reaction= initializeReactionSideCompounds(subgraphNetwork,reactionID);
+        let reaction= await initializeReactionSideCompounds(subgraphNetwork,reactionID);
         // find intervals between reactants and products
-        reaction = addSideCompoundsIntervals(reaction);
+        reaction = await addSideCompoundsIntervals(reaction);
         // find the biggest interval
-        const biggest=biggestInterval(reaction);
+        const biggest= await biggestInterval(reaction);
         reaction.intervalsAvailables=[biggest.interval];
         // find spacing between side compounds
-        const spacing=findSpacingSideCompounds(reaction,biggest.size);
+        const spacing= await findSpacingSideCompounds(reaction,biggest.size);
         reaction.angleSpacingReactant=spacing.reactant;
         reaction.angleSpacingProduct=spacing.product;
         // give coordinates to all side compounds
-        subgraphNetwork=giveCoordAllSideCompounds(subgraphNetwork,reaction,factorMinEdgeLength);
+        subgraphNetwork= await giveCoordAllSideCompounds(subgraphNetwork,reaction,factorMinEdgeLength);
         // insert side compounds in network
         insertAllSideCompoundsInNetwork(subgraphNetwork,reaction);
     } catch (error) {
-        console.error("Error in motifStampSideCompound for reaction "+reactionID);
-        console.error(error);
+        throw new Error("Error in motifStampSideCompound, reaction : "+ reactionID+ "\n"+error);
     }
     return subgraphNetwork;
 }
@@ -414,7 +414,7 @@ function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:strin
  * @returns The initialized Reaction object with side compounds and metabolite angles.
  * @throws Error if the reaction is not found in the network.
  */
-function initializeReactionSideCompounds(subgraphNetwork:SubgraphNetwork,idReaction:string):Reaction{
+async function initializeReactionSideCompounds(subgraphNetwork:SubgraphNetwork,idReaction:string):Promise<Reaction>{
     const network = subgraphNetwork.network.value;
     if (network.nodes[idReaction] && subgraphNetwork.sideCompounds && subgraphNetwork.sideCompounds[idReaction]){
         try {
@@ -427,11 +427,11 @@ function initializeReactionSideCompounds(subgraphNetwork:SubgraphNetwork,idReact
             const productSideCompounds=subgraphNetwork.sideCompounds[idReaction].products.map((node)=>node.id);
             // angle metabolites (but side compounds) associated with the reaction
             const angleMetabolites:{[key:string]:{angle:number,type:MetaboliteType}}={};
-            const metabolitesReaction=getMetaboliteFromReaction(subgraphNetwork,idReaction);
+            const metabolitesReaction= await getMetaboliteFromReaction(subgraphNetwork,idReaction);
             metabolitesReaction.forEach((metabolite)=>{
                 const xMetabolite=network.nodes[metabolite.id].x;
                 const yMetabolite=network.nodes[metabolite.id].y;
-                const angle=angleRadianSegment(x,y,xMetabolite,yMetabolite);
+                const angle= angleRadianSegment(x,y,xMetabolite,yMetabolite);
                 angleMetabolites[metabolite.id]={angle:angle,type:metabolite.type};
             });
             return {
@@ -455,7 +455,7 @@ function initializeReactionSideCompounds(subgraphNetwork:SubgraphNetwork,idReact
  * @param idReaction - The ID of the reaction.
  * @returns An array of objects representing the metabolites, each containing an ID and a type.
  */
-function getMetaboliteFromReaction(subgraphNetwork: SubgraphNetwork, idReaction: string): { id: string; type: MetaboliteType }[] {
+async function getMetaboliteFromReaction(subgraphNetwork: SubgraphNetwork, idReaction: string): Promise<{ id: string; type: MetaboliteType }[]> {
     const network = subgraphNetwork.network.value;
     return network.links
         .filter((link) => link.source.id === idReaction || link.target.id === idReaction)
@@ -508,7 +508,7 @@ function angleRadianSegment(x1:number,y1:number,x2:number,y2:number,clockwise:bo
  * @param reaction - The reaction object.
  * @returns An array of ReactionInterval objects representing the cofactor intervals.
  */
-function addSideCompoundsIntervals(reaction: Reaction): Reaction {
+async function addSideCompoundsIntervals(reaction: Reaction):Promise<Reaction> {
 
     // Sort metabolites by angle
     const sortedMetabolites = Object.entries(reaction.metabolitesAngles)
@@ -529,11 +529,11 @@ function addSideCompoundsIntervals(reaction: Reaction): Reaction {
     let previousId = sortedMetabolites[lastIndex]?.id;
 
     // Process sorted metabolites to find intervals between reactants and products
-    reaction = addIntervalsBetweenMetabolites(reaction,sortedMetabolites, previousId, previousType,true);
+    reaction = await addIntervalsBetweenMetabolites(reaction,sortedMetabolites, previousId, previousType,true);
 
     // If no interval between reactants and products
     if (reaction.intervalsAvailables.length === 0) {
-        reaction = addIntervalsBetweenMetabolites(reaction,sortedMetabolites, previousId, previousType,false);
+        reaction = await addIntervalsBetweenMetabolites(reaction,sortedMetabolites, previousId, previousType,false);
     }
 
     // If still no intervals, add a default interval
@@ -559,7 +559,7 @@ function addSideCompoundsIntervals(reaction: Reaction): Reaction {
  * @param checkChangeType - Optional. Specifies whether to ask for a change in metabolite type to be considered as an interval. Defaults to true.
  * @returns The reaction with added intervals.
  */
-function addIntervalsBetweenMetabolites(reaction:Reaction,sortedMetabolites: {id: string, angle: number, type: MetaboliteType}[], firstPreviousID: string, firstPreviousType: MetaboliteType, checkChangeType: boolean = true):Reaction {
+async function addIntervalsBetweenMetabolites(reaction:Reaction,sortedMetabolites: {id: string, angle: number, type: MetaboliteType}[], firstPreviousID: string, firstPreviousType: MetaboliteType, checkChangeType: boolean = true):Promise<Reaction> {
     let firstInterval = false;
     sortedMetabolites.forEach((currentMetabolite, i) => {
         if ( !checkChangeType || (currentMetabolite.type !== firstPreviousType)) {
@@ -609,7 +609,7 @@ function addInterval(reaction:Reaction,id1:string,type1:MetaboliteType,id2:strin
  * @param reaction 
  * @returns the biggest interval and its size
  */
-function biggestInterval(reaction: Reaction): {interval:ReactionInterval,size:number} {
+async function biggestInterval(reaction: Reaction): Promise<{interval:ReactionInterval,size:number}> {
     const intervals = reaction.intervalsAvailables;
     if (intervals.length === 0) {
         throw new Error("Empty intervals");
@@ -657,7 +657,7 @@ function sizeInterval(reaction:Reaction,intervalIndex:number):number{
 //______________2.3  Stamp motif : find spacing
 
 
-function findSpacingSideCompounds(reaction:Reaction,sizeInterval:number):{reactant:number,product:number}{
+async function findSpacingSideCompounds(reaction:Reaction,sizeInterval:number):Promise<{reactant:number,product:number}>{
     const reactantNumber=reaction.sideCompoundsReactants.length;
     const productNumber=reaction.sideCompoundsProducts.length;
     return {
@@ -678,18 +678,18 @@ function findSpacingSideCompounds(reaction:Reaction,sizeInterval:number):{reacta
  * @param factorLength - The factor length used for edge length of side compounds. Default value is 1/2.
  * @returns The updated subgraph network with the calculated coordinates for the side compounds.
  */
-function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reaction,factorLength:number=1/2):SubgraphNetwork{
+async function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reaction,factorLength:number=1/2):Promise<SubgraphNetwork>{
 
     const distance=calculateDistance(subgraphNetwork, factorLength);
     const sideCompounds=subgraphNetwork.sideCompounds[reaction.id];
     const reactionCoord=subgraphNetwork.network.value.nodes[reaction.id];
     // Reactants Placement
     if (sideCompounds.reactants && sideCompounds.reactants.length>0){
-        placeSideCompounds(sideCompounds.reactants, reaction, reactionCoord, distance, true);
+        await placeSideCompounds(sideCompounds.reactants, reaction, reactionCoord, distance, true);
     }
     // Products Placement
     if (sideCompounds.products && sideCompounds.products.length>0){
-        placeSideCompounds(sideCompounds.products, reaction, reactionCoord, distance, false);
+        await placeSideCompounds(sideCompounds.products, reaction, reactionCoord, distance, false);
     }
    
     return subgraphNetwork;
@@ -725,7 +725,7 @@ function calculateDistance(subgraphNetwork: SubgraphNetwork, factorLength: numbe
  * @param distance - The distance from the reaction to place the side compounds.
  * @param placeReactants - A boolean indicating whether to place reactants or products.
  */
-function placeSideCompounds(sideCompounds: Array<Node>, reaction: Reaction, reactionCoord: Coordinate, distance: number, placeReactants: boolean): void {
+async function placeSideCompounds(sideCompounds: Array<Node>, reaction: Reaction, reactionCoord: Coordinate, distance: number, placeReactants: boolean): Promise<void> {
     const startSideCompound = placeReactants ? reaction.intervalsAvailables[0].reactant : reaction.intervalsAvailables[0].product;
     if (!startSideCompound) {
         console.error("No start side compound found");

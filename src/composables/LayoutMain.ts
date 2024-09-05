@@ -200,11 +200,11 @@ export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Param
         }
       }
     ).then(
-      () => {
+      async () => {
         if (parameters.doDuplicateSideCompounds && parameters.doPutAsideSideCompounds){
           // reverse side compounds of reversed reactions, and apply motif to insert side compounds
           if (printNameStep) console.log('Insert side compounds');
-          subgraphNetwork=reinsertionSideCompounds(subgraphNetwork,parameters.factorLengthSideCompounds,parameters.doReactionReversible);
+          subgraphNetwork= await reinsertionSideCompounds(subgraphNetwork,parameters.factorLengthSideCompounds,parameters.doReactionReversible);
         }else if (!parameters.doDuplicateSideCompounds && parameters.doPutAsideSideCompounds){
           console.warn('doPutAsideSideCompounds is true but doDuplicateSideCompounds is false : side compounds will not be inserted ');
         }

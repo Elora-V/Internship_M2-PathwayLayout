@@ -194,7 +194,6 @@ import {  getSources } from "@/composables/CalculateStartNodes";
 import { addBoldLinkMainChain, addRedLinkcycleGroup } from "@/composables/useSubgraphs";
 import { addMainChainFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/LayoutMainChain";
 import { analyseAllJSON, applyMetricsGraph, applyMetricsLayout } from "@/composables/MetricsApplication";
-import { changeNodeStyles } from "@/composables/styleGraph";
 import { addSideCompoundAttributeFromList, duplicateSideCompound } from "@/composables/LayoutManageSideCompounds";
 
 
