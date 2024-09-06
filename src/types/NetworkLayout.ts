@@ -1,6 +1,7 @@
 import { Link } from "@metabohub/viz-core/src/types/Link";
 import { Node } from "@metabohub/viz-core/src/types/Node";
 import type { Network } from "@metabohub/viz-core/src/types/Network";
+import { TypeSubgraph } from "./Subgraph";
 
 /**
  * This file contains the types for the NetworkLayout object : a network with nodes and links information and metadataLayout for nodes and links.
@@ -16,10 +17,18 @@ export interface NetworkLayout extends Network {
 
 
 export interface NodeLayout extends Node {
-    metadataLayout?: {[key: string]: string | number | {[key: string]: string | number} | Array<string> | boolean};
+    metadataLayout?: {
+      rank? : number;
+      order? : number;
+      reversibleNodeVersion? : string;
+      isReversedVersion? : boolean;
+     [TypeSubgraph.MAIN_CHAIN]?:string[],
+     [TypeSubgraph.SECONDARY_CHAIN]?:string[],
+     [TypeSubgraph.CYCLE]?:string[],
+     [TypeSubgraph.CYCLEGROUP]?:string[],
+    }
 }
   
-// reversibleVersion : string;
 
 export interface LinkLayout extends Link {
     metadataLayout?: {[key: string]: string | number | {[key: string]: string | number} | Array<string> | boolean};

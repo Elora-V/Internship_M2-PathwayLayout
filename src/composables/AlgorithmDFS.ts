@@ -4,7 +4,7 @@ import { NetworkToGDSGraph, NetworkToSerialized } from './ConvertFromNetwork';
 import { Serialized} from 'graph-data-structure';
 import Graph from "graph-data-structure";
 import { StartNodesType } from '@/types/EnumArgs';
-import { getSources } from './CalculateStartNodes';
+import { getStartNodes } from './CalculateStartNodes';
 
 /**
  * Take a network and sources, return the dfs result (that is an array of string of node ID)
@@ -31,7 +31,7 @@ export function DFSWithSources(network:Network, sources:Array<string>|StartNodes
     if (Array.isArray(sources)) {
         sources_list = sources;
     } else {
-        sources_list = getSources(network, sources);
+        sources_list = getStartNodes(network, sources);
     }
 
     // apply DFS (reverse order because DFS is a backward reading)

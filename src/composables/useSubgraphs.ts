@@ -127,81 +127,81 @@ export function addClusterDot(subgraph: SubgraphViz): string {
 //   return subgraphNetwork;
 // }
 
-export function addBoldLinkMainChain(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
-    let network=subgraphNetwork.network.value;
-    network.links.forEach(link=>{
-        let mainChainSource: string[] = [];
-        let mainChainTarget: string[] = [];
-        if ( Object.keys(link.source).includes("metadata") && Object.keys(link.source.metadata).includes(TypeSubgraph.MAIN_CHAIN)){
-            mainChainSource=  link.source.metadata.mainChains as string[];
-        }
+// export function addBoldLinkMainChain(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
+//     let network=subgraphNetwork.network.value;
+//     network.links.forEach(link=>{
+//         let mainChainSource: string[] = [];
+//         let mainChainTarget: string[] = [];
+//         if ( Object.keys(link.source).includes("metadata") && Object.keys(link.source.metadata).includes(TypeSubgraph.MAIN_CHAIN)){
+//             mainChainSource=  link.source.metadata.mainChains as string[];
+//         }
   
-        if ( Object.keys(link.target).includes("metadata") && Object.keys(link.target.metadata).includes(TypeSubgraph.MAIN_CHAIN)){
-            mainChainTarget=  link.target.metadata.mainChains as string[];
-        }        
-        // let sameClusters=true;
-        // // if same number of cluster, and in a cluster: let's check if there are the same
-        // if (clusterTarget.length===clusterSource.length && clusterSource.length!==0){
-        //     clusterTarget.sort;
-        //     clusterSource.sort;
-        //     for (let i = 0; i < clusterTarget.length; ++i) {
-        //         if (clusterTarget[i] !== clusterSource[i]){
-        //             sameClusters=false;
-        //         }
-        //     }
-        // }else{
-        //     // if not the same number of cluster : the two nodes can't be in the exact same clusters
-        //     sameClusters=false;
-        // }
+//         if ( Object.keys(link.target).includes("metadata") && Object.keys(link.target.metadata).includes(TypeSubgraph.MAIN_CHAIN)){
+//             mainChainTarget=  link.target.metadata.mainChains as string[];
+//         }        
+//         // let sameClusters=true;
+//         // // if same number of cluster, and in a cluster: let's check if there are the same
+//         // if (clusterTarget.length===clusterSource.length && clusterSource.length!==0){
+//         //     clusterTarget.sort;
+//         //     clusterSource.sort;
+//         //     for (let i = 0; i < clusterTarget.length; ++i) {
+//         //         if (clusterTarget[i] !== clusterSource[i]){
+//         //             sameClusters=false;
+//         //         }
+//         //     }
+//         // }else{
+//         //     // if not the same number of cluster : the two nodes can't be in the exact same clusters
+//         //     sameClusters=false;
+//         // }
 
-        // Check if there is at least one common cluster
-        let commonMainChain = mainChainSource.some(mainchain => mainChainTarget.includes(mainchain));
+//         // Check if there is at least one common cluster
+//         let commonMainChain = mainChainSource.some(mainchain => mainChainTarget.includes(mainchain));
 
-        if (commonMainChain){ 
-            if(!link.classes){
-                link.classes=[];
-            }
-            if (!(link.classes.includes(TypeSubgraph.MAIN_CHAIN))){
-                link.classes.push(TypeSubgraph.MAIN_CHAIN);
-            }
-        }else{
-            if(link.classes){
-                link.classes = link.classes.filter((c) => c !== TypeSubgraph.MAIN_CHAIN);
-            }
-        }
-    });
+//         if (commonMainChain){ 
+//             if(!link.classes){
+//                 link.classes=[];
+//             }
+//             if (!(link.classes.includes(TypeSubgraph.MAIN_CHAIN))){
+//                 link.classes.push(TypeSubgraph.MAIN_CHAIN);
+//             }
+//         }else{
+//             if(link.classes){
+//                 link.classes = link.classes.filter((c) => c !== TypeSubgraph.MAIN_CHAIN);
+//             }
+//         }
+//     });
   
-    return subgraphNetwork;
-  }
+//     return subgraphNetwork;
+//   }
 
 
 
-  export function addRedLinkcycleGroup(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
-    let network=subgraphNetwork.network.value;
-    network.links.forEach(link=>{
-        let cycleSource: string;
-        let cycleTarget: string;
-        if ( Object.keys(link.source).includes("metadata") && Object.keys(link.source.metadata).includes(TypeSubgraph.CYCLEGROUP)){
-            cycleSource=link.source.metadata[TypeSubgraph.CYCLEGROUP]  as string;
-        }
+//   export function addRedLinkcycleGroup(subgraphNetwork:SubgraphNetwork):SubgraphNetwork{
+//     let network=subgraphNetwork.network.value;
+//     network.links.forEach(link=>{
+//         let cycleSource: string;
+//         let cycleTarget: string;
+//         if ( Object.keys(link.source).includes("metadata") && Object.keys(link.source.metadata).includes(TypeSubgraph.CYCLEGROUP)){
+//             cycleSource=link.source.metadata[TypeSubgraph.CYCLEGROUP]  as string;
+//         }
   
-        if ( Object.keys(link.target).includes("metadata") && Object.keys(link.target.metadata).includes(TypeSubgraph.CYCLEGROUP)){
-            cycleTarget= link.target.metadata[TypeSubgraph.CYCLEGROUP] as string;
-        }       
-        if (cycleSource && cycleSource===cycleTarget){ 
-            if(!link.classes){
-                link.classes=[];
-            }
-            if (!(link.classes.includes(TypeSubgraph.CYCLEGROUP))){
-                link.classes.push(TypeSubgraph.CYCLEGROUP);
-            }
-        }else{
-            if(link.classes){
-                link.classes = link.classes.filter((c) => c !== TypeSubgraph.CYCLEGROUP);
-            }
-        }
-    });
+//         if ( Object.keys(link.target).includes("metadata") && Object.keys(link.target.metadata).includes(TypeSubgraph.CYCLEGROUP)){
+//             cycleTarget= link.target.metadata[TypeSubgraph.CYCLEGROUP] as string;
+//         }       
+//         if (cycleSource && cycleSource===cycleTarget){ 
+//             if(!link.classes){
+//                 link.classes=[];
+//             }
+//             if (!(link.classes.includes(TypeSubgraph.CYCLEGROUP))){
+//                 link.classes.push(TypeSubgraph.CYCLEGROUP);
+//             }
+//         }else{
+//             if(link.classes){
+//                 link.classes = link.classes.filter((c) => c !== TypeSubgraph.CYCLEGROUP);
+//             }
+//         }
+//     });
   
-    return subgraphNetwork;
-  }
+//     return subgraphNetwork;
+//   }
   

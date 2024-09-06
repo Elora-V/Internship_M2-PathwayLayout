@@ -515,7 +515,7 @@ export function NetworkToSerialized(network: Network): GDS.Serialized {
  * @param network 
  * @returns Graph object as {[key:string]:Function}
  */
-export function NetworkToGDSGraph(network: Network):{[key:string]:Function}{ 
+export async function NetworkToGDSGraph(network: Network):Promise<{[key:string]:Function}>{ 
     const graph = GDS.Graph();
     const networkSerialized: GDS.Serialized = NetworkToSerialized(network);
     graph.deserialize(networkSerialized);

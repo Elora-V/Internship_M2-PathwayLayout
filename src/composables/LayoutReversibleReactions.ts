@@ -44,70 +44,39 @@ export async function duplicateReversibleReactions(networkLayout:NetworkLayout):
     const newLinks: Array<Link> = []; //links associated with new reactions nodes
 
     console.warn("metadata en double pr old et new attr")
-    networkLayout.links.forEach( async (link) => {
-      // if the link is reversible :  get the reaction node and duplicate
+    
+    await Promise.all(networkLayout.links.map(async (link) => {
+      // If the link is reversible: get the reaction node and duplicate it
+      const linkReversible = linkIsReversible(networkLayout, link);
+  
+      if (linkReversible.isReversible) {
+        // Duplication of the reaction node
+        let nodeToDuplicate: NodeLayout;
+        const reactionIsSource: boolean = linkReversible.sourceIsReversible;
+  
+        if (reactionIsSource) {
+          nodeToDuplicate = link.source;
+        } else {
+          nodeToDuplicate = link.target;
+        }
+  
+        await duplicateNodeReactionReversible(networkLayout, nodeToDuplicate).then((newReactionNode) => {
+          // Add the new reaction node if it is not already present
 
-      const linkReversible=linkIsReversible(networkLayout,link);
-
-        if (linkReversible.isReversible) {  
-          ////// Duplication of the reaction node
-
-          // get nodes class : we only want to duplicate class "reaction"
-          //let newReactionNode: NodeLayout;
-          let nodeToDuplicate: NodeLayout;
-          const reactionIsSource: boolean= linkReversible.sourceIsReversible;
-
-          if (reactionIsSource) {
-            nodeToDuplicate=link.source;
-            //newReactionNode = await duplicateNodeReactionReversible(networkLayout,link.source);
-            // console.log(link.source.id);
-            // console.log(networkLayout.nodes[link.source.id].metadataLayout);
-            // // duplicate source node
-            // newReactionNode = reversibleNodeReaction(link.source);
-            // // add attribut reversible to original reaction
-            // network.nodes[link.source.id].classes=pushUniqueString(network.nodes[link.source.id].classes,"reversible");
-            // // add metadata of reversibleVersion for original reaction
-            // if(!network.nodes[link.source.id].metadata){
-            //   network.nodes[link.source.id].metadata={};
-            // }
-            // network.nodes[link.source.id].metadata.reversibleVersion=newReactionNode.id;
-          } else {
-            nodeToDuplicate=link.target;
-            //newReactionNode = await duplicateNodeReactionReversible(networkLayout,link.target);
-            // console.log(link.target.id);
-            // console.log(networkLayout.nodes[link.target.id].metadataLayout);
-
-            // // duplicate target node
-            // newReactionNode = reversibleNodeReaction(link.target);
-            // // add attribut reversible to original reaction
-            // network.nodes[link.target.id].classes=pushUniqueString(network.nodes[link.target.id].classes,"reversible");
-            // // add metadata of reversibleVersion for original reaction
-            // if(!network.nodes[link.target.id].metadata){
-            //   network.nodes[link.target.id].metadata={};
-            // }
-            // network.nodes[link.target.id].metadata.reversibleVersion=newReactionNode.id;
+          if (newReactionNode && !networkLayout.nodes[newReactionNode.id]) {
+            networkLayout.nodes[newReactionNode.id] = newReactionNode;
           }
-          //console.log(newReactionNode);
-          
-         await duplicateNodeReactionReversible(networkLayout,link.source).then((newReactionNode) => {
-            // adding new reaction node if not already the case
-            if (newReactionNode && !networkLayout.nodes[newReactionNode.id]) {
-              networkLayout.nodes[newReactionNode.id] = newReactionNode;
-            }
-
-          //////// Adding link to new reaction node in reverse (target become source and source become target)
+          // Adding the link to the new reaction node in the opposite direction (the target becomes the source and the source becomes the target)
           if (reactionIsSource) {
             const target = link.target;
-            newLinks.push(reversibleLink(networkLayout,link,newReactionNode.id,target.id));
+            newLinks.push(reversibleLink(networkLayout, link, newReactionNode.id, target.id));
           } else {
             const source = link.source;
-            newLinks.push(reversibleLink(networkLayout,link,source.id,newReactionNode.id,));      
+            newLinks.push(reversibleLink(networkLayout, link, source.id, newReactionNode.id));
           }
-         });
-
-        }
-
-    });
+        });
+      }
+    }));
 
     newLinks.forEach((link) => {
       networkLayout.links.push(link);
@@ -144,25 +113,29 @@ function linkIsReversible(network:Network,link: Link): {isReversible:boolean,sou
  * @param nodeReaction - The node reaction to duplicate.
  * @returns The duplicated node reaction with reversible metadata.
  */
-async function duplicateNodeReactionReversible(networkLayout:NetworkLayout,nodeReaction:Node):Promise<Node> {
-    // duplicate target node
-    const newReactionNode = await reversibleNodeReaction(nodeReaction);
-    //console.log('newReactionNode',newReactionNode);
-    // add attribut reversible to original reaction
-    //networkLayout.nodes[nodeReaction.id].classes=pushUniqueString(network.nodes[link.target.id].classes,"reversible");
-    // add metadata of reversibleVersion for original reaction
+async function duplicateNodeReactionReversible(networkLayout: NetworkLayout, nodeReaction: Node): Promise<Node> {
+    return new Promise(async (resolve, reject) => {
+        try {
+            // Duplicate target node
+            const newReactionNode = await reversibleNodeReaction(nodeReaction);
+            const newId = newReactionNode.id;
 
-    if(!networkLayout.nodes[nodeReaction.id].metadata){ // TO remove
-      networkLayout.nodes[nodeReaction.id].metadata={};
-    }
-    if(!networkLayout.nodes[nodeReaction.id].metadataLayout){
-      networkLayout.nodes[nodeReaction.id].metadataLayout={};
-    }
-    networkLayout.nodes[nodeReaction.id].metadata["reversibleVersion"]=newReactionNode.id; // TO remove
-    networkLayout.nodes[nodeReaction.id].metadataLayout.reversibleVersion=newReactionNode.id;
+            // Add attribute reversible to original reaction
+            if (!networkLayout.nodes[nodeReaction.id]) {
+                throw new Error("Node not found to set as reversible");
+            }
 
-    return newReactionNode;
-  }
+            if (!networkLayout.nodes[nodeReaction.id].metadataLayout) {
+                networkLayout.nodes[nodeReaction.id].metadataLayout = {};
+            }
+            networkLayout.nodes[nodeReaction.id].metadataLayout.reversibleNodeVersion = newId;
+
+            resolve(newReactionNode);
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
 
 
 /**
@@ -175,6 +148,13 @@ async function duplicateNodeReactionReversible(networkLayout:NetworkLayout,nodeR
 async function reversibleNodeReaction(node: NodeLayout, suffix: string = "_rev"): Promise<Node> {
   const  id = node.id;
   const newId = id.endsWith(suffix) ? id.slice(0, -suffix.length) : id + suffix;
+  let reversed:boolean;
+  // if original node is a reversed version : 
+  if (node.metadataLayout && node.metadataLayout.isReversedVersion){
+    reversed=false; // the new node is the original one
+  }else{
+    reversed=true;
+  }
   
   //const newLabel = label.endsWith(suffix) ? label.slice(0, -suffix.length) : label + suffix;
 
@@ -194,8 +174,8 @@ async function reversibleNodeReaction(node: NodeLayout, suffix: string = "_rev")
   const newNode: NodeLayout = {
     ...node,
     id: newId,
-    metadata: {...node.metadata, reversibleVersion: id},  // to remove : doest work
-    metadataLayout: {reversibleVersion:id},
+    //metadata: {...node.metadata, reversibleVersion: id},  // to remove : doest work
+    metadataLayout: {reversibleNodeVersion:id,isReversedVersion:reversed},
   };
   return newNode;
 }
@@ -247,13 +227,13 @@ function reversibleLink(network:Network,link:Link,sourceID:string,targetID:strin
 export async function chooseReversibleReaction(
   subgraphNetwork:SubgraphNetwork,
   sources: Array<string> | StartNodesType,
-  nodeOrderFunction: (network: Network, sources: Array<string> | StartNodesType) => string[] =BFSWithSources
+  nodeOrderFunction: (network: Network, sources: Array<string> | StartNodesType) => Promise<string[]> = BFSWithSources
 ): Promise<SubgraphNetwork> {
   let nodeOrder: string[] = [];
   const network = subgraphNetwork.network.value;
   // get node order
-  nodeOrder = nodeOrderFunction(network,sources);
-
+  nodeOrder = await nodeOrderFunction(network,sources);
+  console.log('nodeOrder', nodeOrder);
   // keep the first node seen only, for duplicated nodes
   subgraphNetwork=keepFirstReversibleNode(subgraphNetwork, nodeOrder) as SubgraphNetwork;
 
@@ -273,34 +253,49 @@ export function keepFirstReversibleNode(subgraphNetwork:SubgraphNetwork,nodeOrde
 
   for(let i=0;i<nodeOrder.length;i++){
     const nodeID=nodeOrder[i];
+    console.log('--------------');
+    console.log("nodeID",nodeID);
     // if there is a reversible version of the current node:
-    if(network.nodes[nodeID].metadata && network.nodes[nodeID].metadata.reversibleVersion){
-      
-      const reversibleNodeID=network.nodes[nodeID].metadata.reversibleVersion as string;
+    if(network.nodes[nodeID].metadataLayout && network.nodes[nodeID].metadataLayout.reversibleNodeVersion){
+      const reversibleNodeID=network.nodes[nodeID].metadataLayout.reversibleNodeVersion;
+      console.log('reverse: '+reversibleNodeID); 
+      if (!(reversibleNodeID in network.nodes))  throw new Error("Error : the reversible version of the node "+nodeID+" is not found in the network.");
+
       // add the reversible reaction to the list of nodes to remove
       reactionToRemove.push(reversibleNodeID);
       // Rename of id if necessary :
-      if(network.nodes[nodeID].classes && network.nodes[nodeID].classes.includes("reversibleVersion")){
+      if(network.nodes[nodeID].metadataLayout && network.nodes[nodeID].metadataLayout.isReversedVersion){
         // the reversible version is the one keeped, its id have to be renamed by the original id
         nodeToRename[nodeID]=reversibleNodeID;
       }
       // remove metadata information about reversible node for current node and its reversible version
-      delete network.nodes[nodeID].metadata.reversibleVersion;
-      if(reversibleNodeID in network.nodes && network.nodes[reversibleNodeID].metadata && "reversibleVersion" in network.nodes[reversibleNodeID].metadata){ 
+      delete network.nodes[nodeID].metadataLayout.reversibleNodeVersion;
+      if (network.nodes[nodeID].metadataLayout.isReversedVersion) delete network.nodes[nodeID].metadataLayout.isReversedVersion;
+      
+      if(network.nodes[reversibleNodeID].metadataLayout &&  network.nodes[reversibleNodeID].metadataLayout.reversibleNodeVersion){ 
         delete network.nodes[reversibleNodeID].metadata.reversibleVersion;
+        if (network.nodes[reversibleNodeID].metadataLayout.isReversedVersion) delete network.nodes[reversibleNodeID].metadataLayout.isReversedVersion;
       }
     }
   }
-
+  console.log(...reactionToRemove);
   // remove one version of the reaction
   removeAllSelectedNodes(reactionToRemove,network);
   // rename the other if it was the reversible version that is keeped
+  console.warn("need to check if subgraph still exist ?")
   if(doRename){
     return renameAllIDNode(subgraphNetwork,nodeToRename); // return object renamed
   }
   return nodeToRename; // if doRename is false, return the list of node to rename to do it later
 }
 
+/**
+ * Renames the nodes and edges in a subgraph network based on the provided mapping.
+ * 
+ * @param subgraphNetwork - The subgraph network to modify.
+ * @param nodesToRename - An object containing the mapping of old node IDs to new node IDs.
+ * @returns The modified subgraph network.
+ */
 export function renameAllIDNode(subgraphNetwork:SubgraphNetwork,nodesToRename:{[key: string]: string}):SubgraphNetwork{
   const network = subgraphNetwork.network.value;
 
@@ -341,12 +336,20 @@ export function renameAllIDNode(subgraphNetwork:SubgraphNetwork,nodesToRename:{[
 
 
 
+/**
+ * Renames all nodes in a subgraph based on a given mapping.
+ * 
+ * @param subgraphNetwork - The subgraph network object.
+ * @param typeSubgraph - The type of subgraph.
+ * @param nodesToRename - The mapping of nodes to their new names.
+ */
 function renameAllInSubgraph(subgraphNetwork:SubgraphNetwork, typeSubgraph:TypeSubgraph, nodesToRename:{[key: string]: string}){
   const subgraphs = subgraphNetwork[typeSubgraph] ? subgraphNetwork[typeSubgraph] : {};
   Object.entries(subgraphs).forEach(([ID, subgraph]) => {
     subgraph.nodes = subgraph.nodes.map(node => {
       if(nodesToRename[node]){
         // change metadata of node to know in which subgraph it is
+        console.warn("pk fonction ici ?");
         updateNodeMetadataSubgraph(subgraphNetwork.network.value, nodesToRename[node], ID, typeSubgraph);
         // change the name of the node in the subgraph
         return nodesToRename[node];

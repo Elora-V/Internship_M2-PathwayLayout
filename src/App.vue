@@ -190,8 +190,8 @@ import { countIsolatedNodes } from "./composables/countIsolatedNodes";
 import { DFSsourceDAG } from "@/composables/AlgorithmDFS";
 import { createStaticForceLayout } from "@metabohub/viz-core";
 import { BFSWithSources } from "@/composables/AlgorithmBFS";
-import {  getSources } from "@/composables/CalculateStartNodes";
-import { addBoldLinkMainChain, addRedLinkcycleGroup } from "@/composables/useSubgraphs";
+import {  getStartNodes } from "@/composables/CalculateStartNodes";
+//import { addBoldLinkMainChain, addRedLinkcycleGroup } from "@/composables/useSubgraphs";
 import { addMainChainFromSources, getPathSourcesToTargetNode,getLongPathDFS, addMiniBranchToMainChain } from "@/composables/LayoutMainChain";
 import { analyseAllJSON, applyMetricsGraph, applyMetricsLayout } from "@/composables/MetricsApplication";
 import { addSideCompoundAttributeFromList, duplicateSideCompound } from "@/composables/LayoutManageSideCompounds";
@@ -316,7 +316,7 @@ function rescaleAfterAction(){
 
 onMounted(() => {
   svgProperties = initZoom();
-  window.addEventListener('keydown', keydownHandler);
+  //window.addEventListener('keydown', keydownHandler);
   //importNetworkFromURL('public/pathways/Bile_acid_synthesis.json', network, networkStyle, callbackFunction); 
   
 });
@@ -462,51 +462,51 @@ async function algoForce():Promise<void>{
 // ----------------------------------------------- Events
 
 // Action with keyboard
-function keydownHandler(event: KeyboardEvent) {
-  if (event.key === 'ArrowLeft') {
-    dagreLayout(network.value,{}, rescaleAfterAction);
-  } else if (event.key === 'ArrowRight') {
-    //vizLayout(subgraphNetwork ,true,true,true,"cluster",true, false,parameters.dpi,parameters.numberNodeOnEdge,rescaleAfterAction);
-    vizLayout(subgraphNetwork, false,false,parameters.addNodes,parameters.groupOrCluster,false,false,parameters.dpi,parameters.numberNodeOnEdge,rescaleAfterAction);
-  } else if (event.key === "d") {
-    duplicateReversibleReactions(network.value);
-  } else if (event.key =="n"){
-    //console.log(subgraphNetwork);
-    console.log(network.value);
-    console.log(parameters);
-  }else if (event.key == "m"){
-    console.log(applyMetricsGraph(network.value));
-    console.log(applyMetricsLayout(subgraphNetwork,false));
-  } else if (event.key =="c"){
-    addDirectedCycleToSubgraphNetwork(subgraphNetwork);
-  }else if (event.key =="r"){
-    (async () => {
-      const sources=getSources(network.value,StartNodesType.RANK_SOURCE_ALL);
-      subgraphNetwork= await chooseReversibleReaction(subgraphNetwork,sources,BFSWithSources);
-    })();
-  }else if (event.key =="p"){
-    const sources=getSources(network.value,parameters.startNodeTypeMainChain);
-    addMainChainFromSources(subgraphNetwork, sources,parameters.getSubgraph, parameters.merge,parameters.pathType);
-    subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
-  } else if (event.key == "a"){
-    allSteps(subgraphNetwork,parameters);
-  } else if (event.key == "f"){
-    const sources=getSources(network.value,StartNodesType.RANK_ONLY);
-    const {dfs,graph}=DFSsourceDAG(network.value,sources);
-    console.log(dfs);
-  }
-  else if (event.key == "b"){
-    const sources=getSources(network.value,StartNodesType.RANK_ONLY);
-    const bfs=BFSWithSources(network.value,sources);
-    bfs.forEach(node=>{
-      console.log(network.value.nodes[node].label);
-    })
-  }else if (event.key =="m"){
-    subgraphNetwork= addMiniBranchToMainChain(subgraphNetwork);
-  }else if (event.key =="l"){
-    subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
-  }
-}
+// function keydownHandler(event: KeyboardEvent) {
+//   if (event.key === 'ArrowLeft') {
+//     dagreLayout(network.value,{}, rescaleAfterAction);
+//   } else if (event.key === 'ArrowRight') {
+//     //vizLayout(subgraphNetwork ,true,true,true,"cluster",true, false,parameters.dpi,parameters.numberNodeOnEdge,rescaleAfterAction);
+//     vizLayout(subgraphNetwork, false,false,parameters.addNodes,parameters.groupOrCluster,false,false,parameters.dpi,parameters.numberNodeOnEdge,rescaleAfterAction);
+//   } else if (event.key === "d") {
+//     duplicateReversibleReactions(network.value);
+//   } else if (event.key =="n"){
+//     //console.log(subgraphNetwork);
+//     console.log(network.value);
+//     console.log(parameters);
+//   }else if (event.key == "m"){
+//     console.log(applyMetricsGraph(network.value));
+//     console.log(applyMetricsLayout(subgraphNetwork,false));
+//   } else if (event.key =="c"){
+//     addDirectedCycleToSubgraphNetwork(subgraphNetwork);
+//   }else if (event.key =="r"){
+//     (async () => {
+//       const sources=getStartNodes(network.value,StartNodesType.RANK_SOURCE_ALL);
+//       subgraphNetwork= await chooseReversibleReaction(subgraphNetwork,sources,BFSWithSources);
+//     })();
+//   }else if (event.key =="p"){
+//     const sources=await getStartNodes(network.value,parameters.startNodeTypeMainChain);
+//     addMainChainFromSources(subgraphNetwork, sources,parameters.getSubgraph, parameters.merge,parameters.pathType);
+//     //subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
+//   } else if (event.key == "a"){
+//     allSteps(subgraphNetwork,parameters);
+//   } else if (event.key == "f"){
+//     const sources=getStartNodes(network.value,StartNodesType.RANK_ONLY);
+//     const {dfs,graph}=DFSsourceDAG(network.value,sources);
+//     console.log(dfs);
+//   }
+//   else if (event.key == "b"){
+//     const sources=getStartNodes(network.value,StartNodesType.RANK_ONLY);
+//     const bfs=BFSWithSources(network.value,sources);
+//     bfs.forEach(node=>{
+//       console.log(network.value.nodes[node].label);
+//     })
+//   }else if (event.key =="m"){
+//     subgraphNetwork= addMiniBranchToMainChain(subgraphNetwork);
+//   }else if (event.key =="l"){
+//     subgraphNetwork = addBoldLinkMainChain(subgraphNetwork);
+//   }
+// }
 
 
 function loopJson(algo?:Algo):void{

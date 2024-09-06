@@ -1,8 +1,21 @@
+// Types imports
 import { StartNodesType } from "@/types/EnumArgs";
 import { Network } from "@metabohub/viz-core/src/types/Network";
-import { getSources } from "./CalculateStartNodes";
+
+// Composable imports
+import { getStartNodes } from "./CalculateStartNodes";
 import { NetworkToAdjacentObject } from "./ConvertFromNetwork";
 
+
+/**
+ * This file contains the functions to perform Breadth-First Search (BFS) on a graph.
+ * 
+ * -> BFS :
+ *      Perform Breadth-First Search (BFS) on a graph represented by an adjacency object.
+ * 
+ * -> BFSWithSources :
+ *     Perform Breadth-First Search (BFS) on a network with multiple sources.
+ */
 
 
 /**
@@ -49,29 +62,33 @@ export function BFS(adjacency: { [key: string]: string[] }, source: string, bloc
  * RANK_SOURCE_ALL : sources are node of rank 0, then topological sources, then all the other nodes
  * @returns An array of nodes visited in BFS order, a node can appear several time if it is a descendant of several sources.
  */
-export function BFSWithSources(network:Network, sources:Array<string>|StartNodesType):Array<string>{
-    //console.log('BFS');
-    let bfsAllSources:string[] =[];
+export async function BFSWithSources(network:Network, sources:Array<string>|StartNodesType):Promise<Array<string>>{
 
-    // create graph for library from network
-    const adj=NetworkToAdjacentObject(network);
+    try{ 
+        let bfsAllSources:string[] =[];
 
-    //get sources nodes if no list from user
-    let sources_list: Array<string>;
-    if (Array.isArray(sources)) {
-        sources_list = sources;
-    } else {
-        sources_list = getSources(network, sources);
-    }
+        // create graph for library from network
+        const adj=NetworkToAdjacentObject(network);
 
-    // apply BFS
-    sources_list.forEach(source=>{
-        // bfs on source only if source not already visited
-        if( !bfsAllSources.includes(source)){
-            const bfs=BFS(adj,source,bfsAllSources); 
-            bfsAllSources = bfsAllSources.concat(bfs);
+        //get sources nodes if no list from user
+        let sources_list: Array<string>;
+        if (Array.isArray(sources)) {
+            sources_list = sources;
+        } else {
+            sources_list = await getStartNodes(network, sources);
         }
-    })
-  
-    return bfsAllSources
+
+        // apply BFS
+        sources_list.forEach(source=>{
+            // bfs on source only if source not already visited
+            if( !bfsAllSources.includes(source)){
+                const bfs=BFS(adj,source,bfsAllSources); 
+                bfsAllSources = bfsAllSources.concat(bfs);
+            }
+        })
+    
+        return bfsAllSources
+    }catch(error){
+        throw error;
+    }
 }

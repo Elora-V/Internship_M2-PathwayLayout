@@ -2,7 +2,7 @@ import { PathType, StartNodesType } from "@/types/EnumArgs";
 import { DFSWithSources, DFSsourceDAG } from "./AlgorithmDFS";
 import { NetworkToGDSGraph } from "./ConvertFromNetwork";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
-import { getSources } from "./CalculateStartNodes";
+import { getStartNodes } from "./CalculateStartNodes";
 import { Network } from "@metabohub/viz-core/src/types/Network";
 import { BFS } from "./AlgorithmBFS";
 import {TypeSubgraph, type Subgraph} from "@/types/Subgraph";
@@ -44,7 +44,7 @@ export function addMainChainFromSources(subgraphNetwork:SubgraphNetwork, sources
     
     // get sources
     if (!Array.isArray(sources)){
-        sources=getSources(network,sources);
+        sources=getStartNodes(network,sources);
     }
 
     // get main chains of paths from sources

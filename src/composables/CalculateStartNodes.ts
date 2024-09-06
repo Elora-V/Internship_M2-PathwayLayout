@@ -1,8 +1,40 @@
+// Types imports
 import { StartNodesType } from "@/types/EnumArgs";
-import { NetworkToGDSGraph } from "./ConvertFromNetwork";
 import { Network } from "@metabohub/viz-core/src/types/Network";
-import { Node } from "@metabohub/viz-core/src/types/Node";
+import { NodeLayout } from "@/types/NetworkLayout";
 
+// Composable imports
+import { NetworkToGDSGraph } from "./ConvertFromNetwork";
+
+
+/**
+ * This file contains the functions to calculate the start nodes of a network for graph traversal.
+ * 
+ * -> assignRankOrder :
+ *       assign rank and order to nodes of a network
+ * 
+ * -> getStartNodes :
+ *       get the start nodes of a network for graph traversal
+ * 
+ * -> concatSources :
+ *      concatenate two arrays of strings and remove duplicates
+ * 
+ * -> hasRank0 :
+ *      check if a node has rank 0 in metadata
+ * 
+ * -> needRank :
+ *      check if the rank information is needed for the sourcetype
+ * 
+ * -> needSource :
+ *     check if the topological source information is needed for the sourcetype
+ * 
+ * -> needAll :
+ *    check if all nodes are needed for the sourcetype
+ * 
+ * -> concatSources :
+ *     concatenate two arrays of strings and remove duplicates
+ * 
+ */
 
 /**
  * Take network and all the unique y coordinate. Add the rank (y position : first, second...; not coordinate) and order ( x position in the rank: first, second,....) to metadata of network.
@@ -51,7 +83,7 @@ export function assignRankOrder(network: Network, unique_y: Array<number>):void 
 
 
 /**
- * Get a list of nodes to use as input for DFS (as sources) for example
+ * Get a list of nodes to use as start node for graph traversal (DFS for example)
  * @param network 
  * @param typeSource type of sources to get, with a certain order if several types
  * RANK_ONLY : sources are nodes of rank 0
@@ -62,21 +94,21 @@ export function assignRankOrder(network: Network, unique_y: Array<number>):void 
  * RANK_SOURCE_ALL : sources are node of rank 0, then topological sources, then all the other nodes
  * @returns the id of the sources
  */
-export function getSources(network:Network, typeSource:StartNodesType):Array<string>{
+export async function getStartNodes(network:Network, typeSource:StartNodesType):Promise<Array<string>>{
 
     // if all nodes as source
     if (typeSource==StartNodesType.ALL){
-        return Object.keys(network.nodes);
+        return Object.keys(network.nodes).sort();
     }
 
-    const sources_rank=[];
-    const sources_source=[];
-    const sources_all=[];
+    const start_rank=[];
+    const start_source=[];
+    const start_all=[];
 
     // get object for data-graph-structure if indegree information needed (when source nodes needed)
     let graph:{[key:string]:Function};
     if(needSource(typeSource)){
-        graph=NetworkToGDSGraph(network);
+        graph= await NetworkToGDSGraph(network);
     }
 
     // adding node depending on sourcetype : Order is important !! 
@@ -85,15 +117,15 @@ export function getSources(network:Network, typeSource:StartNodesType):Array<str
     .map(([, value]) => value)
     .forEach(node =>{      
         if(needRank(typeSource) && hasRank0(node)){
-            sources_rank.push(node.id);
+            start_rank.push(node.id);
         } else if (needSource(typeSource) && graph.indegree(node.id)===0){
-            sources_source.push(node.id);
+            start_source.push(node.id);
         } else if (needAll(typeSource)) {
-            sources_all.push(node.id);
+            start_all.push(node.id);
         }       
     });
     
-    return sources_rank.concat(sources_source, sources_all);
+    return start_rank.concat(start_source, start_all);
 
 }
 
@@ -114,7 +146,8 @@ export function getSources(network:Network, typeSource:StartNodesType):Array<str
  * @param node Node
  * @returns boolean
  */
-function hasRank0(node:Node):boolean{
+function hasRank0(node:NodeLayout):boolean{
+    console.warn('change rank attr');
     return (node.metadata && Object.keys(node.metadata).includes("rank") && node.metadata.rank===0);
 }
 

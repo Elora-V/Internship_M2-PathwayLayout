@@ -1,3 +1,4 @@
+import { NetworkLayout } from "@/types/NetworkLayout";
 import { Subgraph, TypeSubgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { Network } from "@metabohub/viz-core/src/types/Network";
@@ -132,17 +133,36 @@ export function addNodeToSubgraph(subgraphNetwork:SubgraphNetwork,subgraphID:str
  * Updates the metadata of a node in the network by adding a subgraph ID to its list of subgraph.
  * If the metadata does not exist, they will be created.
  * 
- * @param network - The network object.
+ * @param networkLayout - The network object.
  * @param nodeID - The ID of the node to update.
  * @param subgraphID - The ID of the cluster to add.
  */
-export function updateNodeMetadataSubgraph(network: Network, nodeID: string, subgraphID: string, subgraphType: TypeSubgraph = TypeSubgraph.MAIN_CHAIN): void {
-  if ( !("metadata" in network.nodes[nodeID])){
-    network.nodes[nodeID].metadata={mainChain:[],secondaryChain:[],cycles:[]};
+export function updateNodeMetadataSubgraph(networkLayout: NetworkLayout, nodeID: string, subgraphID: string, subgraphType: TypeSubgraph = TypeSubgraph.MAIN_CHAIN): void {
+    if ( ! networkLayout.nodes[nodeID]) throw new Error('Node not found in networkLayout');
+
+    console.warn('to change with metadataLayout');
+  if ( !(networkLayout.nodes[nodeID].metadata)){ // to remove
+    networkLayout.nodes[nodeID].metadata={};
   }
-  if (!(subgraphType in network.nodes[nodeID].metadata)){
-    network.nodes[nodeID].metadata[subgraphType]=[];
+  if ( !(networkLayout.nodes[nodeID].metadataLayout)){
+    networkLayout.nodes[nodeID].metadataLayout={};
   }
-  const listSubgraph=network.nodes[nodeID].metadata[subgraphType] as Array<string>;
-  listSubgraph.push(subgraphID);
+  if (!(subgraphType in networkLayout.nodes[nodeID].metadata)){ // to remove
+    networkLayout.nodes[nodeID].metadata[subgraphType]=[];
+  }
+
+  if (!(subgraphType in networkLayout.nodes[nodeID].metadataLayout)){
+    networkLayout.nodes[nodeID].metadataLayout[subgraphType]=[];
+  }
+
+  const listSubgraph=networkLayout.nodes[nodeID].metadata[subgraphType] as Array<string>;
+  const listSubgraphOfNode=networkLayout.nodes[nodeID].metadataLayout[subgraphType] as Array<string>;
+
+  if (!listSubgraph.includes(subgraphID)){ // to remove
+    listSubgraph.push(subgraphID);
+  }
+
+  if (!listSubgraphOfNode.includes(subgraphID)){ // to remove
+    listSubgraphOfNode.push(subgraphID);
+  }
 }

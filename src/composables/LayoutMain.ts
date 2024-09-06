@@ -16,7 +16,7 @@ import { BFSWithSources } from "./AlgorithmBFS";
 import { addMainChainFromSources, addMiniBranchToMainChain } from "./LayoutMainChain";
 import { coordinateAllCycles, drawAllCyclesGroup } from "./LayoutDrawCycle";
 import { shiftAllToGetTopLeftCoord } from "./CalculateSize";
-import { getSources } from "./CalculateStartNodes";
+import { getStartNodes } from "./CalculateStartNodes";
 import { NetworktoNetworkLayout } from "./ConvertFromNetwork";
 import { NetworkLayoutToNetwork } from "./ConvertToNetwork";
 
@@ -146,16 +146,16 @@ export async function allSteps(subgraphNetwork: SubgraphNetwork,parameters:Param
         if (parameters.doReactionReversible){
           // choose all other reversible reactions
           if (printNameStep) console.log('Choose reversible reactions');
-          const sources=getSources(network,StartNodesType.RANK_SOURCE_ALL);
+          const sources=await getStartNodes(network,StartNodesType.RANK_SOURCE_ALL);
           subgraphNetwork=await chooseReversibleReaction(subgraphNetwork,sources,BFSWithSources);
         }
       }
     ).then(
-      () => {
+      async () => {
         // get main chains
         if (parameters.doMainChain){
           if (printNameStep) console.log('Find main chain');
-          const sources=getSources(network,parameters.startNodeTypeMainChain);
+          const sources=await getStartNodes(network,parameters.startNodeTypeMainChain);
           addMainChainFromSources(subgraphNetwork, sources,parameters.getSubgraph, parameters.merge,parameters.pathType);
         }
       }
