@@ -148,12 +148,12 @@ async function duplicateNodeReactionReversible(networkLayout: NetworkLayout, nod
 async function reversibleNodeReaction(node: NodeLayout, suffix: string = "_rev"): Promise<Node> {
   const  id = node.id;
   const newId = id.endsWith(suffix) ? id.slice(0, -suffix.length) : id + suffix;
-  let reversed:boolean;
-  // if original node is a reversed version : 
+  let newNodeReversed:boolean;
+  // if original node is a reversed version :
   if (node.metadataLayout && node.metadataLayout.isReversedVersion){
-    reversed=false; // the new node is the original one
+    newNodeReversed=false; // the new node is the original one
   }else{
-    reversed=true;
+    newNodeReversed=true;
   }
   
   //const newLabel = label.endsWith(suffix) ? label.slice(0, -suffix.length) : label + suffix;
@@ -175,7 +175,7 @@ async function reversibleNodeReaction(node: NodeLayout, suffix: string = "_rev")
     ...node,
     id: newId,
     //metadata: {...node.metadata, reversibleVersion: id},  // to remove : doest work
-    metadataLayout: {reversibleNodeVersion:id,isReversedVersion:reversed},
+    metadataLayout: {reversibleNodeVersion:id,isReversedVersion:newNodeReversed},
   };
   return newNode;
 }
@@ -233,7 +233,6 @@ export async function chooseReversibleReaction(
   const network = subgraphNetwork.network.value;
   // get node order
   nodeOrder = await nodeOrderFunction(network,sources);
-  console.log('nodeOrder', nodeOrder);
   // keep the first node seen only, for duplicated nodes
   subgraphNetwork=keepFirstReversibleNode(subgraphNetwork, nodeOrder) as SubgraphNetwork;
 
@@ -253,32 +252,34 @@ export function keepFirstReversibleNode(subgraphNetwork:SubgraphNetwork,nodeOrde
 
   for(let i=0;i<nodeOrder.length;i++){
     const nodeID=nodeOrder[i];
-    console.log('--------------');
-    console.log("nodeID",nodeID);
     // if there is a reversible version of the current node:
     if(network.nodes[nodeID].metadataLayout && network.nodes[nodeID].metadataLayout.reversibleNodeVersion){
       const reversibleNodeID=network.nodes[nodeID].metadataLayout.reversibleNodeVersion;
-      console.log('reverse: '+reversibleNodeID); 
       if (!(reversibleNodeID in network.nodes))  throw new Error("Error : the reversible version of the node "+nodeID+" is not found in the network.");
 
       // add the reversible reaction to the list of nodes to remove
       reactionToRemove.push(reversibleNodeID);
       // Rename of id if necessary :
-      if(network.nodes[nodeID].metadataLayout && network.nodes[nodeID].metadataLayout.isReversedVersion){
+      if(network.nodes[nodeID].metadataLayout.isReversedVersion){
         // the reversible version is the one keeped, its id have to be renamed by the original id
         nodeToRename[nodeID]=reversibleNodeID;
+        delete network.nodes[nodeID].metadataLayout.isReversedVersion;
+      }else if (network.nodes[reversibleNodeID].metadataLayout.isReversedVersion){
+        delete network.nodes[reversibleNodeID].metadataLayout.isReversedVersion;
+      }else{
+        throw new Error("One duplication of node lack attribut isReversedVersion");
       }
+
       // remove metadata information about reversible node for current node and its reversible version
       delete network.nodes[nodeID].metadataLayout.reversibleNodeVersion;
-      if (network.nodes[nodeID].metadataLayout.isReversedVersion) delete network.nodes[nodeID].metadataLayout.isReversedVersion;
       
       if(network.nodes[reversibleNodeID].metadataLayout &&  network.nodes[reversibleNodeID].metadataLayout.reversibleNodeVersion){ 
-        delete network.nodes[reversibleNodeID].metadata.reversibleVersion;
-        if (network.nodes[reversibleNodeID].metadataLayout.isReversedVersion) delete network.nodes[reversibleNodeID].metadataLayout.isReversedVersion;
+        delete network.nodes[reversibleNodeID].metadataLayout.reversibleNodeVersion;
       }
     }
   }
   console.log(...reactionToRemove);
+  console.log(nodeToRename);
   // remove one version of the reaction
   removeAllSelectedNodes(reactionToRemove,network);
   // rename the other if it was the reversible version that is keeped

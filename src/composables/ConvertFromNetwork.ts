@@ -27,7 +27,6 @@ import { inCycle } from './GetSetAttributsNodes';
  * @returns the new network layout object
  */
 export function NetworktoNetworkLayout(network: Network): NetworkLayout {
-    const defaultMetadataLayout: { [key: string]: string | number | { [key: string]: string | number } | Array<string> | boolean } = {};
   
     // Convert nodes
     const nodes: { [key: string]: NodeLayout } = Object.keys(network.nodes).reduce(
@@ -35,7 +34,7 @@ export function NetworktoNetworkLayout(network: Network): NetworkLayout {
         const node = network.nodes[key];
         acc[key] = {
           ...node,
-          metadataLayout: defaultMetadataLayout
+          metadataLayout: {}
         };
         return acc;
       },
@@ -47,7 +46,7 @@ export function NetworktoNetworkLayout(network: Network): NetworkLayout {
       ...link,
       source: nodes[link.source.id], // update of pointer
       target: nodes[link.target.id], // update of pointer
-      metadataLayout: defaultMetadataLayout
+      metadataLayout: {}
     }));
   
     // Convert network to network layout
