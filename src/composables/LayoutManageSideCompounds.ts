@@ -11,12 +11,13 @@ import { GraphStyleProperties } from "@metabohub/viz-core/src/types/GraphStylePr
 import { getContentFromURL } from "./importNetwork";
 import { removeAllSelectedNodes , duplicateAllNodesByAttribut} from "@metabohub/viz-core";
 import { getMeanNodesSizePixel, inchesToPixels, minEdgeLength as minEdgeLength, pixelsToInches } from "./CalculateSize";
-import { getAttributSideCompounds, isDuplicate, isSideCompound, setAsSideCompound } from "./GetSetAttributsNodes";
+import { getAttributSideCompounds, isDuplicate, isReaction, isSideCompound, setAsSideCompound } from "./GetSetAttributsNodes";
 
 // General imports
 import { e, S } from "vitest/dist/reporters-1evA5lom";
 import { c } from "vite/dist/node/types.d-aGj9QkWt";
 import { resolve } from "path";
+import { error } from "console";
 
 
 
@@ -353,13 +354,17 @@ async function minEdgeLengthDefault(subgraphNetwork:SubgraphNetwork,factorMinEdg
     return (nodeSep+rankSep)/2*factorMinEdgeLength; 
 }
 
-// MODIFICATION !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/**
+ * Inverse product and reactant for reaction that are the duplicated version of the original reaction : they have been reversed.
+ * @param subgraphNetwork 
+ * @returns subgraphNetwork updated
+ */
 async function updateSideCompoundsReversibleReaction(subgraphNetwork:SubgraphNetwork):Promise<SubgraphNetwork>{
     const network = subgraphNetwork.network.value;
-    console.warn('modifier updateSideCompoundsReversibleReaction avec nouveau attribut');
     Object.keys(subgraphNetwork.sideCompounds).forEach((reactionID)=>{
+        if (!(reactionID in network.nodes)) throw new Error("Reaction not in subgraphNetwork")
         // if reaction has been reversed : exchange products and reactants
-        if(reactionID in network.nodes && "classes" in network.nodes[reactionID] && network.nodes[reactionID].classes.includes("reversibleVersion")){
+        if(network.nodes[reactionID].metadataLayout && network.nodes[reactionID].metadataLayout.isReversedVersion){
             const products=subgraphNetwork.sideCompounds[reactionID].products;
             const reactants=subgraphNetwork.sideCompounds[reactionID].reactants;
             subgraphNetwork.sideCompounds[reactionID].products=reactants;
@@ -379,7 +384,7 @@ async function updateSideCompoundsReversibleReaction(subgraphNetwork:SubgraphNet
  * @returns The subgraphNetwork with the motif stamp applied for the reaction.
  */
 async function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID:string,factorMinEdgeLength:number=1/2):Promise<SubgraphNetwork>{
-    try {
+    //try {
         // initialize reaction stamp
         let reaction= await initializeReactionSideCompounds(subgraphNetwork,reactionID);
         // find intervals between reactants and products
@@ -395,9 +400,9 @@ async function motifStampSideCompound(subgraphNetwork:SubgraphNetwork,reactionID
         subgraphNetwork= await giveCoordAllSideCompounds(subgraphNetwork,reaction,factorMinEdgeLength);
         // insert side compounds in network
         insertAllSideCompoundsInNetwork(subgraphNetwork,reaction);
-    } catch (error) {
-        throw new Error("Error in motifStampSideCompound, reaction : "+ reactionID+ "\n"+error);
-    }
+    // } catch (error) {
+    //     throw new Error("Error in motifStampSideCompound, reaction : "+ reactionID+ "\n"+error);
+    // }
     return subgraphNetwork;
 }
 
@@ -510,42 +515,48 @@ function angleRadianSegment(x1:number,y1:number,x2:number,y2:number,clockwise:bo
  */
 async function addSideCompoundsIntervals(reaction: Reaction):Promise<Reaction> {
 
-    // Sort metabolites by angle
-    const sortedMetabolites = Object.entries(reaction.metabolitesAngles)
-    .map(([id, {angle, type}]) => ({id, angle, type}))
-    .sort((a, b) => {
-        if (isNaN(a.angle)) return 1; // Place `a` after `b` if `a.angle` is `NaN`
-        if (isNaN(b.angle)) return -1; // Place `b` after `a` if `b.angle` is `NaN`
-        return a.angle - b.angle; // Normal comparison if both angles are numbers
-    });
+    try {
+        // Sort metabolites by angle
+        const sortedMetabolites = Object.entries(reaction.metabolitesAngles)
+        .map(([id, {angle, type}]) => ({id, angle, type}))
+        .sort((a, b) => {
+            if (isNaN(a.angle)) return 1; // Place `a` after `b` if `a.angle` is `NaN`
+            if (isNaN(b.angle)) return -1; // Place `b` after `a` if `b.angle` is `NaN`
+            return a.angle - b.angle; // Normal comparison if both angles are numbers
+        });
 
-    // Initialisation
-    if (!sortedMetabolites || sortedMetabolites.length === 0) {
-        throw new Error("No sorted metabolite for side compounds insertion");
+        // Initialisation
+        console.log(reaction.id);
+        console.log(sortedMetabolites);
+        if (!sortedMetabolites || sortedMetabolites.length === 0) {
+            throw new Error("No sorted metabolite for side compounds insertion");
+        }
+
+        const lastIndex = sortedMetabolites.length - 1;
+        let previousType = sortedMetabolites[lastIndex]?.type;
+        let previousId = sortedMetabolites[lastIndex]?.id;
+
+        // Process sorted metabolites to find intervals between reactants and products
+        reaction = await addIntervalsBetweenMetabolites(reaction,sortedMetabolites, previousId, previousType,true);
+
+        // If no interval between reactants and products
+        if (reaction.intervalsAvailables.length === 0) {
+            reaction = await addIntervalsBetweenMetabolites(reaction,sortedMetabolites, previousId, previousType,false);
+        }
+
+        // If still no intervals, add a default interval
+        if (reaction.intervalsAvailables.length === 0) {
+            reaction.intervalsAvailables =[{
+                typeInterval: 0, 
+                reactant: null,
+                product: null,
+            }];
+        }
+
+        return reaction;
+    } catch(error){
+        throw error;
     }
-
-    const lastIndex = sortedMetabolites.length - 1;
-    let previousType = sortedMetabolites[lastIndex]?.type;
-    let previousId = sortedMetabolites[lastIndex]?.id;
-
-    // Process sorted metabolites to find intervals between reactants and products
-    reaction = await addIntervalsBetweenMetabolites(reaction,sortedMetabolites, previousId, previousType,true);
-
-    // If no interval between reactants and products
-    if (reaction.intervalsAvailables.length === 0) {
-        reaction = await addIntervalsBetweenMetabolites(reaction,sortedMetabolites, previousId, previousType,false);
-    }
-
-    // If still no intervals, add a default interval
-    if (reaction.intervalsAvailables.length === 0) {
-        reaction.intervalsAvailables =[{
-            typeInterval: 0, 
-            reactant: null,
-            product: null,
-        }];
-    }
-
-    return reaction;
 }
 
     
@@ -610,20 +621,24 @@ function addInterval(reaction:Reaction,id1:string,type1:MetaboliteType,id2:strin
  * @returns the biggest interval and its size
  */
 async function biggestInterval(reaction: Reaction): Promise<{interval:ReactionInterval,size:number}> {
-    const intervals = reaction.intervalsAvailables;
-    if (intervals.length === 0) {
-        throw new Error("Empty intervals");
-    }else if (intervals.length === 1) {
-        return {interval:intervals[0],size:sizeInterval(reaction,0)};
+    try {
+        const intervals = reaction.intervalsAvailables;
+        if (intervals.length === 0) {
+            throw new Error("Empty intervals");
+        }else if (intervals.length === 1) {
+            return {interval:intervals[0],size:sizeInterval(reaction,0)};
+        }
+        // size of intervals
+        const sizes = intervals.map((_, index) => sizeInterval(reaction, index));
+        // find biggest size
+        const maxValue = Math.max(...sizes);
+        // Return interval associated
+        const maxIndex = sizes.indexOf(maxValue);
+        if(maxIndex===-1) throw new Error("No interval of max size found");
+        return {interval:intervals[maxIndex],size:maxValue};
+    }catch(error){
+        throw error;
     }
-    // size of intervals
-    const sizes = intervals.map((_, index) => sizeInterval(reaction, index));
-    // find biggest size
-    const maxValue = Math.max(...sizes);
-    // Return interval associated
-    const maxIndex = sizes.indexOf(maxValue);
-    if(maxIndex===-1) throw new Error("No interval of max size found");
-    return {interval:intervals[maxIndex],size:maxValue};
 }
 
 

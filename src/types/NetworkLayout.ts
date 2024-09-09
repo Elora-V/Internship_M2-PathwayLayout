@@ -20,8 +20,8 @@ export interface NodeLayout extends Node {
     metadataLayout?: {
       rank? : number;
       order? : number;
-      reversibleNodeVersion? : string;
-      isReversedVersion? : boolean;
+      reversibleNodeVersion? : string; // id of the duplicated version of the node (the reversed node)
+      isReversedVersion? : boolean; // true if is the duplicated version, false if original node
      [TypeSubgraph.MAIN_CHAIN]?:string[],
      [TypeSubgraph.SECONDARY_CHAIN]?:string[],
      [TypeSubgraph.CYCLE]?:string[],

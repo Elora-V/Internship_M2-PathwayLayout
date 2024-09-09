@@ -259,20 +259,17 @@ export function keepFirstReversibleNode(subgraphNetwork:SubgraphNetwork,nodeOrde
 
       // add the reversible reaction to the list of nodes to remove
       reactionToRemove.push(reversibleNodeID);
-      // Rename of id if necessary :
+
+      // Put on list renaming of id if necessary :
       if(network.nodes[nodeID].metadataLayout.isReversedVersion){
-        // the reversible version is the one keeped, its id have to be renamed by the original id
+        // the duplicated version is the one keeped, its id have to be renamed by the original id
         nodeToRename[nodeID]=reversibleNodeID;
-        delete network.nodes[nodeID].metadataLayout.isReversedVersion;
-      }else if (network.nodes[reversibleNodeID].metadataLayout.isReversedVersion){
-        delete network.nodes[reversibleNodeID].metadataLayout.isReversedVersion;
-      }else{
+      }else if (!network.nodes[reversibleNodeID].metadataLayout.isReversedVersion){
         throw new Error("One duplication of node lack attribut isReversedVersion");
       }
 
       // remove metadata information about reversible node for current node and its reversible version
       delete network.nodes[nodeID].metadataLayout.reversibleNodeVersion;
-      
       if(network.nodes[reversibleNodeID].metadataLayout &&  network.nodes[reversibleNodeID].metadataLayout.reversibleNodeVersion){ 
         delete network.nodes[reversibleNodeID].metadataLayout.reversibleNodeVersion;
       }
@@ -285,7 +282,8 @@ export function keepFirstReversibleNode(subgraphNetwork:SubgraphNetwork,nodeOrde
   // rename the other if it was the reversible version that is keeped
   console.warn("need to check if subgraph still exist ?")
   if(doRename){
-    return renameAllIDNode(subgraphNetwork,nodeToRename); // return object renamed
+    const subgraphNetworkRename=renameAllIDNode(subgraphNetwork,nodeToRename);
+    return  subgraphNetworkRename// return object renamed
   }
   return nodeToRename; // if doRename is false, return the list of node to rename to do it later
 }
@@ -350,8 +348,8 @@ function renameAllInSubgraph(subgraphNetwork:SubgraphNetwork, typeSubgraph:TypeS
     subgraph.nodes = subgraph.nodes.map(node => {
       if(nodesToRename[node]){
         // change metadata of node to know in which subgraph it is
-        console.warn("pk fonction ici ?");
-        updateNodeMetadataSubgraph(subgraphNetwork.network.value, nodesToRename[node], ID, typeSubgraph);
+        //console.warn("pk fonction ici ?");
+        //updateNodeMetadataSubgraph(subgraphNetwork.network.value, nodesToRename[node], ID, typeSubgraph);
         // change the name of the node in the subgraph
         return nodesToRename[node];
       }

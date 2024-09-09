@@ -155,14 +155,14 @@ export function updateNodeMetadataSubgraph(networkLayout: NetworkLayout, nodeID:
     networkLayout.nodes[nodeID].metadataLayout[subgraphType]=[];
   }
 
-  const listSubgraph=networkLayout.nodes[nodeID].metadata[subgraphType] as Array<string>;
+  const listSubgraph=networkLayout.nodes[nodeID].metadata[subgraphType] as Array<string>; // to remove
   const listSubgraphOfNode=networkLayout.nodes[nodeID].metadataLayout[subgraphType] as Array<string>;
 
   if (!listSubgraph.includes(subgraphID)){ // to remove
     listSubgraph.push(subgraphID);
   }
 
-  if (!listSubgraphOfNode.includes(subgraphID)){ // to remove
+  if (!listSubgraphOfNode.includes(subgraphID)){ 
     listSubgraphOfNode.push(subgraphID);
   }
 }
