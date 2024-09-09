@@ -256,9 +256,9 @@ function callbackFunction() {
   //subgraphNetwork={network:network,networkStyle:networkStyle,attributs:{},mainChains:{}};
 
   // remove label (for screenshot)
-  Object.values(network.value.nodes).forEach(node=>{
-        node.label="";
-      })
+  // Object.values(network.value.nodes).forEach(node=>{
+  //       node.label="";
+  //     })
 
   ///subgraphAlgorithm('DAG_Dijkstra')
 

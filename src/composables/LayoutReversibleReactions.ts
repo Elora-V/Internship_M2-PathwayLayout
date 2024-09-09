@@ -11,7 +11,7 @@ import { NetworkLayout, NodeLayout } from "@/types/NetworkLayout";
 import { removeAllSelectedNodes } from "@metabohub/viz-core";
 import { BFSWithSources } from "./AlgorithmBFS";
 import { updateNodeMetadataSubgraph } from "./UseSubgraphNetwork";
-import { addLinkClassReversible, addMetadataReversibleWithClass, addReversible, isReaction, isReversible } from "./GetSetAttributsNodes";
+import { addLinkClassReversible, addMetadataReversibleWithClass, isReaction, isReversible } from "./GetSetAttributsNodes";
 
 // General imports
 import { e } from "vitest/dist/reporters-1evA5lom";
@@ -275,8 +275,6 @@ export function keepFirstReversibleNode(subgraphNetwork:SubgraphNetwork,nodeOrde
       }
     }
   }
-  console.log(...reactionToRemove);
-  console.log(nodeToRename);
   // remove one version of the reaction
   removeAllSelectedNodes(reactionToRemove,network);
   // rename the other if it was the reversible version that is keeped

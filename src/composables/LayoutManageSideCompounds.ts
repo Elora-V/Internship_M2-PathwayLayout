@@ -526,8 +526,6 @@ async function addSideCompoundsIntervals(reaction: Reaction):Promise<Reaction> {
         });
 
         // Initialisation
-        console.log(reaction.id);
-        console.log(sortedMetabolites);
         if (!sortedMetabolites || sortedMetabolites.length === 0) {
             throw new Error("No sorted metabolite for side compounds insertion");
         }
@@ -540,12 +538,12 @@ async function addSideCompoundsIntervals(reaction: Reaction):Promise<Reaction> {
         reaction = await addIntervalsBetweenMetabolites(reaction,sortedMetabolites, previousId, previousType,true);
 
         // If no interval between reactants and products
-        if (reaction.intervalsAvailables.length === 0) {
+        if (!reaction.intervalsAvailables || reaction.intervalsAvailables.length === 0) {
             reaction = await addIntervalsBetweenMetabolites(reaction,sortedMetabolites, previousId, previousType,false);
         }
 
         // If still no intervals, add a default interval
-        if (reaction.intervalsAvailables.length === 0) {
+        if (!reaction.intervalsAvailables || reaction.intervalsAvailables.length === 0) {
             reaction.intervalsAvailables =[{
                 typeInterval: 0, 
                 reactant: null,
@@ -694,7 +692,6 @@ async function findSpacingSideCompounds(reaction:Reaction,sizeInterval:number):P
  * @returns The updated subgraph network with the calculated coordinates for the side compounds.
  */
 async function giveCoordAllSideCompounds(subgraphNetwork:SubgraphNetwork,reaction:Reaction,factorLength:number=1/2):Promise<SubgraphNetwork>{
-
     const distance=calculateDistance(subgraphNetwork, factorLength);
     const sideCompounds=subgraphNetwork.sideCompounds[reaction.id];
     const reactionCoord=subgraphNetwork.network.value.nodes[reaction.id];
