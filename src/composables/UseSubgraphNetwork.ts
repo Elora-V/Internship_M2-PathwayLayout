@@ -140,29 +140,21 @@ export function addNodeToSubgraph(subgraphNetwork:SubgraphNetwork,subgraphID:str
 export function updateNodeMetadataSubgraph(networkLayout: NetworkLayout, nodeID: string, subgraphID: string, subgraphType: TypeSubgraph = TypeSubgraph.MAIN_CHAIN): void {
     if ( ! networkLayout.nodes[nodeID]) throw new Error('Node not found in networkLayout');
 
-    console.warn('to change with metadataLayout');
-  if ( !(networkLayout.nodes[nodeID].metadata)){ // to remove
-    networkLayout.nodes[nodeID].metadata={};
-  }
   if ( !(networkLayout.nodes[nodeID].metadataLayout)){
     networkLayout.nodes[nodeID].metadataLayout={};
   }
-  if (!(subgraphType in networkLayout.nodes[nodeID].metadata)){ // to remove
-    networkLayout.nodes[nodeID].metadata[subgraphType]=[];
-  }
-
-  if (!(subgraphType in networkLayout.nodes[nodeID].metadataLayout)){
-    networkLayout.nodes[nodeID].metadataLayout[subgraphType]=[];
-  }
-
-  const listSubgraph=networkLayout.nodes[nodeID].metadata[subgraphType] as Array<string>; // to remove
-  const listSubgraphOfNode=networkLayout.nodes[nodeID].metadataLayout[subgraphType] as Array<string>;
-
-  if (!listSubgraph.includes(subgraphID)){ // to remove
-    listSubgraph.push(subgraphID);
-  }
-
-  if (!listSubgraphOfNode.includes(subgraphID)){ 
-    listSubgraphOfNode.push(subgraphID);
+  // if subgraphType is CYCLEGROUP, add the subgraphID to the metadataLayout directly
+  if (subgraphType == TypeSubgraph.CYCLEGROUP){
+    networkLayout.nodes[nodeID].metadataLayout[subgraphType]=subgraphID;
+    return;
+  } else {
+    // if subgraphType is not CYCLEGROUP, add the subgraphID to the metadataLayout[subgraphType] array
+    if (!(subgraphType in networkLayout.nodes[nodeID].metadataLayout)){
+        networkLayout.nodes[nodeID].metadataLayout[subgraphType]=[];
+    }
+    const listSubgraphOfNode=networkLayout.nodes[nodeID].metadataLayout[subgraphType];
+    if (!listSubgraphOfNode.includes(subgraphID)){ 
+        listSubgraphOfNode.push(subgraphID);
+    }
   }
 }

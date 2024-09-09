@@ -1,7 +1,7 @@
 import { Subgraph, TypeSubgraph } from "@/types/Subgraph";
 import { SubgraphNetwork } from "@/types/SubgraphNetwork";
 import { Graph } from "@viz-js/viz";
-import { inBiggerCycle } from "./ConvertFromNetwork";
+//import { inBiggerCycle } from "./ConvertFromNetwork";
 
 /**
  * 

@@ -25,11 +25,13 @@ export interface NodeLayout extends Node {
      [TypeSubgraph.MAIN_CHAIN]?:string[],
      [TypeSubgraph.SECONDARY_CHAIN]?:string[],
      [TypeSubgraph.CYCLE]?:string[],
-     [TypeSubgraph.CYCLEGROUP]?:string[],
+     [TypeSubgraph.CYCLEGROUP]?:string,
     }
 }
   
 
 export interface LinkLayout extends Link {
+    source: NodeLayout;
+    target: NodeLayout;
     metadataLayout?: {[key: string]: string | number | {[key: string]: string | number} | Array<string> | boolean};
 }

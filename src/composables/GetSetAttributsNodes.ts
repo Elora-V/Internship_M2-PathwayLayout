@@ -1,10 +1,9 @@
 // Type imports
-import { NetworkLayout } from "@/types/NetworkLayout";
 import { TypeSubgraph } from "@/types/Subgraph";
 import { Node } from "@metabohub/viz-core/src/types/Node";
 import { Network } from "@metabohub/viz-core/src/types/Network";
-import { link } from "fs";
 import { Link } from "@metabohub/viz-core/src/types/Link";
+import { NetworkLayout } from "@/types/NetworkLayout";
 
 /**
  * This file contains functions to check if a node has a specific attribute
@@ -34,6 +33,26 @@ import { Link } from "@metabohub/viz-core/src/types/Link";
  * *********************************
  * 2. Reversible
  * 
+ * -> addMetadataReversibleWithClass :
+ *         Adds the reversible attribute to the given node in the network.
+ * 
+ * -> addReversibleNetwork :
+ *       Adds the reversible attribute to the given node in the network.
+ * 
+ * -> addReversible :
+ *        Adds the reversible attribute to the given node.
+ * 
+ * -> addLinkClassReversible :
+ *       Adds a class to the given node's classes array in a reversible manner.
+ * 
+ * -> pushUniqueString :
+ *      Adds a unique string value to an array if it does not already exist.
+ * 
+ * -> isReversible :
+ *     Checks if a node in the network is reversible.
+ * 
+ * -> isReaction :
+ *    Checks if a given node is a reaction.
  * 
  * 
  * *********************************
@@ -225,15 +244,15 @@ export function isReaction(node:Node):boolean{
  * @param idNode - The ID of the node to check.
  * @returns A boolean indicating whether the node is in a cycle or not.
  */
-export function inCycle(network: Network, idNode: string): boolean {
+export function inCycle(network: NetworkLayout, idNode: string): boolean {
     if (!(idNode in network.nodes)) {
         throw new Error("Node not found in network");
     }
     // no metadata or no cycle metadata or empty cycle metadata : that is, not in a cycle
     console.warn("change matadatlayout inCycle");
     let inCycle:boolean=false;
-    if ("metadata" in network.nodes[idNode] && TypeSubgraph.CYCLE in network.nodes[idNode].metadata){
-            const cycles=network.nodes[idNode].metadata[TypeSubgraph.CYCLE] as string[];
+    if ( network.nodes[idNode].metadataLayout && TypeSubgraph.CYCLE in network.nodes[idNode].metadataLayout){
+            const cycles=network.nodes[idNode].metadataLayout[TypeSubgraph.CYCLE];
             if (cycles.length>0) inCycle=true;
     }
     return inCycle;

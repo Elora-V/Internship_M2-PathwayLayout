@@ -181,7 +181,7 @@ import { defaultParameters,Parameters } from "@/types/Parameters";
 import { dagreLayout, forceLayout, vizLayout } from './composables/LayoutSugiyamaForce';
 import {chooseReversibleReaction, duplicateReversibleReactions} from "./composables/LayoutReversibleReactions"
 import {importNetworkFromFile,importNetworkFromURL} from "./composables/importNetwork"
-import { networkCopy } from "@/composables/ConvertFromNetwork";
+//import { networkCopy } from "@/composables/ConvertFromNetwork";
 import { initZoom, rescale,duplicateNode,removeNode } from "@metabohub/viz-core";
 import { UseContextMenu } from "@metabohub/viz-context-menu";
 import {  addDirectedCycleToSubgraphNetwork } from "@/composables/LayoutFindCycle";

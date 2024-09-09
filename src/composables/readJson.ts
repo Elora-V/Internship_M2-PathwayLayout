@@ -1,154 +1,154 @@
- import { v4 as uuidv4 } from 'uuid';
+//  import { v4 as uuidv4 } from 'uuid';
 
- import { Node } from "@metabohub/viz-core/src/types/Node";
- import { Link } from "@metabohub/viz-core/src/types/Link";
- import { Network} from '@metabohub/viz-core/src/types/Network';
- import type { GraphStyleProperties } from "@metabohub/viz-core/src//types/GraphStyleProperties";
- import { JsonStyle } from '@/types/JsonStyle';
+//  import { Node } from "@metabohub/viz-core/src/types/Node";
+//  import { Link } from "@metabohub/viz-core/src/types/Link";
+//  import { Network} from '@metabohub/viz-core/src/types/Network';
+//  import type { GraphStyleProperties } from "@metabohub/viz-core/src//types/GraphStyleProperties";
+//  import { JsonStyle } from '@/types/JsonStyle';
 
-export function readJsonGraph(jsonGraph: string): { network: Network, networkStyle: GraphStyleProperties } {
-	const jsonObject = JSON.parse(jsonGraph);
+// export function readJsonGraph(jsonGraph: string): { network: Network, networkStyle: GraphStyleProperties } {
+// 	const jsonObject = JSON.parse(jsonGraph);
 
-	const network: Network = {
-		id: "",
-		nodes: {},
-		links: []
-	};
+// 	const network: Network = {
+// 		id: "",
+// 		nodes: {},
+// 		links: []
+// 	};
 
-	const networkStyle: GraphStyleProperties = {
-		nodeStyles: {}
-	}
+// 	const networkStyle: GraphStyleProperties = {
+// 		nodeStyles: {}
+// 	}
 
-	if (!jsonObject.graph) {
-		throw new Error("graph attribute lacking in json graph format")
-	}
+// 	if (!jsonObject.graph) {
+// 		throw new Error("graph attribute lacking in json graph format")
+// 	}
 
-	if (!jsonObject.graph.nodes) {
-		throw new Error("nodes attribute lacking in json graph format")
-	}
+// 	if (!jsonObject.graph.nodes) {
+// 		throw new Error("nodes attribute lacking in json graph format")
+// 	}
 
-	if (!jsonObject.graph.edges) {
-		throw new Error("edges attribute lacking in json graph format")
-	}
+// 	if (!jsonObject.graph.edges) {
+// 		throw new Error("edges attribute lacking in json graph format")
+// 	}
 
-	if (jsonObject.graph.id) {
-		network.id = jsonObject.graph.id;
-	}
-	else {
-		network.id = uuidv4();
-	}
+// 	if (jsonObject.graph.id) {
+// 		network.id = jsonObject.graph.id;
+// 	}
+// 	else {
+// 		network.id = uuidv4();
+// 	}
 
-	if (jsonObject.graph.label) {
-		network.label = jsonObject.graph.label;
-	}
-	else {
-		network.label = network.id;
-	}
+// 	if (jsonObject.graph.label) {
+// 		network.label = jsonObject.graph.label;
+// 	}
+// 	else {
+// 		network.label = network.id;
+// 	}
 
 
-		Object.keys(jsonObject.graph.nodes).forEach((id: string) => {
-			const nodeJSON = jsonObject.graph.nodes[id];
-			const node: Node = {
-				id: "",
-				x: 0,
-				y: 0
-			};
+// 		Object.keys(jsonObject.graph.nodes).forEach((id: string) => {
+// 			const nodeJSON = jsonObject.graph.nodes[id];
+// 			const node: Node = {
+// 				id: "",
+// 				x: 0,
+// 				y: 0
+// 			};
 	
-			node.id = id;
+// 			node.id = id;
 	
-			if (!nodeJSON.label) {
-				node.label = id;
-			}
-			else {
-				node.label = nodeJSON.id;//nodeJSON.label;
-			}
+// 			if (!nodeJSON.label) {
+// 				node.label = id;
+// 			}
+// 			else {
+// 				node.label = nodeJSON.id;//nodeJSON.label;
+// 			}
 	
-			if (node.id in network.nodes) {
-				throw new Error("Duplicated node id : " + node.id);
-			}
+// 			if (node.id in network.nodes) {
+// 				throw new Error("Duplicated node id : " + node.id);
+// 			}
 	
-			if (nodeJSON.metadata) {
-				node.metadata = nodeJSON.metadata;
+// 			if (nodeJSON.metadata) {
+// 				node.metadata = nodeJSON.metadata;
 	
-				if (nodeJSON.metadata.classes) {
-					node.classes = nodeJSON.metadata.classes;
-				} else {
-					node.classes = ['classic node'];
-				}
+// 				if (nodeJSON.metadata.classes) {
+// 					node.classes = nodeJSON.metadata.classes;
+// 				} else {
+// 					node.classes = ['classic node'];
+// 				}
 	
-				if (nodeJSON.metadata.position && nodeJSON.metadata.position.x) {
-					node.x = nodeJSON.metadata.position.x;
-				}
+// 				if (nodeJSON.metadata.position && nodeJSON.metadata.position.x) {
+// 					node.x = nodeJSON.metadata.position.x;
+// 				}
 	
-				if (nodeJSON.metadata.position && nodeJSON.metadata.position.y) {
-					node.y = nodeJSON.metadata.position.y;
-				}
-			}
+// 				if (nodeJSON.metadata.position && nodeJSON.metadata.position.y) {
+// 					node.y = nodeJSON.metadata.position.y;
+// 				}
+// 			}
 	
-			network.nodes[node.id] = node;
-		});
+// 			network.nodes[node.id] = node;
+// 		});
 
-	network.links = jsonObject.graph.edges.filter((link: { source: string, target: string, metadata: {[key: string]: string} }) => {
-		if (link.source && link.target) {
-			return true;
-		}
-	}).map((e: { source: string, target: string, metadata: {[key: string]: string} }) => {
+// 	network.links = jsonObject.graph.edges.filter((link: { source: string, target: string, metadata: {[key: string]: string} }) => {
+// 		if (link.source && link.target) {
+// 			return true;
+// 		}
+// 	}).map((e: { source: string, target: string, metadata: {[key: string]: string} }) => {
 
-		const source: Node = network.nodes[e.source];
-		const target: Node = network.nodes[e.target];
+// 		const source: Node = network.nodes[e.source];
+// 		const target: Node = network.nodes[e.target];
 
-		let classes;
+// 		let classes;
 
-		if (e.metadata) {
-			if (e.metadata.classes) {
-				classes = e.metadata.classes;
-			} else {
-				classes = ['classic edge'];
-			}
-		}
+// 		if (e.metadata) {
+// 			if (e.metadata.classes) {
+// 				classes = e.metadata.classes;
+// 			} else {
+// 				classes = ['classic edge'];
+// 			}
+// 		}
 		
-		return {
-			...e,
-			source: source,
-			target: target,
-			classes: classes,
-			id: source.id + ' -- ' + target.id
-		}
-	});
+// 		return {
+// 			...e,
+// 			source: source,
+// 			target: target,
+// 			classes: classes,
+// 			id: source.id + ' -- ' + target.id
+// 		}
+// 	});
 
-	if (jsonObject.graph.metadata && jsonObject.graph.metadata.style) {
-		if (jsonObject.graph.metadata.style.nodeStyles && Object.keys(jsonObject.graph.metadata.style.nodeStyles).length !== 0) {
-			networkStyle.nodeStyles = jsonObject.graph.metadata.style.nodeStyles;
-		}
-		if (!(jsonObject.graph.metadata.style.nodeStyles) || Object.keys(jsonObject.graph.metadata.style.nodeStyles).length === 0) {
-			if (!(jsonObject.graph.metadata.style.nodeStyles)) {
-				jsonObject.graph.metadata.style['nodeStyles'] = {'classic node': {}};
-			} else {
-				jsonObject.graph.metadata.style.nodeStyles['classic node'] = {};
-			}
-		}
-		if (jsonObject.graph.metadata.style.linkStyles && Object.keys(jsonObject.graph.metadata.style.linkStyles).length !== 0) {
-			networkStyle.linkStyles = jsonObject.graph.metadata.style.linkStyles;
-		}
-		if (!(jsonObject.graph.metadata.style.linkStyles) || Object.keys(jsonObject.graph.metadata.style.linkStyles).length === 0) {
-			if (!(jsonObject.graph.metadata.style.linkStyles)) {
-				jsonObject.graph.metadata.style['linkStyles'] = {'classic edge': {}};
-			} else {
-				jsonObject.graph.metadata.style.linkStyles['classic edge'] = {};
-			}
-		}
-		if (jsonObject.graph.metadata.style.curveLine) {
-			networkStyle.curveLine = jsonObject.graph.metadata.style.curveLine;
-		}
-		if (jsonObject.graph.directed) {
-			networkStyle.directed = jsonObject.graph.directed;
-		}
-	}
-	console.log(network);
+// 	if (jsonObject.graph.metadata && jsonObject.graph.metadata.style) {
+// 		if (jsonObject.graph.metadata.style.nodeStyles && Object.keys(jsonObject.graph.metadata.style.nodeStyles).length !== 0) {
+// 			networkStyle.nodeStyles = jsonObject.graph.metadata.style.nodeStyles;
+// 		}
+// 		if (!(jsonObject.graph.metadata.style.nodeStyles) || Object.keys(jsonObject.graph.metadata.style.nodeStyles).length === 0) {
+// 			if (!(jsonObject.graph.metadata.style.nodeStyles)) {
+// 				jsonObject.graph.metadata.style['nodeStyles'] = {'classic node': {}};
+// 			} else {
+// 				jsonObject.graph.metadata.style.nodeStyles['classic node'] = {};
+// 			}
+// 		}
+// 		if (jsonObject.graph.metadata.style.linkStyles && Object.keys(jsonObject.graph.metadata.style.linkStyles).length !== 0) {
+// 			networkStyle.linkStyles = jsonObject.graph.metadata.style.linkStyles;
+// 		}
+// 		if (!(jsonObject.graph.metadata.style.linkStyles) || Object.keys(jsonObject.graph.metadata.style.linkStyles).length === 0) {
+// 			if (!(jsonObject.graph.metadata.style.linkStyles)) {
+// 				jsonObject.graph.metadata.style['linkStyles'] = {'classic edge': {}};
+// 			} else {
+// 				jsonObject.graph.metadata.style.linkStyles['classic edge'] = {};
+// 			}
+// 		}
+// 		if (jsonObject.graph.metadata.style.curveLine) {
+// 			networkStyle.curveLine = jsonObject.graph.metadata.style.curveLine;
+// 		}
+// 		if (jsonObject.graph.directed) {
+// 			networkStyle.directed = jsonObject.graph.directed;
+// 		}
+// 	}
+// 	console.log(network);
 
-	return { network, networkStyle };
+// 	return { network, networkStyle };
 
-}
+// }
 
 
 // export function readJsonGraph(jsonGraph: string): { network: Network, networkStyle: GraphStyleProperties } {

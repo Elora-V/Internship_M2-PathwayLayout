@@ -1,6 +1,6 @@
-import { Network } from "@metabohub/viz-core/src/types/Network";
-import { removeAllSelectedNodes } from "@metabohub/viz-core";
-import {getContentFromURL} from "./importNetwork"
+// import { Network } from "@metabohub/viz-core/src/types/Network";
+// import { removeAllSelectedNodes } from "@metabohub/viz-core";
+// import {getContentFromURL} from "./importNetwork"
 
 /**
  * Remove side compounds of a network, the list of side compounds is predefined

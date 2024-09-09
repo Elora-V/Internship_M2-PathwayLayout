@@ -10,7 +10,6 @@ import { NetworkLayout, NodeLayout } from "@/types/NetworkLayout";
 // Composable imports
 import { removeAllSelectedNodes } from "@metabohub/viz-core";
 import { BFSWithSources } from "./AlgorithmBFS";
-import { updateNodeMetadataSubgraph } from "./UseSubgraphNetwork";
 import { addLinkClassReversible, addMetadataReversibleWithClass, isReaction, isReversible } from "./GetSetAttributsNodes";
 
 // General imports
@@ -20,11 +19,51 @@ import { l } from "vite/dist/node/types.d-aGj9QkWt";
 
 
 /**
+ * This file contains the functions to duplicate reversible reactions in a network and choose one of the duplicated reactions to keep.
+ * 
+ * *********************************
+ * 
+ * 0. Duplicate reaction
+ * 
+ * -> duplicateReversibleReactions :
+ *      Take a network and add a duplicated node of reversible reactions, and add links to this reaction
+ * 
+ * -> linkIsReversible :
+ *        Determines if a link is reversible in a network by checking if the source or target is a reversible reaction.
+ * 
+ * -> duplicateNodeReactionReversible :
+ *       Duplicates a node reaction and makes it reversible.
+ * 
+ * -> reversibleNodeReaction :
+ *      Reverses the given node layout by appending a suffix to its ID and updating its metadataLayout.
+ * 
+ * -> reversibleLink :
+ *      Links two nodes in a network with a reversible link.
+ * 
+ * 
+ * *********************************
+ * 
+ * 1. Choose reaction
+ * 
+ * -> chooseReversibleReaction :
+ *       Take a network with duplicated nodes (a node is duplicated if the id of the duplicated version is in metadata.reversibleVersion of a node),
+ * 
+ * -> keepFirstReversibleNode :
+ *       Keeps the first reversible node in the given node order, removing all others and their corresponding reversible versions from the network.
+ * 
+ * -> renameAllIDNode :
+ *       Renames the nodes and edges in a subgraph network based on the provided mapping.
+ * 
+ * -> renameInSubgraph :
+ *      Renames all nodes in a subgraph based on a given mapping.
  * 
  * 
  */
 
 
+
+/*******************************************************************************************************************************************************/
+//___________________________________________________0. Duplicate reaction __________________________________________________________________________
 
 
 
@@ -204,6 +243,9 @@ function reversibleLink(network:Network,link:Link,sourceID:string,targetID:strin
   return newLink;
 }
 
+
+/*******************************************************************************************************************************************************/
+//___________________________________________________1. Choose reaction __________________________________________________________________________
 
 
 
